@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "26+srkbwYjA8Vk+C7e5T+yN0tqPv/XLxFtia6yjOdHk=",
+  "Source": "ApiServerReceive",
+  "BasePath": "_content/ApiServerReceive",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

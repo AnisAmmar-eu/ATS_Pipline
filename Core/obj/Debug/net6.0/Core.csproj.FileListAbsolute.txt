@@ -1,0 +1,14 @@
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\bin\Debug\net6.0\Core.deps.json
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\bin\Debug\net6.0\Core.runtimeconfig.json
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\bin\Debug\net6.0\Core.dll
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\bin\Debug\net6.0\Core.pdb
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.csproj.AssemblyReference.cache
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.AssemblyInfoInputs.cache
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.AssemblyInfo.cs
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.csproj.CoreCompileInputs.cache
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.dll
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\refint\Core.dll
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.pdb
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\Core.genruntimeconfig.cache
+C:\0 - Ekium Perso\Projects\4- Fives\1- ATS\Sources Test\Testing\AlarmsManagemnt\Core\obj\Debug\net6.0\ref\Core.dll
