@@ -24,6 +24,6 @@ namespace Core.Entities.AlarmesTR.Models.DB
         public DateTimeOffset? TS { get; set; }
 
         public string? Station { get; set; }
-        public int? Lu { get; set; }
+        public int? NombreNonLu { get; set; }
     }
 }

@@ -165,6 +165,7 @@ namespace Core.Entities.Journals.Services
                .Where(journal => journal.Id == idJournal && journal.Lu == 0)             
                .FirstOrDefault();
             JournalToRead.Lu = 1;
+            JournalToRead.TSLu = DateTime.Now;
 
            /* int countNbLus = _AlarmesDbContext.Journal.Count(p => p.Lu == 0 && p.IdAlarme == JournalToRead.IdAlarme);
             if(countNbLus == 0)

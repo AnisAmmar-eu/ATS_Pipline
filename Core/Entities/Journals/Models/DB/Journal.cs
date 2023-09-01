@@ -23,6 +23,8 @@ namespace Core.Entities.Journals.Models.DB
         public string? Station { get; set; }
         public int? Lu { get; set; }
 
+        public DateTimeOffset? TSLu { get; set; }
+
 
     }
 }
