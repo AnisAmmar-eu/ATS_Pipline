@@ -17,7 +17,7 @@ namespace Core.Shared.signalR
         public async Task RequestJournalData()
         {
             var journalData = _AlarmesDbContext.Journal.ToList();
-            await Clients.Caller.SendAsync("ReceiveAlarm", journalData);
+            await Clients.All.SendAsync("ReceiveAlarm", journalData);
         }
 
 

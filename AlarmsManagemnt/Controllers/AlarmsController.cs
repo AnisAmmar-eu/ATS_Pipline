@@ -19,7 +19,7 @@ namespace AlarmsManagemnt.Controllers
             _IJournalServices = iJournalServices;
         }
 
-        [HttpGet("Collect")]
+        [HttpPost("Collect")]
         public IActionResult Collect()
         {
             return Ok(_IJournalServices.Collect());
@@ -40,7 +40,7 @@ namespace AlarmsManagemnt.Controllers
         }
 
 
-        [HttpGet("LuJournal")]
+        [HttpPost("LuJournal")]
         public IActionResult LuJournal(int idJournal)
         {
             return Ok(_IJournalServices.LuJournal(idJournal));

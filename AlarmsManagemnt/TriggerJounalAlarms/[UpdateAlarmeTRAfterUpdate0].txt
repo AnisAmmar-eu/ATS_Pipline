@@ -1,0 +1,72 @@
+USE [Alarms]
+GO
+/****** Object:  Trigger [dbo].[UpdateAlarmeTRAfterUpdate0]    Script Date: 11/09/2023 10:24:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER TRIGGER [dbo].[UpdateAlarmeTRAfterUpdate0]
+ON [dbo].[Journal]
+AFTER update
+AS
+BEGIN
+
+   /*  a.NombreNonLu = CASE WHEN (SELECT COUNT(*) FROM Journal j WHERE j.IdAlarme = i.IdAlarme AND j.LU = 1)
+                     = (SELECT COUNT(*) FROM Journal j WHERE j.IdAlarme = i.IdAlarme) THEN 1 ELSE 0 END,  */
+
+
+    DECLARE @NombreNonLu INT;
+    DECLARE @ExisteTRLine INT;
+    DECLARE @ActifAlarm INT;
+
+	SET @NombreNonLu = 0
+	SELECT @NombreNonLu = COUNT(*) FROM Journal j  INNER JOIN INSERTED i ON j.IdAlarme = i.IdAlarme WHERE j.IdAlarme = i.IdAlarme AND j.LU = 0 
+
+	SELECT @ActifAlarm = COUNT(*) FROM Journal j  INNER JOIN INSERTED i ON j.IdAlarme = i.IdAlarme   where ( (j.IdAlarme = i.IdAlarme) AND  ((j.Status1 = 1 and j.status0 is null) or (j.Lu = 0)))
+
+	
+	
+	SELECT @ExisteTRLine = COUNT(*) FROM AlarmeTR a  INNER JOIN INSERTED i ON a.IdAlarme = i.IdAlarme WHERE a.IdAlarme = i.IdAlarme  
+
+
+	if(@NombreNonLu > 0)
+		begin
+		UPDATE a
+		SET  a.NombreNonLu = @NombreNonLu ,        
+			a.status = CASE WHEN (i.Status0 IS NULL  and i.Status1 IS NOT NULL ) THEN i.Status1 ELSE i.Status0 END,
+			a.ts = GETDATE(),
+			a.Station = i.Station
+		FROM AlarmeTR a
+		INNER JOIN INSERTED i ON a.IdAlarme = i.IdAlarme;
+		end;
+
+	if (@ExisteTRLine = 0)
+		begin
+			INSERT INTO AlarmeTR (IdAlarme,Status, TS, Station, NombreNonLu)
+			SELECT i.IdAlarme, 1, GETDATE(), i.Station, 1
+			FROM INSERTED i
+		end
+
+	
+
+
+	else if(@ExisteTRLine > 0)
+		begin
+
+		if(@NombreNonLu = 0)
+		begin
+			UPDATE a
+			SET  a.NombreNonLu = 0      
+			FROM AlarmeTR a
+			INNER JOIN INSERTED i ON a.IdAlarme = i.IdAlarme;
+		end ;
+
+		if(@ActifAlarm = 0 )
+		begin
+			delete a
+			from AlarmeTR a
+			INNER JOIN INSERTED i ON a.IdAlarme = i.IdAlarme;
+		end
+		End
+
+END;

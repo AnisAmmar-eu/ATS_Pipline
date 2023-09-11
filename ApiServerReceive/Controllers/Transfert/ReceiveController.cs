@@ -43,26 +43,29 @@ namespace Transfert.App.Transfert
                 {
                     return BadRequest("Aucun journal à traiter.");
                 }
-                string nameTable = "Journal";
-                var truncateSql = $"TRUNCATE TABLE {nameTable}";
-                int a = _AlarmesDbContext.Database.ExecuteSqlRaw(truncateSql);
+                var truncateSql = $"TRUNCATE TABLE Journal ";
+                var truncateSqlTR = $"TRUNCATE TABLE AlarmeTR ";
+                _AlarmesDbContext.Database.ExecuteSqlRaw(truncateSql);
+                _AlarmesDbContext.Database.ExecuteSqlRaw(truncateSqlTR);
+
 
                 foreach (var journal in Journals)
                 {
                     Journal journalToAdd = new Journal
                     {
                         IdAlarme = journal.IdAlarme,
-                        Status0 = journal.Status0,
                         Status1 = journal.Status1,
                         TS1 = journal.TS1,
+                        Status0 = journal.Status0,
                         TS0 = journal.TS0,
                         TS = journal.TS,
-                        Lu = journal.Lu,
-                        Station = journal.Station
+                        Lu = 0,
+                        Station = journal.Station,
+                        TSLu = null
                     };
                     _IJournalServices.addJournal(journalToAdd);
 
-                   // _IJournalServices.AddJournalFromPush(journalToAdd);
+                    // _IJournalServices.AddJournalFromPush(journalToAdd);
                 }
 
                 return Ok(true);

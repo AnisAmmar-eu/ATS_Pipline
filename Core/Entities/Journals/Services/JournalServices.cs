@@ -3,6 +3,7 @@ using Core.Entities.AlarmesPLC.Models.DB;
 using Core.Entities.Journals.Models.DB;
 using Core.Entities.Journals.Services;
 using Core.Shared.Data;
+using Core.Shared.signalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
@@ -15,12 +16,14 @@ namespace Core.Entities.Journals.Services
     {
         private readonly AlarmesDbContext _AlarmesDbContext;
         private readonly IConfiguration _configuration;
+        private readonly alarmesHub _myHub;
 
 
-        public JournalServices(AlarmesDbContext alarmesDbContext, IConfiguration configuration)
+        public JournalServices(AlarmesDbContext alarmesDbContext, IConfiguration configuration,alarmesHub myHub)
         {
             _AlarmesDbContext = alarmesDbContext;
             _configuration = configuration;
+            _myHub = myHub;
 
         }
 
@@ -58,7 +61,7 @@ namespace Core.Entities.Journals.Services
                     AlarmWithStatus1.Status0 = AllalarmsPLC[i].Status;
                     AlarmWithStatus1.TS0 = AllalarmsPLC[i].TS;
                     AlarmWithStatus1.TS = DateTime.Now;
-                    AlarmWithStatus1.Lu = 0;
+                   // AlarmWithStatus1.Lu = 0;
                     _AlarmesDbContext.SaveChanges();
 
                 }
@@ -82,7 +85,7 @@ namespace Core.Entities.Journals.Services
             }
 
 
-
+              await  _myHub.RequestJournalData();
 
              return (IEnumerable<AlarmePLC>)AllalarmsPLC;
         }
@@ -186,6 +189,10 @@ namespace Core.Entities.Journals.Services
             var allJournals = _AlarmesDbContext.Journal.ToList();
             return allJournals;
         }
+
+
+
+    
 
     }
 }

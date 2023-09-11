@@ -11,6 +11,7 @@ namespace Core.Entities.Journals.Services
    public interface IJournalServices
     {
         Task<Journal> addJournal(Journal journal);
+
         Task<IEnumerable<AlarmePLC>> AddJournalFromPush(Journal journal);
 
         Task<IEnumerable<AlarmePLC>> Collect();
@@ -18,6 +19,7 @@ namespace Core.Entities.Journals.Services
         Task<int> CollectCyc(int nbSeconde);
 
         List<Journal> GetAllJournal();
+
 
         Task<Journal> LuJournal(int idJournal);
 

@@ -20,6 +20,7 @@ builder.Services.AddDbContext<AlarmesDbContext>(options =>
 
 builder.Services.AddScoped<IJournalServices, JournalServices>();
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin", builder =>
@@ -33,7 +34,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSignalR();
 
+
 var app = builder.Build();
+
+app.MapHub<alarmesHub>("/alarmesHub");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -53,7 +58,6 @@ app.MapControllers();
 
 
 
-app.MapHub<alarmesHub>("/alarmesHub");
 
 
 app.Run();
