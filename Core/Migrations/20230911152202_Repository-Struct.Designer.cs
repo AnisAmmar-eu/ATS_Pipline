@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AlarmesDbContext))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230911152202_Repository-Struct")]
+    partial class RepositoryStruct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("IdAlarme")
+                    b.Property<int>("AlarmeID")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -107,7 +109,7 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("IdAlarme")
+                    b.Property<int>("AlarmeID")
                         .HasColumnType("int");
 
                     b.Property<int?>("Lu")
@@ -136,7 +138,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("IdAlarme");
+                    b.HasIndex("AlarmeID");
 
                     b.ToTable("Journal");
                 });
@@ -156,7 +158,7 @@ namespace Core.Migrations
                 {
                     b.HasOne("Core.Entities.Alarmes_C.Models.DB.Alarme_C", "Alarme")
                         .WithMany("Journaux")
-                        .HasForeignKey("IdAlarme")
+                        .HasForeignKey("AlarmeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

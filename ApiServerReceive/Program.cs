@@ -1,6 +1,8 @@
 using Core.Entities.Journals.Services;
 using Core.Shared.Data;
 using Core.Shared.signalR;
+using Core.Shared.UnitOfWork;
+using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,7 @@ builder.Services.AddDbContext<AlarmesDbContext>(options =>
 
 
 builder.Services.AddScoped<IJournalServices, JournalServices>();
+builder.Services.AddScoped<IUnitOfWorkAlarm, UnitOfWorkAlarm>();
 
 
 builder.Services.AddCors(options =>

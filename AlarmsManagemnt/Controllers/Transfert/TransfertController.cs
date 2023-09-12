@@ -15,9 +15,9 @@ namespace Transfert.App.Transfert
 
 
         private readonly HttpClient httpClient;
-       private readonly IJournalServices _IJournalServices;
+        private readonly IJournalServices _IJournalServices;
 
-       public TransfertController(IJournalServices IJournalServices)
+        public TransfertController(IJournalServices IJournalServices)
         {
             httpClient = new HttpClient();
             _IJournalServices = IJournalServices;
@@ -33,7 +33,7 @@ namespace Transfert.App.Transfert
             {
                 var api2Url = "https://localhost:7207/api/Receive/endpoint";
 
-                var Journals = _IJournalServices.GetAllJournal();
+                var Journals = await _IJournalServices.GetAllJournal();
 
                 string jsonData = JsonConvert.SerializeObject(Journals);
 
@@ -65,7 +65,7 @@ namespace Transfert.App.Transfert
 
 
 
-     
+
 
 
     }

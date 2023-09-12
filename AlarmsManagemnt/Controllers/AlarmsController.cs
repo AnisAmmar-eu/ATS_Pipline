@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
 using Core.Entities.Journals.Services;
@@ -20,30 +21,30 @@ namespace AlarmsManagemnt.Controllers
         }
 
         [HttpPost("Collect")]
-        public IActionResult Collect()
+        public async Task<IActionResult> Collect()
         {
-            return Ok(_IJournalServices.Collect());
+            return Ok(await _IJournalServices.Collect());
         }
 
 
 
         [HttpGet("CollectCyc")]
-        public IActionResult CollectCyc(int nbSeconde)
+        public async Task<IActionResult> CollectCyc(int nbSeconde)
         {          
-            return Ok(_IJournalServices.CollectCyc(nbSeconde));
+            return Ok(await _IJournalServices.CollectCyc(nbSeconde));
         }
 
         [HttpGet("GetAllJournal")]
-        public IActionResult GetAllJournal()
+        public async Task<IActionResult> GetAllJournal()
         {
-            return Ok(_IJournalServices.GetAllJournal());
+            return Ok(await _IJournalServices.GetAllJournal());
         }
 
 
-        [HttpPost("LuJournal")]
-        public IActionResult LuJournal(int idJournal)
+        [HttpPost("LuJournal/{id}")]
+        public async Task<IActionResult> LuJournal([Required] int id)
         {
-            return Ok(_IJournalServices.LuJournal(idJournal));
+            return Ok(await _IJournalServices.LuJournal(id));
         }
 
     }

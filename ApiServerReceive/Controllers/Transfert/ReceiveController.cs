@@ -58,7 +58,6 @@ namespace Transfert.App.Transfert
                         TS1 = journal.TS1,
                         Status0 = journal.Status0,
                         TS0 = journal.TS0,
-                        TS = journal.TS,
                         Lu = 0,
                         Station = journal.Station,
                         TSLu = null

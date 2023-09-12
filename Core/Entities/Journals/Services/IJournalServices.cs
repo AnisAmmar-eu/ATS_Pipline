@@ -5,23 +5,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Entities.AlarmesPLC.Models.DTO;
+using Core.Entities.Journals.Models.DTOs;
 
 namespace Core.Entities.Journals.Services
 {
    public interface IJournalServices
     {
-        Task<Journal> addJournal(Journal journal);
+        Task<DTOJournal> addJournal(Journal journal);
 
-        Task<IEnumerable<AlarmePLC>> AddJournalFromPush(Journal journal);
+        Task<IEnumerable<DTOAlarmePLC>> AddJournalFromPush(Journal journal);
 
-        Task<IEnumerable<AlarmePLC>> Collect();
+        Task<IEnumerable<DTOAlarmePLC>> Collect();
 
         Task<int> CollectCyc(int nbSeconde);
 
-        List<Journal> GetAllJournal();
+        Task<List<DTOJournal>> GetAllJournal();
 
 
-        Task<Journal> LuJournal(int idJournal);
+        Task<DTOJournal> LuJournal(int idJournal);
 
     }
 }
