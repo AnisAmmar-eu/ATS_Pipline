@@ -8,7 +8,7 @@ namespace Core.Entities.AlarmsRT.Models.DB;
 public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 {
     public int IDAlarm { get; set; }
-    public virtual AlarmC AlarmC { get; set; }
+    public AlarmC AlarmC { get; set; }
 
 
     public int? Status { get; set; }
