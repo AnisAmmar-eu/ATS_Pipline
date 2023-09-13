@@ -56,6 +56,7 @@ public class ReceiveController : ControllerBase
 					journal.IDAlarm = newAlarmC.ID;
 				}
 				else throw new EntityNotFoundException("There is no AlarmC in the transmitted journal");
+
 				var journalToAdd = new Journal
 				{
 					IDAlarm = journal.IDAlarm,

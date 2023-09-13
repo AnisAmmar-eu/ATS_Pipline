@@ -8,19 +8,19 @@ namespace Core.Shared.Models.DB.Kernel;
 /// </summary>
 public class BaseEntity : IBaseEntity<BaseEntity, DTOBaseEntity>
 {
-    public int ID { get; set; }
-    public DateTimeOffset TS { get; set; } = DateTimeOffset.Now;
+	public int ID { get; set; }
+	public DateTimeOffset TS { get; set; } = DateTimeOffset.Now;
 
-    /// <summary>
-    ///     Converts the entity to its DTO.
-    /// </summary>
-    /// <returns> <see cref="DTO" /> of the entity</returns>
-    public virtual DTOBaseEntity ToDTO(string? languageRID = null)
-    {
-        return new DTOBaseEntity
-        {
-            ID = ID,
-            TS = TS
-        };
-    }
+	/// <summary>
+	///     Converts the entity to its DTO.
+	/// </summary>
+	/// <returns> <see cref="DTO" /> of the entity</returns>
+	public virtual DTOBaseEntity ToDTO(string? languageRID = null)
+	{
+		return new DTOBaseEntity
+		{
+			ID = ID,
+			TS = TS
+		};
+	}
 }

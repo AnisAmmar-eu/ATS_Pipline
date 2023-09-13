@@ -10,54 +10,54 @@ namespace AlarmsManagement.Controllers.Transfer;
 [ApiController]
 public class TransferController : ControllerBase
 {
-    private readonly HttpClient _httpClient;
-    private readonly IJournalService _journalService;
-    private readonly IAlarmCService _alarmCService;
+	private readonly HttpClient _httpClient;
+	private readonly IJournalService _journalService;
+	private readonly IAlarmCService _alarmCService;
 
-    public TransferController(IJournalService journalService, IAlarmCService alarmCService)
-    {
-        _httpClient = new HttpClient();
-        _journalService = journalService;
-        _alarmCService = alarmCService;
-    }
+	public TransferController(IJournalService journalService, IAlarmCService alarmCService)
+	{
+		_httpClient = new HttpClient();
+		_journalService = journalService;
+		_alarmCService = alarmCService;
+	}
 
 
-    [HttpPost("PushDataToApi2Async")]
-    public async Task<IActionResult> PushDataToApi2Async()
-    {
-        try
-        {
-            var api2Url = "https://localhost:7207/api/Receive/endpoint";
+	[HttpPost("PushDataToApi2Async")]
+	public async Task<IActionResult> PushDataToApi2Async()
+	{
+		try
+		{
+			var api2Url = "https://localhost:7207/api/Receive/endpoint";
 
-            var journals = await _journalService.GetAllJournal();
-            foreach (var dtoJournal in journals)
-            {
-                dtoJournal.Alarm = await _alarmCService.GetById(dtoJournal.IDAlarm);
-            }
+			var journals = await _journalService.GetAllJournal();
+			foreach (var dtoJournal in journals)
+			{
+				dtoJournal.Alarm = await _alarmCService.GetById(dtoJournal.IDAlarm);
+			}
 
-            var jsonData = JsonConvert.SerializeObject(journals);
+			var jsonData = JsonConvert.SerializeObject(journals);
 
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+			var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            using (var httpClient = new HttpClient())
-            {
-                var response = await httpClient.PostAsync(api2Url, content);
+			using (var httpClient = new HttpClient())
+			{
+				var response = await httpClient.PostAsync(api2Url, content);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return Ok(true); // Les données ont été envoyées avec succès à l'API 2
-                }
+				if (response.IsSuccessStatusCode)
+				{
+					return Ok(true); // Les données ont été envoyées avec succès à l'API 2
+				}
 
-                // Gérer le cas où la requête a échoué
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                return StatusCode((int)response.StatusCode, errorMessage);
-            }
-        }
-        catch (Exception ex)
-        {
-            // Gérer les erreurs d'exception
-            Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
-            return StatusCode(500, "Erreur interne du serveur");
-        }
-    }
+				// Gérer le cas où la requête a échoué
+				var errorMessage = await response.Content.ReadAsStringAsync();
+				return StatusCode((int)response.StatusCode, errorMessage);
+			}
+		}
+		catch (Exception ex)
+		{
+			// Gérer les erreurs d'exception
+			Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
+			return StatusCode(500, "Erreur interne du serveur");
+		}
+	}
 }

@@ -7,7 +7,7 @@ namespace Core.Entities.AlarmsPLC.Repositories;
 
 public class AlarmPLCRepository : RepositoryBaseEntity<AlarmCTX, AlarmPLC, DTOAlarmPLC>, IAlarmPLCRepository
 {
-    public AlarmPLCRepository(AlarmCTX context) : base(context)
-    {
-    }
+	public AlarmPLCRepository(AlarmCTX context) : base(context)
+	{
+	}
 }

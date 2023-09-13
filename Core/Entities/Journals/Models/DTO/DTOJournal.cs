@@ -8,13 +8,13 @@ namespace Core.Entities.Journals.Models.DTO;
 
 public partial class DTOJournal : DTOBaseEntity, IDTO<Journal, DTOJournal>
 {
-    public int IDAlarm { get; set; }
-    public virtual DTOAlarmC Alarm { get; set; }
+	public int IDAlarm { get; set; }
+	public virtual DTOAlarmC Alarm { get; set; }
 
-    public int? Status1 { get; set; }
-    public DateTimeOffset? TS1 { get; set; }
-    public int? Status0 { get; set; }
-    public DateTimeOffset? TS0 { get; set; }
-    public string? Station { get; set; }
-    public int? IsRead { get; set; }
+	public int? Status1 { get; set; }
+	public DateTimeOffset? TS1 { get; set; }
+	public int? Status0 { get; set; }
+	public DateTimeOffset? TS0 { get; set; }
+	public string? Station { get; set; }
+	public int? IsRead { get; set; }
 }

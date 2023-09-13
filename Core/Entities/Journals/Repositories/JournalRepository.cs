@@ -7,7 +7,7 @@ namespace Core.Entities.Journals.Repositories;
 
 public class JournalRepository : RepositoryBaseEntity<AlarmCTX, Journal, DTOJournal>, IJournalRepository
 {
-    public JournalRepository(AlarmCTX context) : base(context)
-    {
-    }
+	public JournalRepository(AlarmCTX context) : base(context)
+	{
+	}
 }

@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<AlarmCTX>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
@@ -28,13 +28,13 @@ builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowOrigin", policyBuilder =>
-    {
-        policyBuilder.WithOrigins("http://localhost:4200")
-            .WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
+	options.AddPolicy("AllowOrigin", policyBuilder =>
+	{
+		policyBuilder.WithOrigins("http://localhost:4200")
+			.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+			.AllowAnyHeader()
+			.AllowCredentials();
+	});
 });
 
 builder.Services.AddSignalR();
@@ -48,8 +48,8 @@ app.MapHub<AlarmsHub>("/alarmsHub");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 

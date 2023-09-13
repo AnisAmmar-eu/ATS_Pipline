@@ -6,8 +6,8 @@ namespace Core.Entities.AlarmsPLC.Models.DB;
 
 public partial class AlarmPLC : BaseEntity, IBaseEntity<AlarmPLC, DTOAlarmPLC>
 {
-    public DTOAlarmPLC ToDTO(string? languageRID = null)
-    {
-        return new DTOAlarmPLC(this);
-    }
+	public DTOAlarmPLC ToDTO(string? languageRID = null)
+	{
+		return new DTOAlarmPLC(this);
+	}
 }

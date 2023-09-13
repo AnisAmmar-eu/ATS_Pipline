@@ -9,17 +9,17 @@ namespace Core.Shared.UnitOfWork.Interfaces;
 /// </summary>
 public interface IAlarmUOW : IDisposable
 {
-    IAlarmCRepository AlarmC { get; }
-    IAlarmPLCRepository AlarmPLC { get; }
-    IJournalRepository Journal { get; }
+	IAlarmCRepository AlarmC { get; }
+	IAlarmPLCRepository AlarmPLC { get; }
+	IJournalRepository Journal { get; }
 
-    /// <summary>
-    ///     Saves changes made in this context to the underlying database.
-    /// </summary>
-    /// <returns></returns>
-    int Commit();
+	/// <summary>
+	///     Saves changes made in this context to the underlying database.
+	/// </summary>
+	/// <returns></returns>
+	int Commit();
 
-    Task StartTransaction();
+	Task StartTransaction();
 
-    Task CommitTransaction();
+	Task CommitTransaction();
 }

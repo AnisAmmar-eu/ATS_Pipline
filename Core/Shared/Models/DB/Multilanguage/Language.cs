@@ -4,6 +4,6 @@ namespace Core.Shared.Models.DB.Multilanguage;
 
 public class Language : BaseEntity
 {
-    public string RID { get; set; } = "";
-    public string Name { get; set; } = "";
+	public string RID { get; set; } = "";
+	public string Name { get; set; } = "";
 }

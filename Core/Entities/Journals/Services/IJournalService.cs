@@ -6,16 +6,16 @@ namespace Core.Entities.Journals.Services;
 
 public interface IJournalService
 {
-    Task<DTOJournal> AddJournal(Journal journal);
+	Task<DTOJournal> AddJournal(Journal journal);
 
-    Task<IEnumerable<DTOAlarmPLC>> AddJournalFromPush(Journal journal);
+	Task<IEnumerable<DTOAlarmPLC>> AddJournalFromPush(Journal journal);
 
-    Task<IEnumerable<DTOAlarmPLC>> Collect();
+	Task<IEnumerable<DTOAlarmPLC>> Collect();
 
-    Task<int> CollectCyc(int nbSeconds);
+	Task<int> CollectCyc(int nbSeconds);
 
-    Task<List<DTOJournal>> GetAllJournal();
+	Task<List<DTOJournal>> GetAllJournal();
 
 
-    Task<DTOJournal> ReadJournal(int idJournal);
+	Task<DTOJournal> ReadJournal(int idJournal);
 }
