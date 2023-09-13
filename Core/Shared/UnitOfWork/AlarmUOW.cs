@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Core.Shared.UnitOfWork;
 
-public class AlarmUow : AlarmUOW
+public class AlarmUOW : IAlarmUOW
 {
     private readonly AlarmCTX _alarmCTX;
     private IDbContextTransaction? _transaction;
     private int _transactionCount;
 
-    public AlarmUow(AlarmCTX alarmCTX)
+    public AlarmUOW(AlarmCTX alarmCTX)
     {
         _alarmCTX = alarmCTX;
 

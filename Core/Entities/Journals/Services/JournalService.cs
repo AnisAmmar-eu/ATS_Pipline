@@ -8,23 +8,23 @@ using Microsoft.Extensions.Configuration;
 
 namespace Core.Entities.Journals.Services;
 
-public class JournalServices : IJournalServices
+public class JournalService : IJournalService
 {
-    private readonly AlarmUOW _alarmUow;
+    private readonly IAlarmUOW _alarmUOW;
     private readonly IConfiguration _configuration;
 
 
-    public JournalServices(AlarmUOW alarmUOW, IConfiguration configuration)
+    public JournalService(IAlarmUOW alarmUOW, IConfiguration configuration)
     {
         _configuration = configuration;
-        _alarmUow = alarmUOW;
+        _alarmUOW = alarmUOW;
         //_myHub = myHub;
     }
 
     public async Task<DTOJournal> AddJournal(Journal journal)
     {
-        await _alarmUow.Journal.Add(journal);
-        _alarmUow.Commit();
+        await _alarmUOW.Journal.Add(journal);
+        _alarmUOW.Commit();
         return journal.ToDTO();
     }
 
@@ -33,13 +33,13 @@ public class JournalServices : IJournalServices
     {
         var appSettingsSection = _configuration.GetSection("stationConfig");
 
-        await _alarmUow.StartTransaction();
-        var allAlarmsPLC = await _alarmUow.AlarmPLC.GetAll(withTracking: false);
+        await _alarmUOW.StartTransaction();
+        var allAlarmsPLC = await _alarmUOW.AlarmPLC.GetAll(withTracking: false);
         for (var i = 0; i < allAlarmsPLC.Count; i++)
         {
             try
             {
-                var alarmWithStatus1 = await _alarmUow.Journal.GetBy(
+                var alarmWithStatus1 = await _alarmUOW.Journal.GetBy(
                     new Expression<Func<Journal, bool>>[]
                     {
                         alarm => alarm.Status1 == 1 && alarm.Status0 != 0 &&
@@ -51,7 +51,7 @@ public class JournalServices : IJournalServices
                 alarmWithStatus1.TS0 = allAlarmsPLC[i].TS;
                 alarmWithStatus1.TS = DateTime.Now;
                 // AlarmWithStatus1.Lu = 0;
-                _alarmUow.Journal.Update(alarmWithStatus1);
+                _alarmUOW.Journal.Update(alarmWithStatus1);
             }
             catch (EntityNotFoundException)
             {
@@ -61,15 +61,15 @@ public class JournalServices : IJournalServices
                 newJournal.Status1 = allAlarmsPLC[i].Status;
                 newJournal.TS1 = allAlarmsPLC[i].TS;
                 newJournal.TS = DateTime.Now;
-                await _alarmUow.Journal.Add(newJournal);
+                await _alarmUOW.Journal.Add(newJournal);
             }
 
-            _alarmUow.AlarmPLC.Remove(allAlarmsPLC[i]);
+            _alarmUOW.AlarmPLC.Remove(allAlarmsPLC[i]);
         }
 
         // await  _myHub.RequestJournalData();
-        _alarmUow.Commit();
-        await _alarmUow.CommitTransaction();
+        _alarmUOW.Commit();
+        await _alarmUOW.CommitTransaction();
         return allAlarmsPLC.ConvertAll(alarmPLC => alarmPLC.ToDTO());
     }
 
@@ -78,8 +78,8 @@ public class JournalServices : IJournalServices
     {
         var appSettingsSection = _configuration.GetSection("stationConfig");
 
-        var allJournals = await _alarmUow.Journal.GetAll();
-        await _alarmUow.StartTransaction();
+        var allJournals = await _alarmUOW.Journal.GetAll();
+        await _alarmUOW.StartTransaction();
 
         if (allJournals.Count == 0)
         {
@@ -88,12 +88,12 @@ public class JournalServices : IJournalServices
             newJournal.IDAlarm = journal.IDAlarm;
             newJournal.Status1 = journal.Status1;
             newJournal.TS1 = journal.TS;
-            await _alarmUow.Journal.Add(newJournal);
+            await _alarmUOW.Journal.Add(newJournal);
         }
 
         try
         {
-            var alarmWithStatus1 = await _alarmUow.Journal.GetBy(new Expression<Func<Journal, bool>>[]
+            var alarmWithStatus1 = await _alarmUOW.Journal.GetBy(new Expression<Func<Journal, bool>>[]
             {
                 alarm => alarm.Status1 == 1 && alarm.Status0 != 0 && alarm.IDAlarm == journal.IDAlarm
             }, query => query.OrderByDescending(j => j.ID));
@@ -110,11 +110,11 @@ public class JournalServices : IJournalServices
             newJournal.IDAlarm = journal.IDAlarm;
             newJournal.Status1 = journal.Status1;
             newJournal.TS1 = journal.TS;
-            await _alarmUow.Journal.Add(newJournal);
+            await _alarmUOW.Journal.Add(newJournal);
         }
 
-        _alarmUow.Commit();
-        await _alarmUow.CommitTransaction();
+        _alarmUOW.Commit();
+        await _alarmUOW.CommitTransaction();
         return (IEnumerable<DTOAlarmPLC>)allJournals;
     }
 
@@ -137,12 +137,12 @@ public class JournalServices : IJournalServices
 
     public async Task<DTOJournal> ReadJournal(int idJournal)
     {
-        var journalToRead = await _alarmUow.Journal.GetById(idJournal,
+        var journalToRead = await _alarmUOW.Journal.GetById(idJournal,
             new Expression<Func<Journal, bool>>[]
             {
                 journal => journal.IsRead == 0
             });
-        await _alarmUow.StartTransaction();
+        await _alarmUOW.StartTransaction();
         journalToRead.IsRead = 1;
         journalToRead.TSRead = DateTime.Now;
 
@@ -154,15 +154,15 @@ public class JournalServices : IJournalServices
              _AlarmesDbContext.SaveChanges();
          }*/
 
-        _alarmUow.Commit();
-        await _alarmUow.CommitTransaction();
+        _alarmUOW.Commit();
+        await _alarmUOW.CommitTransaction();
         return journalToRead.ToDTO();
     }
 
 
     public async Task<List<DTOJournal>> GetAllJournal()
     {
-        var allJournals = await _alarmUow.Journal.GetAll();
+        var allJournals = await _alarmUOW.Journal.GetAll();
         return allJournals.ConvertAll(journal => journal.ToDTO());
     }
 }

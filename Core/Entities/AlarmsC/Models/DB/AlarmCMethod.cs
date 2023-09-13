@@ -11,6 +11,15 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
         Name = "";
         Description = "";
     }
+    
+    public AlarmC(DTOAlarmC alarmC)
+    {
+        ID = alarmC.ID;
+        TS = (DateTimeOffset)alarmC.TS!;
+        RID = alarmC.RID;
+        Name = alarmC.Name;
+        Description = alarmC.Description;
+    }
 
     public override DTOAlarmC ToDTO(string? languageRID = null)
     {
