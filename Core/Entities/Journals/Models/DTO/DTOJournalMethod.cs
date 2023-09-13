@@ -22,7 +22,7 @@ public partial class DTOJournal : DTOBaseEntity, IDTO<Journal, DTOJournal>
         Status0 = journal.Status0;
         Status1 = journal.Status1;
         IDAlarm = journal.IDAlarm;
-        Alarm = journal.Alarm;
+        Alarm = journal.Alarm?.ToDTO()!;
         Station = journal.Station;
         IsRead = journal.IsRead;
     }

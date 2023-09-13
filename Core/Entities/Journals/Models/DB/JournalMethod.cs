@@ -21,7 +21,7 @@ public partial class Journal : BaseEntity, IBaseEntity<Journal, DTOJournal>
         Status0 = dtoJournal.Status0;
         Status1 = dtoJournal.Status1;
         IDAlarm = dtoJournal.IDAlarm;
-        Alarm = dtoJournal.Alarm;
+        Alarm = dtoJournal.Alarm?.ToModel()!;
         Station = dtoJournal.Station;
         IsRead = dtoJournal.IsRead;
     }

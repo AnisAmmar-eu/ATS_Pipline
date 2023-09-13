@@ -8,6 +8,7 @@ namespace Core.Entities.AlarmsC.Models.DB;
 
 public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 {
+    public string RID { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
 

@@ -1,3 +1,4 @@
+using Core.Entities.AlarmsC.Services;
 using Core.Entities.Journals.Services;
 using Core.Shared.Data;
 using Core.Shared.signalR;
@@ -19,9 +20,10 @@ builder.Services.AddDbContext<AlarmCTX>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddScoped<IJournalServices, JournalServices>();
+builder.Services.AddScoped<IAlarmCService, AlarmCService>();
+builder.Services.AddScoped<IJournalService, JournalService>();
 
-builder.Services.AddScoped<AlarmUOW, AlarmUow>();
+builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
 
 
 builder.Services.AddCors(options =>

@@ -9,8 +9,9 @@ namespace Core.Entities.AlarmsC.Models.DTO;
 
 public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, DTOAlarmC>
 {
+    public string RID { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public virtual ICollection<DTOJournal> Journals { get; set; }
-    public virtual DTOAlarmRT AlarmRT { get; set; }
+    public virtual ICollection<DTOJournal>? Journals { get; set; }
+    public virtual DTOAlarmRT? AlarmRT { get; set; }
 };

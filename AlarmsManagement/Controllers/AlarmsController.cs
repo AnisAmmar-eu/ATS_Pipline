@@ -8,36 +8,36 @@ namespace AlarmsManagement.Controllers;
 [Route("[controller]")]
 public class AlarmsController : ControllerBase
 {
-    private readonly IJournalServices _iJournalServices;
+    private readonly IJournalService _iJournalService;
 
-    public AlarmsController(IJournalServices iJournalServices)
+    public AlarmsController(IJournalService iJournalService)
     {
-        _iJournalServices = iJournalServices;
+        _iJournalService = iJournalService;
     }
 
     [HttpPost("Collect")]
     public async Task<IActionResult> Collect()
     {
-        return Ok(await _iJournalServices.Collect());
+        return Ok(await _iJournalService.Collect());
     }
 
 
     [HttpGet("CollectCyc")]
     public async Task<IActionResult> CollectCyc(int nbSeconde)
     {
-        return Ok(await _iJournalServices.CollectCyc(nbSeconde));
+        return Ok(await _iJournalService.CollectCyc(nbSeconde));
     }
 
     [HttpGet("GetAllJournal")]
     public async Task<IActionResult> GetAllJournal()
     {
-        return Ok(await _iJournalServices.GetAllJournal());
+        return Ok(await _iJournalService.GetAllJournal());
     }
 
 
     [HttpPost("LuJournal/{id}")]
     public async Task<IActionResult> LuJournal([Required] int id)
     {
-        return Ok(await _iJournalServices.ReadJournal(id));
+        return Ok(await _iJournalService.ReadJournal(id));
     }
 }

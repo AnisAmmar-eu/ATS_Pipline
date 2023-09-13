@@ -38,6 +38,10 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 

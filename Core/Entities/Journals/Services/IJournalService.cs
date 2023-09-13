@@ -4,7 +4,7 @@ using Core.Entities.Journals.Models.DTO;
 
 namespace Core.Entities.Journals.Services;
 
-public interface IJournalServices
+public interface IJournalService
 {
     Task<DTOJournal> AddJournal(Journal journal);
 
