@@ -1,8 +1,7 @@
-﻿namespace Core.Shared.Models.HttpResponse
+﻿namespace Core.Shared.Models.HttpResponse;
+
+public class ApiStatusObject
 {
-    public class ApiStatusObject
-    {
-        public int Code { get; set; }
-        public string? Message { get; set; }
-    }
+    public int Code { get; set; }
+    public string? Message { get; set; }
 }

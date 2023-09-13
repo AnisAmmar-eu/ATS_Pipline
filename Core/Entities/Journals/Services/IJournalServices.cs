@@ -1,29 +1,21 @@
-﻿using Core.Entities.AlarmesPLC.Models.DB;
+﻿using Core.Entities.AlarmsPLC.Models.DTOs;
 using Core.Entities.Journals.Models.DB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Entities.AlarmesPLC.Models.DTO;
-using Core.Entities.Journals.Models.DTOs;
+using Core.Entities.Journals.Models.DTO;
 
-namespace Core.Entities.Journals.Services
+namespace Core.Entities.Journals.Services;
+
+public interface IJournalServices
 {
-   public interface IJournalServices
-    {
-        Task<DTOJournal> addJournal(Journal journal);
+    Task<DTOJournal> AddJournal(Journal journal);
 
-        Task<IEnumerable<DTOAlarmePLC>> AddJournalFromPush(Journal journal);
+    Task<IEnumerable<DTOAlarmPLC>> AddJournalFromPush(Journal journal);
 
-        Task<IEnumerable<DTOAlarmePLC>> Collect();
+    Task<IEnumerable<DTOAlarmPLC>> Collect();
 
-        Task<int> CollectCyc(int nbSeconde);
+    Task<int> CollectCyc(int nbSeconds);
 
-        Task<List<DTOJournal>> GetAllJournal();
+    Task<List<DTOJournal>> GetAllJournal();
 
 
-        Task<DTOJournal> LuJournal(int idJournal);
-
-    }
+    Task<DTOJournal> ReadJournal(int idJournal);
 }

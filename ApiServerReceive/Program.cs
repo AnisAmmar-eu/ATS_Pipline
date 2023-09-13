@@ -1,6 +1,5 @@
 using Core.Entities.Journals.Services;
 using Core.Shared.Data;
-using Core.Shared.signalR;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -15,22 +14,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddDbContext<AlarmesDbContext>(options =>
+builder.Services.AddDbContext<AlarmCTX>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-
 builder.Services.AddScoped<IJournalServices, JournalServices>();
-builder.Services.AddScoped<IUnitOfWorkAlarm, UnitOfWorkAlarm>();
+builder.Services.AddScoped<AlarmUOW, AlarmUow>();
 
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowOrigin", builder =>
+    options.AddPolicy("AllowOrigin", policyBuilder =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        policyBuilder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
@@ -38,9 +36,6 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("AllowOrigin");
-
-
-
 
 
 // Configure the HTTP request pipeline.
@@ -53,8 +48,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-
 
 
 app.MapControllers();

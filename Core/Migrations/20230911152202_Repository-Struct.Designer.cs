@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmesDbContext))]
+    [DbContext(typeof(AlarmCTX))]
     [Migration("20230911152202_Repository-Struct")]
     partial class RepositoryStruct
     {

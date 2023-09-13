@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmesDbContext))]
+    [DbContext(typeof(AlarmCTX))]
     partial class AlarmesDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace Core.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Core.Entities.Alarmes_C.Models.DB.Alarme_C", b =>
+            modelBuilder.Entity("Core.Entities.AlarmsC.Models.DB.AlarmC", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -43,10 +43,10 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Alarme_C");
+                    b.ToTable("AlarmC");
                 });
 
-            modelBuilder.Entity("Core.Entities.AlarmesPLC.Models.DB.AlarmePLC", b =>
+            modelBuilder.Entity("Core.Entities.AlarmsPLC.Models.DB.AlarmPLC", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("IdAlarme")
+                    b.Property<int>("IDAlarm")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -65,21 +65,21 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("AlarmePLC");
+                    b.ToTable("AlarmPLC");
                 });
 
-            modelBuilder.Entity("Core.Entities.AlarmesTR.Models.DB.AlarmeTR", b =>
+            modelBuilder.Entity("Core.Entities.AlarmsRT.Models.DB.AlarmRT", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("IdAlarme")
+                    b.Property<int>("IDAlarm")
                         .HasColumnType("int");
 
-                    b.Property<int?>("NombreNonLu")
+                    b.Property<int?>("NumberNonRead")
                         .HasColumnType("int");
 
                     b.Property<string>("Station")
@@ -88,15 +88,15 @@ namespace Core.Migrations
                     b.Property<int?>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("TS")
+                    b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.HasIndex("IdAlarme")
+                    b.HasIndex("IDAlarm")
                         .IsUnique();
 
-                    b.ToTable("AlarmeTR");
+                    b.ToTable("AlarmRT");
                 });
 
             modelBuilder.Entity("Core.Entities.Journals.Models.DB.Journal", b =>
@@ -107,10 +107,10 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("IdAlarme")
+                    b.Property<int>("IDAlarm")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Lu")
+                    b.Property<int?>("IsRead")
                         .HasColumnType("int");
 
                     b.Property<string>("Station")
@@ -131,44 +131,44 @@ namespace Core.Migrations
                     b.Property<DateTimeOffset?>("TS1")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset?>("TSLu")
+                    b.Property<DateTimeOffset?>("TSRead")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("IdAlarme");
+                    b.HasIndex("IDAlarm");
 
                     b.ToTable("Journal");
                 });
 
-            modelBuilder.Entity("Core.Entities.AlarmesTR.Models.DB.AlarmeTR", b =>
+            modelBuilder.Entity("Core.Entities.AlarmsRT.Models.DB.AlarmRT", b =>
                 {
-                    b.HasOne("Core.Entities.Alarmes_C.Models.DB.Alarme_C", "Alarme_C")
-                        .WithOne("AlarmeTR")
-                        .HasForeignKey("Core.Entities.AlarmesTR.Models.DB.AlarmeTR", "IdAlarme")
+                    b.HasOne("Core.Entities.AlarmsC.Models.DB.AlarmC", "AlarmC")
+                        .WithOne("AlarmRT")
+                        .HasForeignKey("Core.Entities.AlarmsRT.Models.DB.AlarmRT", "IDAlarm")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Alarme_C");
+                    b.Navigation("AlarmC");
                 });
 
             modelBuilder.Entity("Core.Entities.Journals.Models.DB.Journal", b =>
                 {
-                    b.HasOne("Core.Entities.Alarmes_C.Models.DB.Alarme_C", "Alarme")
-                        .WithMany("Journaux")
-                        .HasForeignKey("IdAlarme")
+                    b.HasOne("Core.Entities.AlarmsC.Models.DB.AlarmC", "Alarm")
+                        .WithMany("Journals")
+                        .HasForeignKey("IDAlarm")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Alarme");
+                    b.Navigation("Alarm");
                 });
 
-            modelBuilder.Entity("Core.Entities.Alarmes_C.Models.DB.Alarme_C", b =>
+            modelBuilder.Entity("Core.Entities.AlarmsC.Models.DB.AlarmC", b =>
                 {
-                    b.Navigation("AlarmeTR")
+                    b.Navigation("AlarmRT")
                         .IsRequired();
 
-                    b.Navigation("Journaux");
+                    b.Navigation("Journals");
                 });
 #pragma warning restore 612, 618
         }
