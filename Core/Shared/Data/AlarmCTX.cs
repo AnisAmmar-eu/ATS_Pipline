@@ -1,7 +1,7 @@
 ﻿using Core.Entities.AlarmsC.Models.DB;
 using Core.Entities.AlarmsPLC.Models.DB;
-using Core.Entities.Journals.Models.DB;
 using Microsoft.EntityFrameworkCore;
+using AlarmLog = Core.Entities.AlarmsLog.Models.DB.AlarmLog;
 using AlarmRT = Core.Entities.AlarmsRT.Models.DB.AlarmRT;
 
 namespace Core.Shared.Data;
@@ -15,21 +15,21 @@ public class AlarmCTX : DbContext
 
 	public DbSet<AlarmPLC> AlarmPLC { get; set; }
 	public DbSet<AlarmC> AlarmC { get; set; }
-	public DbSet<Journal> Journal { get; set; }
+	public DbSet<AlarmLog> AlarmLog { get; set; }
 	public DbSet<AlarmRT> AlarmRT { get; set; }
 
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		modelBuilder.Entity<Journal>()
+		modelBuilder.Entity<AlarmLog>()
 			.HasOne(j => j.Alarm)
-			.WithMany(a => a.Journals)
-			.HasForeignKey(j => j.IDAlarm)
+			.WithMany(a => a.AlarmLogs)
+			.HasForeignKey(j => j.AlarmID)
 			.OnDelete(DeleteBehavior.Cascade);
 
 		modelBuilder.Entity<AlarmRT>()
-			.HasOne(at => at.AlarmC)
+			.HasOne(at => at.Alarm)
 			.WithOne(ac => ac.AlarmRT)
-			.HasForeignKey<AlarmRT>(at => at.IDAlarm);
+			.HasForeignKey<AlarmRT>(at => at.AlarmID);
 	}
 }

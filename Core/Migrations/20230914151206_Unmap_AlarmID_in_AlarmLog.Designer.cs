@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AlarmCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230914151206_Unmap_AlarmID_in_AlarmLog")]
+    partial class Unmap_AlarmID_in_AlarmLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,14 +60,14 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("AlarmID")
-                        .HasColumnType("int");
-
                     b.Property<TimeSpan?>("Duration")
                         .HasColumnType("time");
 
                     b.Property<bool?>("HasChanged")
                         .HasColumnType("bit");
+
+                    b.Property<int>("IDAlarm")
+                        .HasColumnType("int");
 
                     b.Property<string>("IRID")
                         .HasColumnType("nvarchar(max)");
@@ -97,8 +99,6 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AlarmID");
-
                     b.ToTable("AlarmLog");
                 });
 
@@ -110,7 +110,7 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("AlarmID")
+                    b.Property<int>("IDAlarm")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -135,6 +135,9 @@ namespace Core.Migrations
                     b.Property<int>("AlarmID")
                         .HasColumnType("int");
 
+                    b.Property<int>("IDAlarm")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -149,40 +152,20 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AlarmID")
-                        .IsUnique();
+                    b.HasIndex("AlarmID");
 
                     b.ToTable("AlarmRT");
-                });
-
-            modelBuilder.Entity("Core.Entities.AlarmsLog.Models.DB.AlarmLog", b =>
-                {
-                    b.HasOne("Core.Entities.AlarmsC.Models.DB.AlarmC", "Alarm")
-                        .WithMany("AlarmLogs")
-                        .HasForeignKey("AlarmID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Alarm");
                 });
 
             modelBuilder.Entity("Core.Entities.AlarmsRT.Models.DB.AlarmRT", b =>
                 {
                     b.HasOne("Core.Entities.AlarmsC.Models.DB.AlarmC", "Alarm")
-                        .WithOne("AlarmRT")
-                        .HasForeignKey("Core.Entities.AlarmsRT.Models.DB.AlarmRT", "AlarmID")
+                        .WithMany()
+                        .HasForeignKey("AlarmID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Alarm");
-                });
-
-            modelBuilder.Entity("Core.Entities.AlarmsC.Models.DB.AlarmC", b =>
-                {
-                    b.Navigation("AlarmLogs");
-
-                    b.Navigation("AlarmRT")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

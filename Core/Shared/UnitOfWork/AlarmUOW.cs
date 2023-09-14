@@ -1,6 +1,6 @@
 ﻿using Core.Entities.AlarmsC.Repositories;
+using Core.Entities.AlarmsLog.Repositories;
 using Core.Entities.AlarmsPLC.Repositories;
-using Core.Entities.Journals.Repositories;
 using Core.Shared.Data;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -19,13 +19,13 @@ public class AlarmUOW : IAlarmUOW
 
 		AlarmC = new AlarmCRepository(_alarmCTX);
 		AlarmPLC = new AlarmPLCRepository(_alarmCTX);
-		Journal = new JournalRepository(_alarmCTX);
+		AlarmLog = new AlarmLogRepository(_alarmCTX);
 	}
 
 
 	public IAlarmCRepository AlarmC { get; }
 	public IAlarmPLCRepository AlarmPLC { get; }
-	public IJournalRepository Journal { get; }
+	public IAlarmLogRepository AlarmLog { get; }
 
 	public int Commit()
 	{

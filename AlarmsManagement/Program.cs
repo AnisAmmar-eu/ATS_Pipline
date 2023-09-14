@@ -1,5 +1,5 @@
 using Core.Entities.AlarmsC.Services;
-using Core.Entities.Journals.Services;
+using Core.Entities.AlarmsLog.Services;
 using Core.Shared.Data;
 using Core.Shared.signalR;
 using Core.Shared.UnitOfWork;
@@ -21,7 +21,7 @@ builder.Services.AddDbContext<AlarmCTX>(options =>
 
 
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
-builder.Services.AddScoped<IJournalService, JournalService>();
+builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 
 builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
 

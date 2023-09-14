@@ -13,17 +13,17 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmsRT.Models.DB.AlarmR
 
 	public AlarmRT(AlarmC alarmC)
 	{
-		IDAlarm = alarmC.ID;
-		AlarmC = alarmC;
+		AlarmID = alarmC.ID;
+		Alarm = alarmC;
 	}
 
 	public AlarmRT(DTOAlarmRT dtoAlarmRT)
 	{
-		AlarmC = dtoAlarmRT.AlarmC;
+		Alarm = dtoAlarmRT.Alarm;
 		ID = dtoAlarmRT.ID;
 		TS = (DateTimeOffset)dtoAlarmRT.TS!;
-		IDAlarm = dtoAlarmRT.IDAlarm;
-		Status = dtoAlarmRT.Status;
+		AlarmID = dtoAlarmRT.AlarmID;
+		IsActive = dtoAlarmRT.IsActive;
 		Station = dtoAlarmRT.Station;
 		NumberNonRead = dtoAlarmRT.NumberNonRead;
 	}

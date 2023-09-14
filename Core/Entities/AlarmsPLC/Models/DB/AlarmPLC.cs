@@ -6,6 +6,6 @@ namespace Core.Entities.AlarmsPLC.Models.DB;
 
 public partial class AlarmPLC : BaseEntity, IBaseEntity<AlarmPLC, DTOAlarmPLC>
 {
-	public int IDAlarm { get; set; }
-	public int Status { get; set; }
+	public int AlarmID { get; set; }
+	public bool IsActive { get; set; }
 }

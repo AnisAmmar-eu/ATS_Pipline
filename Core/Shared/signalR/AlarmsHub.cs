@@ -16,7 +16,7 @@ public class AlarmsHub : Hub
 
 	public async Task RequestJournalData()
 	{
-		var journalData = _alarmCtx.Journal.ToList();
+		var journalData = _alarmCtx.AlarmLog.ToList();
 		await Clients.All.SendAsync("ReceiveAlarm", journalData);
 	}
 }

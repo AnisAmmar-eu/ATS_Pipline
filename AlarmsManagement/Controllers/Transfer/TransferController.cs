@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Core.Entities.AlarmsC.Services;
-using Core.Entities.Journals.Services;
+using Core.Entities.AlarmsLog.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -11,13 +11,13 @@ namespace AlarmsManagement.Controllers.Transfer;
 public class TransferController : ControllerBase
 {
 	private readonly HttpClient _httpClient;
-	private readonly IJournalService _journalService;
+	private readonly IAlarmLogService _alarmLogService;
 	private readonly IAlarmCService _alarmCService;
 
-	public TransferController(IJournalService journalService, IAlarmCService alarmCService)
+	public TransferController(IAlarmLogService alarmLogService, IAlarmCService alarmCService)
 	{
 		_httpClient = new HttpClient();
-		_journalService = journalService;
+		_alarmLogService = alarmLogService;
 		_alarmCService = alarmCService;
 	}
 
@@ -29,10 +29,10 @@ public class TransferController : ControllerBase
 		{
 			var api2Url = "https://localhost:7207/api/Receive/endpoint";
 
-			var journals = await _journalService.GetAllJournal();
+			var journals = await _alarmLogService.GetAllAlarmLog();
 			foreach (var dtoJournal in journals)
 			{
-				dtoJournal.Alarm = await _alarmCService.GetById(dtoJournal.IDAlarm);
+				dtoJournal.Alarm = await _alarmCService.GetById(dtoJournal.AlarmID);
 			}
 
 			var jsonData = JsonConvert.SerializeObject(journals);

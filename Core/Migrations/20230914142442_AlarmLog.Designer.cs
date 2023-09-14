@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AlarmCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230914142442_AlarmLog")]
+    partial class AlarmLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,6 +69,9 @@ namespace Core.Migrations
                     b.Property<bool?>("HasChanged")
                         .HasColumnType("bit");
 
+                    b.Property<int>("IDAlarm")
+                        .HasColumnType("int");
+
                     b.Property<string>("IRID")
                         .HasColumnType("nvarchar(max)");
 
@@ -110,7 +115,7 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("AlarmID")
+                    b.Property<int>("IDAlarm")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -132,11 +137,11 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("AlarmID")
+                    b.Property<int>("AlarmCID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<int>("IDAlarm")
+                        .HasColumnType("int");
 
                     b.Property<int?>("NumberNonRead")
                         .HasColumnType("int");
@@ -144,13 +149,15 @@ namespace Core.Migrations
                     b.Property<string>("Station")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AlarmID")
-                        .IsUnique();
+                    b.HasIndex("AlarmCID");
 
                     b.ToTable("AlarmRT");
                 });
@@ -158,7 +165,7 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.AlarmsLog.Models.DB.AlarmLog", b =>
                 {
                     b.HasOne("Core.Entities.AlarmsC.Models.DB.AlarmC", "Alarm")
-                        .WithMany("AlarmLogs")
+                        .WithMany()
                         .HasForeignKey("AlarmID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -168,21 +175,13 @@ namespace Core.Migrations
 
             modelBuilder.Entity("Core.Entities.AlarmsRT.Models.DB.AlarmRT", b =>
                 {
-                    b.HasOne("Core.Entities.AlarmsC.Models.DB.AlarmC", "Alarm")
-                        .WithOne("AlarmRT")
-                        .HasForeignKey("Core.Entities.AlarmsRT.Models.DB.AlarmRT", "AlarmID")
+                    b.HasOne("Core.Entities.AlarmsC.Models.DB.AlarmC", "AlarmC")
+                        .WithMany()
+                        .HasForeignKey("AlarmCID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Alarm");
-                });
-
-            modelBuilder.Entity("Core.Entities.AlarmsC.Models.DB.AlarmC", b =>
-                {
-                    b.Navigation("AlarmLogs");
-
-                    b.Navigation("AlarmRT")
-                        .IsRequired();
+                    b.Navigation("AlarmC");
                 });
 #pragma warning restore 612, 618
         }

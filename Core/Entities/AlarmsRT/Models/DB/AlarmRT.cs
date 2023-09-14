@@ -7,12 +7,18 @@ namespace Core.Entities.AlarmsRT.Models.DB;
 
 public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 {
-	public int IDAlarm { get; set; }
-	public AlarmC AlarmC { get; set; }
+	public int AlarmID { get; set; }
 
-
-	public int? Status { get; set; }
+	public bool IsActive { get; set; }
 
 	public string? Station { get; set; }
 	public int? NumberNonRead { get; set; }
+
+	private AlarmC? _alarm;
+
+	public AlarmC Alarm
+	{
+		set => _alarm = value;
+		get => _alarm ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Alarm));
+	}
 }

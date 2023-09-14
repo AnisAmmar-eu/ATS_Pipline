@@ -15,6 +15,11 @@ public class AlarmCService : IAlarmCService
 		_alarmUOW = alarmUOW;
 	}
 
+	public async Task<List<DTOAlarmC>> GetAll()
+	{
+		return (await _alarmUOW.AlarmC.GetAll()).ConvertAll(alarmC => alarmC.ToDTO());
+	}
+
 	/// <summary>
 	/// Get an AlarmC by its ID
 	/// </summary>

@@ -2,13 +2,13 @@
 using Core.Entities.AlarmsC.Models.DB;
 using Core.Entities.AlarmsC.Models.DTO;
 using Core.Entities.AlarmsC.Services;
-using Core.Entities.Journals.Models.DB;
-using Core.Entities.Journals.Models.DTO;
-using Core.Entities.Journals.Services;
+using Core.Entities.AlarmsLog.Models.DTO;
+using Core.Entities.AlarmsLog.Services;
 using Core.Shared.Data;
 using Core.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AlarmLog = Core.Entities.AlarmsLog.Models.DB.AlarmLog;
 
 namespace ApiServerReceive.Controllers.Transfer;
 
@@ -20,13 +20,13 @@ public class ReceiveController : ControllerBase
 
 
 	private readonly HttpClient _httpClient;
-	private readonly IJournalService _iJournalService;
+	private readonly IAlarmLogService _iAlarmLogService;
 	private readonly IAlarmCService _iAlarmCService;
 
-	public ReceiveController(IJournalService journalService, AlarmCTX alarmCTX, IAlarmCService iAlarmCService)
+	public ReceiveController(IAlarmLogService alarmLogService, AlarmCTX alarmCTX, IAlarmCService iAlarmCService)
 	{
 		_httpClient = new HttpClient();
-		_iJournalService = journalService;
+		_iAlarmLogService = alarmLogService;
 		_alarmCtx = alarmCTX;
 		_iAlarmCService = iAlarmCService;
 	}
@@ -34,7 +34,7 @@ public class ReceiveController : ControllerBase
 
 	[HttpPost]
 	[Route("endpoint")]
-	public async Task<IActionResult> ReceiveDataFromApi1([FromBody] IEnumerable<DTOJournal> dtoJournals)
+	public async Task<IActionResult> ReceiveDataFromApi1([FromBody] IEnumerable<DTOAlarmLog> dtoJournals)
 	{
 		try
 		{
@@ -53,22 +53,25 @@ public class ReceiveController : ControllerBase
 				{
 					DTOAlarmC newAlarmC = await _iAlarmCService.AddReceivedAlarmC(journal.Alarm);
 					journal.Alarm = newAlarmC;
-					journal.IDAlarm = newAlarmC.ID;
+					journal.AlarmID = newAlarmC.ID;
 				}
 				else throw new EntityNotFoundException("There is no AlarmC in the transmitted journal");
 
-				var journalToAdd = new Journal
+				var journalToAdd = new AlarmLog
 				{
-					IDAlarm = journal.IDAlarm,
-					Status1 = journal.Status1,
-					TS1 = journal.TS1,
-					Status0 = journal.Status0,
-					TS0 = journal.TS0,
-					IsRead = 0,
+					HasChanged = journal.HasChanged,
+					IRID = journal.IRID,
+					AlarmID = journal.AlarmID,
 					Station = journal.Station,
-					TSRead = null
+					IsAck = false,
+					IsActive = journal.IsActive,
+					TSRaised = journal.TSRaised,
+					TSClear = journal.TSClear,
+					Duration = journal.Duration,
+					TSRead = null,
+					TSGet = journal.TSGet,
 				};
-				await _iJournalService.AddJournal(journalToAdd);
+				await _iAlarmLogService.AddJournal(journalToAdd);
 
 				// _IJournalServices.AddJournalFromPush(journalToAdd);
 			}

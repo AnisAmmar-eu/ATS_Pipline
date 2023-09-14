@@ -10,8 +10,8 @@ public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmRT, DTOAlarmRT>
 	{
 		ID = alarmRT.ID;
 		TS = alarmRT.TS;
-		IDAlarm = alarmRT.IDAlarm;
-		Status = alarmRT.Status;
+		AlarmID = alarmRT.AlarmID;
+		IsActive = alarmRT.IsActive;
 		Station = alarmRT.Station;
 		NumberNonRead = alarmRT.NumberNonRead;
 	}

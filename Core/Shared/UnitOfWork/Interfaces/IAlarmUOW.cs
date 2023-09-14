@@ -1,6 +1,6 @@
 ﻿using Core.Entities.AlarmsC.Repositories;
+using Core.Entities.AlarmsLog.Repositories;
 using Core.Entities.AlarmsPLC.Repositories;
-using Core.Entities.Journals.Repositories;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
 
@@ -11,7 +11,7 @@ public interface IAlarmUOW : IDisposable
 {
 	IAlarmCRepository AlarmC { get; }
 	IAlarmPLCRepository AlarmPLC { get; }
-	IJournalRepository Journal { get; }
+	IAlarmLogRepository AlarmLog { get; }
 
 	/// <summary>
 	///     Saves changes made in this context to the underlying database.
