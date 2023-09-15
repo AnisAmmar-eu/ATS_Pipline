@@ -41,7 +41,7 @@ public class ReceiveController : ControllerBase
 			Debug.Print("Reçu depuis l'api 1");
 
 			if (dtoJournals == null || !dtoJournals.Any()) return BadRequest("Aucun journal à traiter.");
-			var truncateSql = "TRUNCATE TABLE Journal ";
+			var truncateSql = "TRUNCATE TABLE AlarmLog ";
 			var truncateSqlRT = "TRUNCATE TABLE AlarmRT ";
 			_alarmCtx.Database.ExecuteSqlRaw(truncateSql);
 			_alarmCtx.Database.ExecuteSqlRaw(truncateSqlRT);

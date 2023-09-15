@@ -19,13 +19,17 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmsRT.Models.DB.AlarmR
 
 	public AlarmRT(DTOAlarmRT dtoAlarmRT)
 	{
-		Alarm = dtoAlarmRT.Alarm;
 		ID = dtoAlarmRT.ID;
 		TS = (DateTimeOffset)dtoAlarmRT.TS!;
+		IRID = dtoAlarmRT.IRID;
 		AlarmID = dtoAlarmRT.AlarmID;
-		IsActive = dtoAlarmRT.IsActive;
 		Station = dtoAlarmRT.Station;
-		NumberNonRead = dtoAlarmRT.NumberNonRead;
+		NbNonAck = dtoAlarmRT.NbNonAck;
+		IsActive = dtoAlarmRT.IsActive;
+		TSRaised = dtoAlarmRT.TSRaised;
+		TSClear = dtoAlarmRT.TSClear;
+		
+		Alarm = dtoAlarmRT.Alarm;
 	}
 
 	public override DTOAlarmRT ToDTO(string? languageRID = null)

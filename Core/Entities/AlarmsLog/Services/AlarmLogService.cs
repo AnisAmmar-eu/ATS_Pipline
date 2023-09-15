@@ -43,7 +43,7 @@ public class AlarmLogService : IAlarmLogService
 				int i = index; // Copied here because of try catch scoping to remove a warning.
 				
 				// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
-				AlarmLog alarmWithStatus1 = await _alarmUOW.AlarmLog.GetBy(
+				AlarmLog alarmWithStatus1 = await _alarmUOW.AlarmLog.GetByWithIncludes(
 					new Expression<Func<AlarmLog, bool>>[]
 					{
 						alarm => alarm.IsActive && alarm.AlarmID == allAlarmsPLC[i].AlarmID
@@ -146,7 +146,7 @@ public class AlarmLogService : IAlarmLogService
 
 	public async Task<DTOAlarmLog> ReadAlarmLog(int idJournal)
 	{
-		var journalToRead = await _alarmUOW.AlarmLog.GetById(idJournal,
+		var journalToRead = await _alarmUOW.AlarmLog.GetByIdWithIncludes(idJournal,
 			new Expression<Func<AlarmLog, bool>>[]
 			{
 				journal => !journal.IsAck
@@ -171,7 +171,7 @@ public class AlarmLogService : IAlarmLogService
 
 	public async Task<List<DTOAlarmLog>> GetAllAlarmLog()
 	{
-		var allJournals = await _alarmUOW.AlarmLog.GetAll();
+		var allJournals = await _alarmUOW.AlarmLog.GetAllWithIncludes();
 		return allJournals.ConvertAll(journal => journal.ToDTO());
 	}
 }

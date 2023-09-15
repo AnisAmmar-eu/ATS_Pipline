@@ -77,7 +77,6 @@ namespace Core.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Station")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("TS")
@@ -135,16 +134,26 @@ namespace Core.Migrations
                     b.Property<int>("AlarmID")
                         .HasColumnType("int");
 
+                    b.Property<string>("IRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("NumberNonRead")
+                    b.Property<int?>("NbNonAck")
                         .HasColumnType("int");
 
                     b.Property<string>("Station")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TSClear")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TSRaised")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
