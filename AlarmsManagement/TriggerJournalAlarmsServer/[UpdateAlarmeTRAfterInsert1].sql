@@ -44,13 +44,10 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
                  INNER JOIN INSERTED log2 ON log1.AlarmID = log2.AlarmID
         WHERE log1.AlarmID = log2.AlarmID
 
-        INSERT INTO logs VALUES (N'' + RTRIM(CAST(@MostRecentClear AS NVARCHAR(max))))
-
         if (@NbNonAck > 1)
             begin
                 if (@IsAlarmActive >= 1)
                     begin
-                        INSERT INTO logs (logstring) VALUES ('NULL MOMENT XD');
                         UPDATE a
                         SET a.NbNonAck = @NbNonAck,
                             a.IsActive = 1,
@@ -63,10 +60,6 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
                     end
                 else
                     begin
-                        INSERT INTO logs (logstring)
-                        SELECT (N'Updating: ' + RTRIM(CAST(@MostRecentClear AS NVARCHAR(max))) + ' and ' +
-                                RTRIM(CAST(i.TSClear AS NVARCHAR(max))))
-                        FROM INSERTED i
                         UPDATE a
                         SET a.NbNonAck = @NbNonAck,
                             a.IsActive = 0,
