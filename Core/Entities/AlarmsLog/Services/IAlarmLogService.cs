@@ -10,7 +10,7 @@ public interface IAlarmLogService
 	// Task<IEnumerable<DTOAlarmPLC>> AddAlarmLogFromPush(AlarmLog alarmLog);
 	Task<IEnumerable<DTOAlarmPLC>> Collect();
 	Task<int> CollectCyc(int nbSeconds);
-	Task<List<DTOAlarmLog>> GetAllAlarmLog();
+	Task<List<DTOAlarmLog>> GetAll();
 	Task<DTOAlarmLog> ReadAlarmLog(int idAlarmLog);
 	public Task<HttpResponseMessage> SendLogsToServer();
 }

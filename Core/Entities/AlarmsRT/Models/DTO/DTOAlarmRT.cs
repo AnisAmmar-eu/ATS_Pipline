@@ -1,4 +1,5 @@
 using Core.Entities.AlarmsC.Models.DB;
+using Core.Entities.AlarmsC.Models.DTO;
 using Core.Shared.Models.DTOs.Kernel;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
 
@@ -13,5 +14,5 @@ public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmsRT.Models.DB.AlarmRT
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }
 	public DateTimeOffset? TSClear { get; set; }
-	public AlarmC Alarm { get; set; }
+	public DTOAlarmC Alarm { get; set; }
 }

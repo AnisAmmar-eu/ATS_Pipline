@@ -1,6 +1,8 @@
 ﻿using Core.Entities.AlarmsC.Repositories;
 using Core.Entities.AlarmsLog.Repositories;
 using Core.Entities.AlarmsPLC.Repositories;
+using Core.Entities.AlarmsRT.Models.DB;
+using Core.Entities.AlarmsRT.Repositories;
 using Core.Shared.Data;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -20,12 +22,14 @@ public class AlarmUOW : IAlarmUOW
 		AlarmC = new AlarmCRepository(_alarmCTX);
 		AlarmPLC = new AlarmPLCRepository(_alarmCTX);
 		AlarmLog = new AlarmLogRepository(_alarmCTX);
+		AlarmRT = new AlarmRTRepository(_alarmCTX);
 	}
 
 
 	public IAlarmCRepository AlarmC { get; }
 	public IAlarmPLCRepository AlarmPLC { get; }
 	public IAlarmLogRepository AlarmLog { get; }
+	public IAlarmRTRepository AlarmRT { get; }
 
 	public int Commit()
 	{

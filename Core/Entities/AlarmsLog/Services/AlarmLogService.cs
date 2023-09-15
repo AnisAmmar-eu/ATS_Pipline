@@ -172,7 +172,7 @@ public class AlarmLogService : IAlarmLogService
 	}
 
 
-	public async Task<List<DTOAlarmLog>> GetAllAlarmLog()
+	public async Task<List<DTOAlarmLog>> GetAll()
 	{
 		var allAlarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes();
 		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO());

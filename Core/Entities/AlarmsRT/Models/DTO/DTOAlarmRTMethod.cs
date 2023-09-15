@@ -18,7 +18,7 @@ public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmRT, DTOAlarmRT>
 		TSRaised = alarmRT.TSRaised;
 		TSClear = alarmRT.TSClear;
 		
-		Alarm = alarmRT.Alarm;
+		Alarm = alarmRT.Alarm.ToDTO();
 	}
 
 	public override AlarmRT ToModel()

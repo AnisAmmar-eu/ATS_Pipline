@@ -29,7 +29,7 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmsRT.Models.DB.AlarmR
 		TSRaised = dtoAlarmRT.TSRaised;
 		TSClear = dtoAlarmRT.TSClear;
 		
-		Alarm = dtoAlarmRT.Alarm;
+		Alarm = dtoAlarmRT.Alarm.ToModel();
 	}
 
 	public override DTOAlarmRT ToDTO(string? languageRID = null)
