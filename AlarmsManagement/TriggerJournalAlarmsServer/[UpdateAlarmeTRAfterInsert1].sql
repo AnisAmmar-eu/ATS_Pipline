@@ -16,6 +16,9 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
 
 
         DECLARE @NbNonAck INT;
+        DECLARE @IsAlarmActive INT;
+        DECLARE @MostRecentClear DATETIMEOFFSET;
+        DECLARE @MostRecentRaise DATETIMEOFFSET;
 
 
         SELECT @NbNonAck = COUNT(*)
@@ -24,24 +27,69 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
         WHERE j.AlarmID = i.AlarmID
           AND j.IsAck = 0
 
+        SELECT @IsAlarmActive = COUNT(*)
+        FROM AlarmLog currLog
+                 INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
+        WHERE currLog.AlarmID = newLog.AlarmID
+          AND currLog.IsActive = 1
+          AND (currLog.IsActive = 1 OR currLog.IsAck = 0)
+
+        SELECT @MostRecentClear = MAX(log1.TSClear)
+        FROM AlarmLog log1
+                 INNER JOIN INSERTED log2 ON log1.AlarmID = log2.AlarmID
+        WHERE log1.AlarmID = log2.AlarmID
+        
+        SELECT @MostRecentRaise = MAX(log1.TSRaised)
+        FROM AlarmLog log1
+                 INNER JOIN INSERTED log2 ON log1.AlarmID = log2.AlarmID
+        WHERE log1.AlarmID = log2.AlarmID
+
+        INSERT INTO logs VALUES (N'' + RTRIM(CAST(@MostRecentClear AS NVARCHAR(max))))
+
         if (@NbNonAck > 1)
             begin
-                UPDATE a
-                SET a.NbNonAck = @NbNonAck,
-                    a.IsActive = i.IsActive,
-                    a.TS       = GETDATE(),
-                    a.Station  = i.Station,
-                    a.TSRaised = GETDATE()
-                FROM AlarmRT a
-                         INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
-            end;
+                if (@IsAlarmActive >= 1)
+                    begin
+                        INSERT INTO logs (logstring) VALUES ('NULL MOMENT XD');
+                        UPDATE a
+                        SET a.NbNonAck = @NbNonAck,
+                            a.IsActive = 1,
+                            a.TS       = GETDATE(),
+                            a.Station  = i.Station,
+                            a.TSRaised = @MostRecentRaise,
+                            a.TSClear  = NULL
+                        FROM AlarmRT a
+                                 INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID AND i.IsActive = 1
+                    end
+                else
+                    begin
+                        INSERT INTO logs (logstring)
+                        SELECT (N'Updating: ' + RTRIM(CAST(@MostRecentClear AS NVARCHAR(max))) + ' and ' +
+                                RTRIM(CAST(i.TSClear AS NVARCHAR(max))))
+                        FROM INSERTED i
+                        UPDATE a
+                        SET a.NbNonAck = @NbNonAck,
+                            a.IsActive = 0,
+                            a.TS       = GETDATE(),
+                            a.Station  = i.Station,
+                            a.TSRaised = i.TSRaised,
+                            a.TSClear  = i.TSClear
+                        FROM AlarmRT a
+                                 INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID AND @MostRecentClear = i.TSClear
+                    end
+            end
         else
-            begin
-
-                INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised)
-                SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
-                FROM INSERTED i
-            End;
-
-
+            if (@IsAlarmActive >= 1)
+                begin
+                    INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised)
+                    SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, i.TSRaised
+                    FROM INSERTED i
+                end
+            else
+                if (@NbNonAck = 1)
+                    begin
+                        INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised, TSClear)
+                        SELECT i.AlarmID, 0, GETDATE(), i.Station, 1, i.TSRaised, i.TSClear
+                        FROM INSERTED i
+                    end
     END;

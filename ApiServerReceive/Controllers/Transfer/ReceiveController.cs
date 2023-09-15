@@ -34,46 +34,46 @@ public class ReceiveController : ControllerBase
 
 	[HttpPost]
 	[Route("endpoint")]
-	public async Task<IActionResult> ReceiveDataFromApi1([FromBody] IEnumerable<DTOAlarmLog> dtoJournals)
+	public async Task<IActionResult> ReceiveDataFromApi1([FromBody] IEnumerable<DTOAlarmLog> dtoAlarmLogs)
 	{
 		try
 		{
 			Debug.Print("Reçu depuis l'api 1");
 
-			if (dtoJournals == null || !dtoJournals.Any()) return BadRequest("Aucun journal à traiter.");
+			if (dtoAlarmLogs == null || !dtoAlarmLogs.Any()) return BadRequest("Aucun alarmLog à traiter.");
 			var truncateSql = "TRUNCATE TABLE AlarmLog ";
 			var truncateSqlRT = "TRUNCATE TABLE AlarmRT ";
 			_alarmCtx.Database.ExecuteSqlRaw(truncateSql);
 			_alarmCtx.Database.ExecuteSqlRaw(truncateSqlRT);
 
 
-			foreach (var journal in dtoJournals)
+			foreach (var alarmLog in dtoAlarmLogs)
 			{
-				if (journal.Alarm != null)
+				if (alarmLog.Alarm != null)
 				{
-					DTOAlarmC newAlarmC = await _iAlarmCService.AddReceivedAlarmC(journal.Alarm);
-					journal.Alarm = newAlarmC;
-					journal.AlarmID = newAlarmC.ID;
+					DTOAlarmC newAlarmC = await _iAlarmCService.AddReceivedAlarmC(alarmLog.Alarm);
+					alarmLog.Alarm = newAlarmC;
+					alarmLog.AlarmID = newAlarmC.ID;
 				}
-				else throw new EntityNotFoundException("There is no AlarmC in the transmitted journal");
+				else throw new EntityNotFoundException("There is no AlarmC in the transmitted alarmLog");
 
-				var journalToAdd = new AlarmLog
+				var alarmLogToAdd = new AlarmLog
 				{
-					HasChanged = journal.HasChanged,
-					IRID = journal.IRID,
-					AlarmID = journal.AlarmID,
-					Station = journal.Station,
+					HasBeenSent = true,
+					IRID = alarmLog.IRID,
+					AlarmID = alarmLog.AlarmID,
+					Station = alarmLog.Station,
 					IsAck = false,
-					IsActive = journal.IsActive,
-					TSRaised = journal.TSRaised,
-					TSClear = journal.TSClear,
-					Duration = journal.Duration,
+					IsActive = alarmLog.IsActive,
+					TSRaised = alarmLog.TSRaised,
+					TSClear = alarmLog.TSClear,
+					Duration = alarmLog.Duration,
 					TSRead = null,
-					TSGet = journal.TSGet,
+					TSGet = alarmLog.TSGet,
 				};
-				await _iAlarmLogService.AddJournal(journalToAdd);
+				await _iAlarmLogService.AddAlarmLog(alarmLogToAdd);
 
-				// _IJournalServices.AddJournalFromPush(journalToAdd);
+				// _IAlarmLogServices.AddJournalFromPush(alarmLogToAdd);
 			}
 
 			return Ok(true);

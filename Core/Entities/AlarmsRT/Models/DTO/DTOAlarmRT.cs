@@ -12,6 +12,6 @@ public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmsRT.Models.DB.AlarmRT
 	public int? NbNonAck { get; set; }
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }
-	public DateTimeOffset TSClear { get; set; }
+	public DateTimeOffset? TSClear { get; set; }
 	public AlarmC Alarm { get; set; }
 }

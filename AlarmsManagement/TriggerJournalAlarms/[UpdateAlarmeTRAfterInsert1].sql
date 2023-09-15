@@ -9,39 +9,40 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
     ON [dbo].[AlarmLog]
     AFTER insert
     AS
-BEGIN
+    BEGIN
 
-    /*  a.NbNonAck = CASE WHEN (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID AND j.IsRead = 1)
-                      = (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID) THEN 1 ELSE 0 END,  */
-
-
-    DECLARE @NbNonAck INT;
+        /*  a.NbNonAck = CASE WHEN (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID AND j.IsRead = 1)
+                          = (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID) THEN 1 ELSE 0 END,  */
 
 
-    SELECT @NbNonAck = COUNT(*)
-    FROM AlarmLog j
-             INNER JOIN INSERTED i ON j.AlarmID = i.AlarmID
-    WHERE j.AlarmID = i.AlarmID
-      AND j.IsAck = 0
-
-    if (@NbNonAck > 1)
-        begin
-            UPDATE a
-            SET a.NbNonAck = @NbNonAck,
-                a.IsActive      = i.IsActive,
-                a.TS            = GETDATE(),
-                a.Station       = i.Station,
-                a.TSRaised      = GETDATE()
-            FROM AlarmRT a
-                     INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
-        end;
-    else
-        begin
-
-            INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised)
-            SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
-            FROM INSERTED i
-        End;
+        DECLARE @NbNonAck INT;
 
 
-END;
+        SELECT @NbNonAck = COUNT(*)
+        FROM AlarmLog j
+                 INNER JOIN INSERTED i ON j.AlarmID = i.AlarmID
+        WHERE j.AlarmID = i.AlarmID
+          AND j.IsAck = 0
+
+        if (@NbNonAck > 1)
+            begin
+                UPDATE a
+                SET a.NbNonAck = @NbNonAck,
+                    a.IsActive = i.IsActive,
+                    a.TS       = GETDATE(),
+                    a.Station  = i.Station,
+                    a.TSRaised = GETDATE(),
+                    a.TSClear  = NULL
+                FROM AlarmRT a
+                         INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
+            end;
+        else
+            begin
+
+                INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised)
+                SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
+                FROM INSERTED i
+            End;
+
+
+    END;

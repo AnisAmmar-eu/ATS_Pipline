@@ -13,7 +13,7 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 	public int? NbNonAck { get; set; }
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }
-	public DateTimeOffset TSClear { get; set; }
+	public DateTimeOffset? TSClear { get; set; }
 
 
 

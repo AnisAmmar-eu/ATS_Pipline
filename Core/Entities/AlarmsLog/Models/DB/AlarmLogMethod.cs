@@ -15,6 +15,7 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	{
 		TS = DateTime.Now;
 		IsAck = false;
+		HasBeenSent = false;
 		AlarmID = alarmC.ID;
 		Alarm = alarmC;
 	}
@@ -23,7 +24,7 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	{
 		ID = dtoAlarmLog.ID;
 		TS = (DateTimeOffset)dtoAlarmLog.TS!;
-		HasChanged = dtoAlarmLog.HasChanged;
+		HasBeenSent = dtoAlarmLog.HasBeenSent;
 		IRID = dtoAlarmLog.IRID;
 		AlarmID = dtoAlarmLog.AlarmID;
 		Station = dtoAlarmLog.Station;

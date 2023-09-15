@@ -8,7 +8,7 @@ namespace Core.Entities.AlarmsLog.Models.DTO;
 
 public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 {
-	public bool? HasChanged { get; set; }
+	public bool HasBeenSent { get; set; }
 	public string? IRID { get; set; }
 	public int AlarmID { get; set; }
 	public string? Station { get; set; }

@@ -11,9 +11,6 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
     AS
     BEGIN
 
-        /*  a.NbNonAck = CASE WHEN (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID AND j.IsAck = 1)
-                          = (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID) THEN 1 ELSE 0 END,  */
-
 
         DECLARE @NbNonAck INT;
         DECLARE @ExistRTLine INT;
@@ -29,7 +26,7 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
         SELECT @ActiveAlarm = COUNT(*)
         FROM AlarmLog currLog
                  INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
-        where (currLog.AlarmID = newLog.AlarmID AND (currLog.IsActive = 1 or currLog.IsAck = 0))
+        where (currLog.AlarmID = newLog.AlarmID AND (currLog.IsActive = 1 OR currLog.IsAck = 0))
 
 
         SELECT @ExistRTLine = COUNT(*)

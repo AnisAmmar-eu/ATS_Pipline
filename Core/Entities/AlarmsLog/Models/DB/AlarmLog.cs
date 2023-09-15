@@ -8,7 +8,7 @@ namespace Core.Entities.AlarmsLog.Models.DB;
 
 public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 {
-	public bool? HasChanged { get; set; } // Useful?
+	public bool HasBeenSent { get; set; }
 	public string? IRID { get; set; } // Useful?
 	public int AlarmID { get; set; }
 	public string? Station { get; set; }
