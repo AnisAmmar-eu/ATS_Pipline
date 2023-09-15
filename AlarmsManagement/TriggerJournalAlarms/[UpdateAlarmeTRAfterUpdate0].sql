@@ -5,31 +5,31 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
+ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
     ON [dbo].[AlarmLog]
     AFTER update
     AS
 BEGIN
 
-    /*  a.NumberNonRead = CASE WHEN (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID AND j.IsRead = 1)
+    /*  a.NbNonAck = CASE WHEN (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID AND j.IsRead = 1)
                       = (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID) THEN 1 ELSE 0 END,  */
 
 
-    DECLARE @NumberNonRead INT;
+    DECLARE @NbNonAck INT;
     DECLARE @ExistRTLine INT;
     DECLARE @ActiveAlarm INT;
 
-    SET @NumberNonRead = 0
-    SELECT @NumberNonRead = COUNT(*)
-    FROM AlarmLog log
-             INNER JOIN INSERTED newLog ON log.AlarmID = newLog.AlarmID
-    WHERE log.AlarmID = newLog.AlarmID
-      AND log.IsAck = 0
+    SET @NbNonAck = 0
+    SELECT @NbNonAck = COUNT(*)
+    FROM AlarmLog currLog
+             INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
+    WHERE currLog.AlarmID = newLog.AlarmID
+      AND currLog.IsAck = 0
 
     SELECT @ActiveAlarm = COUNT(*)
-    FROM AlarmLog log
-             INNER JOIN INSERTED newLog ON log.AlarmID = newLog.AlarmID
-    where (log.AlarmID = newLog.AlarmID AND (log.IsActive = 1 OR log.IsAck = 0))
+    FROM AlarmLog currLog
+             INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
+    where (currLog.AlarmID = newLog.AlarmID AND (currLog.IsActive = 1 OR currLog.IsAck = 0))
 
 
     SELECT @ExistRTLine = COUNT(*)
@@ -38,21 +38,22 @@ BEGIN
     WHERE a.AlarmID = i.AlarmID
 
 
-    if (@NumberNonRead > 0)
+    if (@NbNonAck > 0)
         begin
             UPDATE a
-            SET a.NumberNonRead = @NumberNonRead,
+            SET a.NbNonAck = @NbNonAck,
                 a.IsActive      = i.IsActive,
                 a.TS            = GETDATE(),
-                a.Station       = i.Station
+                a.Station       = i.Station,
+                a.TSClear       = GETDATE()
             FROM AlarmRT a
                      INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
         end;
 
     if (@ExistRTLine = 0)
         begin
-            INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NumberNonRead)
-            SELECT i.AlarmID, 1, GETDATE(), i.Station, 1
+            INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSClear)
+            SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
             FROM INSERTED i
         end
 
@@ -61,10 +62,10 @@ BEGIN
         if (@ExistRTLine > 0)
             begin
 
-                if (@NumberNonRead = 0)
+                if (@NbNonAck = 0)
                     begin
                         UPDATE a
-                        SET a.NumberNonRead = 0
+                        SET a.NbNonAck = 0
                         FROM AlarmRT a
                                  INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
                     end;

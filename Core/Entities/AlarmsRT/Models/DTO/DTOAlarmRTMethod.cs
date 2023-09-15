@@ -10,10 +10,15 @@ public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmRT, DTOAlarmRT>
 	{
 		ID = alarmRT.ID;
 		TS = alarmRT.TS;
+		IRID = alarmRT.IRID;
 		AlarmID = alarmRT.AlarmID;
-		IsActive = alarmRT.IsActive;
 		Station = alarmRT.Station;
-		NumberNonRead = alarmRT.NumberNonRead;
+		NbNonAck = alarmRT.NbNonAck;
+		IsActive = alarmRT.IsActive;
+		TSRaised = alarmRT.TSRaised;
+		TSClear = alarmRT.TSClear;
+		
+		Alarm = alarmRT.Alarm;
 	}
 
 	public override AlarmRT ToModel()

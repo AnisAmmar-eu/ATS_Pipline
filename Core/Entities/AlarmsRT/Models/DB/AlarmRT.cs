@@ -7,12 +7,15 @@ namespace Core.Entities.AlarmsRT.Models.DB;
 
 public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 {
+	public string IRID { get; set; }
 	public int AlarmID { get; set; }
-
-	public bool IsActive { get; set; }
-
 	public string? Station { get; set; }
-	public int? NumberNonRead { get; set; }
+	public int? NbNonAck { get; set; }
+	public bool IsActive { get; set; }
+	public DateTimeOffset TSRaised { get; set; }
+	public DateTimeOffset TSClear { get; set; }
+
+
 
 	private AlarmC? _alarm;
 

@@ -124,8 +124,8 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 		params string[] includes
 	)
 	{
-		return await Query(filters, orderBy, withTracking, maxCount).ToListAsync();
-		//return await Query(filters, orderBy, withTracking, maxCount, includes: new Dictionary<string, string[]>() { { "", includes } }).ToListAsync();
+		//return await Query(filters, orderBy, withTracking, maxCount).ToListAsync();
+		return await Query(filters, orderBy, withTracking, maxCount, includes: new Dictionary<string, string[]>() { { "", includes } }).ToListAsync();
 	}
 
 	public async Task<List<T>> GetAllWithConcat(
