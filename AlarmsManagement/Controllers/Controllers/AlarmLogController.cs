@@ -51,15 +51,14 @@ public class AlarmLogController : ControllerBase
 		return new ApiResponseObject(await _alarmLogService.GetByClassID(alarmClassID)).SuccessResult();
 	}
 
-
 	/// <summary>
-	/// Reads a log entry.
+	/// Ack a list of log entries
 	/// </summary>
-	/// <param name="id"></param>
+	/// <param name="alarmLogIDs"></param>
 	/// <returns></returns>
-	[HttpPost("{id}")]
-	public async Task<IActionResult> ReadAlarmLog([Required] int id)
+	[HttpPost("ack")]
+	public async Task<IActionResult> AckAlarmLogs([FromBody] [Required] int[] alarmLogIDs)
 	{
-		return new ApiResponseObject(await _alarmLogService.ReadAlarmLog(id)).SuccessResult();
+		return new ApiResponseObject(await _alarmLogService.AckAlarmLogs(alarmLogIDs)).SuccessResult();
 	}
 }

@@ -24,7 +24,8 @@ public class AlarmLogService : IAlarmLogService
 	private readonly IHubContext<AlarmHub, IAlarmHub> _hubContext;
 
 
-	public AlarmLogService(IAlarmUOW alarmUOW, IConfiguration configuration, ISignalRService signalRService, IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext)
+	public AlarmLogService(IAlarmUOW alarmUOW, IConfiguration configuration, ISignalRService signalRService,
+		IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext)
 	{
 		_configuration = configuration;
 		_signalRService = signalRService;
@@ -111,21 +112,26 @@ public class AlarmLogService : IAlarmLogService
 	}
 
 
-	public async Task<DTOAlarmLog> ReadAlarmLog(int idAlarmLog)
+	public async Task<List<DTOAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
 	{
-		var alarmLogToRead = await _alarmUOW.AlarmLog.GetByIdWithIncludes(idAlarmLog,
-			new Expression<Func<AlarmLog, bool>>[]
-			{
-				alarmLog => !alarmLog.IsAck
-			});
+		List<DTOAlarmLog> ackAlarmLogs = new List<DTOAlarmLog>();
 		await _alarmUOW.StartTransaction();
-		alarmLogToRead.IsAck = true;
-		alarmLogToRead.TSRead = DateTime.Now;
+		foreach (int idAlarmLog in idAlarmLogs)
+		{
+			var alarmLogToAck = await _alarmUOW.AlarmLog.GetByIdWithIncludes(idAlarmLog,
+				new Expression<Func<AlarmLog, bool>>[]
+				{
+					alarmLog => !alarmLog.IsAck
+				});
+			alarmLogToAck.IsAck = true;
+			alarmLogToAck.TSRead = DateTime.Now;
+			ackAlarmLogs.Add(alarmLogToAck.ToDTO());
+		}
 		_alarmUOW.Commit();
 		await _alarmUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
-		return alarmLogToRead.ToDTO();
+		return ackAlarmLogs;
 	}
 
 
