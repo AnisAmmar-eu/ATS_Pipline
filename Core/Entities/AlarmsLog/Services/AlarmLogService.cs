@@ -4,7 +4,11 @@ using Core.Entities.AlarmsLog.Models.DTO;
 using Core.Entities.AlarmsPLC.Models.DB;
 using Core.Entities.AlarmsPLC.Models.DTOs;
 using Core.Shared.Exceptions;
+using Core.Shared.SignalR;
+using Core.Shared.SignalR.AlarmHub;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using AlarmLog = Core.Entities.AlarmsLog.Models.DB.AlarmLog;
@@ -15,11 +19,17 @@ public class AlarmLogService : IAlarmLogService
 {
 	private readonly IAlarmUOW _alarmUOW;
 	private readonly IConfiguration _configuration;
+	private readonly ISignalRService _signalRService;
+	private readonly IHttpContextAccessor _httpContextAccessor;
+	private readonly IHubContext<AlarmHub, IAlarmHub> _hubContext;
 
 
-	public AlarmLogService(IAlarmUOW alarmUOW, IConfiguration configuration)
+	public AlarmLogService(IAlarmUOW alarmUOW, IConfiguration configuration, ISignalRService signalRService, IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext)
 	{
 		_configuration = configuration;
+		_signalRService = signalRService;
+		_httpContextAccessor = httpContextAccessor;
+		_hubContext = hubContext;
 		_alarmUOW = alarmUOW;
 		//_myHub = myHub;
 	}
@@ -80,56 +90,10 @@ public class AlarmLogService : IAlarmLogService
 		// await  _myHub.RequestAlarmLogData();
 		_alarmUOW.Commit();
 		await _alarmUOW.CommitTransaction();
+		await _hubContext.Clients.All.RefreshAlarmRT();
+		await _hubContext.Clients.All.RefreshAlarmLog();
 		return allAlarmsPLC.ConvertAll(alarmPLC => alarmPLC.ToDTO());
 	}
-
-
-	/*
-	public async Task<IEnumerable<DTOAlarmPLC>> AddAlarmLogFromPush(AlarmLog alarmLog)
-	{
-		var appSettingsSection = _configuration.GetSection("stationConfig");
-
-		var allAlarmLogs = await _alarmUOW.AlarmLog.GetAll();
-		await _alarmUOW.StartTransaction();
-
-		if (allAlarmLogs.Count == 0)
-		{
-			var newAlarmLog = new AlarmLog();
-			newAlarmLog.Station = alarmLog.Station;
-			newAlarmLog.IDAlarm = alarmLog.IDAlarm;
-			newAlarmLog.Status1 = alarmLog.Status1;
-			newAlarmLog.TS1 = alarmLog.TS;
-			await _alarmUOW.AlarmLog.Add(newAlarmLog);
-		}
-
-		try
-		{
-			var alarmWithStatus1 = await _alarmUOW.AlarmLog.GetBy(new Expression<Func<AlarmLog, bool>>[]
-			{
-				alarm => alarm.Status1 == 1 && alarm.Status0 != 0 && alarm.IDAlarm == alarmLog.IDAlarm
-			}, query => query.OrderByDescending(j => j.ID));
-
-			alarmWithStatus1.Station = alarmLog.Station;
-			alarmWithStatus1.Status0 = alarmLog.Status0;
-			alarmWithStatus1.TS0 = alarmLog.TS0;
-			alarmWithStatus1.IsRead = 0;
-		}
-		catch (EntityNotFoundException)
-		{
-			var newAlarmLog = new AlarmLog();
-			newAlarmLog.Station = alarmLog.Station;
-			newAlarmLog.IDAlarm = alarmLog.IDAlarm;
-			newAlarmLog.Status1 = alarmLog.Status1;
-			newAlarmLog.TS1 = alarmLog.TS;
-			await _alarmUOW.AlarmLog.Add(newAlarmLog);
-		}
-
-		_alarmUOW.Commit();
-		await _alarmUOW.CommitTransaction();
-		return (IEnumerable<DTOAlarmPLC>)allAlarmLogs;
-	}
-	*/
-
 
 	public async Task<int> CollectCyc(int nbSeconds)
 	{
@@ -157,17 +121,10 @@ public class AlarmLogService : IAlarmLogService
 		await _alarmUOW.StartTransaction();
 		alarmLogToRead.IsAck = true;
 		alarmLogToRead.TSRead = DateTime.Now;
-
-		/* int countNbLus = _AlarmesDbContext.AlarmLog.Count(p => p.Lu == 0 && p.IdAlarme == JournalToRead.IdAlarme);
-		 if(countNbLus == 0)
-		 {
-		     var AlarmeToRead = _AlarmesDbContext.AlarmeTR.Where(p => p.IdAlarme == AlarmLogToRead.IdAlarme).FirstOrDefault();
-		     AlarmeToRead.Lu = 1;
-		     _AlarmesDbContext.SaveChanges();
-		 }*/
-
 		_alarmUOW.Commit();
 		await _alarmUOW.CommitTransaction();
+		await _hubContext.Clients.All.RefreshAlarmRT();
+		await _hubContext.Clients.All.RefreshAlarmLog();
 		return alarmLogToRead.ToDTO();
 	}
 
@@ -176,6 +133,14 @@ public class AlarmLogService : IAlarmLogService
 	{
 		var allAlarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes();
 		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO());
+	}
+
+	public async Task<List<DTOAlarmLog>> GetByClassID(int alarmID)
+	{
+		return (await _alarmUOW.AlarmLog.GetAllWithIncludes(filters: new Expression<Func<AlarmLog, bool>>[]
+		{
+			alarmLog => alarmLog.AlarmID == alarmID
+		})).ConvertAll(alarmLog => alarmLog.ToDTO());
 	}
 
 	public async Task MarkLogsAsSent(List<DTOAlarmLog> dtoAlarmLogs)

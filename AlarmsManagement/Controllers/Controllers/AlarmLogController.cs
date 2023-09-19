@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Core.Entities.AlarmsLog.Services;
+using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlarmsManagement.Controllers.Controllers;
@@ -8,25 +9,25 @@ namespace AlarmsManagement.Controllers.Controllers;
 [Route("api/alarm-log")]
 public class AlarmLogController : ControllerBase
 {
-	private readonly IAlarmLogService _iAlarmLogService;
+	private readonly IAlarmLogService _alarmLogService;
 
-	public AlarmLogController(IAlarmLogService iAlarmLogService)
+	public AlarmLogController(IAlarmLogService alarmLogService)
 	{
-		_iAlarmLogService = iAlarmLogService;
+		_alarmLogService = alarmLogService;
 	}
 
 	// AlarmPLC controller
 	[HttpPost("Collect")]
 	public async Task<IActionResult> Collect()
 	{
-		return Ok(await _iAlarmLogService.Collect());
+		return Ok(await _alarmLogService.Collect());
 	}
 
 	// AlarmPLC controller
 	[HttpGet("CollectCyc")]
 	public async Task<IActionResult> CollectCyc(int nbSecond)
 	{
-		return Ok(await _iAlarmLogService.CollectCyc(nbSecond));
+		return Ok(await _alarmLogService.CollectCyc(nbSecond));
 	}
 
 	/// <summary>
@@ -36,7 +37,18 @@ public class AlarmLogController : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetAllAlarmLog()
 	{
-		return Ok(await _iAlarmLogService.GetAll());
+		return new ApiResponseObject(await _alarmLogService.GetAll()).SuccessResult();
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet]
+	[Route("{alarmClassID}")]
+	public async Task<IActionResult> GetAlarmLogByClassID([Required] int alarmClassID)
+	{
+		return new ApiResponseObject(await _alarmLogService.GetByClassID(alarmClassID)).SuccessResult();
 	}
 
 
@@ -48,6 +60,6 @@ public class AlarmLogController : ControllerBase
 	[HttpPost("{id}")]
 	public async Task<IActionResult> ReadAlarmLog([Required] int id)
 	{
-		return Ok(await _iAlarmLogService.ReadAlarmLog(id));
+		return new ApiResponseObject(await _alarmLogService.ReadAlarmLog(id)).SuccessResult();
 	}
 }

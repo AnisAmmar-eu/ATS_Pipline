@@ -11,6 +11,7 @@ public interface IAlarmLogService
 	Task<IEnumerable<DTOAlarmPLC>> Collect();
 	Task<int> CollectCyc(int nbSeconds);
 	Task<List<DTOAlarmLog>> GetAll();
+	public Task<List<DTOAlarmLog>> GetByClassID(int alarmID);
 	Task<DTOAlarmLog> ReadAlarmLog(int idAlarmLog);
 	public Task<HttpResponseMessage> SendLogsToServer();
 }
