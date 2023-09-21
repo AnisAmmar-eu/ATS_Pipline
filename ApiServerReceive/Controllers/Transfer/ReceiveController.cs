@@ -13,7 +13,7 @@ using AlarmLog = Core.Entities.AlarmsLog.Models.DB.AlarmLog;
 
 namespace ApiServerReceive.Controllers.Transfer;
 
-[Route("api/[controller]")]
+[Route("api/receive")]
 [ApiController]
 public class ReceiveController : ControllerBase
 {
@@ -34,8 +34,8 @@ public class ReceiveController : ControllerBase
 
 
 	[HttpPost]
-	[Route("endpoint")]
-	public async Task<IActionResult> ReceiveDataFromApi1([FromBody] IEnumerable<DTOSAlarmLog> dtoAlarmLogs)
+	[Route("alarm-log")]
+	public async Task<IActionResult> ReceiveAlarmLog([FromBody] IEnumerable<DTOSAlarmLog> dtoAlarmLogs)
 	{
 		try
 		{
@@ -53,22 +53,12 @@ public class ReceiveController : ControllerBase
 			foreach (var alarmLog in dtoAlarmLogs)
 			{
 				DTOAlarmC newAlarmC = await _iAlarmCService.GetByRID(alarmLog.AlarmRID);
-				alarmLog.AlarmID = newAlarmC.ID;
 
-				var alarmLogToAdd = new AlarmLog
-				{
-					HasBeenSent = true,
-					AlarmID = alarmLog.AlarmID,
-					Station = alarmLog.Station,
-					IsAck = false,
-					IsActive = alarmLog.IsActive,
-					TSRaised = alarmLog.TSRaised,
-					TSClear = alarmLog.TSClear,
-					Duration = alarmLog.Duration,
-					TSRead = null,
-					TSGet = alarmLog.TSGet,
-					// Here no need to instantiate the Alarm Field as it won't be used. Only AlarmID is needed
-				};
+				AlarmLog alarmLogToAdd = alarmLog.ToModel();
+				alarmLogToAdd.ID = 0;
+				alarmLogToAdd.IsAck = false;
+				alarmLogToAdd.HasBeenSent = true;
+				alarmLogToAdd.AlarmID = newAlarmC.ID;
 				await _iAlarmLogService.AddAlarmLog(alarmLogToAdd);
 
 				// _IAlarmLogServices.AddJournalFromPush(alarmLogToAdd);

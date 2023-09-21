@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 
 namespace AlarmsManagement.Controllers.Transfer;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/transfer")]
 public class TransferController : ControllerBase
 {
 	private readonly IAlarmLogService _alarmLogService;
@@ -19,8 +19,8 @@ public class TransferController : ControllerBase
 	}
 
 
-	[HttpPost("PushDataToApi2Async")]
-	public async Task<IActionResult> PushDataToApi2Async()
+	[HttpPost("alarm-log")]
+	public async Task<IActionResult> TransferAlarmLog()
 	{
 		try
 		{ 
@@ -32,7 +32,7 @@ public class TransferController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			// Gérer les erreurs d'exception
+			// Handle any exception
 			Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
 			return StatusCode(500, "Erreur interne du serveur");
 		}

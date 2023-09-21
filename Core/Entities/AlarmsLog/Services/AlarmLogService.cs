@@ -153,7 +153,7 @@ public class AlarmLogService : IAlarmLogService
 
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
-		var api2Url = "https://localhost:7207/api/Receive/endpoint";
+		var api2Url = "https://localhost:7207/api/receive/alarm-log";
 		var alarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes(filters: new Expression<Func<AlarmLog, bool>>[]
 		{
 			alarmLog => !alarmLog.HasBeenSent
