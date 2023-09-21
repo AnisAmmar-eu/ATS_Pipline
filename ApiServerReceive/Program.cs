@@ -1,9 +1,13 @@
 using Core.Entities.AlarmsC.Services;
 using Core.Entities.AlarmsLog.Services;
+using Core.Entities.AlarmsRT.Services;
+using Core.Entities.Packets.Services;
 using Core.Shared.Data;
+using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +22,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AlarmCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
+builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
+builder.Services.AddScoped<IAlarmRTService, AlarmRTService>();
+
+builder.Services.AddScoped<IPacketService, PacketService>();
+
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ISignalRService, SignalRService>();
+
 builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
 
 

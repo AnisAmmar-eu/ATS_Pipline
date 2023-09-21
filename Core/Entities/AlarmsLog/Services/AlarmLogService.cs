@@ -158,7 +158,7 @@ public class AlarmLogService : IAlarmLogService
 		{
 			alarmLog => !alarmLog.HasBeenSent
 		});
-		var jsonData = JsonConvert.SerializeObject(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
+		var jsonData = JsonConvert.SerializeObject(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOS()));
 		var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
 		using (var httpClient = new HttpClient())

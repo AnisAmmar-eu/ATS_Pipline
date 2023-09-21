@@ -56,4 +56,9 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	{
 		return new DTOFAlarmLog(this, languageRID);
 	}
+
+	public DTOSAlarmLog ToDTOS(string? languageRID = null)
+	{
+		return new DTOSAlarmLog(this, languageRID);
+	}
 }

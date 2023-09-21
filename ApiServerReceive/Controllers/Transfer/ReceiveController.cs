@@ -42,10 +42,12 @@ public class ReceiveController : ControllerBase
 			Debug.Print("Reçu depuis l'api 1");
 
 			if (dtoAlarmLogs == null || !dtoAlarmLogs.Any()) return BadRequest("Aucun alarmLog à traiter.");
+			/*
 			var truncateSql = "TRUNCATE TABLE AlarmLog ";
 			var truncateSqlRT = "TRUNCATE TABLE AlarmRT ";
 			_alarmCtx.Database.ExecuteSqlRaw(truncateSql);
 			_alarmCtx.Database.ExecuteSqlRaw(truncateSqlRT);
+			*/	
 
 
 			foreach (var alarmLog in dtoAlarmLogs)
@@ -65,7 +67,7 @@ public class ReceiveController : ControllerBase
 					Duration = alarmLog.Duration,
 					TSRead = null,
 					TSGet = alarmLog.TSGet,
-					Alarm = newAlarmC.ToModel(),
+					// Here no need to instantiate the Alarm Field as it won't be used. Only AlarmID is needed
 				};
 				await _iAlarmLogService.AddAlarmLog(alarmLogToAdd);
 
