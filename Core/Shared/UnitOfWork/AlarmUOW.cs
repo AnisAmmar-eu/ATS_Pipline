@@ -1,8 +1,10 @@
 ﻿using Core.Entities.AlarmsC.Repositories;
+using Core.Entities.AlarmsCycle.Models.Repositories;
 using Core.Entities.AlarmsLog.Repositories;
 using Core.Entities.AlarmsPLC.Repositories;
 using Core.Entities.AlarmsRT.Models.DB;
 using Core.Entities.AlarmsRT.Repositories;
+using Core.Entities.Packets.Repositories;
 using Core.Shared.Data;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -23,6 +25,8 @@ public class AlarmUOW : IAlarmUOW
 		AlarmPLC = new AlarmPLCRepository(_alarmCTX);
 		AlarmLog = new AlarmLogRepository(_alarmCTX);
 		AlarmRT = new AlarmRTRepository(_alarmCTX);
+		Packet = new PacketRepository(_alarmCTX);
+		AlarmCycle = new AlarmCycleRepository(_alarmCTX);
 	}
 
 
@@ -30,6 +34,8 @@ public class AlarmUOW : IAlarmUOW
 	public IAlarmPLCRepository AlarmPLC { get; }
 	public IAlarmLogRepository AlarmLog { get; }
 	public IAlarmRTRepository AlarmRT { get; }
+	public IPacketRepository Packet { get;  }
+	public IAlarmCycleRepository AlarmCycle { get; }
 
 	public int Commit()
 	{

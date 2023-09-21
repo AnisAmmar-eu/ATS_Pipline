@@ -3,6 +3,7 @@ using Core.Entities.AlarmsC.Models.DB;
 using Core.Entities.AlarmsC.Models.DTO;
 using Core.Entities.AlarmsC.Services;
 using Core.Entities.AlarmsLog.Models.DTO;
+using Core.Entities.AlarmsLog.Models.DTO.DTOS;
 using Core.Entities.AlarmsLog.Services;
 using Core.Shared.Data;
 using Core.Shared.Exceptions;
@@ -34,7 +35,7 @@ public class ReceiveController : ControllerBase
 
 	[HttpPost]
 	[Route("endpoint")]
-	public async Task<IActionResult> ReceiveDataFromApi1([FromBody] IEnumerable<DTOAlarmLog> dtoAlarmLogs)
+	public async Task<IActionResult> ReceiveDataFromApi1([FromBody] IEnumerable<DTOSAlarmLog> dtoAlarmLogs)
 	{
 		try
 		{
@@ -49,18 +50,12 @@ public class ReceiveController : ControllerBase
 
 			foreach (var alarmLog in dtoAlarmLogs)
 			{
-				if (alarmLog.Alarm != null)
-				{
-					DTOAlarmC newAlarmC = await _iAlarmCService.AddReceivedAlarmC(alarmLog.Alarm);
-					alarmLog.Alarm = newAlarmC;
-					alarmLog.AlarmID = newAlarmC.ID;
-				}
-				else throw new EntityNotFoundException("There is no AlarmC in the transmitted alarmLog");
+				DTOAlarmC newAlarmC = await _iAlarmCService.GetByRID(alarmLog.AlarmRID);
+				alarmLog.AlarmID = newAlarmC.ID;
 
 				var alarmLogToAdd = new AlarmLog
 				{
 					HasBeenSent = true,
-					IRID = alarmLog.IRID,
 					AlarmID = alarmLog.AlarmID,
 					Station = alarmLog.Station,
 					IsAck = false,
@@ -70,6 +65,7 @@ public class ReceiveController : ControllerBase
 					Duration = alarmLog.Duration,
 					TSRead = null,
 					TSGet = alarmLog.TSGet,
+					Alarm = newAlarmC.ToModel(),
 				};
 				await _iAlarmLogService.AddAlarmLog(alarmLogToAdd);
 

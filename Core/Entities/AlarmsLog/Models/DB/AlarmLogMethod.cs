@@ -1,5 +1,7 @@
 ﻿using Core.Entities.AlarmsC.Models.DB;
 using Core.Entities.AlarmsLog.Models.DTO;
+using Core.Entities.AlarmsLog.Models.DTO.DTOF;
+using Core.Entities.AlarmsLog.Models.DTO.DTOS;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -19,14 +21,10 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 		AlarmID = alarmC.ID;
 		Alarm = alarmC;
 	}
-
 	public AlarmLog(DTOAlarmLog dtoAlarmLog)
 	{
 		ID = dtoAlarmLog.ID;
 		TS = (DateTimeOffset)dtoAlarmLog.TS!;
-		HasBeenSent = dtoAlarmLog.HasBeenSent;
-		IRID = dtoAlarmLog.IRID;
-		AlarmID = dtoAlarmLog.AlarmID;
 		Station = dtoAlarmLog.Station;
 		IsAck = dtoAlarmLog.IsAck;
 		IsActive = dtoAlarmLog.IsActive;
@@ -35,11 +33,27 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 		Duration = dtoAlarmLog.Duration;
 		TSRead = dtoAlarmLog.TSRead;
 		TSGet = dtoAlarmLog.TSGet;
-		Alarm = dtoAlarmLog.Alarm.ToModel();
 	}
 
-	public DTOAlarmLog ToDTO(string? languageRID = null)
+	public AlarmLog(DTOFAlarmLog dtofAlarmLog) : this((DTOAlarmLog)dtofAlarmLog)
+	{
+		Alarm = dtofAlarmLog.Alarm.ToModel();
+	}
+	
+	public AlarmLog(DTOSAlarmLog dtosAlarmLog, AlarmC alarmC) : this((DTOAlarmLog)dtosAlarmLog)
+	{
+		HasBeenSent = dtosAlarmLog.HasBeenSent;
+		AlarmID = alarmC.ID;
+		Alarm = alarmC;
+	}
+
+	public override DTOAlarmLog ToDTO(string? languageRID = null)
 	{
 		return new DTOAlarmLog(this, languageRID);
+	}
+
+	public DTOFAlarmLog ToDTOF(string? languageRID = null)
+	{
+		return new DTOFAlarmLog(this, languageRID);
 	}
 }

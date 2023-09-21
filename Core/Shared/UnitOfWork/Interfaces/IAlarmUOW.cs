@@ -1,7 +1,9 @@
 ﻿using Core.Entities.AlarmsC.Repositories;
+using Core.Entities.AlarmsCycle.Models.Repositories;
 using Core.Entities.AlarmsLog.Repositories;
 using Core.Entities.AlarmsPLC.Repositories;
 using Core.Entities.AlarmsRT.Repositories;
+using Core.Entities.Packets.Repositories;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
 
@@ -14,6 +16,9 @@ public interface IAlarmUOW : IDisposable
 	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }
+	
+	IPacketRepository Packet { get; }
+	IAlarmCycleRepository AlarmCycle { get; }
 
 	/// <summary>
 	///     Saves changes made in this context to the underlying database.

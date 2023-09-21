@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Core.Entities.AlarmsC.Models.DB;
 using Core.Entities.AlarmsLog.Models.DTO;
+using Core.Entities.AlarmsLog.Models.DTO.DTOF;
+using Core.Entities.AlarmsLog.Repositories;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -9,7 +11,6 @@ namespace Core.Entities.AlarmsLog.Models.DB;
 public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 {
 	public bool HasBeenSent { get; set; }
-	public string? IRID { get; set; } // Useful?
 	public int AlarmID { get; set; }
 	public string? Station { get; set; }
 	public bool IsAck { get; set; } // Ack = Acknowledge

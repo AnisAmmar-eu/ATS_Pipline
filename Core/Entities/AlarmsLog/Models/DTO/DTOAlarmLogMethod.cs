@@ -17,9 +17,9 @@ public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 	{
 		ID = alarmLog.ID;
 		TS = alarmLog.TS;
-		HasBeenSent = alarmLog.HasBeenSent;
-		IRID = alarmLog.IRID;
-		AlarmID = alarmLog.AlarmID;
+		//HasBeenSent = alarmLog.HasBeenSent;
+		//IRID = alarmLog.IRID;
+		//AlarmID = alarmLog.AlarmID;
 		Station = alarmLog.Station;
 		IsAck = alarmLog.IsAck;
 		IsActive = alarmLog.IsActive;
@@ -28,7 +28,6 @@ public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 		Duration = alarmLog.Duration;
 		TSRead = alarmLog.TSRead;
 		TSGet = alarmLog.TSGet;
-		Alarm = alarmLog.Alarm.ToDTO();
 	}
 
 	public override AlarmLog ToModel()

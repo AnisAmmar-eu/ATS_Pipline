@@ -8,9 +8,6 @@ namespace Core.Entities.AlarmsLog.Models.DTO;
 
 public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 {
-	public bool HasBeenSent { get; set; }
-	public string? IRID { get; set; }
-	public int AlarmID { get; set; }
 	public string? Station { get; set; }
 	public bool IsAck { get; set; } // Ack = Acknowledge
 	public bool IsActive { get; set; }
@@ -20,5 +17,4 @@ public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 	public DateTimeOffset? TSRead { get; set; }
 	public DateTimeOffset? TSGet { get; set; }
 	
-	public DTOAlarmC Alarm { get; set; }
 }

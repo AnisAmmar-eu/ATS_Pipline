@@ -1,7 +1,9 @@
+using System.Net.Sockets;
 using System.Text;
 using Core.Entities.AlarmsC.Services;
 using Core.Entities.AlarmsLog.Services;
 using Core.Entities.AlarmsRT.Services;
+using Core.Entities.Packets.Services;
 using Core.Shared.Data;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.AlarmHub;
@@ -71,6 +73,8 @@ builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 builder.Services.AddScoped<IAlarmRTService, AlarmRTService>();
+
+builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();

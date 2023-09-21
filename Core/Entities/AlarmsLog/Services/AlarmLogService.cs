@@ -1,6 +1,8 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
 using Core.Entities.AlarmsLog.Models.DTO;
+using Core.Entities.AlarmsLog.Models.DTO.DTOF;
+using Core.Entities.AlarmsLog.Models.DTO.DTOS;
 using Core.Entities.AlarmsPLC.Models.DB;
 using Core.Entities.AlarmsPLC.Models.DTOs;
 using Core.Shared.Exceptions;
@@ -112,9 +114,9 @@ public class AlarmLogService : IAlarmLogService
 	}
 
 
-	public async Task<List<DTOAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
+	public async Task<List<DTOFAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
 	{
-		List<DTOAlarmLog> ackAlarmLogs = new List<DTOAlarmLog>();
+		List<DTOFAlarmLog> ackAlarmLogs = new List<DTOFAlarmLog>();
 		await _alarmUOW.StartTransaction();
 		foreach (int idAlarmLog in idAlarmLogs)
 		{
@@ -125,7 +127,7 @@ public class AlarmLogService : IAlarmLogService
 				});
 			alarmLogToAck.IsAck = true;
 			alarmLogToAck.TSRead = DateTime.Now;
-			ackAlarmLogs.Add(alarmLogToAck.ToDTO());
+			ackAlarmLogs.Add(alarmLogToAck.ToDTOF());
 		}
 		_alarmUOW.Commit();
 		await _alarmUOW.CommitTransaction();
@@ -135,30 +137,18 @@ public class AlarmLogService : IAlarmLogService
 	}
 
 
-	public async Task<List<DTOAlarmLog>> GetAll()
+	public async Task<List<DTOFAlarmLog>> GetAll()
 	{
 		var allAlarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes();
-		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO());
+		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOF());
 	}
 
-	public async Task<List<DTOAlarmLog>> GetByClassID(int alarmID)
+	public async Task<List<DTOFAlarmLog>> GetByClassID(int alarmID)
 	{
 		return (await _alarmUOW.AlarmLog.GetAllWithIncludes(filters: new Expression<Func<AlarmLog, bool>>[]
 		{
 			alarmLog => alarmLog.AlarmID == alarmID
-		})).ConvertAll(alarmLog => alarmLog.ToDTO());
-	}
-
-	public async Task MarkLogsAsSent(List<DTOAlarmLog> dtoAlarmLogs)
-	{
-		await _alarmUOW.StartTransaction();
-		dtoAlarmLogs.ForEach(dtoAlarmLog =>
-		{
-			dtoAlarmLog.HasBeenSent = true;
-			_alarmUOW.AlarmLog.Update(dtoAlarmLog.ToModel());
-		});
-		_alarmUOW.Commit();
-		await _alarmUOW.CommitTransaction();
+		})).ConvertAll(alarmLog => alarmLog.ToDTOF());
 	}
 
 	public async Task<HttpResponseMessage> SendLogsToServer()

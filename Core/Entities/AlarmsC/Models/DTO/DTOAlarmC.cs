@@ -9,6 +9,7 @@ namespace Core.Entities.AlarmsC.Models.DTO;
 
 public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, DTOAlarmC>
 {
+	// DTO ONLY SENT TO FRONTEND
 	public string RID { get; set; }
 	public string Name { get; set; }
 	public string Description { get; set; }

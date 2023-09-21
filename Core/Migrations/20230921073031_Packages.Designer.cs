@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AlarmCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230921073031_Packages")]
+    partial class Packages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,13 +67,26 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<int?>("NbNonAck")
                         .HasColumnType("int");
 
+                    b.Property<string>("Station")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("TSClear")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TSRaised")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
@@ -97,6 +112,9 @@ namespace Core.Migrations
 
                     b.Property<bool>("HasBeenSent")
                         .HasColumnType("bit");
+
+                    b.Property<string>("IRID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAck")
                         .HasColumnType("bit");
@@ -208,10 +226,6 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PacketType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -225,7 +239,7 @@ namespace Core.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Packet");
                 });
 
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.AlarmListPackets.AlarmListPacket", b =>
+            modelBuilder.Entity("Core.Entities.Packets.Models.DB.AlarmListPacket.AlarmListPacket", b =>
                 {
                     b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
 
@@ -244,7 +258,7 @@ namespace Core.Migrations
 
             modelBuilder.Entity("Core.Entities.AlarmsCycle.Models.DB.AlarmCycle", b =>
                 {
-                    b.HasOne("Core.Entities.Packets.Models.DB.AlarmListPackets.AlarmListPacket", "AlarmListPacket")
+                    b.HasOne("Core.Entities.Packets.Models.DB.AlarmListPacket.AlarmListPacket", "AlarmListPacket")
                         .WithMany("AlarmList")
                         .HasForeignKey("AlarmListPacketID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -283,7 +297,7 @@ namespace Core.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.AlarmListPackets.AlarmListPacket", b =>
+            modelBuilder.Entity("Core.Entities.Packets.Models.DB.AlarmListPacket.AlarmListPacket", b =>
                 {
                     b.Navigation("AlarmList");
                 });
