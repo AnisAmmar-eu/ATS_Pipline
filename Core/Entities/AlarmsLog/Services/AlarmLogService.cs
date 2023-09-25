@@ -153,28 +153,28 @@ public class AlarmLogService : IAlarmLogService
 
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
-		var api2Url = "https://localhost:7207/api/receive/alarm-log";
-		var alarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes(filters: new Expression<Func<AlarmLog, bool>>[]
+		const string api2Url = "https://localhost:7207/api/receive/alarm-log";
+		List<AlarmLog> alarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes(filters: new Expression<Func<AlarmLog, bool>>[]
 		{
 			alarmLog => !alarmLog.HasBeenSent
 		});
-		var jsonData = JsonConvert.SerializeObject(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOS()));
-		var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+		string jsonData = JsonConvert.SerializeObject(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOS()));
+		StringContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-		using (var httpClient = new HttpClient())
+		using (HttpClient httpClient = new HttpClient())
 		{
-			var response = await httpClient.PostAsync(api2Url, content);
-			if (response.IsSuccessStatusCode)
+			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
+			
+			if (!response.IsSuccessStatusCode) return response;
+			
+			await _alarmUOW.StartTransaction();
+			alarmLogs.ForEach(alarmLog =>
 			{
-				await _alarmUOW.StartTransaction();
-				alarmLogs.ForEach(alarmLog =>
-				{
-					alarmLog.HasBeenSent = true;
-					_alarmUOW.AlarmLog.Update(alarmLog);
-				});
-				_alarmUOW.Commit();
-				await _alarmUOW.CommitTransaction();
-			}
+				alarmLog.HasBeenSent = true;
+				_alarmUOW.AlarmLog.Update(alarmLog);
+			});
+			_alarmUOW.Commit();
+			await _alarmUOW.CommitTransaction();
 
 			return response;
 		}

@@ -2,6 +2,7 @@
 using Core.Entities.AlarmsC.Services;
 using Core.Entities.AlarmsLog.Models.DTO;
 using Core.Entities.AlarmsLog.Services;
+using Core.Entities.Packets.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -12,27 +13,47 @@ namespace AlarmsManagement.Controllers.Transfer;
 public class TransferController : ControllerBase
 {
 	private readonly IAlarmLogService _alarmLogService;
+	private readonly IPacketService _packetService;
 
-	public TransferController(IAlarmLogService alarmLogService, IAlarmCService alarmCService)
+	public TransferController(IAlarmLogService alarmLogService, IPacketService packetService)
 	{
 		_alarmLogService = alarmLogService;
+		_packetService = packetService;
 	}
 
 
 	[HttpPost("alarm-log")]
-	public async Task<IActionResult> TransferAlarmLog()
+	public async Task<IActionResult> TransferAlarmsLog()
 	{
 		try
 		{ 
 			HttpResponseMessage response = await _alarmLogService.SendLogsToServer();
 			if (response.IsSuccessStatusCode)
 				return Ok(true);
-			var errorMessage = await response.Content.ReadAsStringAsync();
+			string errorMessage = await response.Content.ReadAsStringAsync();
 			return StatusCode((int)response.StatusCode, errorMessage);
 		}
 		catch (Exception ex)
 		{
 			// Handle any exception
+			Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
+			return StatusCode(500, "Erreur interne du serveur");
+		}
+	}
+
+	[HttpPost("packet")]
+	public async Task<IActionResult> TransferPackets()
+	{
+		try
+		{
+			HttpResponseMessage response = await _packetService.SendPacketsToServer();
+			if (response.IsSuccessStatusCode)
+				return Ok(true);
+			string errorMessage = await response.Content.ReadAsStringAsync();
+			return StatusCode((int)response.StatusCode, errorMessage);
+		}
+		catch (Exception ex)
+		{
 			Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
 			return StatusCode(500, "Erreur interne du serveur");
 		}

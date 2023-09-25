@@ -15,13 +15,13 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 		PacketType = packet.PacketType;
 	}
 
-	protected DTOPacket()
+	public DTOPacket()
 	{
 		CycleStationRID = "";
 		PacketType = "";
 	}
 
-	public virtual Packet ToModel()
+	public override Packet ToModel()
 	{
 		return new Packet(this);
 	}
