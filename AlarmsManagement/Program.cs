@@ -1,10 +1,10 @@
-using System.Net.Sockets;
 using System.Text;
 using Core.Entities.AlarmsC.Services;
 using Core.Entities.AlarmsLog.Services;
 using Core.Entities.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
 using Core.Shared.Data;
+using Core.Shared.Services.Background;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.AlarmHub;
 using Core.Shared.UnitOfWork;
@@ -80,6 +80,9 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
+
+builder.Services.AddSingleton<CollectService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
 
 
 builder.Services.AddCors(options =>
