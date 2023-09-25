@@ -71,6 +71,7 @@ public class AlarmLogService : IAlarmLogService
 				alarmWithStatus1.IsAck = false;
 				alarmWithStatus1.HasBeenSent = false;
 				_alarmUOW.AlarmLog.Update(alarmWithStatus1);
+				_alarmUOW.Commit();
 			}
 			catch (EntityNotFoundException)
 			{
@@ -85,13 +86,14 @@ public class AlarmLogService : IAlarmLogService
 				newAlarmLog.TS = DateTime.Now;
 				newAlarmLog.HasBeenSent = false;
 				await _alarmUOW.AlarmLog.Add(newAlarmLog);
+				_alarmUOW.Commit();
 			}
 
 			_alarmUOW.AlarmPLC.Remove(allAlarmsPLC[index]);
+			_alarmUOW.Commit();
 		}
 
 		// await  _myHub.RequestAlarmLogData();
-		_alarmUOW.Commit();
 		await _alarmUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
@@ -128,8 +130,8 @@ public class AlarmLogService : IAlarmLogService
 			alarmLogToAck.IsAck = true;
 			alarmLogToAck.TSRead = DateTime.Now;
 			ackAlarmLogs.Add(alarmLogToAck.ToDTOF());
+			_alarmUOW.Commit();
 		}
-		_alarmUOW.Commit();
 		await _alarmUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
