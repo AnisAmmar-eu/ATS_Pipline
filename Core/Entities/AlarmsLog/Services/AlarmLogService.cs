@@ -82,10 +82,18 @@ public class AlarmLogService : IAlarmLogService
 				AlarmLog newAlarmLog = new AlarmLog(await _alarmUOW.AlarmC.GetById(allAlarmsPLC[index].AlarmID));
 				newAlarmLog.Station = appSettingsSection["nameStation"];
 				newAlarmLog.AlarmID = allAlarmsPLC[index].AlarmID;
-				newAlarmLog.IsActive = true;
-				newAlarmLog.TSRaised = allAlarmsPLC[index].TS;
 				newAlarmLog.TS = DateTime.Now;
 				newAlarmLog.HasBeenSent = false;
+				if (allAlarmsPLC[index].IsOneShot)
+				{
+					newAlarmLog.IsActive = false;
+					newAlarmLog.TSClear = allAlarmsPLC[index].TS;
+				}
+				else
+				{
+					newAlarmLog.IsActive = true;
+				}
+				newAlarmLog.TSRaised = allAlarmsPLC[index].TS;
 				await _alarmUOW.AlarmLog.Add(newAlarmLog);
 				_alarmUOW.Commit();
 			}
@@ -133,6 +141,7 @@ public class AlarmLogService : IAlarmLogService
 			ackAlarmLogs.Add(alarmLogToAck.ToDTOF());
 			_alarmUOW.Commit();
 		}
+
 		await _alarmUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
@@ -157,19 +166,20 @@ public class AlarmLogService : IAlarmLogService
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
 		const string api2Url = "https://localhost:7207/api/receive/alarm-log";
-		List<AlarmLog> alarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes(filters: new Expression<Func<AlarmLog, bool>>[]
-		{
-			alarmLog => !alarmLog.HasBeenSent
-		});
+		List<AlarmLog> alarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes(
+			filters: new Expression<Func<AlarmLog, bool>>[]
+			{
+				alarmLog => !alarmLog.HasBeenSent
+			});
 		string jsonData = JsonConvert.SerializeObject(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOS()));
 		StringContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
 		using (HttpClient httpClient = new HttpClient())
 		{
 			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
-			
+
 			if (!response.IsSuccessStatusCode) return response;
-			
+
 			await _alarmUOW.StartTransaction();
 			alarmLogs.ForEach(alarmLog =>
 			{

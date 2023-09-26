@@ -40,7 +40,7 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
             begin
 
                 INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised)
-                SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
+                SELECT i.AlarmID, i.IsActive, GETDATE(), i.Station, 1, GETDATE()
                 FROM INSERTED i
             End;
 

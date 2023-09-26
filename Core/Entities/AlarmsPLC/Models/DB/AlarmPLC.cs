@@ -8,4 +8,5 @@ public partial class AlarmPLC : BaseEntity, IBaseEntity<AlarmPLC, DTOAlarmPLC>
 {
 	public int AlarmID { get; set; }
 	public bool IsActive { get; set; }
+	public bool IsOneShot { get; set; }
 }

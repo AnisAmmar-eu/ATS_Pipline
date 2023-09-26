@@ -12,5 +12,6 @@ public partial class DTOAlarmPLC : DTOBaseEntity, IDTO<AlarmPLC, DTOAlarmPLC>
 		TS = alarmPLC.TS;
 		AlarmID = alarmPLC.AlarmID;
 		IsActive = alarmPLC.IsActive;
+		IsOneShot = alarmPLC.IsOneShot;
 	}
 }

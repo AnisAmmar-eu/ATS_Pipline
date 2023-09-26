@@ -143,6 +143,9 @@ namespace Core.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsOneShot")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
