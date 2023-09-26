@@ -9,73 +9,75 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
     ON [dbo].[AlarmLog]
     AFTER update
     AS
-BEGIN
+    BEGIN
 
-    /*  a.NbNonAck = CASE WHEN (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID AND j.IsRead = 1)
-                      = (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID) THEN 1 ELSE 0 END,  */
-
-
-    DECLARE @NbNonAck INT;
-    DECLARE @ExistRTLine INT;
-    DECLARE @ActiveAlarm INT;
-
-    SET @NbNonAck = 0
-    SELECT @NbNonAck = COUNT(*)
-    FROM AlarmLog currLog
-             INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
-    WHERE currLog.AlarmID = newLog.AlarmID
-      AND currLog.IsAck = 0
-
-    SELECT @ActiveAlarm = COUNT(*)
-    FROM AlarmLog currLog
-             INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
-    where (currLog.AlarmID = newLog.AlarmID AND (currLog.IsActive = 1 OR currLog.IsAck = 0))
+        /*  a.NbNonAck = CASE WHEN (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID AND j.IsRead = 1)
+                          = (SELECT COUNT(*) FROM AlarmLog j WHERE j.AlarmID = i.AlarmID) THEN 1 ELSE 0 END,  */
 
 
-    SELECT @ExistRTLine = COUNT(*)
-    FROM AlarmRT a
-             INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID
-    WHERE a.AlarmID = i.AlarmID
+        DECLARE @NbNonAck INT;
+        DECLARE @ExistRTLine INT;
+        DECLARE @ActiveAlarm INT;
+
+        SET @NbNonAck = 0
+        SELECT @NbNonAck = COUNT(*)
+        FROM AlarmLog currLog
+                 INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
+        WHERE currLog.AlarmID = newLog.AlarmID
+          AND currLog.IsAck = 0
+
+        SELECT @ActiveAlarm = COUNT(*)
+        FROM AlarmLog currLog
+                 INNER JOIN INSERTED newLog ON currLog.AlarmID = newLog.AlarmID
+        where (currLog.AlarmID = newLog.AlarmID AND (currLog.IsActive = 1 OR currLog.IsAck = 0))
 
 
-    if (@NbNonAck > 0)
-        begin
-            UPDATE a
-            SET a.NbNonAck = @NbNonAck,
-                a.IsActive      = i.IsActive,
-                a.TS            = GETDATE(),
-                a.Station       = i.Station,
-                a.TSClear       = GETDATE()
-            FROM AlarmRT a
-                     INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
-        end;
+        SELECT @ExistRTLine = COUNT(*)
+        FROM AlarmRT a
+                 INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID
+        WHERE a.AlarmID = i.AlarmID
 
-    if (@ExistRTLine = 0)
-        begin
-            INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSClear)
-            SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
-            FROM INSERTED i
-        end
-
-
-    else
-        if (@ExistRTLine > 0)
+        if (@NbNonAck > 0)
             begin
+                UPDATE a
+                SET a.NbNonAck = @NbNonAck,
+                    a.IsActive = i.IsActive,
+                    a.TS       = GETDATE(),
+                    a.Station  = i.Station,
+                    a.TSClear  = GETDATE()
+                FROM AlarmRT a
+                         INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
+            end;
 
-                if (@NbNonAck = 0)
-                    begin
-                        UPDATE a
-                        SET a.NbNonAck = 0
-                        FROM AlarmRT a
-                                 INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
-                    end;
+        if (@ExistRTLine = 0)
+            begin
+                INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSClear)
+                SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
+                FROM INSERTED i
+            end
 
-                if (@ActiveAlarm = 0)
+
+        else
+            begin
+                if (@ExistRTLine > 0)
                     begin
-                        delete a
-                        from AlarmRT a
-                                 INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
-                    end
+
+                        if (@NbNonAck = 0)
+                            INSERT INTO LOGS VALUES ('Where i need to be')
+                        begin
+                            UPDATE a
+                            SET a.NbNonAck = 0,
+                                a.IsActive = CASE WHEN @ActiveAlarm > 0 THEN 1 ELSE 0 END
+                            FROM AlarmRT a
+                                     INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
+                        end;
+
+                        if (@ActiveAlarm = 0)
+                            begin
+                                delete a
+                                from AlarmRT a
+                                         INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
+                            end
+                    End
             End
-
-END;
+    END;

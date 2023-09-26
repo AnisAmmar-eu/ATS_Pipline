@@ -7,7 +7,7 @@ namespace Core.Shared.Services.Background;
 
 public class CollectService : BackgroundService
 {
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(20);
+	private readonly TimeSpan _period = TimeSpan.FromMilliseconds(100);
 	private int _executionCount = 0;
 	private readonly ILogger<CollectService> _logger;
 	private readonly IServiceScopeFactory _factory;

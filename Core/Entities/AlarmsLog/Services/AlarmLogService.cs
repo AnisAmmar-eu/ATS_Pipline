@@ -48,8 +48,9 @@ public class AlarmLogService : IAlarmLogService
 	{
 		var appSettingsSection = _configuration.GetSection("stationConfig");
 
-		await _alarmUOW.StartTransaction();
 		List<AlarmPLC> allAlarmsPLC = await _alarmUOW.AlarmPLC.GetAll(withTracking: false);
+		if (allAlarmsPLC.Count == 0) return Array.Empty<DTOAlarmPLC>();
+		await _alarmUOW.StartTransaction();
 		for (int index = 0; index < allAlarmsPLC.Count; index++)
 		{
 			try
