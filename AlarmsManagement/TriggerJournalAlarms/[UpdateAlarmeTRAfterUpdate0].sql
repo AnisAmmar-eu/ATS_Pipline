@@ -63,7 +63,6 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
                     begin
 
                         if (@NbNonAck = 0)
-                            INSERT INTO LOGS VALUES ('Where i need to be')
                         begin
                             UPDATE a
                             SET a.NbNonAck = 0,
