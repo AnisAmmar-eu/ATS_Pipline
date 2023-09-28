@@ -13,13 +13,13 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 		PacketType = "";
 		CycleStationRID = "";
 	}
-	public Packet(DTOPacket dtoPacket)
+	public Packet(DTOPacket dto)
 	{
-		ID = dtoPacket.ID;
-		TS = (DateTimeOffset)dtoPacket.TS!;
-		CycleStationRID = dtoPacket.CycleStationRID;
-		Status = dtoPacket.Status;
-		PacketType = dtoPacket.PacketType;
+		ID = dto.ID;
+		TS = (DateTimeOffset)dto.TS!;
+		CycleStationRID = dto.CycleStationRID;
+		Status = dto.Status;
+		PacketType = dto.PacketType;
 	}
 	public override DTOPacket ToDTO(string? languageRID = null)
 	{

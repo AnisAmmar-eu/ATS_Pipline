@@ -1,6 +1,7 @@
 using Core.Entities.Packets.Dictionary;
-using Core.Entities.Packets.Models.DTO.AlarmListPackets;
-using Core.Entities.Packets.Models.DTO.Detection;
+using Core.Entities.Packets.Models.DTO.AlarmLists;
+using Core.Entities.Packets.Models.DTO.Announcements;
+using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
@@ -37,8 +38,9 @@ public class DTOPacketBinder: IModelBinder
 
 		return type switch
 		{
-			PacketType.ALARM => typeof(DTOAlarmListPacket),
-			PacketType.DETECTION => typeof(DTODetectionPacket),
+			PacketType.ALARM => typeof(DTOAlarmList),
+			PacketType.ANNOUNCEMENT => typeof(DTOAnnouncement),
+			PacketType.DETECTION => typeof(DTODetection),
 			_ => typeof(DTOPacket),
 		};
 	}

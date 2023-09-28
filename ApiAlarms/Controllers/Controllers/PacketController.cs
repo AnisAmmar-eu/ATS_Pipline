@@ -1,4 +1,4 @@
-using Core.Entities.Packets.Models.DTO.AlarmListPackets;
+using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Services;
 using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +18,8 @@ public class PacketController : ControllerBase
 	}
 
 	[HttpPost("alarms")]
-	public async Task<IActionResult> BuildAlarmPacket([FromBody] DTOAlarmListPacket dtoAlarmListPacket)
+	public async Task<IActionResult> BuildAlarmPacket([FromBody] DTOAlarmList dtoAlarmList)
 	{
-		return new ApiResponseObject(await _packetService.BuildPacket(dtoAlarmListPacket)).SuccessResult();
+		return new ApiResponseObject(await _packetService.BuildPacket(dtoAlarmList)).SuccessResult();
 	}
 }

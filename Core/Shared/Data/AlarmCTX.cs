@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.Detection;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.EntityFrameworkCore;
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
-using Core.Entities.Packets.Models.DB.AlarmListPackets;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
+using Core.Entities.Packets.Models.DB.AlarmLists;
+using Core.Entities.Packets.Models.DB.Detections;
+
 namespace Core.Shared.Data;
 
 public class AlarmCTX : DbContext
@@ -26,8 +27,8 @@ public class AlarmCTX : DbContext
 	
 	// Packets
 	public DbSet<Packet> Packet => Set<Packet>();
-	public DbSet<AlarmListPacket> AlarmListPacket => Set<AlarmListPacket>();
-	public DbSet<DetectionPacket> DetectionPacket => Set<DetectionPacket>();
+	public DbSet<Entities.Packets.Models.DB.AlarmLists.AlarmList> AlarmListPacket => Set<Entities.Packets.Models.DB.AlarmLists.AlarmList>();
+	public DbSet<Detection> DetectionPacket => Set<Detection>();
 
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,9 +46,9 @@ public class AlarmCTX : DbContext
 			.WithOne(ac => ac.AlarmRT)
 			.HasForeignKey<AlarmRT>(at => at.AlarmID);
 
-		modelBuilder.Entity<AlarmListPacket>()
-			.HasMany(alarmListPacket => alarmListPacket.AlarmList)
-			.WithOne(alarmCycle => alarmCycle.AlarmListPacket)
+		modelBuilder.Entity<AlarmList>()
+			.HasMany(alarmListPacket => alarmListPacket.AlarmCycles)
+			.WithOne(alarmCycle => alarmCycle.AlarmList)
 			.HasForeignKey(alarmCycle => alarmCycle.AlarmListPacketID)
 			.IsRequired();
 	}
