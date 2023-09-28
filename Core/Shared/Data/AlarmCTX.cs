@@ -1,16 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Core.Entities.AlarmsC.Models.DB;
-using Core.Entities.AlarmsCycle.Models.DB;
-using Core.Entities.AlarmsLog.Repositories;
-using Core.Entities.AlarmsPLC.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Detection;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.EntityFrameworkCore;
-using AlarmListPacket = Core.Entities.Packets.Models.DB.AlarmListPackets.AlarmListPacket;
-using AlarmLog = Core.Entities.AlarmsLog.Models.DB.AlarmLog;
-using AlarmRT = Core.Entities.AlarmsRT.Models.DB.AlarmRT;
-
+using Core.Entities.Alarms.AlarmsC.Models.DB;
+using Core.Entities.Alarms.AlarmsCycle.Models.DB;
+using Core.Entities.Packets.Models.DB.AlarmListPackets;
+using Core.Entities.Alarms.AlarmsLog.Models.DB;
+using Core.Entities.Alarms.AlarmsPLC.Models.DB;
+using Core.Entities.Alarms.AlarmsRT.Models.DB;
 namespace Core.Shared.Data;
 
 public class AlarmCTX : DbContext

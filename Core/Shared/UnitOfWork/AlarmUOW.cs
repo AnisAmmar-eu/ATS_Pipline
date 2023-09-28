@@ -1,9 +1,8 @@
-﻿using Core.Entities.AlarmsC.Repositories;
-using Core.Entities.AlarmsCycle.Models.Repositories;
-using Core.Entities.AlarmsLog.Repositories;
-using Core.Entities.AlarmsPLC.Repositories;
-using Core.Entities.AlarmsRT.Models.DB;
-using Core.Entities.AlarmsRT.Repositories;
+﻿using Core.Entities.Alarms.AlarmsC.Repositories;
+using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
+using Core.Entities.Alarms.AlarmsLog.Repositories;
+using Core.Entities.Alarms.AlarmsPLC.Repositories;
+using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Shared.Data;
 using Core.Shared.UnitOfWork.Interfaces;

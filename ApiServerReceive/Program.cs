@@ -1,6 +1,6 @@
-using Core.Entities.AlarmsC.Services;
-using Core.Entities.AlarmsLog.Services;
-using Core.Entities.AlarmsRT.Services;
+using Core.Entities.Alarms.AlarmsC.Services;
+using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
 using Core.Shared.Data;
 using Core.Shared.SignalR;

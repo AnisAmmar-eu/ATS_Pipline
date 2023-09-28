@@ -1,4 +1,4 @@
-using Core.Entities.AlarmsLog.Services;
+using Core.Entities.Alarms.AlarmsLog.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

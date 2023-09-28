@@ -1,19 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using Core.Entities.AlarmsC.Models.DB;
-using Core.Entities.AlarmsC.Models.DTO;
-using Core.Entities.AlarmsC.Services;
-using Core.Entities.AlarmsLog.Models.DTO;
-using Core.Entities.AlarmsLog.Models.DTO.DTOS;
-using Core.Entities.AlarmsLog.Services;
-using Core.Entities.Packets.Models.DB;
+using Core.Entities.Alarms.AlarmsC.Models.DTO;
+using Core.Entities.Alarms.AlarmsC.Services;
+using Core.Entities.Alarms.AlarmsLog.Models.DB;
+using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
+using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Services;
 using Core.Shared.Data;
-using Core.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AlarmLog = Core.Entities.AlarmsLog.Models.DB.AlarmLog;
 
 namespace ApiServerReceive.Controllers.Transfer;
 

@@ -1,7 +1,6 @@
-using Core.Entities.AlarmsCycle.Models.DTO;
 using Core.Entities.Packets.Models.DB.AlarmListPackets;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
-
+using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 namespace Core.Entities.Packets.Models.DTO.AlarmListPackets;
 
 public partial class DTOAlarmListPacket : DTOPacket, IDTO<AlarmListPacket, AlarmListPackets.DTOAlarmListPacket>
