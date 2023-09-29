@@ -1,4 +1,4 @@
-namespace testCVB;
+namespace ApiADS;
 
 public class Utils
 {

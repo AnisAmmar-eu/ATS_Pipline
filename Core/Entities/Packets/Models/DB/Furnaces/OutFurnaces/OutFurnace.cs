@@ -7,4 +7,5 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 {
 	public DateTimeOffset? TSUnpackPIT; // TSUnpackingOfPIT
 	public DateTimeOffset? TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
+	public int FTAPickUp; // FTAPickUpFromPIT
 }

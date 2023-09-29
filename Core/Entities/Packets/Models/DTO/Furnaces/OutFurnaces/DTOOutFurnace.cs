@@ -7,4 +7,5 @@ public partial class DTOOutFurnace: DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 {
 	public DateTimeOffset? TSUnpackPIT; // TSUnpackingOfPIT
 	public DateTimeOffset? TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
+	public int FTAPickUp; // FTAPickUpFromPIT
 }

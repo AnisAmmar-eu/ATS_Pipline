@@ -6,14 +6,18 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 
 public partial class DTOInFurnace : DTOFurnace, IDTO<InFurnace, DTOInFurnace>
 {
-	public DTOInFurnace(InFurnace furnace) : base(furnace)
+	public DTOInFurnace(InFurnace inFurnace) : base(inFurnace)
 	{
-		FurnaceNumber = furnace.FurnaceNumber;
-		PITNumber = furnace.PITNumber;
-		PITSectionNumber = furnace.PITSectionNumber;
-		FTAIDUsedToBake = furnace.FTAIDUsedToBake;
-		TSPackingPit = furnace.TSPackingPit;
-		AnodePosition = furnace.AnodePosition;
-		PITHeight = furnace.PITHeight;
+		OriginID = inFurnace.OriginID;
+		AnodePosition = inFurnace.AnodePosition;
+		PalletSide = inFurnace.PalletSide;
+		PITNumber = inFurnace.PITNumber;
+		PITSectionNumber = inFurnace.PITSectionNumber;
+		PITHeight = inFurnace.PITHeight;
+		FTAinPIT = inFurnace.FTAinPIT;
+		GreenPosition = inFurnace.GreenPosition;
+		BakedPosition = inFurnace.BakedPosition;
+		FTASuckPit = inFurnace.FTASuckPit;
+		TSLoad = inFurnace.TSLoad;
 	}
 }

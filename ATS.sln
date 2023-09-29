@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServerReceive", "ApiServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiPacket", "ApiPacket\ApiPacket.csproj", "{5583A9CF-E7F4-46A6-A953-757F21455536}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiADS", "ApiADS\ApiADS.csproj", "{38F8CD33-F18C-44FD-B468-6AFA2F903089}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiADS", "ApiADS\ApiADS.csproj", "{A513115D-DF69-4F0E-9748-6F17DC6D4D4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{5583A9CF-E7F4-46A6-A953-757F21455536}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5583A9CF-E7F4-46A6-A953-757F21455536}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5583A9CF-E7F4-46A6-A953-757F21455536}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38F8CD33-F18C-44FD-B468-6AFA2F903089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38F8CD33-F18C-44FD-B468-6AFA2F903089}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38F8CD33-F18C-44FD-B468-6AFA2F903089}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38F8CD33-F18C-44FD-B468-6AFA2F903089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A513115D-DF69-4F0E-9748-6F17DC6D4D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A513115D-DF69-4F0E-9748-6F17DC6D4D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A513115D-DF69-4F0E-9748-6F17DC6D4D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A513115D-DF69-4F0E-9748-6F17DC6D4D4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

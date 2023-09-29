@@ -10,5 +10,6 @@ public partial class DTOOutFurnace: DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 	{
 		TSUnpackPIT = outFurnace.TSUnpackPIT;
 		TSCentralConveyor = outFurnace.TSCentralConveyor;
+		FTAPickUp = outFurnace.FTAPickUp;
 	}
 }

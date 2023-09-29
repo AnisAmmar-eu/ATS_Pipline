@@ -3,7 +3,7 @@ using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlarmsManagement.Controllers.Controllers;
+namespace ApiAlarms.Controllers.Controllers;
 
 [ApiController]
 [Route("api/alarm-log")]

@@ -2,7 +2,7 @@
 using Core.Entities.Packets.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlarmsManagement.Controllers.Transfer;
+namespace ApiAlarms.Controllers.Transfer;
 
 [ApiController]
 [Route("api/transfer")]

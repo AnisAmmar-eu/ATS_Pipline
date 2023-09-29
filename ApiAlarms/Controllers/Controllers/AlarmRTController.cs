@@ -3,7 +3,7 @@ using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlarmsManagement.Controllers.Controllers;
+namespace ApiAlarms.Controllers.Controllers;
 
 [ApiController]
 [Route("api/alarms-real-time")]

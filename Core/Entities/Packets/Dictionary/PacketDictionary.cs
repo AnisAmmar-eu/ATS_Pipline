@@ -21,4 +21,6 @@ public class PacketType
 	public const string ALARM = "ALARM";
 	public const string ANNOUNCEMENT = "ANNOUNCMENT";
 	public const string DETECTION = "DETECTION";
+	public const string SHOOTING = "SHOOTING";
+	public const string FURNACE = "FURNACE";
 }

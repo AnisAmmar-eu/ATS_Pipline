@@ -5,12 +5,15 @@ namespace Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 
 public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 {
-	public int FurnaceNumber;
-	public int PITNumber; // TODO PIT => Pit ?
-	public int PITSectionNumber;
-	
-	public int FTAIDUsedToBake; // TODO ????
-	public DateTimeOffset TSPackingPit; // TsPackingInPit
+	public int OriginID;
 	public int AnodePosition; // AnodePositionInThePackOf7
-	public int PITHeight; // HeightInThePit
+	public int PalletSide;
+	public int PITNumber;
+	public int PITSectionNumber;
+	public int PITHeight;
+	public int FTAinPIT;
+	public int GreenPosition;
+	public int BakedPosition;
+	public int FTASuckPit;
+	public DateTimeOffset? TSLoad;
 }
