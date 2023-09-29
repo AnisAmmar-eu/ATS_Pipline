@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Dictionary;
 using Core.Entities.Packets.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -10,8 +11,9 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 
 	public Packet()
 	{
-		PacketType = "";
+		Type = "";
 		CycleStationRID = "";
+		Status = PacketStatus.Initialised;
 	}
 	public Packet(DTOPacket dto)
 	{
@@ -19,7 +21,7 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 		TS = (DateTimeOffset)dto.TS!;
 		CycleStationRID = dto.CycleStationRID;
 		Status = dto.Status;
-		PacketType = dto.PacketType;
+		Type = dto.Type;
 	}
 	public override DTOPacket ToDTO(string? languageRID = null)
 	{

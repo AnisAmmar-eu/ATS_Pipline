@@ -21,7 +21,7 @@ public class DTOPacketBinder: IModelBinder
                 string json = await new StreamReader(stream).ReadToEndAsync();
 
                 DTOPacket packet = JsonConvert.DeserializeObject<DTOPacket>(json)!;
-                Type dtoType = GetDTOType(packet.PacketType);
+                Type dtoType = GetDTOType(packet.Type);
                 object? formatedModel = JsonConvert.DeserializeObject(json, dtoType);
 
                 bindingContext.Result = ModelBindingResult.Success(formatedModel);

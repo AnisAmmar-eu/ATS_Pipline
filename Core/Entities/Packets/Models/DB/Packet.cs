@@ -9,5 +9,5 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 {
 	public string CycleStationRID { get; set; }
 	public PacketStatus Status { get; set; }
-	public string PacketType { get; set; }
+	public string Type { get; set; }
 }

@@ -17,6 +17,14 @@ public class PacketService : IPacketService
 		_alarmUOW = alarmUOW;
 	}
 
+	public async Task<DTOPacket> AddPacket(Packet packet)
+	{
+		await _alarmUOW.StartTransaction();
+		await _alarmUOW.Packet.Add(packet);
+		_alarmUOW.Commit();
+		await _alarmUOW.CommitTransaction();
+		return packet.ToDTO();
+	}
 	public async Task<DTOPacket> BuildPacket(DTOPacket dtoPacket)
 	{
 		await _alarmUOW.StartTransaction();

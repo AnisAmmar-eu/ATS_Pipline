@@ -1,20 +1,20 @@
 using System.Buffers.Binary;
-using Core.Entities.Alarms;
-using Core.Entities.Alarms.AlarmsPLC.Models.DB;
-using Core.Entities.Alarms.AlarmsPLC.Services;
+using Core.Entities.Packets.Models.DB.Detections;
+using Core.Entities.Packets.Models.Structs;
+using Core.Entities.Packets.Services;
 using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;
 
 namespace ApiADS.Notifications;
 
-public class AlarmNotification
+public class DetectionNotification
 {
 	private readonly uint _acquitMsg;
 	private readonly uint _newMsg;
 	private readonly uint _oldEntry;
 	private readonly ResultHandle _resultHandle;
-
-	public AlarmNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
+	
+	public DetectionNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
 	{
 		_resultHandle = resultHandle;
 		_acquitMsg = acquitMsg;
@@ -39,15 +39,15 @@ public class AlarmNotification
 		tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
 		tcClient.WriteAny(_newMsg, Utils.NoMessage);
 		// Get element of FIFO
-		Alarm alarm = (Alarm)tcClient.ReadAny(_oldEntry, typeof(Alarm));
-		AlarmPLC alarmPLC = new(alarm);
+		DetectionStruct detectionStruct = (DetectionStruct)tcClient.ReadAny(_oldEntry, typeof(DetectionStruct));
+		Detection detection = new(detectionStruct);
 		await using AsyncServiceScope scope = ((IServiceProvider)dynamicObject.appServices).CreateAsyncScope();
 		IServiceProvider services = scope.ServiceProvider;
 
 		try
 		{
-			var serviceAds = services.GetRequiredService<IAlarmPLCService>();
-			await serviceAds.AddAlarmPLC(alarmPLC);
+			var serviceAds = services.GetRequiredService<IPacketService>();
+			await serviceAds.AddPacket(detection);
 			tcClient.WriteAny(_acquitMsg, Utils.FinishedReading);
 		}
 		catch

@@ -12,13 +12,13 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 		TS = detection.TS;
 		CycleStationRID = detection.CycleStationRID;
 		Status = detection.Status;
-		PacketType = detection.PacketType;
+		Type = detection.Type;
 	}
 
 	public DTOPacket()
 	{
 		CycleStationRID = "";
-		PacketType = "";
+		Type = "";
 	}
 
 	public override Packet ToModel()

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Core.Entities.Packets.Dictionary;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Detections;
