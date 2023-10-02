@@ -1,6 +1,6 @@
 ﻿using Core.Shared.Models.DB.Kernel.Interfaces;
 
-namespace Core.Shared.Models.DTOs.Kernel.Interfaces;
+namespace Core.Shared.Models.DTO.Kernel.Interfaces;
 
 /// <summary>
 ///     Interface defining the properties of a DTO.

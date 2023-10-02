@@ -1,6 +1,6 @@
 using Core.Entities.Packets.Models.DB;
-using Core.Shared.Models.DTOs.Kernel;
-using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DTO;
 

@@ -1,8 +1,8 @@
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
-using Core.Shared.Models.DTOs.Kernel;
-using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsC.Models.DTO;
 

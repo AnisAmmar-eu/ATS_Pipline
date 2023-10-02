@@ -1,6 +1,6 @@
 ﻿using Core.Shared.Models.DB.Kernel;
 
-namespace Core.Shared.Models.DTOs.Kernel;
+namespace Core.Shared.Models.DTO.Kernel;
 
 public class DTOBaseChoice : DTOBaseEntity
 {

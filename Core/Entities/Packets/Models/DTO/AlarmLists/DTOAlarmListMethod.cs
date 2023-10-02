@@ -1,6 +1,6 @@
 using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.Packets.Models.DB.AlarmLists;
-using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DTO.AlarmLists;
 

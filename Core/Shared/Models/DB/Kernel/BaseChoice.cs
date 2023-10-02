@@ -1,4 +1,4 @@
-﻿using Core.Shared.Models.DTOs.Kernel;
+﻿using Core.Shared.Models.DTO.Kernel;
 
 namespace Core.Shared.Models.DB.Kernel;
 

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Core.Shared.Exceptions;
+using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Core.Shared.Models.HttpResponse;
 
@@ -82,7 +86,6 @@ public class ApiResponseObject
 			StatusCode = Status.Code
 		};
 	}
-	/*
 
 	public async Task<JsonResult> SuccessResult(ILogsService logsService, ControllerContext context)
 	{
@@ -152,5 +155,4 @@ public class ApiResponseObject
 	    {
 	    }
 	}
-	*/
 }

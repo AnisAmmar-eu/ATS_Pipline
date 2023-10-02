@@ -6,6 +6,7 @@ using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Detections;
+using Core.Shared.Models.DB.System.Logs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Shared.Data;
@@ -15,6 +16,8 @@ public class AlarmCTX : DbContext
 	public AlarmCTX(DbContextOptions<AlarmCTX> options) : base(options)
 	{
 	}
+
+	public DbSet<Log> Log => Set<Log>();
 
 	// Alarms
 	public DbSet<AlarmPLC> AlarmPLC => Set<AlarmPLC>();

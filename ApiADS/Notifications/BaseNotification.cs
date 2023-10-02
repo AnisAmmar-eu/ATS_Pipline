@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;

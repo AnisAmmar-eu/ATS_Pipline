@@ -4,6 +4,7 @@ using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.Packets.Repositories;
+using Core.Shared.Repositories.System.Logs;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
 
@@ -12,6 +13,7 @@ namespace Core.Shared.UnitOfWork.Interfaces;
 /// </summary>
 public interface IAlarmUOW : IDisposable
 {
+	 ILogRepository Log { get; }
 	IAlarmCRepository AlarmC { get; }
 	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }

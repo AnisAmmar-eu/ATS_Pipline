@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Shared.Repositories.Kernel.Interfaces;
 

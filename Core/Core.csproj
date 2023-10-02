@@ -8,7 +8,10 @@
 
     <ItemGroup>
         <Folder Include="Migrations\"/>
-        <Folder Include="Shared\Repositories\"/>
+        <Folder Include="Shared\Models\DB\System\" />
+        <Folder Include="Shared\Models\DTO\System\" />
+        <Folder Include="Shared\Repositories\System\" />
+        <Folder Include="Shared\Services\System\" />
     </ItemGroup>
 
     <ItemGroup>

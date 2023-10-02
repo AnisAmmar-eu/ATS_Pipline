@@ -1,7 +1,7 @@
 ﻿using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 
-namespace Core.Shared.Models.DTOs.Kernel;
+namespace Core.Shared.Models.DTO.Kernel;
 
 /// <summary>
 ///     Base class for all DTOs

@@ -1,5 +1,5 @@
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
-using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DTO.Shootings.S3S4Shootings;
 
