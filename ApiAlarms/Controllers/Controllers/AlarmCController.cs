@@ -1,8 +1,5 @@
-using Core.Entities.Alarms;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Services;
-using Core.Entities.Alarms.AlarmsPLC.Models.DB;
-using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,18 +10,10 @@ namespace ApiAlarms.Controllers.Controllers;
 public class AlarmCController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;
-	private readonly IAlarmPLCService _alarmPLCServiceA;
 
-	public AlarmCController(IAlarmCService alarmCService, IAlarmPLCService alarmPLCServiceA)
+	public AlarmCController(IAlarmCService alarmCService)
 	{
 		_alarmCService = alarmCService;
-		_alarmPLCServiceA = alarmPLCServiceA;
-	}
-
-	[HttpGet("IO")]
-	public async Task guifez()
-	{
-		await _alarmPLCServiceA.Add(new AlarmPLC(new Alarm()));
 	}
 
 	/// <summary>
