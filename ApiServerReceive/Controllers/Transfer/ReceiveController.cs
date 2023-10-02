@@ -61,7 +61,7 @@ public class ReceiveController : ControllerBase
 				alarmLogToAdd.IsAck = false;
 				alarmLogToAdd.HasBeenSent = true;
 				alarmLogToAdd.AlarmID = newAlarmC.ID;
-				await _alarmLogService.AddAlarmLog(alarmLogToAdd);
+				await _alarmLogService.Add(alarmLogToAdd);
 			}
 
 			return Ok(true);

@@ -1,10 +1,14 @@
-﻿using Core.Entities.Alarms.AlarmsC.Repositories;
+﻿using System.Runtime.CompilerServices;
+using Core.Entities.Alarms;
+using Core.Entities.Alarms.AlarmsC.Repositories;
 using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
+using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Shared.Data;
+using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -36,6 +40,19 @@ public class AlarmUOW : IAlarmUOW
 	public IPacketRepository Packet { get;  }
 	public IAlarmCycleRepository AlarmCycle { get; }
 
+	public object? GetRepoByType(Type repo)
+	{
+		return repo switch
+		{
+			_ when repo == typeof(IAlarmCRepository) => AlarmC,
+			_ when repo == typeof(IAlarmPLCRepository) => AlarmPLC,
+			_ when repo == typeof(IAlarmLogRepository) => AlarmLog,
+			_ when repo == typeof(IAlarmRTRepository) => AlarmRT,
+			_ when repo == typeof(IPacketRepository) => Packet,
+			_ when repo == typeof(IAlarmCycleRepository) => Packet,
+			_ => null,
+		};
+	}
 	public int Commit()
 	{
 		try

@@ -1,20 +1,27 @@
 using System.Buffers.Binary;
-using Core.Entities.Packets.Models.DB.Detections;
-using Core.Entities.Packets.Models.Structs;
-using Core.Entities.Packets.Services;
+using Core.Entities.Alarms;
+using Core.Entities.Alarms.AlarmsPLC.Models.DB;
+using Core.Entities.Alarms.AlarmsPLC.Services;
+using Core.Shared.Models.DB.Kernel.Interfaces;
+using Core.Shared.Models.DTOs.Kernel.Interfaces;
+using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;
 
 namespace ApiADS.Notifications;
 
-public class DetectionNotification
+public class BaseNotification<TService, T, TDTO, TStruct>
+	where T : class, IBaseEntity<T, TDTO>
+	where TDTO : class, IDTO<T, TDTO>
+	where TService : class, IServiceBaseEntity<T, TDTO>
+	where TStruct : struct, IBaseADS<T, TStruct>
 {
 	private readonly uint _acquitMsg;
 	private readonly uint _newMsg;
 	private readonly uint _oldEntry;
 	private readonly ResultHandle _resultHandle;
-	
-	public DetectionNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
+
+	public BaseNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
 	{
 		_resultHandle = resultHandle;
 		_acquitMsg = acquitMsg;
@@ -39,15 +46,15 @@ public class DetectionNotification
 		tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
 		tcClient.WriteAny(_newMsg, Utils.NoMessage);
 		// Get element of FIFO
-		DetectionStruct detectionStruct = (DetectionStruct)tcClient.ReadAny(_oldEntry, typeof(DetectionStruct));
-		Detection detection = new(detectionStruct);
+		TStruct adsStruct = (TStruct)tcClient.ReadAny(_oldEntry, typeof(TStruct));
+		T entity = adsStruct.ToModel();
 		await using AsyncServiceScope scope = ((IServiceProvider)dynamicObject.appServices).CreateAsyncScope();
 		IServiceProvider services = scope.ServiceProvider;
 
 		try
 		{
-			var serviceAds = services.GetRequiredService<IPacketService>();
-			await serviceAds.AddPacket(detection);
+			var serviceAds = services.GetRequiredService<TService>();
+			await serviceAds.Add(entity);
 			tcClient.WriteAny(_acquitMsg, Utils.FinishedReading);
 		}
 		catch

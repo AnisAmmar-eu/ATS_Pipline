@@ -2,33 +2,24 @@ using System.Text;
 using Core.Entities.Packets.Dictionary;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Repositories;
 using Core.Migrations;
+using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Newtonsoft.Json;
 
 namespace Core.Entities.Packets.Services;
 
-public class PacketService : IPacketService
+public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPacket>, IPacketService
 {
-	private readonly IAlarmUOW _alarmUOW;
-
-	public PacketService(IAlarmUOW alarmUOW)
+	public PacketService(IAlarmUOW alarmUOW) : base(alarmUOW)
 	{
-		_alarmUOW = alarmUOW;
 	}
 
-	public async Task<DTOPacket> AddPacket(Packet packet)
-	{
-		await _alarmUOW.StartTransaction();
-		await _alarmUOW.Packet.Add(packet);
-		_alarmUOW.Commit();
-		await _alarmUOW.CommitTransaction();
-		return packet.ToDTO();
-	}
 	public async Task<DTOPacket> BuildPacket(DTOPacket dtoPacket)
 	{
 		await _alarmUOW.StartTransaction();
-		
+
 		Packet packet = dtoPacket.ToModel();
 		await packet.Create(_alarmUOW);
 
@@ -48,14 +39,11 @@ public class PacketService : IPacketService
 		using (HttpClient httpClient = new HttpClient())
 		{
 			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
-			
+
 			if (!response.IsSuccessStatusCode) return response;
-			
+
 			await _alarmUOW.StartTransaction();
-			packets.ForEach(packet =>
-			{
-				_alarmUOW.Packet.Remove(packet);
-			});
+			packets.ForEach(packet => { _alarmUOW.Packet.Remove(packet); });
 			_alarmUOW.Commit();
 			await _alarmUOW.CommitTransaction();
 
@@ -71,6 +59,7 @@ public class PacketService : IPacketService
 			packet.ID = 0;
 			await _alarmUOW.Packet.Add(packet.ToModel());
 		}
+
 		_alarmUOW.Commit();
 		await _alarmUOW.CommitTransaction();
 	}

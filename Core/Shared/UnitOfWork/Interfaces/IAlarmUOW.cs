@@ -20,6 +20,8 @@ public interface IAlarmUOW : IDisposable
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
 
+	public object? GetRepoByType(Type repo);
+	
 	/// <summary>
 	///     Saves changes made in this context to the underlying database.
 	/// </summary>

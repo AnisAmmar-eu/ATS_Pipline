@@ -37,7 +37,7 @@ public class AlarmLogController : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetAllAlarmLog()
 	{
-		return new ApiResponseObject(await _alarmLogService.GetAll()).SuccessResult();
+		return new ApiResponseObject(await _alarmLogService.GetAllForFront()).SuccessResult();
 	}
 
 	/// <summary>

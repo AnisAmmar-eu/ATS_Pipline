@@ -2,15 +2,15 @@
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsPLC.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
+using Core.Shared.Services.Kernel.Interfaces;
+
 namespace Core.Entities.Alarms.AlarmsLog.Services;
 
-public interface IAlarmLogService
+public interface IAlarmLogService: IServiceBaseEntity<AlarmLog, DTOAlarmLog>
 {
-	Task<DTOAlarmLog> AddAlarmLog(AlarmLog alarmLog);
-	// Task<IEnumerable<DTOAlarmPLC>> AddAlarmLogFromPush(AlarmLog alarmLog);
 	Task<IEnumerable<DTOAlarmPLC>> Collect();
 	Task<int> CollectCyc(int nbSeconds);
-	Task<List<DTOFAlarmLog>> GetAll();
+	Task<List<DTOFAlarmLog>> GetAllForFront();
 	public Task<List<DTOFAlarmLog>> GetByClassID(int alarmID);
 	Task<List<DTOFAlarmLog>> AckAlarmLogs(int[] idAlarmLogs);
 	public Task<HttpResponseMessage> SendLogsToServer();

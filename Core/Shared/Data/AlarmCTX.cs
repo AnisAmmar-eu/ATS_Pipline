@@ -27,7 +27,7 @@ public class AlarmCTX : DbContext
 	
 	// Packets
 	public DbSet<Packet> Packet => Set<Packet>();
-	public DbSet<Entities.Packets.Models.DB.AlarmLists.AlarmList> AlarmListPacket => Set<Entities.Packets.Models.DB.AlarmLists.AlarmList>();
+	public DbSet<AlarmList> AlarmListPacket => Set<AlarmList>();
 	public DbSet<Detection> DetectionPacket => Set<Detection>();
 
 

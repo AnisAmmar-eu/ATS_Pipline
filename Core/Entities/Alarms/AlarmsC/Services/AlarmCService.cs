@@ -3,30 +3,16 @@ using Core.Shared.Exceptions;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
+using Core.Entities.Alarms.AlarmsC.Repositories;
+using Core.Shared.Services.Kernel;
+
 namespace Core.Entities.Alarms.AlarmsC.Services;
 
-public class AlarmCService : IAlarmCService
+public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAlarmC>, IAlarmCService
 {
-	private readonly IAlarmUOW _alarmUOW;
 
-	public AlarmCService(IAlarmUOW alarmUOW)
+	public AlarmCService(IAlarmUOW alarmUOW) : base(alarmUOW)
 	{
-		_alarmUOW = alarmUOW;
-	}
-
-	public async Task<List<DTOAlarmC>> GetAll()
-	{
-		return (await _alarmUOW.AlarmC.GetAll()).ConvertAll(alarmC => alarmC.ToDTO());
-	}
-
-	/// <summary>
-	/// Get an AlarmC by its ID
-	/// </summary>
-	/// <param name="ID"></param>
-	/// <returns></returns>
-	public async Task<DTOAlarmC> GetById(int ID)
-	{
-		return (await _alarmUOW.AlarmC.GetById(ID)).ToDTO();
 	}
 
 	/// <summary>

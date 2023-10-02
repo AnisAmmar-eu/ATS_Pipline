@@ -1,4 +1,7 @@
 using System.Runtime.InteropServices;
+using Core.Entities.Alarms.AlarmsPLC.Models.DB;
+using Core.Shared.Models.DB.Kernel.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace Core.Entities.Alarms;
 
@@ -18,7 +21,7 @@ namespace Core.Entities.Alarms;
  */
 
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
-public struct Alarm
+public struct Alarm : IBaseADS<AlarmPLC, Alarm>
 {
     // Type must be 'blittable' to the corresponding PLC Struct Type
     // See MSDN for MarshalAs and Default Marshalling.
@@ -32,4 +35,18 @@ public struct Alarm
     public uint TimeStampMS;
 
     public uint Status;
+
+    public Alarm(bool value)
+    {
+	    Value = true;
+	    ID = 2005;
+	    OneShot = false;
+	    TimeStamp = 0;
+	    TimeStampMS = 0;
+	    Status = 2;
+    }
+    public AlarmPLC ToModel()
+    {
+	    return new AlarmPLC(this);
+    }
 }

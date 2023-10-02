@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
+using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Shared.Exceptions;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.AlarmHub;
@@ -13,11 +14,13 @@ using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsPLC.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
+using Core.Entities.Alarms.AlarmsLog.Repositories;
+using Core.Shared.Services.Kernel;
+
 namespace Core.Entities.Alarms.AlarmsLog.Services;
 
-public class AlarmLogService : IAlarmLogService
+public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, DTOAlarmLog>, IAlarmLogService
 {
-	private readonly IAlarmUOW _alarmUOW;
 	private readonly IConfiguration _configuration;
 	private readonly ISignalRService _signalRService;
 	private readonly IHttpContextAccessor _httpContextAccessor;
@@ -25,21 +28,13 @@ public class AlarmLogService : IAlarmLogService
 
 
 	public AlarmLogService(IAlarmUOW alarmUOW, IConfiguration configuration, ISignalRService signalRService,
-		IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext)
+		IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext) : base(alarmUOW)
 	{
 		_configuration = configuration;
 		_signalRService = signalRService;
 		_httpContextAccessor = httpContextAccessor;
 		_hubContext = hubContext;
-		_alarmUOW = alarmUOW;
 		//_myHub = myHub;
-	}
-
-	public async Task<DTOAlarmLog> AddAlarmLog(AlarmLog alarmLog)
-	{
-		await _alarmUOW.AlarmLog.Add(alarmLog);
-		_alarmUOW.Commit();
-		return alarmLog.ToDTO();
 	}
 
 	public async Task<IEnumerable<DTOAlarmPLC>> Collect()
@@ -147,7 +142,7 @@ public class AlarmLogService : IAlarmLogService
 	}
 
 
-	public async Task<List<DTOFAlarmLog>> GetAll()
+	public async Task<List<DTOFAlarmLog>> GetAllForFront()
 	{
 		var allAlarmLogs = await _alarmUOW.AlarmLog.GetAllWithIncludes();
 		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOF());
