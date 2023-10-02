@@ -13,18 +13,10 @@ namespace ApiAlarms.Controllers.Controllers;
 public class AlarmCController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;
-	private readonly IAlarmPLCService _alarmPLCServiceA;
 
-	public AlarmCController(IAlarmCService alarmCService, IAlarmPLCService alarmPLCServiceA)
+	public AlarmCController(IAlarmCService alarmCService)
 	{
 		_alarmCService = alarmCService;
-		_alarmPLCServiceA = alarmPLCServiceA;
-	}
-
-	[HttpGet("IO")]
-	public async Task guifez()
-	{
-		await _alarmPLCServiceA.Add(new AlarmPLC(new Alarm()));
 	}
 
 	/// <summary>
