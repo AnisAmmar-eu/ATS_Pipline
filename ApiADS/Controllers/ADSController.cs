@@ -6,7 +6,7 @@ namespace ApiADS.Controllers;
 
 [ApiController]
 [Route("ads")]
-public partial class ADSController : ControllerBase
+public class ADSController : ControllerBase
 {
 	private IServiceProvider _serviceProvider;
 
@@ -40,7 +40,7 @@ public partial class ADSController : ControllerBase
 			ads.tcClient = tcClient;
 			ads.appServices = _serviceProvider;
 			ads.cancel = cancel;
-			AlarmNotification alarmNotification = InitAlarmNotification(ads);
+			AlarmNotification alarmNotification = AlarmNotification.Create(ads);
 			try
 			{
 				while ((await tcClient.ReadAnyAsync<uint>(ads.alarmNew, cancel)).ErrorCode ==

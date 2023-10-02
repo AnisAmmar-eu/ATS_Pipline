@@ -10,7 +10,8 @@ using TwinCAT.Ads;
 
 namespace ApiADS.Notifications;
 
-public class BaseNotification<TService, T, TDTO, TStruct>
+public class
+	BaseNotification<TService, T, TDTO, TStruct>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 	where TService : class, IServiceBaseEntity<T, TDTO>
@@ -29,6 +30,37 @@ public class BaseNotification<TService, T, TDTO, TStruct>
 		_oldEntry = oldEntry;
 	}
 
+	public static async Task<BaseNotification<TService, T, TDTO, TStruct>> Create(dynamic ads)
+	{
+		return await CreateSub(ads, "", "", "");
+	}
+
+	protected static async Task<BaseNotification<TService, T, TDTO, TStruct>> CreateSub(dynamic ads,
+		string acquitSymbol,
+		string newMsgSymbol, string oldEntrySymbol)
+	{
+		AdsClient tcClient = (AdsClient)ads.tcClient;
+
+		uint acquitMsg = tcClient.CreateVariableHandle(acquitSymbol);
+		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
+		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
+
+		int size = sizeof(UInt32);
+		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(newMsgSymbol, size,
+			new NotificationSettings(AdsTransMode.OnChange, 0, 0), ads, ads.cancel);
+		BaseNotification<TService, T, TDTO, TStruct> notification =
+			new(resultHandle, acquitMsg, newMsg, oldEntry);
+		tcClient.AdsNotification += notification.GetElement;
+
+		// Verifies if there isn't already something in the queue
+		ResultValue<uint> newMsgValue = await tcClient.ReadAnyAsync<uint>(ads.msgNewHandle, ads.cancel);
+		if (newMsgValue.ErrorCode != AdsErrorCode.NoError)
+			throw new Exception(newMsgValue.ErrorCode.ToString());
+		if (newMsgValue.Value == Utils.HasNewMsg)
+			notification.GetElementSub(ads);
+		return notification;
+	}
+
 	public void GetElement(object? sender, AdsNotificationEventArgs e)
 	{
 		uint newMsg = BinaryPrimitives.ReadUInt32LittleEndian(e.Data.Span);
@@ -39,7 +71,7 @@ public class BaseNotification<TService, T, TDTO, TStruct>
 			GetElementSub(e.UserData as dynamic);
 		}
 	}
-	
+
 	public async void GetElementSub(dynamic dynamicObject)
 	{
 		AdsClient? tcClient = (dynamicObject!.tcClient as AdsClient);

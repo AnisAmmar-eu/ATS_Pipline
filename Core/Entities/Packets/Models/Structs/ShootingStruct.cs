@@ -1,9 +1,10 @@
+using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.Structs;
 
-public struct ShootingStruct : IBaseADS<Shooting, ShootingStruct> // TODO Not in list variables
+public struct ShootingStruct : IBaseADS<Packet, ShootingStruct> // TODO Not in list variables
 {
 	public uint CycleStationRID;
 	public uint AnodeIDKey;
@@ -11,7 +12,7 @@ public struct ShootingStruct : IBaseADS<Shooting, ShootingStruct> // TODO Not in
 	public uint ProcedurePerformance; // TODO int?
 	public string LedStatus; // TODO Dictionary?
 	public uint ShootingTS;
-	public Shooting ToModel()
+	public Packet ToModel()
 	{
 		return new Shooting(this);
 	}

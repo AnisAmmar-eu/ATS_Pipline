@@ -6,10 +6,15 @@ using TwinCAT.Ads;
 
 namespace ApiADS.Notifications;
 
-public class AlarmNotification : BaseNotification<AlarmPLCService, AlarmPLC, DTOAlarmPLC, Alarm>
+public class AlarmNotification : BaseNotification<IAlarmPLCService, AlarmPLC, DTOAlarmPLC, Alarm>
 {
 	public AlarmNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
 		: base(resultHandle, acquitMsg, newMsg, oldEntry)
 	{
+	}
+
+	public new static async Task<AlarmNotification> Create(dynamic ads)
+	{
+		return await CreateSub(ads, Utils.AlarmAcquitMsg, Utils.AlarmNewMsg, Utils.AlarmToRead);
 	}
 }
