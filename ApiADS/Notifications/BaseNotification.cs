@@ -27,14 +27,8 @@ public class
 		_oldEntry = oldEntry;
 	}
 
-	public static async Task<BaseNotification<TService, T, TDTO, TStruct>> Create(dynamic ads)
-	{
-		return await CreateSub(ads, "", "", "");
-	}
-
 	protected static async Task<BaseNotification<TService, T, TDTO, TStruct>> CreateSub(dynamic ads,
-		string acquitSymbol,
-		string newMsgSymbol, string oldEntrySymbol)
+		string acquitSymbol, string newMsgSymbol, string oldEntrySymbol)
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
 

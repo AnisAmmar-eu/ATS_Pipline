@@ -13,7 +13,7 @@ public class ShootingNotification : BaseNotification<IPacketService, Packet, DTO
 	{
 	}
 
-	public new static async Task<ShootingNotification> Create(dynamic ads)
+	public static async Task<ShootingNotification> Create(dynamic ads)
 	{
 		return await CreateSub(ads, Utils.ShootingAcquitMsg, Utils.ShootingNewMsg, Utils.ShootingToRead);
 	}

@@ -13,7 +13,7 @@ public class DetectionNotification : BaseNotification<IPacketService, Packet, DT
 	{
 	}
 
-	public new static async Task<DetectionNotification> Create(dynamic ads)
+	public static async Task<DetectionNotification> Create(dynamic ads)
 	{
 		return await CreateSub(ads, Utils.DetectionAcquitMsg, Utils.DetectionNewMsg, Utils.DetectionToRead);
 	}

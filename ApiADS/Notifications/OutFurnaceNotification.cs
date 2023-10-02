@@ -13,7 +13,7 @@ public class OutFurnaceNotification : BaseNotification<IPacketService, Packet, D
 	{
 	}
 
-	public new static async Task<OutFurnaceNotification> Create(dynamic ads)
+	public static async Task<OutFurnaceNotification> Create(dynamic ads)
 	{
 		return await CreateSub(ads, Utils.OutFurnaceAcquitMsg, Utils.OutFurnaceNewMsg, Utils.OutFurnaceToRead);
 	}

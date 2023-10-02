@@ -13,7 +13,7 @@ public class AlarmNotification : BaseNotification<IAlarmPLCService, AlarmPLC, DT
 	{
 	}
 
-	public new static async Task<AlarmNotification> Create(dynamic ads)
+	public static async Task<AlarmNotification> Create(dynamic ads)
 	{
 		return await CreateSub(ads, Utils.AlarmAcquitMsg, Utils.AlarmNewMsg, Utils.AlarmToRead);
 	}
