@@ -12,12 +12,12 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 	where TDTO : class, IDTO<T, TDTO>
 	where TRepository : IRepositoryBaseEntity<T, TDTO>
 {
-	protected readonly IAlarmUOW _alarmUOW;
+	protected readonly IAlarmUOW AlarmUOW;
 	private readonly TRepository _repository;
 
 	protected ServiceBaseEntity(IAlarmUOW alarmUOW)
 	{
-		_alarmUOW = alarmUOW;
+		AlarmUOW = alarmUOW;
 		_repository = (TRepository?)alarmUOW.GetRepoByType(typeof(TRepository)) ??
 		              throw new InvalidOperationException("Repo is null");
 	}
@@ -42,28 +42,28 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 
 	public async Task<TDTO> Add(T entity)
 	{
-		await _alarmUOW.StartTransaction();
+		await AlarmUOW.StartTransaction();
 		await _repository.Add(entity);
-		_alarmUOW.Commit();
-		await _alarmUOW.CommitTransaction();
+		AlarmUOW.Commit();
+		await AlarmUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 
 	public async Task<TDTO> Update(T entity)
 	{
-		await _alarmUOW.StartTransaction();
+		await AlarmUOW.StartTransaction();
 		_repository.Update(entity);
-		_alarmUOW.Commit();
-		await _alarmUOW.CommitTransaction();
+		AlarmUOW.Commit();
+		await AlarmUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 
 	public async Task<TDTO> Remove(T entity)
 	{
-		await _alarmUOW.StartTransaction();
+		await AlarmUOW.StartTransaction();
 		_repository.Remove(entity);
-		_alarmUOW.Commit();
-		await _alarmUOW.CommitTransaction();
+		AlarmUOW.Commit();
+		await AlarmUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 }

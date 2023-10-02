@@ -21,7 +21,7 @@ public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAla
 	/// <returns></returns>
 	public async Task<DTOAlarmC> GetByRID(string RID)
 	{
-		return (await _alarmUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[]
+		return (await AlarmUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[]
 		{
 			alarm => alarm.RID == RID
 		})).ToDTO();
@@ -42,12 +42,12 @@ public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAla
 		}
 		catch (EntityNotFoundException e)
 		{
-			await _alarmUOW.StartTransaction();
+			await AlarmUOW.StartTransaction();
 			AlarmC model = received.ToModel();
 			model.ID = 0;
-			await _alarmUOW.AlarmC.Add(model);
-			_alarmUOW.Commit();
-			await _alarmUOW.CommitTransaction();
+			await AlarmUOW.AlarmC.Add(model);
+			AlarmUOW.Commit();
+			await AlarmUOW.CommitTransaction();
 			return model.ToDTO();
 		}
 	}

@@ -1,6 +1,5 @@
 using System.Dynamic;
 using ApiADS.Notifications;
-using Core.Entities.Packets.Models.DB.Detections;
 using Microsoft.AspNetCore.Mvc;
 using TwinCAT.Ads;
 
@@ -41,7 +40,7 @@ public class ADSController : ControllerBase
 			ads.cancel = cancel;
 			// DetectionNotification detectionNotification = DetectionNotification.Create(ads);
 			// ShootingNotification shootingNotification = ShootingNotification.Create(ads);
-			AlarmNotification alarmNotification = AlarmNotification.Create(ads);
+			AlarmNotification.Create(ads);
 			try
 			{
 				while ((await tcClient.ReadAnyAsync<uint>(ads.alarmNew, cancel)).ErrorCode ==

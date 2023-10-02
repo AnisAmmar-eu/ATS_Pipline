@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Core.Shared.Models.HttpResponse;
 
@@ -63,7 +62,6 @@ public class ApiResponseObject
 
 	public ObjectResult SuccessResult()
 	{
-		string? toto = MethodBase.GetCurrentMethod()?.Name;
 		Status.Code = 200;
 		return new ObjectResult(this)
 		{

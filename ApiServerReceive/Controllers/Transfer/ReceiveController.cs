@@ -7,7 +7,6 @@ using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Services;
-using Core.Shared.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiServerReceive.Controllers.Transfer;
@@ -17,19 +16,15 @@ namespace ApiServerReceive.Controllers.Transfer;
 public class ReceiveController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;
-	private readonly AlarmCTX _alarmCtx;
 	private readonly IAlarmLogService _alarmLogService;
 
 
-	private readonly HttpClient _httpClient;
 	private readonly IPacketService _packetService;
 
-	public ReceiveController(IAlarmLogService alarmLogService, AlarmCTX alarmCTX, IAlarmCService alarmCService,
+	public ReceiveController(IAlarmLogService alarmLogService, IAlarmCService alarmCService,
 		IPacketService packetService)
 	{
-		_httpClient = new HttpClient();
 		_alarmLogService = alarmLogService;
-		_alarmCtx = alarmCTX;
 		_alarmCService = alarmCService;
 		_packetService = packetService;
 	}
@@ -37,13 +32,13 @@ public class ReceiveController : ControllerBase
 
 	[HttpPost]
 	[Route("alarm-log")]
-	public async Task<IActionResult> ReceiveAlarmLog([FromBody] IEnumerable<DTOSAlarmLog> dtoAlarmLogs)
+	public async Task<IActionResult> ReceiveAlarmLog([FromBody] List<DTOSAlarmLog> dtoAlarmLogs)
 	{
 		try
 		{
 			Debug.Print("Reçu depuis l'api 1");
 
-			if (dtoAlarmLogs == null || !dtoAlarmLogs.Any()) return BadRequest("Aucun alarmLog à traiter.");
+			if (!dtoAlarmLogs.Any()) return BadRequest("Aucun alarmLog à traiter.");
 			/*
 			var truncateSql = "TRUNCATE TABLE AlarmLog ";
 			var truncateSqlRT = "TRUNCATE TABLE AlarmRT ";

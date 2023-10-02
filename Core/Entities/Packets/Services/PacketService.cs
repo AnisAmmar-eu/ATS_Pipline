@@ -16,20 +16,20 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 
 	public async Task<DTOPacket> BuildPacket(DTOPacket dtoPacket)
 	{
-		await _alarmUOW.StartTransaction();
+		await AlarmUOW.StartTransaction();
 
 		Packet packet = dtoPacket.ToModel();
-		await packet.Create(_alarmUOW);
+		await packet.Create(AlarmUOW);
 
-		await packet.Build(_alarmUOW, packet.ToDTO());
+		await packet.Build(AlarmUOW, packet.ToDTO());
 
-		await _alarmUOW.CommitTransaction();
+		await AlarmUOW.CommitTransaction();
 		return packet.ToDTO();
 	}
 
 	public async Task<HttpResponseMessage> SendPacketsToServer()
 	{
-		List<Packet> packets = await _alarmUOW.Packet.GetAll();
+		List<Packet> packets = await AlarmUOW.Packet.GetAll();
 		const string api2Url = "https://localhost:7207/api/receive/packet";
 		string jsonData = JsonConvert.SerializeObject(packets.ConvertAll(packet => packet.ToDTO()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
@@ -40,10 +40,10 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 
 			if (!response.IsSuccessStatusCode) return response;
 
-			await _alarmUOW.StartTransaction();
-			packets.ForEach(packet => { _alarmUOW.Packet.Remove(packet); });
-			_alarmUOW.Commit();
-			await _alarmUOW.CommitTransaction();
+			await AlarmUOW.StartTransaction();
+			packets.ForEach(packet => { AlarmUOW.Packet.Remove(packet); });
+			AlarmUOW.Commit();
+			await AlarmUOW.CommitTransaction();
 
 			return response;
 		}
@@ -51,14 +51,14 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 
 	public async Task ReceivePacket(IEnumerable<DTOPacket> packets)
 	{
-		await _alarmUOW.StartTransaction();
+		await AlarmUOW.StartTransaction();
 		foreach (DTOPacket packet in packets)
 		{
 			packet.ID = 0;
-			await _alarmUOW.Packet.Add(packet.ToModel());
+			await AlarmUOW.Packet.Add(packet.ToModel());
 		}
 
-		_alarmUOW.Commit();
-		await _alarmUOW.CommitTransaction();
+		AlarmUOW.Commit();
+		await AlarmUOW.CommitTransaction();
 	}
 }

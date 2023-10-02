@@ -14,9 +14,9 @@ namespace Core.Shared.Repositories.Kernel;
 /// <typeparam name="T">
 ///     Type that defines an table in the database and have to implement <see cref="IBaseEntity{T}" />
 /// </typeparam>
-public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, DTO>
-	where T : class, IBaseEntity<T, DTO>
-	where DTO : class, IDTO<T, DTO>
+public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, TDTO>
+	where T : class, IBaseEntity<T, TDTO>
+	where TDTO : class, IDTO<T, TDTO>
 	where TContext : DbContext
 {
 	protected TContext _context;
@@ -51,7 +51,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 			includes: new Dictionary<string, string[]> { { "", includes } }
 		).FirstOrDefaultAsync(x => x.ID == id);
 		if (t == null)
-			throw new EntityNotFoundException(typeof(T).Name ?? "entity", id);
+			throw new EntityNotFoundException(typeof(T).Name, id);
 
 		return t;
 	}
@@ -70,7 +70,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 			includes: includes
 		).FirstOrDefaultAsync(x => x.ID == id);
 		if (t == null)
-			throw new EntityNotFoundException(typeof(T).Name ?? "entity", id);
+			throw new EntityNotFoundException(typeof(T).Name, id);
 
 		return t;
 	}
@@ -92,7 +92,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 	{
 		T? t = await Query(filters, null, withTracking).FirstOrDefaultAsync();
 		if (t == null)
-			throw new EntityNotFoundException((typeof(T).Name ?? "entity") + " not found");
+			throw new EntityNotFoundException((typeof(T).Name) + " not found");
 
 		return t;
 	}
@@ -106,7 +106,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 	{
 		T? t = await Query(filters, orderBy, withTracking, includes: includes).FirstOrDefaultAsync();
 		if (t == null)
-			throw new EntityNotFoundException((typeof(T).Name ?? "entity") + " not found");
+			throw new EntityNotFoundException((typeof(T).Name) + " not found");
 
 		return t;
 	}
@@ -153,7 +153,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 	/// <summary>
 	///     Add an new entity in the table of <typeref name="T" />
 	/// </summary>
-	/// <param name="dto"><see cref="DTO{T}" /> dto to use to instantiate the new entity</param>
+	/// <param name="dto"><see cref="TDTO{T}" /> dto to use to instantiate the new entity</param>
 	/// <returns></returns>
 	public async Task Add(T entity)
 	{
@@ -203,7 +203,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 		query = includes.Aggregate(query, (current, include) => current.Include(include));
 		T? entity = await query.FirstOrDefaultAsync(x => x.ID == id);
 		if (entity == null)
-			throw new EntityNotFoundException(typeof(T).Name ?? "entity", id);
+			throw new EntityNotFoundException(typeof(T).Name, id);
 
 		_context.Set<T>().Remove(entity);
 	}

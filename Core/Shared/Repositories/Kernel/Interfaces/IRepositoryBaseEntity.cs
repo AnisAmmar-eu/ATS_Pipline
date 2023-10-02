@@ -14,9 +14,9 @@ namespace Core.Shared.Repositories.Kernel.Interfaces;
 ///     Type of the entity to manipulate, should be in the base and defined in the namespace
 ///     <see cref="Entity" />
 /// </typeparam>
-public interface IRepositoryBaseEntity<T, DTO>
-	where T : class, IBaseEntity<T, DTO>
-	where DTO : class, IDTO<T, DTO>
+public interface IRepositoryBaseEntity<T, TDTO>
+	where T : class, IBaseEntity<T, TDTO>
+	where TDTO : class, IDTO<T, TDTO>
 {
 	/*/// <summary>
 	///     Get entity by id from the table of <typeref name="T"/>
@@ -105,7 +105,7 @@ public interface IRepositoryBaseEntity<T, DTO>
 	/// <summary>
 	///     Add an new entity in the table of <typeref name="T" />
 	/// </summary>
-	/// <param name="dto"><see cref="DTO{T}" /> dto to use to instantiate the new entity</param>
+	/// <param name="dto"><see cref="TDTO{T}" /> dto to use to instantiate the new entity</param>
 	/// <returns></returns>
 	Task Add(T entity);
 

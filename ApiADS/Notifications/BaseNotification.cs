@@ -65,7 +65,7 @@ public class
 
 	public async void GetElementSub(dynamic dynamicObject)
 	{
-		AdsClient? tcClient = dynamicObject!.tcClient as AdsClient;
+		AdsClient? tcClient = dynamicObject.tcClient as AdsClient;
 		tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
 		tcClient.WriteAny(_newMsg, Utils.NoMessage);
 		// Get element of FIFO

@@ -6,9 +6,9 @@ namespace Core.Shared.Models.DTOs.Kernel.Interfaces;
 ///     Interface defining the properties of a DTO.
 /// </summary>
 /// <typeparam name="T">Type which the DTO is linked</typeparam>
-public interface IDTO<T, DTO>
-	where T : class, IBaseEntity<T, DTO>
-	where DTO : class, IDTO<T, DTO>
+public interface IDTO<T, TDTO>
+	where T : class, IBaseEntity<T, TDTO>
+	where TDTO : class, IDTO<T, TDTO>
 {
 	public int ID { get; set; }
 	public DateTimeOffset? TS { get; set; }

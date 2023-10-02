@@ -55,11 +55,7 @@ builder.Services.AddAuthentication(options =>
 
 				return Task.CompletedTask;
 			},
-			OnAuthenticationFailed = context =>
-			{
-				Exception te = context.Exception;
-				return Task.CompletedTask;
-			}
+			OnAuthenticationFailed = _ => Task.CompletedTask
 		};
 	});
 
@@ -91,7 +87,7 @@ app.UseSwaggerUI();
 
 string? clientHost = builder.Configuration["ClientHost"];
 
-app.UseCors(builder => builder.WithOrigins(clientHost)
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()
 	.AllowCredentials());
