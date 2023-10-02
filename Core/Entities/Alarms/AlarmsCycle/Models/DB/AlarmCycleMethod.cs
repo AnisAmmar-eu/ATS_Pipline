@@ -1,15 +1,17 @@
+using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
+using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Entities.Alarms.AlarmsRT.Models.DB;
-using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
+
 namespace Core.Entities.Alarms.AlarmsCycle.Models.DB;
 
-public partial class AlarmCycle : BaseEntity, IBaseEntity<Alarms.AlarmsCycle.Models.DB.AlarmCycle, DTOAlarmCycle>
+public partial class AlarmCycle : BaseEntity, IBaseEntity<AlarmCycle, DTOAlarmCycle>
 {
 	public AlarmCycle()
 	{
 		AlarmRID = "";
 	}
+
 	public AlarmCycle(AlarmRT alarmRT)
 	{
 		AlarmRID = alarmRT.Alarm.RID;
@@ -24,6 +26,7 @@ public partial class AlarmCycle : BaseEntity, IBaseEntity<Alarms.AlarmsCycle.Mod
 		IsActive = dtoAlarmCycle.IsActive;
 		AlarmListPacketID = dtoAlarmCycle.AlarmListPacketID;
 	}
+
 	public override DTOAlarmCycle ToDTO(string? languageRID = null)
 	{
 		return new DTOAlarmCycle(this);

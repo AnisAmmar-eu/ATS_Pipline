@@ -14,4 +14,4 @@ public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, DTOAlarmC>
 	public string Description { get; set; }
 	public virtual ICollection<DTOAlarmLog>? Journals { get; set; }
 	public virtual DTOAlarmRT? AlarmRT { get; set; }
-};
+}

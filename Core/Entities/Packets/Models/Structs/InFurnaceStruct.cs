@@ -18,6 +18,7 @@ public struct InFurnaceStruct : IBaseADS<Packet, InFurnaceStruct>
 	public uint BakedPosition;
 	public uint FTASuckPit;
 	public uint TSLoad;
+
 	public Packet ToModel()
 	{
 		return new InFurnace(this);

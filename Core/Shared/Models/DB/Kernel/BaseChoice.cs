@@ -12,7 +12,7 @@ public class BaseChoice<T, TLang> : BaseEntity
 
 	public override DTOBaseChoice ToDTO(string? languageRID = null)
 	{
-		var cLang = CLangs.SingleOrDefault(choiceLang => choiceLang.Language.RID == languageRID);
+		TLang? cLang = CLangs.SingleOrDefault(choiceLang => choiceLang.Language.RID == languageRID);
 		return new DTOBaseChoice
 		{
 			ID = ID,

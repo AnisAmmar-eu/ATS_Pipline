@@ -1,4 +1,3 @@
-using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Models.DB.Kernel.Interfaces;

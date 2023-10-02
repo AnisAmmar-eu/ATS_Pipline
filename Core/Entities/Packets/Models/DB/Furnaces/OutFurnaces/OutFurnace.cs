@@ -5,7 +5,7 @@ namespace Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 
 public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace>
 {
-	public DateTimeOffset? TSUnpackPIT; // TSUnpackingOfPIT
-	public DateTimeOffset? TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
 	public int FTAPickUp; // FTAPickUpFromPIT
+	public DateTimeOffset? TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
+	public DateTimeOffset? TSUnpackPIT; // TSUnpackingOfPIT
 }

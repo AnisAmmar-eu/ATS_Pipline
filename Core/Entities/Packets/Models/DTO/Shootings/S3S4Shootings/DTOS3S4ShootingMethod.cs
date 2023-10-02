@@ -1,4 +1,3 @@
-using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
 

@@ -1,3 +1,4 @@
+using System.Dynamic;
 using ApiADS.Notifications;
 using Microsoft.AspNetCore.Mvc;
 using TwinCAT.Ads;
@@ -8,7 +9,7 @@ namespace ApiADS.Controllers;
 [Route("ads")]
 public class ADSController : ControllerBase
 {
-	private IServiceProvider _serviceProvider;
+	private readonly IServiceProvider _serviceProvider;
 
 	public ADSController(IServiceProvider serviceProvider)
 	{
@@ -26,17 +27,14 @@ public class ADSController : ControllerBase
 			{
 				// Connection
 				tcClient.Connect(851);
-				if (tcClient.IsConnected)
-				{
-					break;
-				}
+				if (tcClient.IsConnected) break;
 
 				Console.WriteLine("Unable to connect to the automaton. Retrying in 1 second");
 				Thread.Sleep(1000);
 			}
 
 			// Create dynamic Object to use in function notification
-			dynamic ads = new System.Dynamic.ExpandoObject();
+			dynamic ads = new ExpandoObject();
 			ads.tcClient = tcClient;
 			ads.appServices = _serviceProvider;
 			ads.cancel = cancel;
@@ -45,10 +43,8 @@ public class ADSController : ControllerBase
 			{
 				while ((await tcClient.ReadAnyAsync<uint>(ads.alarmNew, cancel)).ErrorCode ==
 				       AdsErrorCode.NoError)
-				{
 					// To avoid spamming the TwinCat
 					Thread.Sleep(1000);
-				}
 			}
 			catch (Exception ex)
 			{

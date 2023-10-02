@@ -10,27 +10,26 @@ using Newtonsoft.Json;
 
 namespace Core.Entities.Packets.Models.DTO.Binders;
 
-public class DTOPacketBinder: IModelBinder
+public class DTOPacketBinder : IModelBinder
 {
 	public async Task BindModelAsync(ModelBindingContext bindingContext)
 	{
-            try
-            {
-                Stream stream = bindingContext.HttpContext.Request.Body;
+		try
+		{
+			Stream stream = bindingContext.HttpContext.Request.Body;
 
-                string json = await new StreamReader(stream).ReadToEndAsync();
+			string json = await new StreamReader(stream).ReadToEndAsync();
 
-                DTOPacket packet = JsonConvert.DeserializeObject<DTOPacket>(json)!;
-                Type dtoType = GetDTOType(packet.Type);
-                object? formatedModel = JsonConvert.DeserializeObject(json, dtoType);
+			DTOPacket packet = JsonConvert.DeserializeObject<DTOPacket>(json)!;
+			Type dtoType = GetDTOType(packet.Type);
+			object? formatedModel = JsonConvert.DeserializeObject(json, dtoType);
 
-                bindingContext.Result = ModelBindingResult.Success(formatedModel);
-
-            }
-            catch
-            {
-                bindingContext.Result = ModelBindingResult.Failed();
-            }
+			bindingContext.Result = ModelBindingResult.Success(formatedModel);
+		}
+		catch
+		{
+			bindingContext.Result = ModelBindingResult.Failed();
+		}
 	}
 
 	private static Type GetDTOType(string? type)
@@ -45,7 +44,7 @@ public class DTOPacketBinder: IModelBinder
 			PacketType.DETECTION => typeof(DTODetection),
 			PacketType.SHOOTING => typeof(DTOShooting),
 			PacketType.FURNACE => typeof(DTOFurnace),
-			_ => typeof(DTOPacket),
+			_ => typeof(DTOPacket)
 		};
 	}
 }

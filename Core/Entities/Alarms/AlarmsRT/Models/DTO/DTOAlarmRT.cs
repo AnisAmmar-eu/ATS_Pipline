@@ -1,7 +1,8 @@
+using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Shared.Models.DTOs.Kernel;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
-using Core.Entities.Alarms.AlarmsC.Models.DTO;
+
 namespace Core.Entities.Alarms.AlarmsRT.Models.DTO;
 
 public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmRT, DTOAlarmRT>

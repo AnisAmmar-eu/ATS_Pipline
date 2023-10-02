@@ -1,7 +1,5 @@
 using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.Packets.Services;
 using TwinCAT.Ads;

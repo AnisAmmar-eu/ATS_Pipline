@@ -1,22 +1,21 @@
 using System.Linq.Expressions;
-using Core.Shared.Exceptions;
-using Core.Shared.UnitOfWork.Interfaces;
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Repositories;
+using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
+using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsC.Services;
 
 public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAlarmC>, IAlarmCService
 {
-
 	public AlarmCService(IAlarmUOW alarmUOW) : base(alarmUOW)
 	{
 	}
 
 	/// <summary>
-	/// Search for an AlarmC based on its RID.
+	///     Search for an AlarmC based on its RID.
 	/// </summary>
 	/// <param name="RID"></param>
 	/// <returns></returns>
@@ -29,8 +28,8 @@ public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAla
 	}
 
 	/// <summary>
-	/// Tries to add a received AlarmC to AlarmsServer, if it already exists, it returns the AlarmC from the DB.
-	/// If it doesn't, creates a new one and returns it. Comparison is made with the RID.
+	///     Tries to add a received AlarmC to AlarmsServer, if it already exists, it returns the AlarmC from the DB.
+	///     If it doesn't, creates a new one and returns it. Comparison is made with the RID.
 	/// </summary>
 	/// <param name="received">Received AlarmC from a station</param>
 	/// <returns>An already existing AlarmC with the same RID or a new one.</returns>

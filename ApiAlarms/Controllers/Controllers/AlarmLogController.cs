@@ -31,7 +31,7 @@ public class AlarmLogController : ControllerBase
 	}
 
 	/// <summary>
-	/// Get all logs.
+	///     Get all logs.
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
@@ -41,7 +41,6 @@ public class AlarmLogController : ControllerBase
 	}
 
 	/// <summary>
-	/// 
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
@@ -52,7 +51,7 @@ public class AlarmLogController : ControllerBase
 	}
 
 	/// <summary>
-	/// Ack a list of log entries
+	///     Ack a list of log entries
 	/// </summary>
 	/// <param name="alarmLogIDs"></param>
 	/// <returns></returns>

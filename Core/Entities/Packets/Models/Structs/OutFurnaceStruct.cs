@@ -10,6 +10,7 @@ public struct OutFurnaceStruct : IBaseADS<Packet, OutFurnaceStruct>
 	public uint TSUnpackPIT; // TSUnpackingOfPIT
 	public uint TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
 	public uint FTAPickUp; // FTAPickUpFromPIT
+
 	public Packet ToModel()
 	{
 		return new OutFurnace(this);

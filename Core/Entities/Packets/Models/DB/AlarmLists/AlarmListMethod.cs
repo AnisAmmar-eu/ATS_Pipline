@@ -9,11 +9,11 @@ namespace Core.Entities.Packets.Models.DB.AlarmLists;
 
 public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 {
-
-	public AlarmList() : base()
+	public AlarmList()
 	{
 		AlarmCycles = new List<AlarmCycle>();
 	}
+
 	public AlarmList(DTOAlarmList dto) : base(dto)
 	{
 		AlarmCycles = dto.AlarmList.ToList().ConvertAll(dtoAlarmCycle =>
@@ -23,6 +23,7 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 			return alarmCycle;
 		});
 	}
+
 	public override DTOAlarmList ToDTO(string? languageRID = null)
 	{
 		return new DTOAlarmList(this);
@@ -34,10 +35,10 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 		List<AlarmRT> alarmRTs = await alarmUOW.AlarmRT.GetAllWithInclude();
 		foreach (AlarmRT alarmRT in alarmRTs)
 		{
-			AlarmCycle alarmCycle = new AlarmCycle(alarmRT);
+			AlarmCycle alarmCycle = new(alarmRT);
 			alarmCycle.AlarmListPacketID = dtoAlarmList.ID;
 			await alarmUOW.AlarmCycle.Add(alarmCycle);
-			alarmUOW.Commit();	
+			alarmUOW.Commit();
 			dtoAlarmList.AlarmList.Add(alarmCycle.ToDTO());
 		}
 

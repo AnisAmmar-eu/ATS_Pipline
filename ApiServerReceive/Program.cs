@@ -9,7 +9,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -48,7 +48,7 @@ builder.Services.AddCors(options =>
 });
 
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseCors("AllowOrigin");
 

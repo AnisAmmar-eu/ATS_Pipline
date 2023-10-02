@@ -5,5 +5,4 @@ namespace Core.Entities.Packets.Models.DB.Furnaces;
 
 public partial class Furnace : Packet, IBaseEntity<Furnace, DTOFurnace>
 {
-	
 }

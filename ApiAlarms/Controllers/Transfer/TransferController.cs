@@ -22,7 +22,7 @@ public class TransferController : ControllerBase
 	public async Task<IActionResult> TransferAlarmsLog()
 	{
 		try
-		{ 
+		{
 			HttpResponseMessage response = await _alarmLogService.SendLogsToServer();
 			if (response.IsSuccessStatusCode)
 				return Ok(true);

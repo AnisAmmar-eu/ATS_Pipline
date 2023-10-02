@@ -1,14 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Core.Entities.Packets.Models.DB;
-using Microsoft.AspNetCore.Routing.Patterns;
-using Microsoft.EntityFrameworkCore;
-using Core.Entities.Alarms.AlarmsC.Models.DB;
+﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
+using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Detections;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Shared.Data;
 
@@ -24,7 +22,7 @@ public class AlarmCTX : DbContext
 	public DbSet<AlarmLog> AlarmLog => Set<AlarmLog>();
 	public DbSet<AlarmRT> AlarmRT => Set<AlarmRT>();
 	public DbSet<AlarmCycle> AlarmCycle => Set<AlarmCycle>();
-	
+
 	// Packets
 	public DbSet<Packet> Packet => Set<Packet>();
 	public DbSet<AlarmList> AlarmListPacket => Set<AlarmList>();
@@ -34,7 +32,7 @@ public class AlarmCTX : DbContext
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
-		
+
 		modelBuilder.Entity<AlarmLog>()
 			.HasOne(j => j.Alarm)
 			.WithMany(a => a.AlarmLogs)

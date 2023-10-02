@@ -63,13 +63,13 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
                     begin
 
                         if (@NbNonAck = 0)
-                        begin
-                            UPDATE a
-                            SET a.NbNonAck = 0,
-                                a.IsActive = CASE WHEN @ActiveAlarm > 0 THEN 1 ELSE 0 END
-                            FROM AlarmRT a
-                                     INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
-                        end;
+                            begin
+                                UPDATE a
+                                SET a.NbNonAck = 0,
+                                    a.IsActive = CASE WHEN @ActiveAlarm > 0 THEN 1 ELSE 0 END
+                                FROM AlarmRT a
+                                         INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
+                            end;
 
                         if (@ActiveAlarm = 0)
                             begin

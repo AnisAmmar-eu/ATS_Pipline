@@ -16,12 +16,12 @@ public interface IAlarmUOW : IDisposable
 	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }
-	
+
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
 
 	public object? GetRepoByType(Type repo);
-	
+
 	/// <summary>
 	///     Saves changes made in this context to the underlying database.
 	/// </summary>

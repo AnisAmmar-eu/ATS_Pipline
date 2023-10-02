@@ -1,10 +1,11 @@
-﻿using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Entities.Alarms.AlarmsC.Models.DB;
+﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
+using Core.Shared.Models.DB.Kernel;
+using Core.Shared.Models.DB.Kernel.Interfaces;
+
 namespace Core.Entities.Alarms.AlarmsRT.Models.DB;
 
-public partial class AlarmRT : BaseEntity, IBaseEntity<Alarms.AlarmsRT.Models.DB.AlarmRT, DTOAlarmRT>
+public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 {
 	public AlarmRT()
 	{
@@ -27,7 +28,7 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<Alarms.AlarmsRT.Models.DB
 		IsActive = dtoAlarmRT.IsActive;
 		TSRaised = dtoAlarmRT.TSRaised;
 		TSClear = dtoAlarmRT.TSClear;
-		
+
 		Alarm = dtoAlarmRT.Alarm.ToModel();
 	}
 

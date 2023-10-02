@@ -63,7 +63,7 @@ public class ApiResponseObject
 
 	public ObjectResult SuccessResult()
 	{
-		var toto = MethodBase.GetCurrentMethod()?.Name;
+		string? toto = MethodBase.GetCurrentMethod()?.Name;
 		Status.Code = 200;
 		return new ObjectResult(this)
 		{

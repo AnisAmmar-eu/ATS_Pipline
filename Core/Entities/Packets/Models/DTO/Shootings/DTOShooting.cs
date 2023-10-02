@@ -7,7 +7,7 @@ public partial class DTOShooting : DTOPacket, IDTO<Shooting, DTOShooting>
 {
 	public int AnodeIDKey; // IESA key
 	public string GlobalStationStatus; // TODO Dictionary ?
-	public int ProcedurePerformance; // TODO int ?
 	public string LedStatus; // TODO Dictionary ?
+	public int ProcedurePerformance; // TODO int ?
 	public DateTimeOffset ShootingTS; // TSWhenAnodeIsShot
 }

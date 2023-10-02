@@ -7,10 +7,10 @@ namespace Core.Shared.Services.Background;
 
 public class CollectService : BackgroundService
 {
-	private readonly TimeSpan _period = TimeSpan.FromMilliseconds(100);
-	private int _executionCount = 0;
-	private readonly ILogger<CollectService> _logger;
 	private readonly IServiceScopeFactory _factory;
+	private readonly ILogger<CollectService> _logger;
+	private readonly TimeSpan _period = TimeSpan.FromMilliseconds(100);
+	private int _executionCount;
 
 	public CollectService(ILogger<CollectService> logger, IServiceScopeFactory factory)
 	{
@@ -24,7 +24,6 @@ public class CollectService : BackgroundService
 
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
-		{
 			try
 			{
 				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
@@ -44,6 +43,5 @@ public class CollectService : BackgroundService
 					"Failed to execute PeriodicCollectService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-		}
 	}
 }

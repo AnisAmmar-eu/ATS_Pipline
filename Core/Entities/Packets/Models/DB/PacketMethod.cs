@@ -8,13 +8,13 @@ namespace Core.Entities.Packets.Models.DB;
 
 public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 {
-
 	public Packet()
 	{
 		Type = "";
 		CycleStationRID = "";
 		Status = PacketStatus.Initialised;
 	}
+
 	public Packet(DTOPacket dto)
 	{
 		ID = dto.ID;
@@ -23,6 +23,7 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 		Status = dto.Status;
 		Type = dto.Type;
 	}
+
 	public override DTOPacket ToDTO(string? languageRID = null)
 	{
 		return new DTOPacket(this);

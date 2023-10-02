@@ -9,8 +9,7 @@ namespace ApiAlarms.Controllers.Controllers;
 [Route("api/packets")]
 public class PacketController : ControllerBase
 {
-	
-	private IPacketService _packetService;
+	private readonly IPacketService _packetService;
 
 	public PacketController(IPacketService packetService)
 	{

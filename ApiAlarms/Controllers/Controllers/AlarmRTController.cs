@@ -17,7 +17,7 @@ public class AlarmRTController : ControllerBase
 	}
 
 	/// <summary>
-	/// Returns all AlarmsRT
+	///     Returns all AlarmsRT
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]

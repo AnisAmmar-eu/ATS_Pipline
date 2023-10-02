@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Core.Entities.Packets.Dictionary;
 
 public enum PacketStatus
@@ -7,13 +5,13 @@ public enum PacketStatus
 	Initialised,
 	Running,
 	Completed,
-	Sent,
+	Sent
 }
 
 public enum AnodeType
 {
 	D20,
-	DX,
+	DX
 }
 
 public class PacketType

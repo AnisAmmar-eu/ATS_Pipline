@@ -14,6 +14,7 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 		// TSCentralConveyor = adsStruct.TSCentralConveyor;
 		FTAPickUp = (int)adsStruct.FTAPickUp;
 	}
+
 	public override DTOOutFurnace ToDTO(string? languageRID = null)
 	{
 		return new DTOOutFurnace(this);

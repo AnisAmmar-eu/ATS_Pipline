@@ -6,5 +6,4 @@ namespace Core.Entities.Packets.Repositories;
 
 public interface IPacketRepository : IRepositoryBaseEntity<Packet, DTOPacket>
 {
-	
 }

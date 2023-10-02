@@ -1,7 +1,5 @@
 using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.Packets.Services;
 using TwinCAT.Ads;
@@ -14,7 +12,7 @@ public class ShootingNotification : BaseNotification<IPacketService, Packet, DTO
 		: base(resultHandle, acquitMsg, newMsg, oldEntry)
 	{
 	}
-	
+
 	public new static async Task<ShootingNotification> Create(dynamic ads)
 	{
 		return await CreateSub(ads, Utils.ShootingAcquitMsg, Utils.ShootingNewMsg, Utils.ShootingToRead);

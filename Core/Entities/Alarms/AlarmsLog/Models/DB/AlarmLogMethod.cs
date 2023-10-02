@@ -1,12 +1,13 @@
-﻿using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Entities.Alarms.AlarmsC.Models.DB;
+﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
+using Core.Shared.Models.DB.Kernel;
+using Core.Shared.Models.DB.Kernel.Interfaces;
+
 namespace Core.Entities.Alarms.AlarmsLog.Models.DB;
 
-public partial class AlarmLog : BaseEntity, IBaseEntity<Alarms.AlarmsLog.Models.DB.AlarmLog, DTOAlarmLog>
+public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 {
 	public AlarmLog()
 	{
@@ -20,6 +21,7 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<Alarms.AlarmsLog.Models.
 		AlarmID = alarmC.ID;
 		Alarm = alarmC;
 	}
+
 	public AlarmLog(DTOAlarmLog dtoAlarmLog)
 	{
 		ID = dtoAlarmLog.ID;
@@ -38,8 +40,8 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<Alarms.AlarmsLog.Models.
 	{
 		Alarm = dtofAlarmLog.Alarm.ToModel();
 	}
-	
-	public AlarmLog(DTOSAlarmLog dtosAlarmLog, AlarmC alarmC) : this((DTOAlarmLog)dtosAlarmLog)
+
+	public AlarmLog(DTOSAlarmLog dtosAlarmLog, AlarmC alarmC) : this(dtosAlarmLog)
 	{
 		HasBeenSent = dtosAlarmLog.HasBeenSent;
 		AlarmID = alarmC.ID;

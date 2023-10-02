@@ -9,9 +9,9 @@ public struct DetectionStruct : IBaseADS<Packet, DetectionStruct> // TODO Not pr
 {
 	public uint CycleStationRID;
 	public uint MeasuredType;
-	[MarshalAs(UnmanagedType.U1)]
-	public bool IsMismatched;
+	[MarshalAs(UnmanagedType.U1)] public bool IsMismatched;
 	public int AnodeSize;
+
 	public Packet ToModel()
 	{
 		return new Detection(this);

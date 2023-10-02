@@ -4,7 +4,7 @@ using Core.Shared.Models.DTOs.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsC.Models.DTO;
 
-public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, Alarms.AlarmsC.Models.DTO.DTOAlarmC>
+public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, DTOAlarmC>
 {
 	public DTOAlarmC()
 	{

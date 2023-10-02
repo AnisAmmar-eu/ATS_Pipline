@@ -44,7 +44,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 		params string[] includes
 	)
 	{
-		var t = await Query(
+		T? t = await Query(
 			filters,
 			null,
 			withTracking,
@@ -63,7 +63,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 		Dictionary<string, string[]>? includes = null
 	)
 	{
-		var t = await Query(
+		T? t = await Query(
 			filters,
 			null,
 			withTracking,
@@ -90,7 +90,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 		params string[] includes
 	)
 	{
-		var t = await Query(filters, null, withTracking).FirstOrDefaultAsync();
+		T? t = await Query(filters, null, withTracking).FirstOrDefaultAsync();
 		if (t == null)
 			throw new EntityNotFoundException((typeof(T).Name ?? "entity") + " not found");
 
@@ -104,7 +104,7 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 		Dictionary<string, string[]>? includes = null
 	)
 	{
-		var t = await Query(filters, orderBy, withTracking, includes: includes).FirstOrDefaultAsync();
+		T? t = await Query(filters, orderBy, withTracking, includes: includes).FirstOrDefaultAsync();
 		if (t == null)
 			throw new EntityNotFoundException((typeof(T).Name ?? "entity") + " not found");
 
@@ -125,7 +125,8 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 	)
 	{
 		//return await Query(filters, orderBy, withTracking, maxCount).ToListAsync();
-		return await Query(filters, orderBy, withTracking, maxCount, includes: new Dictionary<string, string[]>() { { "", includes } }).ToListAsync();
+		return await Query(filters, orderBy, withTracking, maxCount,
+			new Dictionary<string, string[]> { { "", includes } }).ToListAsync();
 	}
 
 	public async Task<List<T>> GetAllWithConcat(
@@ -198,9 +199,9 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 	/// <returns></returns>
 	public async Task Remove(int id, params string[] includes)
 	{
-		var query = _context.Set<T>().AsQueryable();
+		IQueryable<T> query = _context.Set<T>().AsQueryable();
 		query = includes.Aggregate(query, (current, include) => current.Include(include));
-		var entity = await query.FirstOrDefaultAsync(x => x.ID == id);
+		T? entity = await query.FirstOrDefaultAsync(x => x.ID == id);
 		if (entity == null)
 			throw new EntityNotFoundException(typeof(T).Name ?? "entity", id);
 
@@ -253,10 +254,10 @@ public class RepositoryBaseEntity<TContext, T, DTO> : IRepositoryBaseEntity<T, D
 		Dictionary<string, string[]>? includes = null
 	)
 	{
-		var query = _context.Set<T>().AsQueryable();
+		IQueryable<T> query = _context.Set<T>().AsQueryable();
 		if (includes != null)
 		{
-			foreach (var include in includes)
+			foreach (KeyValuePair<string, string[]> include in includes)
 				if (include.Key != "")
 				{
 					query = query.Include(include.Key);

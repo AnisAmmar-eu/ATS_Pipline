@@ -4,7 +4,7 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsC.Models.DB;
 
-public partial class AlarmC : BaseEntity, IBaseEntity<Alarms.AlarmsC.Models.DB.AlarmC, DTOAlarmC>
+public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 {
 	public AlarmC()
 	{

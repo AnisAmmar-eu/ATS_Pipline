@@ -16,12 +16,12 @@ namespace ApiServerReceive.Controllers.Transfer;
 [ApiController]
 public class ReceiveController : ControllerBase
 {
+	private readonly IAlarmCService _alarmCService;
 	private readonly AlarmCTX _alarmCtx;
+	private readonly IAlarmLogService _alarmLogService;
 
 
 	private readonly HttpClient _httpClient;
-	private readonly IAlarmLogService _alarmLogService;
-	private readonly IAlarmCService _alarmCService;
 	private readonly IPacketService _packetService;
 
 	public ReceiveController(IAlarmLogService alarmLogService, AlarmCTX alarmCTX, IAlarmCService alarmCService,
@@ -52,7 +52,7 @@ public class ReceiveController : ControllerBase
 			*/
 
 
-			foreach (var alarmLog in dtoAlarmLogs)
+			foreach (DTOSAlarmLog alarmLog in dtoAlarmLogs)
 			{
 				DTOAlarmC newAlarmC = await _alarmCService.GetByRID(alarmLog.AlarmRID);
 

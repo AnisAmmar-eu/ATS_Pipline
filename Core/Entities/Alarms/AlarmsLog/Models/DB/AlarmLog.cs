@@ -1,11 +1,13 @@
-﻿using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Entities.Alarms.AlarmsC.Models.DB;
+﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
+using Core.Shared.Models.DB.Kernel;
+using Core.Shared.Models.DB.Kernel.Interfaces;
+
 namespace Core.Entities.Alarms.AlarmsLog.Models.DB;
 
 public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 {
+	private AlarmC? _alarm;
 	public bool HasBeenSent { get; set; }
 	public int AlarmID { get; set; }
 	public string? Station { get; set; }
@@ -16,9 +18,6 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	public TimeSpan? Duration { get; set; }
 	public DateTimeOffset? TSRead { get; set; }
 	public DateTimeOffset? TSGet { get; set; } // Useful? TSGet == TS ?
-
-
-	private AlarmC? _alarm;
 
 	public AlarmC Alarm
 	{

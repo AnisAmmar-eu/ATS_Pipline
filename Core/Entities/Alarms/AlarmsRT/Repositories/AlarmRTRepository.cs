@@ -1,8 +1,9 @@
 using System.Linq.Expressions;
-using Core.Shared.Data;
-using Core.Shared.Repositories.Kernel;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
+using Core.Shared.Data;
+using Core.Shared.Repositories.Kernel;
+
 namespace Core.Entities.Alarms.AlarmsRT.Repositories;
 
 public class AlarmRTRepository : RepositoryBaseEntity<AlarmCTX, AlarmRT, DTOAlarmRT>, IAlarmRTRepository

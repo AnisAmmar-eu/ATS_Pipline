@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -27,43 +27,41 @@ builder.Services.AddDbContext<AlarmCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(options =>
-{
-	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+	{
+		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+	})
 // Adding Jwt Bearer
-.AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-    };
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            if (context.Request.Query.TryGetValue("access_token", out StringValues token)
-            )
-            {
-                context.Token = token;
-            }
+	.AddJwtBearer(options =>
+	{
+		options.SaveToken = true;
+		options.RequireHttpsMetadata = false;
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidAudience = builder.Configuration["JWT:ValidAudience"],
+			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+		};
+		options.Events = new JwtBearerEvents
+		{
+			OnMessageReceived = context =>
+			{
+				if (context.Request.Query.TryGetValue("access_token", out StringValues token)
+				   )
+					context.Token = token;
 
-            return Task.CompletedTask;
-        },
-        OnAuthenticationFailed = context =>
-        {
-            var te = context.Exception;
-            return Task.CompletedTask;
-        }
-    };
-});
+				return Task.CompletedTask;
+			},
+			OnAuthenticationFailed = context =>
+			{
+				Exception te = context.Exception;
+				return Task.CompletedTask;
+			}
+		};
+	});
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -82,21 +80,21 @@ builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
 //builder.Services.AddSingleton<CollectService>();
 //builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-	app.UseSwagger();
-	app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 //}
 
-var clientHost = builder.Configuration["ClientHost"];
+string? clientHost = builder.Configuration["ClientHost"];
 
 app.UseCors(builder => builder.WithOrigins(clientHost)
-    .WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
-    .AllowAnyHeader()
-    .AllowCredentials());
+	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+	.AllowAnyHeader()
+	.AllowCredentials());
 
 app.UseHttpsRedirection();
 

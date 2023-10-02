@@ -38,7 +38,7 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
         FROM AlarmLog log1
                  INNER JOIN INSERTED log2 ON log1.AlarmID = log2.AlarmID
         WHERE log1.AlarmID = log2.AlarmID
-        
+
         SELECT @MostRecentRaise = MAX(log1.TSRaised)
         FROM AlarmLog log1
                  INNER JOIN INSERTED log2 ON log1.AlarmID = log2.AlarmID

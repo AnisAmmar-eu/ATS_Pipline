@@ -1,14 +1,9 @@
 using System.Linq.Expressions;
-using System.Reflection;
-using Core.Shared.Data;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
-using Core.Shared.Repositories.Kernel;
 using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Services.Kernel.Interfaces;
-using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
-using Microsoft.VisualBasic;
 
 namespace Core.Shared.Services.Kernel;
 

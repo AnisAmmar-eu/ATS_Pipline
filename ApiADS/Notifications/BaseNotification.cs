@@ -1,7 +1,4 @@
 using System.Buffers.Binary;
-using Core.Entities.Alarms;
-using Core.Entities.Alarms.AlarmsPLC.Models.DB;
-using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
 using Core.Shared.Services.Kernel.Interfaces;
@@ -45,7 +42,7 @@ public class
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
-		int size = sizeof(UInt32);
+		int size = sizeof(uint);
 		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(newMsgSymbol, size,
 			new NotificationSettings(AdsTransMode.OnChange, 0, 0), ads, ads.cancel);
 		BaseNotification<TService, T, TDTO, TStruct> notification =
@@ -74,7 +71,7 @@ public class
 
 	public async void GetElementSub(dynamic dynamicObject)
 	{
-		AdsClient? tcClient = (dynamicObject!.tcClient as AdsClient);
+		AdsClient? tcClient = dynamicObject!.tcClient as AdsClient;
 		tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
 		tcClient.WriteAny(_newMsg, Utils.NoMessage);
 		// Get element of FIFO
@@ -85,7 +82,7 @@ public class
 
 		try
 		{
-			var serviceAds = services.GetRequiredService<TService>();
+			TService serviceAds = services.GetRequiredService<TService>();
 			await serviceAds.Add(entity);
 			tcClient.WriteAny(_acquitMsg, Utils.FinishedReading);
 		}

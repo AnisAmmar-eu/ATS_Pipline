@@ -1,9 +1,7 @@
 using System.Text;
-using Core.Entities.Packets.Dictionary;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Repositories;
-using Core.Migrations;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Newtonsoft.Json;
@@ -34,9 +32,9 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 		List<Packet> packets = await _alarmUOW.Packet.GetAll();
 		const string api2Url = "https://localhost:7207/api/receive/packet";
 		string jsonData = JsonConvert.SerializeObject(packets.ConvertAll(packet => packet.ToDTO()));
-		StringContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 
-		using (HttpClient httpClient = new HttpClient())
+		using (HttpClient httpClient = new())
 		{
 			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
 

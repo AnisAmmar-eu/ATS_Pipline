@@ -12,6 +12,7 @@ public struct ShootingStruct : IBaseADS<Packet, ShootingStruct> // TODO Not in l
 	public uint ProcedurePerformance; // TODO int?
 	public string LedStatus; // TODO Dictionary?
 	public uint ShootingTS;
+
 	public Packet ToModel()
 	{
 		return new Shooting(this);

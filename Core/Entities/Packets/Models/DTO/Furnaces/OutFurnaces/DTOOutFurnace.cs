@@ -3,9 +3,9 @@ using Core.Shared.Models.DTOs.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 
-public partial class DTOOutFurnace: DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
+public partial class DTOOutFurnace : DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 {
-	public DateTimeOffset? TSUnpackPIT; // TSUnpackingOfPIT
-	public DateTimeOffset? TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
 	public int FTAPickUp; // FTAPickUpFromPIT
+	public DateTimeOffset? TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
+	public DateTimeOffset? TSUnpackPIT; // TSUnpackingOfPIT
 }

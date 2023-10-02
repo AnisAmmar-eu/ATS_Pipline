@@ -7,7 +7,7 @@ namespace Core.Entities.Packets.Models.DB.Detections;
 
 public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 {
-	public Detection() : base()
+	public Detection()
 	{
 	}
 
@@ -19,6 +19,7 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 		IsMismatched = detectionStruct.IsMismatched;
 		AnodeSize = detectionStruct.AnodeSize;
 	}
+
 	public override DTODetection ToDTO(string? languageRID = null)
 	{
 		return new DTODetection(this);

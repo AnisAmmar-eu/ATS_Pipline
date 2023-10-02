@@ -1,4 +1,3 @@
-using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
 

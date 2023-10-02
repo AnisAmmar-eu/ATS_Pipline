@@ -1,9 +1,10 @@
-﻿using Core.Shared.Models.DTOs.Kernel;
+﻿using Core.Entities.Alarms.AlarmsPLC.Models.DB;
+using Core.Shared.Models.DTOs.Kernel;
 using Core.Shared.Models.DTOs.Kernel.Interfaces;
-using Core.Entities.Alarms.AlarmsPLC.Models.DB;
+
 namespace Core.Entities.Alarms.AlarmsPLC.Models.DTO;
 
-public partial class DTOAlarmPLC : DTOBaseEntity, IDTO<AlarmPLC, Alarms.AlarmsPLC.Models.DTO.DTOAlarmPLC>
+public partial class DTOAlarmPLC : DTOBaseEntity, IDTO<AlarmPLC, DTOAlarmPLC>
 {
 	public DTOAlarmPLC(AlarmPLC alarmPLC)
 	{

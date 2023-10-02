@@ -17,6 +17,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		// TODO
 		// ShootingTS = adsStruct.ShootingTS;
 	}
+
 	public override DTOShooting ToDTO(string? languageRID = null)
 	{
 		return new DTOShooting(this);
