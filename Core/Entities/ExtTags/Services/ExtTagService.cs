@@ -6,7 +6,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.ExtTags.Services;
 
-public class ExtTagService : ServiceBaseEntity<ExtTagRepository, ExtTag, DTOExtTag>, IExtTagService
+public class ExtTagService : ServiceBaseEntity<IExtTagRepository, ExtTag, DTOExtTag>, IExtTagService
 {
 	protected ExtTagService(IAlarmUOW alarmUOW) : base(alarmUOW)
 	{

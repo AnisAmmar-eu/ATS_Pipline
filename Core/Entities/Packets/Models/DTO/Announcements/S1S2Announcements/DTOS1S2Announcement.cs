@@ -5,6 +5,6 @@ namespace Core.Entities.Packets.Models.DTO.Announcements.S1S2Announcements;
 
 public partial class DTOS1S2Announcement : DTOAnnouncement, IDTO<S1S2Announcement, DTOS1S2Announcement>
 {
-	public int SerialNumber;
-	public int TrolleyNumber;
+	public int SerialNumber { get; set; }
+	public int TrolleyNumber { get; set; }
 }

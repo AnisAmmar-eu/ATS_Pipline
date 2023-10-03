@@ -3,7 +3,9 @@ using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
+using Core.Entities.ServicesMonitors.Services;
 using Core.Shared.Data;
+using Core.Shared.Services.Background;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -71,10 +73,14 @@ builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 
+builder.Services.AddScoped<IServicesMonitorService, ServicesMonitorService>();
+
 builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
 
 //builder.Services.AddSingleton<CollectService>();
 //builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
+builder.Services.AddSingleton<MonitorService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<MonitorService>());
 
 WebApplication app = builder.Build();
 

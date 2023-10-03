@@ -7,11 +7,11 @@ namespace Core.Entities.ServicesMonitors.Models.DB;
 
 public partial class ServicesMonitor : BaseEntity, IBaseEntity<ServicesMonitor, DTOServicesMonitor>
 {
-	public string RID;
-	public string Name;
-	public string Description;
-	public string IPAdress;
-	public bool IsConnected;
+	public string RID { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
+	public string IPAddress { get; set; }
+	public bool IsConnected { get; set; }
 
-	public List<ExtTag> ExtTags = new List<ExtTag>();
+	public List<ExtTag> ExtTags { get; set; } = new List<ExtTag>();
 }

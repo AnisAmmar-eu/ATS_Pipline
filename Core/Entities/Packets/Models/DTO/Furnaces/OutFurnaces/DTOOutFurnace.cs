@@ -5,7 +5,7 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 
 public partial class DTOOutFurnace : DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 {
-	public int FTAPickUp; // FTAPickUpFromPIT
-	public DateTimeOffset? TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
-	public DateTimeOffset? TSUnpackPIT; // TSUnpackingOfPIT
+	public int FTAPickUp { get; set; } // FTAPickUpFromPIT
+	public DateTimeOffset? TSCentralConveyor { get; set; } // TSWhenAnodeInOutletCentralConveyor
+	public DateTimeOffset? TSUnpackPIT { get; set; } // TSUnpackingOfPIT
 }

@@ -5,7 +5,7 @@ namespace Core.Entities.Packets.Models.DTO.Detections;
 
 public partial class DTODetection : DTOPacket, IDTO<Detection, DTODetection>
 {
-	public int AnodeSize; // Millimeters
-	public bool IsMismatched;
-	public int MeasuredType; // Enum AnodeType
+	public int AnodeSize { get; set; } // Millimeters
+	public bool IsMismatched { get; set; }
+	public int MeasuredType { get; set; } // Enum AnodeType
 }

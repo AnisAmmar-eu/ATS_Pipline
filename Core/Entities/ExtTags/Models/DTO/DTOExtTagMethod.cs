@@ -8,9 +8,12 @@ public partial class DTOExtTag : DTOBaseEntity, IDTO<ExtTag, DTOExtTag>
 {
 	public DTOExtTag(ExtTag extTag)
 	{
+		ID = extTag.ID;
+		TS = extTag.TS;
 		RID = extTag.RID;
 		Name = extTag.Name;
 		Description = extTag.Description;
+		ValueType = extTag.ValueType;
 		CurrentValue = extTag.CurrentValue;
 		NewValue = extTag.NewValue;
 		IsReadOnly = extTag.IsReadOnly;

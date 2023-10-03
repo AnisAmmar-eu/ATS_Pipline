@@ -8,10 +8,17 @@ public partial class DTOServicesMonitor : DTOBaseEntity, IDTO<ServicesMonitor, D
 {
 	public DTOServicesMonitor(ServicesMonitor servicesMonitor)
 	{
+		ID = servicesMonitor.ID;
+		TS = servicesMonitor.TS;
 		RID = servicesMonitor.RID;
 		Name = servicesMonitor.Name;
 		Description = servicesMonitor.Description;
-		IPAdress = servicesMonitor.IPAdress;
+		IPAddress = servicesMonitor.IPAddress;
 		IsConnected = servicesMonitor.IsConnected;
+	}
+
+	public override ServicesMonitor ToModel()
+	{
+		return new ServicesMonitor(this);
 	}
 }

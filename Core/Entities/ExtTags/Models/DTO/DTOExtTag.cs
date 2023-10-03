@@ -10,8 +10,11 @@ public partial class DTOExtTag : DTOBaseEntity, IDTO<ExtTag, DTOExtTag>
 	public string RID;
 	public string Name;
 	public string Description;
-	public int CurrentValue;
-	public int NewValue;
+
+	public string ValueType;
+	public string CurrentValue;
+	public string NewValue;
+	
 	public bool IsReadOnly;
 	public bool HasNewValue;
 	public int ServiceID;
