@@ -11,9 +11,18 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 	public string RID { get; set; }
 	public string Name { get; set; }
 	public string Description { get; set; }
-
-	// TODO Refactor nav
 	public virtual ICollection<AlarmLog> AlarmLogs { get; set; }
 
-	public virtual AlarmRT AlarmRT { get; set; }
+	#region Nav Properties
+
+	private AlarmRT? _alarmRT;
+
+	public virtual AlarmRT AlarmRT
+	{
+		set => _alarmRT = value;
+		get => _alarmRT
+		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(AlarmRT));
+	}
+
+	#endregion
 }
