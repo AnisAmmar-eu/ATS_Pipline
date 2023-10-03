@@ -3,7 +3,9 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.ExtTags.Repositories;
 using Core.Entities.Packets.Repositories;
+using Core.Entities.ServicesMonitors.Repositories;
 using Core.Shared.Repositories.System.Logs;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
@@ -21,6 +23,9 @@ public interface IAlarmUOW : IDisposable
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
+	
+	IExtTagRepository ExtTag { get;  }
+	IServicesMonitorRepository ServicesMonitor { get; }
 
 	public object? GetRepoByType(Type repo);
 

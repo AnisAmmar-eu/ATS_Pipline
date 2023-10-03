@@ -3,7 +3,9 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.ExtTags.Repositories;
 using Core.Entities.Packets.Repositories;
+using Core.Entities.ServicesMonitors.Repositories;
 using Core.Shared.Data;
 using Core.Shared.Repositories.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -27,8 +29,12 @@ public class AlarmUOW : IAlarmUOW
 		AlarmPLC = new AlarmPLCRepository(_alarmCTX);
 		AlarmLog = new AlarmLogRepository(_alarmCTX);
 		AlarmRT = new AlarmRTRepository(_alarmCTX);
+		
 		Packet = new PacketRepository(_alarmCTX);
 		AlarmCycle = new AlarmCycleRepository(_alarmCTX);
+
+		ExtTag = new ExtTagRepository(_alarmCTX);
+		ServicesMonitor = new ServicesMonitorRepository(_alarmCTX);
 	}
 
 	public ILogRepository Log { get; }
@@ -37,8 +43,12 @@ public class AlarmUOW : IAlarmUOW
 	public IAlarmPLCRepository AlarmPLC { get; }
 	public IAlarmLogRepository AlarmLog { get; }
 	public IAlarmRTRepository AlarmRT { get; }
+	
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
+	
+	public IExtTagRepository ExtTag { get;  }
+	public IServicesMonitorRepository ServicesMonitor { get; }
 
 	public object? GetRepoByType(Type repo)
 	{
@@ -50,6 +60,8 @@ public class AlarmUOW : IAlarmUOW
 			_ when repo == typeof(IAlarmRTRepository) => AlarmRT,
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
+			_ when repo == typeof(IExtTagRepository) => ExtTag,
+			_ when repo == typeof(IServicesMonitorRepository) => ServicesMonitor,
 			_ => null
 		};
 	}

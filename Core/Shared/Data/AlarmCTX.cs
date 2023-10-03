@@ -3,9 +3,11 @@ using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
+using Core.Entities.ExtTags.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Detections;
+using Core.Entities.ServicesMonitors.Models.DB;
 using Core.Shared.Models.DB.System.Logs;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +33,9 @@ public class AlarmCTX : DbContext
 	public DbSet<AlarmList> AlarmListPacket => Set<AlarmList>();
 	public DbSet<Detection> DetectionPacket => Set<Detection>();
 
+	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
+	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
+
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -51,6 +56,12 @@ public class AlarmCTX : DbContext
 			.HasMany(alarmListPacket => alarmListPacket.AlarmCycles)
 			.WithOne(alarmCycle => alarmCycle.AlarmList)
 			.HasForeignKey(alarmCycle => alarmCycle.AlarmListPacketID)
+			.IsRequired();
+
+		modelBuilder.Entity<ServicesMonitor>()
+			.HasMany(servicesMonitor => servicesMonitor.ExtTags)
+			.WithOne(extTag => extTag.Service)
+			.HasForeignKey(extTag => extTag.ServiceID)
 			.IsRequired();
 	}
 }
