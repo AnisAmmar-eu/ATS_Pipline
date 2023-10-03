@@ -10,5 +10,5 @@ public interface IServicesMonitorService : IServiceBaseEntity<ServicesMonitor, D
 	///		Will ping every ping address it finds and update its status.
 	/// </summary>
 	/// <returns></returns>
-	public Task UpdateAllStatus();
+	public Task PingAllAndUpdate();
 }

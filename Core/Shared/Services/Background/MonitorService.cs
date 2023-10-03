@@ -35,7 +35,7 @@ public class MonitorService : BackgroundService
 				_logger.LogInformation("MonitorService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling UpdateAllStatus");
 
-				await servicesMonitorService.UpdateAllStatus();
+				await servicesMonitorService.PingAllAndUpdate();
 
 				_executionCount++;
 				_logger.LogInformation("Executed PeriodicMonitorService - Count: {count}", _executionCount);

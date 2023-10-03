@@ -16,7 +16,7 @@ public class ServicesMonitorService :
 	{
 	}
 
-	public async Task UpdateAllStatus()
+	public async Task PingAllAndUpdate()
 	{
 		List<ServicesMonitor> services = await AlarmUOW.ServicesMonitor.GetAll();
 		List<Tuple<Task<PingReply>, ServicesMonitor>> replies = new();
