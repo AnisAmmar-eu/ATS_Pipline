@@ -12,4 +12,18 @@ public class BIPeriodicLogService : ServiceBaseEntity<IBIPeriodicLogRepository, 
 	protected BIPeriodicLogService(IAlarmUOW alarmUOW) : base(alarmUOW)
 	{
 	}
+
+	public async Task<DTOBIPeriodicLog> BuildBIPeriodicLog(DTOBIPeriodicLog dtoLog)
+	{
+		await AlarmUOW.StartTransaction();
+		
+		dtoLog.ID = 0;
+		BIPeriodicLog log = dtoLog.ToModel();
+		await log.Create(AlarmUOW);
+
+		await log.Build(AlarmUOW, log.ToDTO());
+
+		await AlarmUOW.CommitTransaction();
+		return log.ToDTO();
+	}
 }

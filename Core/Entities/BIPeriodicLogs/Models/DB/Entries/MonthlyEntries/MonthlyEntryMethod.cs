@@ -1,3 +1,4 @@
+using Core.Entities.BIPeriodicLogs.Models.DTO;
 using Core.Entities.BIPeriodicLogs.Models.DTO.Entries.MonthlyEntries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -8,5 +9,9 @@ public partial class MonthlyEntry : BIPeriodicLog, IBaseEntity<MonthlyEntry, DTO
 	public override DTOMonthlyEntry ToDTO()
 	{
 		return new DTOMonthlyEntry(this);
+	}
+
+	public MonthlyEntry(DTOBIPeriodicLog dtoBIPeriodicLog) : base(dtoBIPeriodicLog)
+	{
 	}
 }

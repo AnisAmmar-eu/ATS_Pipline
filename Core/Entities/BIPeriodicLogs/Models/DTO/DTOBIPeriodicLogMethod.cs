@@ -27,4 +27,9 @@ public partial class DTOBIPeriodicLog : DTOBaseEntity, IDTO<BIPeriodicLog, DTOBI
 		NbAnodeS4 = biPeriodicLog.NbAnodeS4;
 		NbAnodeS5 = biPeriodicLog.NbAnodeS5;
 	}
+
+	public override BIPeriodicLog ToModel()
+	{
+		return new BIPeriodicLog(this);
+	}
 }

@@ -1,3 +1,4 @@
+using Core.Entities.BIPeriodicLogs.Models.DTO;
 using Core.Entities.BIPeriodicLogs.Models.DTO.Entries.DailyEntries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -8,5 +9,9 @@ public partial class DailyEntry : BIPeriodicLog, IBaseEntity<DailyEntry, DTODail
 	public override DTODailyEntry ToDTO()
 	{
 		return new DTODailyEntry(this);
+	}
+
+	public DailyEntry(DTOBIPeriodicLog dtoBIPeriodicLog) : base(dtoBIPeriodicLog)
+	{
 	}
 }
