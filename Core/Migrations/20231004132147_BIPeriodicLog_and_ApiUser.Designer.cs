@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AlarmCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231004132147_BIPeriodicLog_and_ApiUser")]
+    partial class BIPeriodicLog_and_ApiUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,10 +214,6 @@ namespace Core.Migrations
                     b.Property<int>("Cam2Matched")
                         .HasColumnType("int");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("InactiveAlarms")
                         .HasColumnType("int");
 
@@ -251,9 +249,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("BIPeriodicLog");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("BIPeriodicLog");
+                    b.ToTable("BIPeriodicLogs");
                 });
 
             modelBuilder.Entity("Core.Entities.ExtTags.Models.DB.ExtTag", b =>
@@ -726,77 +722,11 @@ namespace Core.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.Entries.AnnualEntries.AnnualEntry", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("AnnualEntry");
-                });
-
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.Entries.DailyEntries.DailyEntry", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("DailyEntry");
-                });
-
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.Entries.MonthlyEntries.MonthlyEntry", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("MonthlyEntry");
-                });
-
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.Entries.WeeklyEntries.WeeklyEntry", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("WeeklyEntry");
-                });
-
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.RT.AnnualRTs.AnnualRT", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("AnnualRT");
-                });
-
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.RT.DailyRTs.DailyRT", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("DailyRT");
-                });
-
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.RT.MonthlyRTs.MonthlyRT", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("MonthlyRT");
-                });
-
-            modelBuilder.Entity("Core.Entities.BIPeriodicLogs.Models.DB.RT.WeeklyRTs.WeeklyRT", b =>
-                {
-                    b.HasBaseType("Core.Entities.BIPeriodicLogs.Models.DB.BIPeriodicLog");
-
-                    b.HasDiscriminator().HasValue("WeeklyRT");
-                });
-
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.AlarmLists.AlarmList", b =>
                 {
                     b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
 
                     b.HasDiscriminator().HasValue("AlarmList");
-                });
-
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Announcements.Announcement", b =>
-                {
-                    b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
-
-                    b.Property<int>("AnodeType")
-                        .HasColumnType("int");
-
-                    b.HasDiscriminator().HasValue("Announcement");
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Detections.Detection", b =>
@@ -813,109 +743,6 @@ namespace Core.Migrations
                         .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("Detection");
-                });
-
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Furnaces.InFurnaces.InFurnace", b =>
-                {
-                    b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
-
-                    b.Property<int>("AnodePosition")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BakedPosition")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FTASuckPit")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FTAinPIT")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GreenPosition")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OriginID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PITHeight")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PITNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PITSectionNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PalletSide")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("TSLoad")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasDiscriminator().HasValue("InFurnace");
-                });
-
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces.OutFurnace", b =>
-                {
-                    b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
-
-                    b.Property<int>("FTAPickUp")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("TSCentralConveyor")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("TSUnpackPIT")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasDiscriminator().HasValue("OutFurnace");
-                });
-
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Shootings.Shooting", b =>
-                {
-                    b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
-
-                    b.Property<int>("AnodeIDKey")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GlobalStationStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LedStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProcedurePerformance")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("ShootingTS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasDiscriminator().HasValue("Shooting");
-                });
-
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement.S1S2Announcement", b =>
-                {
-                    b.HasBaseType("Core.Entities.Packets.Models.DB.Announcements.Announcement");
-
-                    b.Property<int>("SerialNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrolleyNumber")
-                        .HasColumnType("int");
-
-                    b.HasDiscriminator().HasValue("S1S2Announcement");
-                });
-
-            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings.S3S4Shooting", b =>
-                {
-                    b.HasBaseType("Core.Entities.Packets.Models.DB.Shootings.Shooting");
-
-                    b.Property<bool>("IsDoubleAnode")
-                        .HasColumnType("bit");
-
-                    b.HasDiscriminator().HasValue("S3S4Shooting");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsCycle.Models.DB.AlarmCycle", b =>

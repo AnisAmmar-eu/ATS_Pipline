@@ -4,6 +4,8 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.BIPeriodicLogs.Repositories;
+using Core.Entities.BIPeriodicLogs.Services;
 using Core.Entities.ExtTags.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
@@ -40,6 +42,7 @@ public class AlarmUOW : IAlarmUOW
 
 		ExtTag = new ExtTagRepository(_alarmCTX);
 		ServicesMonitor = new ServicesMonitorRepository(_alarmCTX);
+		BIPeriodicLog = new BIPeriodicLogRepository(_alarmCTX);
 
 		Acts = new ActRepository(_alarmCTX);
 		ActEntities = new ActEntityRepository(_alarmCTX);
@@ -58,6 +61,7 @@ public class AlarmUOW : IAlarmUOW
 
 	public IExtTagRepository ExtTag { get; }
 	public IServicesMonitorRepository ServicesMonitor { get; }
+	public IBIPeriodicLogRepository BIPeriodicLog { get;  }
 
 	#region Users
 
@@ -75,10 +79,14 @@ public class AlarmUOW : IAlarmUOW
 			_ when repo == typeof(IAlarmPLCRepository) => AlarmPLC,
 			_ when repo == typeof(IAlarmLogRepository) => AlarmLog,
 			_ when repo == typeof(IAlarmRTRepository) => AlarmRT,
+			
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
+			
 			_ when repo == typeof(IExtTagRepository) => ExtTag,
 			_ when repo == typeof(IServicesMonitorRepository) => ServicesMonitor,
+			_ when repo == typeof(IBIPeriodicLogRepository) => BIPeriodicLog,
+			
 			_ when repo == typeof(IActRepository) => Acts,
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
 			_ when repo == typeof(IRoleRepository) => Roles,

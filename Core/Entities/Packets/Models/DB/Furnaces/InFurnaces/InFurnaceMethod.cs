@@ -6,6 +6,10 @@ namespace Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 
 public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 {
+	public InFurnace()
+	{
+	}
+
 	public InFurnace(InFurnaceStruct adsStruct)
 	{
 		// TODO

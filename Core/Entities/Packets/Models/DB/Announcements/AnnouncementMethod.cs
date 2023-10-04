@@ -7,6 +7,8 @@ namespace Core.Entities.Packets.Models.DB.Announcements;
 
 public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnouncement>
 {
+	public Announcement()
+	{}
 	public Announcement(AnnouncementStruct adsStruct)
 	{
 		// TODO

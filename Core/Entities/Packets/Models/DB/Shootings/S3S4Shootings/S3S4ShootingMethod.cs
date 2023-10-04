@@ -6,6 +6,10 @@ namespace Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 
 public partial class S3S4Shooting : Shooting, IBaseEntity<S3S4Shooting, DTOS3S4Shooting>
 {
+	public S3S4Shooting()
+	{
+	}
+
 	public S3S4Shooting(ShootingStruct adsStruct) : base(adsStruct)
 	{
 	}

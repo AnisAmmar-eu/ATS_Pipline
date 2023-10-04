@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.BIPeriodicLogs.Repositories;
 using Core.Entities.ExtTags.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
@@ -30,6 +31,7 @@ public interface IAlarmUOW : IDisposable
 
 	IExtTagRepository ExtTag { get; }
 	IServicesMonitorRepository ServicesMonitor { get; }
+	IBIPeriodicLogRepository BIPeriodicLog { get;  }
 
 	#region Users
 

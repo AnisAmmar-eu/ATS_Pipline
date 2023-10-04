@@ -6,6 +6,10 @@ namespace Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 
 public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace>
 {
+	public OutFurnace()
+	{
+	}
+
 	public OutFurnace(OutFurnaceStruct adsStruct)
 	{
 		// TODO
