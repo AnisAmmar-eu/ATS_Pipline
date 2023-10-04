@@ -1,11 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using Core.Entities.Alarms.AlarmsC.Repositories;
+﻿using Core.Entities.Alarms.AlarmsC.Repositories;
 using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.BIPeriodicLogs.Repositories;
-using Core.Entities.BIPeriodicLogs.Services;
 using Core.Entities.ExtTags.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
@@ -13,7 +11,6 @@ using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
 using Core.Shared.Data;
-using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Repositories.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -61,15 +58,7 @@ public class AlarmUOW : IAlarmUOW
 
 	public IExtTagRepository ExtTag { get; }
 	public IServicesMonitorRepository ServicesMonitor { get; }
-	public IBIPeriodicLogRepository BIPeriodicLog { get;  }
-
-	#region Users
-
-	public IActRepository Acts { get; }
-	public IActEntityRepository ActEntities { get; }
-	public IRoleRepository Roles { get; }
-
-	#endregion
+	public IBIPeriodicLogRepository BIPeriodicLog { get; }
 
 	public object? GetRepoByType(Type repo)
 	{
@@ -79,14 +68,14 @@ public class AlarmUOW : IAlarmUOW
 			_ when repo == typeof(IAlarmPLCRepository) => AlarmPLC,
 			_ when repo == typeof(IAlarmLogRepository) => AlarmLog,
 			_ when repo == typeof(IAlarmRTRepository) => AlarmRT,
-			
+
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
-			
+
 			_ when repo == typeof(IExtTagRepository) => ExtTag,
 			_ when repo == typeof(IServicesMonitorRepository) => ServicesMonitor,
 			_ when repo == typeof(IBIPeriodicLogRepository) => BIPeriodicLog,
-			
+
 			_ when repo == typeof(IActRepository) => Acts,
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
 			_ when repo == typeof(IRoleRepository) => Roles,
@@ -155,4 +144,12 @@ public class AlarmUOW : IAlarmUOW
 	{
 		_alarmCTX.Dispose();
 	}
+
+	#region Users
+
+	public IActRepository Acts { get; }
+	public IActEntityRepository ActEntities { get; }
+	public IRoleRepository Roles { get; }
+
+	#endregion
 }

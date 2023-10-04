@@ -10,8 +10,8 @@ namespace ApiAlarms.Controllers.Controllers;
 [Route("api/alarms-real-time")]
 public class AlarmRTController : ControllerBase
 {
-	private readonly ILogsService _logsService;
 	private readonly IAlarmRTService _alarmRTService;
+	private readonly ILogsService _logsService;
 
 	public AlarmRTController(IAlarmRTService alarmRTService, ILogsService logsService)
 	{

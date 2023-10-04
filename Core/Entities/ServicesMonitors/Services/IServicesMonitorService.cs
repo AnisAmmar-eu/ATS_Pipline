@@ -7,7 +7,7 @@ namespace Core.Entities.ServicesMonitors.Services;
 public interface IServicesMonitorService : IServiceBaseEntity<ServicesMonitor, DTOServicesMonitor>
 {
 	/// <summary>
-	///		Will ping every ping address it finds and update its status.
+	///     Will ping every ping address it finds and update its status.
 	/// </summary>
 	/// <returns></returns>
 	public Task PingAllAndUpdate();

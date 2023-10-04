@@ -1,4 +1,3 @@
-using Core.Entities.BIPeriodicLogs.Models.DB.Entries.WeeklyEntries;
 using Core.Entities.BIPeriodicLogs.Models.DB.RT.WeeklyRTs;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 

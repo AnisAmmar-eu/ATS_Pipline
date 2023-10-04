@@ -6,5 +6,4 @@ namespace Core.Entities.ServicesMonitors.Repositories;
 
 public interface IServicesMonitorRepository : IRepositoryBaseEntity<ServicesMonitor, DTOServicesMonitor>
 {
-	
 }

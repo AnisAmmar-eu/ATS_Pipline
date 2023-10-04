@@ -6,7 +6,8 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.BIPeriodicLogs.Services;
 
-public class BIPeriodicLogService : ServiceBaseEntity<IBIPeriodicLogRepository, BIPeriodicLog, DTOBIPeriodicLog>, IBIPeriodicLogService
+public class BIPeriodicLogService : ServiceBaseEntity<IBIPeriodicLogRepository, BIPeriodicLog, DTOBIPeriodicLog>,
+	IBIPeriodicLogService
 {
 	protected BIPeriodicLogService(IAlarmUOW alarmUOW) : base(alarmUOW)
 	{

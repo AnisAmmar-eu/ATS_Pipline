@@ -5,7 +5,8 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.BIPeriodicLogs.Repositories;
 
-public class BIPeriodicLogRepository : RepositoryBaseEntity<AlarmCTX, BIPeriodicLog, DTOBIPeriodicLog>, IBIPeriodicLogRepository
+public class BIPeriodicLogRepository : RepositoryBaseEntity<AlarmCTX, BIPeriodicLog, DTOBIPeriodicLog>,
+	IBIPeriodicLogRepository
 {
 	public BIPeriodicLogRepository(AlarmCTX context) : base(context)
 	{

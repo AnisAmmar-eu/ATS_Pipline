@@ -89,70 +89,70 @@ public class ApiResponseObject
 
 	public async Task<JsonResult> SuccessResult(ILogsService logsService, ControllerContext context)
 	{
-	    await CreateLog(logsService, context);
+		await CreateLog(logsService, context);
 
-	    return new JsonResult(this);
+		return new JsonResult(this);
 	}
 
 	public async Task<ObjectResult> ErrorResult(ILogsService logsService, ControllerContext context, Exception e)
 	{
-	    switch (e)
-	    {
-	        case ArgumentException:
-	            Status.Code = 400;
-	            Result = e.Message;
-	            break;
-	        case UnauthorizedAccessException:
-	            Status.Code = 401;
-	            Result = "Unauthorized action: " + e.Message;
-	            break;
-	        case EntityNotFoundException:
-	            Status.Code = 404;
-	            Result = e.Message;
-	            break;
-	        case TimeoutException:
-	            Status.Code = 408;
-	            Result = "Request timeout: " + e.Message;
-	            break;
-	        case InvalidOperationException:
-	            Status.Code = 409;
-	            Result = "Request cause a conflict: " + e.Message;
-	            break;
-	        case NotImplementedException:
-	            Status.Code = 501;
-	            Result = "Not implemented request: " + e.Message;
-	            break;
-	        default:
-	            Status.Code = 500;
-	            Result = "Internal Server Error: " + e.Message;
-	            break;
-	    }
+		switch (e)
+		{
+			case ArgumentException:
+				Status.Code = 400;
+				Result = e.Message;
+				break;
+			case UnauthorizedAccessException:
+				Status.Code = 401;
+				Result = "Unauthorized action: " + e.Message;
+				break;
+			case EntityNotFoundException:
+				Status.Code = 404;
+				Result = e.Message;
+				break;
+			case TimeoutException:
+				Status.Code = 408;
+				Result = "Request timeout: " + e.Message;
+				break;
+			case InvalidOperationException:
+				Status.Code = 409;
+				Result = "Request cause a conflict: " + e.Message;
+				break;
+			case NotImplementedException:
+				Status.Code = 501;
+				Result = "Not implemented request: " + e.Message;
+				break;
+			default:
+				Status.Code = 500;
+				Result = "Internal Server Error: " + e.Message;
+				break;
+		}
 
-	    await CreateLog(logsService, context);
+		await CreateLog(logsService, context);
 
-	    return new ObjectResult(Result)
-	    {
-	        StatusCode = Status.Code
-	    };
+		return new ObjectResult(Result)
+		{
+			StatusCode = Status.Code
+		};
 	}
 
 	private async Task CreateLog(ILogsService logsService, ControllerContext context)
 	{
-	    try
-	    {
-	        await logsService.Create(
-	            DateTimeOffset.Now,
-	            Dns.GetHostName(),
-	            context.ActionDescriptor.ControllerTypeInfo.Assembly.ManifestModule.Name,
-	            context.ActionDescriptor.ControllerTypeInfo.Name,
-	            context.ActionDescriptor.ActionName,
-	            context.ActionDescriptor.AttributeRouteInfo?.Template ?? "",
-	            Status.Code,
-	            JsonConvert.SerializeObject(Result)
-	        );
-	    }
-	    catch
-	    {
-	    }
+		try
+		{
+			await logsService.Create(
+				DateTimeOffset.Now,
+				Dns.GetHostName(),
+				context.ActionDescriptor.ControllerTypeInfo.Assembly.ManifestModule.Name,
+				context.ActionDescriptor.ControllerTypeInfo.Name,
+				context.ActionDescriptor.ActionName,
+				context.ActionDescriptor.AttributeRouteInfo?.Template ?? "",
+				Status.Code,
+				JsonConvert.SerializeObject(Result)
+			);
+		}
+		catch
+		{
+		}
 	}
 }

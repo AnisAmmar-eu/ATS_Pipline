@@ -5,5 +5,4 @@ namespace Core.Entities.BIPeriodicLogs.Models.DB.Entries.MonthlyEntries;
 
 public partial class MonthlyEntry : BIPeriodicLog, IBaseEntity<MonthlyEntry, DTOMonthlyEntry>
 {
-	
 }

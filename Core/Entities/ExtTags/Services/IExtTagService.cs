@@ -6,5 +6,4 @@ namespace Core.Entities.ExtTags.Services;
 
 public interface IExtTagService : IServiceBaseEntity<ExtTag, DTOExtTag>
 {
-	
 }

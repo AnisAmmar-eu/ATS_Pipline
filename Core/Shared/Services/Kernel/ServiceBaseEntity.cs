@@ -12,8 +12,8 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 	where TDTO : class, IDTO<T, TDTO>
 	where TRepository : IRepositoryBaseEntity<T, TDTO>
 {
-	protected readonly IAlarmUOW AlarmUOW;
 	private readonly TRepository _repository;
+	protected readonly IAlarmUOW AlarmUOW;
 
 	protected ServiceBaseEntity(IAlarmUOW alarmUOW)
 	{

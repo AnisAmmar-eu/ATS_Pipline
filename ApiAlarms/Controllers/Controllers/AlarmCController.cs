@@ -10,8 +10,8 @@ namespace ApiAlarms.Controllers.Controllers;
 [Route("api/alarms-class")]
 public class AlarmCController : ControllerBase
 {
-	private readonly ILogsService _logsService;
 	private readonly IAlarmCService _alarmCService;
+	private readonly ILogsService _logsService;
 
 	public AlarmCController(IAlarmCService alarmCService, ILogsService logsService)
 	{

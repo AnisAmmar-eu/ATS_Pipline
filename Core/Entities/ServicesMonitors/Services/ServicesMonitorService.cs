@@ -1,5 +1,4 @@
 using System.Net.NetworkInformation;
-using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.ServicesMonitors.Models.DB;
 using Core.Entities.ServicesMonitors.Models.DTO;
 using Core.Entities.ServicesMonitors.Repositories;

@@ -14,12 +14,12 @@ public partial class ExtTag : BaseEntity, IBaseEntity<ExtTag, DTOExtTag>
 	public string ValueType { get; set; }
 	public string CurrentValue { get; set; }
 	public string NewValue { get; set; }
-	
+
 	public bool IsReadOnly { get; set; }
 	public bool HasNewValue { get; set; }
 	public int ServiceID { get; set; }
 	public string? Path { get; set; }
-	
+
 	#region Nav Properties
 
 	private ServicesMonitor? _service;

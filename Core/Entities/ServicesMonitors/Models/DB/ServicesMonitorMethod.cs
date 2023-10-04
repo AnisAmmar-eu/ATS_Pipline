@@ -8,8 +8,8 @@ public partial class ServicesMonitor : BaseEntity, IBaseEntity<ServicesMonitor, 
 {
 	public ServicesMonitor()
 	{
-		
 	}
+
 	public ServicesMonitor(DTOServicesMonitor dtoServicesMonitor)
 	{
 		ID = dtoServicesMonitor.ID;
@@ -20,6 +20,7 @@ public partial class ServicesMonitor : BaseEntity, IBaseEntity<ServicesMonitor, 
 		IPAddress = dtoServicesMonitor.IPAddress;
 		IsConnected = dtoServicesMonitor.IsConnected;
 	}
+
 	public override DTOServicesMonitor ToDTO()
 	{
 		return new DTOServicesMonitor(this);

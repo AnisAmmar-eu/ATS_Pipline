@@ -10,7 +10,6 @@ using Core.Entities.ServicesMonitors.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
-using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Repositories.System.Logs;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
@@ -31,15 +30,7 @@ public interface IAlarmUOW : IDisposable
 
 	IExtTagRepository ExtTag { get; }
 	IServicesMonitorRepository ServicesMonitor { get; }
-	IBIPeriodicLogRepository BIPeriodicLog { get;  }
-
-	#region Users
-
-	public IActRepository Acts { get; }
-	public IActEntityRepository ActEntities { get; }
-	public IRoleRepository Roles { get; }
-
-	#endregion
+	IBIPeriodicLogRepository BIPeriodicLog { get; }
 
 	public object? GetRepoByType(Type repo);
 
@@ -52,4 +43,12 @@ public interface IAlarmUOW : IDisposable
 	Task StartTransaction();
 
 	Task CommitTransaction();
+
+	#region Users
+
+	public IActRepository Acts { get; }
+	public IActEntityRepository ActEntities { get; }
+	public IRoleRepository Roles { get; }
+
+	#endregion
 }

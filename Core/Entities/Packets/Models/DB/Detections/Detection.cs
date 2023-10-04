@@ -7,11 +7,11 @@ namespace Core.Entities.Packets.Models.DB.Detections;
 
 public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 {
-	public int AnodeSize { get; set; } // LaserAnodeSize (millimeters)
-	public bool IsMismatched { get; set; } // AnodeTypeSizeMismatch
-	public AnodeType MeasuredType { get; set; }
-
 	public Detection(DTOPacket dtoPacket) : base(dtoPacket)
 	{
 	}
+
+	public int AnodeSize { get; set; } // LaserAnodeSize (millimeters)
+	public bool IsMismatched { get; set; } // AnodeTypeSizeMismatch
+	public AnodeType MeasuredType { get; set; }
 }

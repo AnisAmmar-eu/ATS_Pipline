@@ -1,41 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Beckhoff.TwinCAT.Ads" Version="6.0.296" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Beckhoff.TwinCAT.Ads" Version="6.0.296"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
+        <PackageReference Include="System.Security.Permissions" Version="6.0.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Classes\" />
-    <Folder Include="anodesImages\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Classes\"/>
+        <Folder Include="anodesImages\"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Stemmer.Cvb">
-      <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.dll</HintPath>
-    </Reference>
-    <Reference Include="Stemmer.Cvb.Aux">
-      <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Aux.dll</HintPath>
-    </Reference>
-    <Reference Include="Stemmer.Cvb.Extensions">
-      <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Stemmer.Cvb.Forms">
-      <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="Stemmer.Cvb.Foundation">
-      <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="Stemmer.Cvb.Wpf">
-      <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Wpf.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Stemmer.Cvb">
+            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.dll</HintPath>
+        </Reference>
+        <Reference Include="Stemmer.Cvb.Aux">
+            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Aux.dll</HintPath>
+        </Reference>
+        <Reference Include="Stemmer.Cvb.Extensions">
+            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Extensions.dll</HintPath>
+        </Reference>
+        <Reference Include="Stemmer.Cvb.Forms">
+            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Forms.dll</HintPath>
+        </Reference>
+        <Reference Include="Stemmer.Cvb.Foundation">
+            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Foundation.dll</HintPath>
+        </Reference>
+        <Reference Include="Stemmer.Cvb.Wpf">
+            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Wpf.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 
 </Project>

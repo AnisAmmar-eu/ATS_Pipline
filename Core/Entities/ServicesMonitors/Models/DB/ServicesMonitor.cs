@@ -13,5 +13,5 @@ public partial class ServicesMonitor : BaseEntity, IBaseEntity<ServicesMonitor, 
 	public string IPAddress { get; set; }
 	public bool IsConnected { get; set; }
 
-	public List<ExtTag> ExtTags { get; set; } = new List<ExtTag>();
+	public List<ExtTag> ExtTags { get; set; } = new();
 }

@@ -15,7 +15,7 @@ public class AlarmLogRepository : RepositoryBaseEntity<AlarmCTX, AlarmLog, DTOAl
 	public async Task<AlarmLog> GetByIdWithIncludes(int id, Expression<Func<AlarmLog, bool>>[]? filters = null,
 		bool withTracking = true)
 	{
-		return await GetById(id, filters, withTracking, new[] { "Alarm" });
+		return await GetById(id, filters, withTracking, "Alarm");
 	}
 
 	public async Task<AlarmLog> GetByWithIncludes(
@@ -23,7 +23,7 @@ public class AlarmLogRepository : RepositoryBaseEntity<AlarmCTX, AlarmLog, DTOAl
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
 		bool withTracking = true)
 	{
-		return await GetBy(filters, orderBy, withTracking, new[] { "Alarm" });
+		return await GetBy(filters, orderBy, withTracking, "Alarm");
 	}
 
 	public async Task<List<AlarmLog>> GetAllWithIncludes(

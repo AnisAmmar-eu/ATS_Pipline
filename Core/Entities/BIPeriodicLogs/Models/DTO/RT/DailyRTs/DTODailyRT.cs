@@ -3,7 +3,6 @@ using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.BIPeriodicLogs.Models.DTO.RT.DailyRTs;
 
-public partial class DTODailyRT : DTOBIPeriodicLog, IDTO<DailyRT, DailyRTs.DTODailyRT>
+public partial class DTODailyRT : DTOBIPeriodicLog, IDTO<DailyRT, DTODailyRT>
 {
-	
 }

@@ -18,13 +18,11 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.Packets.Models.DB.Detections;
-using Core.Entities.Packets.Models.DB.Furnaces;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.ServicesMonitors.Models.DB;
-using Core.Entities.User.Models.DB;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
@@ -64,7 +62,7 @@ public class AlarmCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
 	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
-	
+
 	// BIPeriodicLogs
 	public DbSet<BIPeriodicLog> BIPeriodicLog => Set<BIPeriodicLog>();
 	public DbSet<DailyEntry> DailyEntry => Set<DailyEntry>();

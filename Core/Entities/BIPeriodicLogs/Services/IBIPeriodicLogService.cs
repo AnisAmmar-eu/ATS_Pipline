@@ -6,5 +6,4 @@ namespace Core.Entities.BIPeriodicLogs.Services;
 
 public interface IBIPeriodicLogService : IServiceBaseEntity<BIPeriodicLog, DTOBIPeriodicLog>
 {
-	
 }

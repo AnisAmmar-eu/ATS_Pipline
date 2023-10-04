@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices.ComTypes;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Shared.Models.HttpResponse;
@@ -12,8 +11,8 @@ namespace ApiAlarms.Controllers.Controllers;
 [Route("api/alarm-log")]
 public class AlarmLogController : ControllerBase
 {
-	private readonly ILogsService _logsService;
 	private readonly IAlarmLogService _alarmLogService;
+	private readonly ILogsService _logsService;
 
 	public AlarmLogController(IAlarmLogService alarmLogService, ILogsService logsService)
 	{

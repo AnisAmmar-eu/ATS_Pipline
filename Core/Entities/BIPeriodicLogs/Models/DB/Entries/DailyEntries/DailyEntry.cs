@@ -5,5 +5,4 @@ namespace Core.Entities.BIPeriodicLogs.Models.DB.Entries.DailyEntries;
 
 public partial class DailyEntry : BIPeriodicLog, IBaseEntity<DailyEntry, DTODailyEntry>
 {
-	
 }

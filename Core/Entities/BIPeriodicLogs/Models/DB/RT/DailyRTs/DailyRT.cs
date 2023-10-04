@@ -5,5 +5,4 @@ namespace Core.Entities.BIPeriodicLogs.Models.DB.RT.DailyRTs;
 
 public partial class DailyRT : BIPeriodicLog, IBaseEntity<DailyRT, DTODailyRT>
 {
-	
 }

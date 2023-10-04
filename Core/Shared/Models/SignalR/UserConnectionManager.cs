@@ -9,18 +9,18 @@ public class UserConnectionManager<T>
 {
 	private readonly Dictionary<T, HashSet<string>> _connections = new();
 
-    /// <summary>
-    ///     Gets the total number of connections in the collection.
-    /// </summary>
-    public int Count => _connections.Count;
+	/// <summary>
+	///     Gets the total number of connections in the collection.
+	/// </summary>
+	public int Count => _connections.Count;
 
-    /// <summary>
-    ///     Adds a new connection for a given user.
-    /// </summary>
-    /// <param name="key">The key of the user.</param>
-    /// <param name="connectionId">The SignalR connection ID.</param>
-    /// <exception cref="ArgumentNullException">The key or connectionId parameter is null.</exception>
-    public void Add(T key, string connectionId)
+	/// <summary>
+	///     Adds a new connection for a given user.
+	/// </summary>
+	/// <param name="key">The key of the user.</param>
+	/// <param name="connectionId">The SignalR connection ID.</param>
+	/// <exception cref="ArgumentNullException">The key or connectionId parameter is null.</exception>
+	public void Add(T key, string connectionId)
 	{
 		if (key == null || connectionId == null) throw new ArgumentNullException();
 
@@ -41,13 +41,13 @@ public class UserConnectionManager<T>
 		}
 	}
 
-    /// <summary>
-    ///     Retrieves all connections associated with a given user.
-    /// </summary>
-    /// <param name="key">The key of the user.</param>
-    /// <returns>A collection of strings representing SignalR connection IDs.</returns>
-    /// <exception cref="ArgumentNullException">The key parameter is null.</exception>
-    public IEnumerable<string> GetConnections(T key)
+	/// <summary>
+	///     Retrieves all connections associated with a given user.
+	/// </summary>
+	/// <param name="key">The key of the user.</param>
+	/// <returns>A collection of strings representing SignalR connection IDs.</returns>
+	/// <exception cref="ArgumentNullException">The key parameter is null.</exception>
+	public IEnumerable<string> GetConnections(T key)
 	{
 		if (key == null) throw new ArgumentNullException();
 
@@ -56,12 +56,12 @@ public class UserConnectionManager<T>
 			: Enumerable.Empty<string>();
 	}
 
-    /// <summary>
-    ///     Get the count of all connections.
-    /// </summary>
-    /// <return>A count</return>
-    /// <returns></returns>
-    public int GetConnectionsCount()
+	/// <summary>
+	///     Get the count of all connections.
+	/// </summary>
+	/// <return>A count</return>
+	/// <returns></returns>
+	public int GetConnectionsCount()
 	{
 		int count = 0;
 
@@ -69,13 +69,13 @@ public class UserConnectionManager<T>
 		return count;
 	}
 
-    /// <summary>
-    ///     Removes a connection for a given user.
-    /// </summary>
-    /// <param name="key">The key of the user.</param>
-    /// <param name="connectionId">The SignalR connection ID.</param>
-    /// <exception cref="ArgumentNullException">The key or connectionId parameter is null.</exception>
-    public void Remove(T key, string connectionId)
+	/// <summary>
+	///     Removes a connection for a given user.
+	/// </summary>
+	/// <param name="key">The key of the user.</param>
+	/// <param name="connectionId">The SignalR connection ID.</param>
+	/// <exception cref="ArgumentNullException">The key or connectionId parameter is null.</exception>
+	public void Remove(T key, string connectionId)
 	{
 		if (key == null || connectionId == null) throw new ArgumentNullException();
 

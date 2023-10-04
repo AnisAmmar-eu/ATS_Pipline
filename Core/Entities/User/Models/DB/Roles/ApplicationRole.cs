@@ -1,10 +1,8 @@
-﻿
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace Core.Entities.User.Models.DB.Roles
+namespace Core.Entities.User.Models.DB.Roles;
+
+public partial class ApplicationRole : IdentityRole
 {
-    public partial class ApplicationRole : IdentityRole
-    {
-        public string Type { get; set; } = "USER";
-    }
+	public string Type { get; set; } = "USER";
 }

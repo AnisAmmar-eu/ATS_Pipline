@@ -6,5 +6,4 @@ namespace Core.Entities.ExtTags.Repositories;
 
 public interface IExtTagRepository : IRepositoryBaseEntity<ExtTag, DTOExtTag>
 {
-	
 }

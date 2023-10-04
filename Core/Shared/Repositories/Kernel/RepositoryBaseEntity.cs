@@ -92,7 +92,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	{
 		T? t = await Query(filters, null, withTracking).FirstOrDefaultAsync();
 		if (t == null)
-			throw new EntityNotFoundException((typeof(T).Name) + " not found");
+			throw new EntityNotFoundException(typeof(T).Name + " not found");
 
 		return t;
 	}
@@ -106,7 +106,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	{
 		T? t = await Query(filters, orderBy, withTracking, includes: includes).FirstOrDefaultAsync();
 		if (t == null)
-			throw new EntityNotFoundException((typeof(T).Name) + " not found");
+			throw new EntityNotFoundException(typeof(T).Name + " not found");
 
 		return t;
 	}

@@ -5,5 +5,4 @@ namespace Core.Entities.BIPeriodicLogs.Models.DB.RT.AnnualRTs;
 
 public partial class AnnualRT : BIPeriodicLog, IBaseEntity<AnnualRT, DTOAnnualRT>
 {
-	
 }

@@ -5,5 +5,4 @@ namespace Core.Entities.BIPeriodicLogs.Models.DB.RT.MonthlyRTs;
 
 public partial class MonthlyRT : BIPeriodicLog, IBaseEntity<MonthlyRT, DTOMonthlyRT>
 {
-	
 }

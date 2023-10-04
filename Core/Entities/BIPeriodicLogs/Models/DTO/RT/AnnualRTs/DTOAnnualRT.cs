@@ -5,5 +5,4 @@ namespace Core.Entities.BIPeriodicLogs.Models.DTO.RT.AnnualRTs;
 
 public partial class DTOAnnualRT : DTOBIPeriodicLog, IDTO<AnnualRT, DTOAnnualRT>
 {
-	
 }
