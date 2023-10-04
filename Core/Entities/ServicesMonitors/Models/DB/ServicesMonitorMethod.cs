@@ -20,7 +20,7 @@ public partial class ServicesMonitor : BaseEntity, IBaseEntity<ServicesMonitor, 
 		IPAddress = dtoServicesMonitor.IPAddress;
 		IsConnected = dtoServicesMonitor.IsConnected;
 	}
-	public override DTOServicesMonitor ToDTO(string? languageRID = null)
+	public override DTOServicesMonitor ToDTO()
 	{
 		return new DTOServicesMonitor(this);
 	}

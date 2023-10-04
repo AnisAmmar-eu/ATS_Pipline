@@ -6,7 +6,7 @@ namespace Core.Entities.ExtTags.Models.DB;
 
 public partial class ExtTag : BaseEntity, IBaseEntity<ExtTag, DTOExtTag>
 {
-	public DTOExtTag ToDTO(string? languageRID = null)
+	public DTOExtTag ToDTO()
 	{
 		return new DTOExtTag(this);
 	}

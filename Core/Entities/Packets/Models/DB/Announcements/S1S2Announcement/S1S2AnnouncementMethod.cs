@@ -12,7 +12,7 @@ public partial class S1S2Announcement : Announcement, IBaseEntity<S1S2Announceme
 		TrolleyNumber = (int)adsStruct.TrolleyNumber;
 	}
 
-	public override DTOS1S2Announcement ToDTO(string? languageRID = null)
+	public override DTOS1S2Announcement ToDTO()
 	{
 		return new DTOS1S2Announcement(this);
 	}

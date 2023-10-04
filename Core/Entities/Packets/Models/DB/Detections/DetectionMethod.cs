@@ -20,7 +20,7 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 		AnodeSize = detectionStruct.AnodeSize;
 	}
 
-	public override DTODetection ToDTO(string? languageRID = null)
+	public override DTODetection ToDTO()
 	{
 		return new DTODetection(this);
 	}

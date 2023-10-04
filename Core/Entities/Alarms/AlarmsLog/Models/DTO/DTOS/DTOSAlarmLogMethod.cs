@@ -9,7 +9,7 @@ public partial class DTOSAlarmLog : DTOAlarmLog
 		AlarmRID = "";
 	}
 
-	public DTOSAlarmLog(AlarmLog alarmLog, string? languageRID = null) : base(alarmLog, languageRID)
+	public DTOSAlarmLog(AlarmLog alarmLog) : base(alarmLog)
 	{
 		HasBeenSent = alarmLog.HasBeenSent;
 		AlarmRID = alarmLog.Alarm.RID;

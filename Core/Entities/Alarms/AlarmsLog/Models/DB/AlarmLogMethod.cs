@@ -48,18 +48,18 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 		Alarm = alarmC;
 	}
 
-	public override DTOAlarmLog ToDTO(string? languageRID = null)
+	public override DTOAlarmLog ToDTO()
 	{
-		return new DTOAlarmLog(this, languageRID);
+		return new DTOAlarmLog(this);
 	}
 
-	public DTOFAlarmLog ToDTOF(string? languageRID = null)
+	public DTOFAlarmLog ToDTOF()
 	{
-		return new DTOFAlarmLog(this, languageRID);
+		return new DTOFAlarmLog(this);
 	}
 
-	public DTOSAlarmLog ToDTOS(string? languageRID = null)
+	public DTOSAlarmLog ToDTOS()
 	{
-		return new DTOSAlarmLog(this, languageRID);
+		return new DTOSAlarmLog(this);
 	}
 }

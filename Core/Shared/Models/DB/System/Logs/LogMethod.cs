@@ -30,7 +30,7 @@ namespace Core.Shared.Models.DB.System.Logs
 			Value = dto.Value;
 		}
 
-		public override DTOLog ToDTO(string? languageRID = null)
+		public override DTOLog ToDTO()
 		{
 			return new DTOLog(this);
 		}

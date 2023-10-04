@@ -24,7 +24,7 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 		Type = dto.Type;
 	}
 
-	public override DTOPacket ToDTO(string? languageRID = null)
+	public override DTOPacket ToDTO()
 	{
 		return new DTOPacket(this);
 	}

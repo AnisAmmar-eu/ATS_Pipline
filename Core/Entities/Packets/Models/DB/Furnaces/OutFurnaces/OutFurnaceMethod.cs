@@ -15,7 +15,7 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 		FTAPickUp = (int)adsStruct.FTAPickUp;
 	}
 
-	public override DTOOutFurnace ToDTO(string? languageRID = null)
+	public override DTOOutFurnace ToDTO()
 	{
 		return new DTOOutFurnace(this);
 	}

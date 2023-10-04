@@ -24,7 +24,7 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 		});
 	}
 
-	public override DTOAlarmList ToDTO(string? languageRID = null)
+	public override DTOAlarmList ToDTO()
 	{
 		return new DTOAlarmList(this);
 	}

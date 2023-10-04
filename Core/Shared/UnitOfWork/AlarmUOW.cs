@@ -1,4 +1,5 @@
-﻿using Core.Entities.Alarms.AlarmsC.Repositories;
+﻿using System.Runtime.CompilerServices;
+using Core.Entities.Alarms.AlarmsC.Repositories;
 using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
@@ -6,7 +7,11 @@ using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.ExtTags.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
+using Core.Entities.User.Repositories.Acts;
+using Core.Entities.User.Repositories.Acts.ActEntities;
+using Core.Entities.User.Repositories.Roles;
 using Core.Shared.Data;
+using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Repositories.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -29,12 +34,16 @@ public class AlarmUOW : IAlarmUOW
 		AlarmPLC = new AlarmPLCRepository(_alarmCTX);
 		AlarmLog = new AlarmLogRepository(_alarmCTX);
 		AlarmRT = new AlarmRTRepository(_alarmCTX);
-		
+
 		Packet = new PacketRepository(_alarmCTX);
 		AlarmCycle = new AlarmCycleRepository(_alarmCTX);
 
 		ExtTag = new ExtTagRepository(_alarmCTX);
 		ServicesMonitor = new ServicesMonitorRepository(_alarmCTX);
+
+		Acts = new ActRepository(_alarmCTX);
+		ActEntities = new ActEntityRepository(_alarmCTX);
+		Roles = new RoleRepository(_alarmCTX);
 	}
 
 	public ILogRepository Log { get; }
@@ -43,12 +52,20 @@ public class AlarmUOW : IAlarmUOW
 	public IAlarmPLCRepository AlarmPLC { get; }
 	public IAlarmLogRepository AlarmLog { get; }
 	public IAlarmRTRepository AlarmRT { get; }
-	
+
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
-	
-	public IExtTagRepository ExtTag { get;  }
+
+	public IExtTagRepository ExtTag { get; }
 	public IServicesMonitorRepository ServicesMonitor { get; }
+
+	#region Users
+
+	public IActRepository Acts { get; }
+	public IActEntityRepository ActEntities { get; }
+	public IRoleRepository Roles { get; }
+
+	#endregion
 
 	public object? GetRepoByType(Type repo)
 	{
@@ -62,6 +79,9 @@ public class AlarmUOW : IAlarmUOW
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
 			_ when repo == typeof(IExtTagRepository) => ExtTag,
 			_ when repo == typeof(IServicesMonitorRepository) => ServicesMonitor,
+			_ when repo == typeof(IActRepository) => Acts,
+			_ when repo == typeof(IActEntityRepository) => ActEntities,
+			_ when repo == typeof(IRoleRepository) => Roles,
 			_ => null
 		};
 	}

@@ -8,12 +8,19 @@ using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.ServicesMonitors.Models.DB;
+using Core.Entities.User.Models.DB;
+using Core.Entities.User.Models.DB.Acts;
+using Core.Entities.User.Models.DB.Acts.ActEntities;
+using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
+using Core.Entities.User.Models.DB.Roles;
+using Core.Entities.User.Models.DB.Users;
 using Core.Shared.Models.DB.System.Logs;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Shared.Data;
 
-public class AlarmCTX : DbContext
+public class AlarmCTX : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 {
 	public AlarmCTX(DbContextOptions<AlarmCTX> options) : base(options)
 	{
@@ -36,6 +43,10 @@ public class AlarmCTX : DbContext
 	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
 	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
 
+	// Action
+	public DbSet<Act> Acts => Set<Act>();
+	public DbSet<ActEntity> ActEntities => Set<ActEntity>();
+	public DbSet<ActEntityRole> ActEntityRoles => Set<ActEntityRole>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

@@ -21,7 +21,7 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 		Description = alarmC.Description;
 	}
 
-	public override DTOAlarmC ToDTO(string? languageRID = null)
+	public override DTOAlarmC ToDTO()
 	{
 		return new DTOAlarmC(this);
 	}

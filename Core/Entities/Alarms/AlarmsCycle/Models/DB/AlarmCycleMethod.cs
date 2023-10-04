@@ -27,7 +27,7 @@ public partial class AlarmCycle : BaseEntity, IBaseEntity<AlarmCycle, DTOAlarmCy
 		AlarmListPacketID = dtoAlarmCycle.AlarmListPacketID;
 	}
 
-	public override DTOAlarmCycle ToDTO(string? languageRID = null)
+	public override DTOAlarmCycle ToDTO()
 	{
 		return new DTOAlarmCycle(this);
 	}

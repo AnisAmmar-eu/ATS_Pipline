@@ -14,7 +14,7 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 		AnodeType = (AnodeType)adsStruct.AnodeType;
 	}
 
-	public override DTOAnnouncement ToDTO(string? languageRID = null)
+	public override DTOAnnouncement ToDTO()
 	{
 		return new DTOAnnouncement(this);
 	}

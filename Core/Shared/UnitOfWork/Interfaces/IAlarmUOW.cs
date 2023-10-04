@@ -6,6 +6,10 @@ using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.ExtTags.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
+using Core.Entities.User.Repositories.Acts;
+using Core.Entities.User.Repositories.Acts.ActEntities;
+using Core.Entities.User.Repositories.Roles;
+using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Repositories.System.Logs;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
@@ -15,7 +19,7 @@ namespace Core.Shared.UnitOfWork.Interfaces;
 /// </summary>
 public interface IAlarmUOW : IDisposable
 {
-	 ILogRepository Log { get; }
+	ILogRepository Log { get; }
 	IAlarmCRepository AlarmC { get; }
 	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }
@@ -23,9 +27,17 @@ public interface IAlarmUOW : IDisposable
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
-	
-	IExtTagRepository ExtTag { get;  }
+
+	IExtTagRepository ExtTag { get; }
 	IServicesMonitorRepository ServicesMonitor { get; }
+
+	#region Users
+
+	public IActRepository Acts { get; }
+	public IActEntityRepository ActEntities { get; }
+	public IRoleRepository Roles { get; }
+
+	#endregion
 
 	public object? GetRepoByType(Type repo);
 

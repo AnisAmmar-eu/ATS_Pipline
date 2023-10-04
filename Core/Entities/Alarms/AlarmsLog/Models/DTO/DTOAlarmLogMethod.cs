@@ -13,7 +13,7 @@ public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 	}
 
 
-	public DTOAlarmLog(AlarmLog alarmLog, string languageRID)
+	public DTOAlarmLog(AlarmLog alarmLog)
 	{
 		ID = alarmLog.ID;
 		TS = alarmLog.TS;

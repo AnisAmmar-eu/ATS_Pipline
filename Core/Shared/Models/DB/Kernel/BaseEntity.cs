@@ -15,7 +15,7 @@ public class BaseEntity : IBaseEntity<BaseEntity, DTOBaseEntity>
 	///     Converts the entity to its DTO.
 	/// </summary>
 	/// <returns> <see cref="DTO" /> of the entity</returns>
-	public virtual DTOBaseEntity ToDTO(string? languageRID = null)
+	public virtual DTOBaseEntity ToDTO()
 	{
 		return new DTOBaseEntity
 		{

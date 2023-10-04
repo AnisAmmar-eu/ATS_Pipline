@@ -24,7 +24,7 @@ public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 		// TSLoad = adsStruct.TSLoad;
 	}
 
-	public override DTOInFurnace ToDTO(string? languageRID = null)
+	public override DTOInFurnace ToDTO()
 	{
 		return new DTOInFurnace(this);
 	}

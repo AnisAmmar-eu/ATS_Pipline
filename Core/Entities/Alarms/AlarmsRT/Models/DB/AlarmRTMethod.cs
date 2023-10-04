@@ -32,8 +32,8 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 		Alarm = dtoAlarmRT.Alarm.ToModel();
 	}
 
-	public override DTOAlarmRT ToDTO(string? languageRID = null)
+	public override DTOAlarmRT ToDTO()
 	{
-		return new DTOAlarmRT(this, languageRID);
+		return new DTOAlarmRT(this);
 	}
 }

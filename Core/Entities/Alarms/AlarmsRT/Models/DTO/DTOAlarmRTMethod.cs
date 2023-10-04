@@ -6,7 +6,7 @@ namespace Core.Entities.Alarms.AlarmsRT.Models.DTO;
 
 public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmRT, DTOAlarmRT>
 {
-	public DTOAlarmRT(AlarmRT alarmRT, string languageRID)
+	public DTOAlarmRT(AlarmRT alarmRT)
 	{
 		ID = alarmRT.ID;
 		TS = alarmRT.TS;

@@ -23,7 +23,7 @@ public interface IRepositoryBase<T, TDTO>
 	/// </summary>
 	/// <param name="id">ID of the entity to get</param>
 	/// <returns><see cref="IDTO{T, DTO}" /> of the entity</returns>
-	Task<IDTO<T, TDTO>> GetById(int id, string? languageRID = null);
+	Task<IDTO<T, TDTO>> GetById(int id);
 
 	/// <summary>
 	///     Get all entities from the table of <typeref name="T" /> with join to its navigation properties
@@ -31,28 +31,27 @@ public interface IRepositoryBase<T, TDTO>
 	/// <param name="id"></param>
 	/// <param name="includes">Variadic parameter, array of <see cref="string" /> of names of column to include in the query</param>
 	/// <returns><see cref="IDTO{T, DTO}" /> of the entity</returns>
-	Task<IDTO<T, TDTO>> GetById(int id, string? languageRID = null, params string[] includes);
+	Task<IDTO<T, TDTO>> GetById(int id, params string[] includes);
 
 	/// <summary>
 	///     Get all entities from the table of <typeref name="T" />
 	/// </summary>
 	/// <returns><see cref="List{IDTO{T, DTO}}" /> of the entity</returns>
-	Task<List<IDTO<T, TDTO>>> GetAll(string? languageRID = null);
+	Task<List<IDTO<T, TDTO>>> GetAll();
 
 	/// <summary>
 	///     Get all entities from the table of <typeref name="T" /> with join to its navigation properties
 	/// </summary>
 	/// <param name="includes">Variadic parameter, array of <see cref="string" /> of names of column to include in the query</param>
 	/// <returns></returns>
-	Task<List<IDTO<T, TDTO>>> GetAll(string? languageRID = null, params string[] includes);
+	Task<List<IDTO<T, TDTO>>> GetAll(params string[] includes);
 
 	/// <summary>
 	///     Find entities by a predicate
 	/// </summary>
 	/// <param name="expression">Predicate</param>
 	/// <returns></returns>
-	Task<IEnumerable<IDTO<T, TDTO>>> Find(Expression<Func<IBaseEntity<T, TDTO>, bool>> expression,
-		string? languageRID = null);
+	Task<IEnumerable<IDTO<T, TDTO>>> Find(Expression<Func<IBaseEntity<T, TDTO>, bool>> expression);
 
 	/// <summary>
 	///     Add an new entity in the table of <typeref name="T" />
@@ -66,7 +65,7 @@ public interface IRepositoryBase<T, TDTO>
 	/// </summary>
 	/// <param name="dto"></param>
 	/// <returns>Return the <see cref="IDTO{T, DTO}" /> of the entity saved in the database</returns>
-	Task<IDTO<T, TDTO>> AddAndReturn(IDTO<T, TDTO> dto, string? languageRID = null);
+	Task<IDTO<T, TDTO>> AddAndReturn(IDTO<T, TDTO> dto);
 
 	/// <summary>
 	///     Add several entities in the table of <typeref name="T" />
@@ -101,5 +100,5 @@ public interface IRepositoryBase<T, TDTO>
 	/// </summary>
 	/// <param name="dto">DTO of the entity to updated, null attribute will not change</param>
 	/// <returns>The <see cref="IDTO{T, DTO}" /> of the updated entity</returns>
-	Task<IDTO<T, TDTO>> Update(IDTO<T, TDTO> dto, string? languageRID = null);
+	Task<IDTO<T, TDTO>> Update(IDTO<T, TDTO> dto);
 }

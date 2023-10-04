@@ -18,9 +18,9 @@ public interface IBaseEntity<T, TDTO>
 	///     Returns the <see cref="IDTO{T,DTO}" /> of the entity T.
 	/// </summary>
 	/// <returns></returns>
-	public IDTO<T, TDTO> ToIDTO(string? languageRID = null)
+	public IDTO<T, TDTO> ToIDTO()
 	{
-		return ToDTO(languageRID);
+		return ToDTO();
 	}
 
 	/*/// <summary>
@@ -33,5 +33,5 @@ public interface IBaseEntity<T, TDTO>
 	///     Converts the entity to its DTO.
 	/// </summary>
 	/// <returns> <see cref="TDTO" /> of the entity</returns>
-	TDTO ToDTO(string? languageRID = null);
+	TDTO ToDTO();
 }
