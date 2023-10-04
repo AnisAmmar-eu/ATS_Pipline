@@ -6,6 +6,10 @@ namespace Core.Entities.Packets.Models.DB.Shootings;
 
 public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 {
+	public Shooting()
+	{
+	}
+
 	public Shooting(ShootingStruct adsStruct)
 	{
 		// TODO
