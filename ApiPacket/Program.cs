@@ -6,6 +6,7 @@ using Core.Entities.Packets.Services;
 using Core.Entities.ServicesMonitors.Services;
 using Core.Shared.Data;
 using Core.Shared.Services.Background;
+using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -63,6 +64,8 @@ builder.Services.AddAuthentication(options =>
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.AddScoped<ILogsService, LogsService>();
 
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();

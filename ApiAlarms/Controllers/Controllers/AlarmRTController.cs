@@ -1,6 +1,7 @@
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Models.HttpResponse;
+using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiAlarms.Controllers.Controllers;
@@ -9,11 +10,13 @@ namespace ApiAlarms.Controllers.Controllers;
 [Route("api/alarms-real-time")]
 public class AlarmRTController : ControllerBase
 {
+	private readonly ILogsService _logsService;
 	private readonly IAlarmRTService _alarmRTService;
 
-	public AlarmRTController(IAlarmRTService alarmRTService)
+	public AlarmRTController(IAlarmRTService alarmRTService, ILogsService logsService)
 	{
 		_alarmRTService = alarmRTService;
+		_logsService = logsService;
 	}
 
 	/// <summary>
@@ -30,12 +33,9 @@ public class AlarmRTController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			if (e is EntryPointNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
-			Console.WriteLine("Internal error: " + e.Message);
-			return StatusCode(500, e.Message);
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
 
-		return new ApiResponseObject(dtoAlarmRTs).SuccessResult();
+		return await new ApiResponseObject(dtoAlarmRTs).SuccessResult(_logsService, ControllerContext);
 	}
 }

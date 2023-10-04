@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices.ComTypes;
+using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Shared.Models.HttpResponse;
+using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiAlarms.Controllers.Controllers;
@@ -9,25 +12,45 @@ namespace ApiAlarms.Controllers.Controllers;
 [Route("api/alarm-log")]
 public class AlarmLogController : ControllerBase
 {
+	private readonly ILogsService _logsService;
 	private readonly IAlarmLogService _alarmLogService;
 
-	public AlarmLogController(IAlarmLogService alarmLogService)
+	public AlarmLogController(IAlarmLogService alarmLogService, ILogsService logsService)
 	{
 		_alarmLogService = alarmLogService;
+		_logsService = logsService;
 	}
 
 	// AlarmPLC controller
 	[HttpPost("Collect")]
 	public async Task<IActionResult> Collect()
 	{
-		return Ok(await _alarmLogService.Collect());
+		try
+		{
+			await _alarmLogService.Collect();
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
 	// AlarmPLC controller
 	[HttpGet("CollectCyc")]
 	public async Task<IActionResult> CollectCyc(int nbSecond)
 	{
-		return Ok(await _alarmLogService.CollectCyc(nbSecond));
+		try
+		{
+			await _alarmLogService.CollectCyc(nbSecond);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
 	/// <summary>
@@ -37,7 +60,17 @@ public class AlarmLogController : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetAllAlarmLog()
 	{
-		return new ApiResponseObject(await _alarmLogService.GetAllForFront()).SuccessResult();
+		List<DTOFAlarmLog> result;
+		try
+		{
+			result = await _alarmLogService.GetAllForFront();
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
 	}
 
 	/// <summary>
@@ -47,7 +80,17 @@ public class AlarmLogController : ControllerBase
 	[Route("{alarmClassID}")]
 	public async Task<IActionResult> GetAlarmLogByClassID([Required] int alarmClassID)
 	{
-		return new ApiResponseObject(await _alarmLogService.GetByClassID(alarmClassID)).SuccessResult();
+		List<DTOFAlarmLog> result;
+		try
+		{
+			result = await _alarmLogService.GetByClassID(alarmClassID);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
 	}
 
 	/// <summary>
@@ -58,6 +101,16 @@ public class AlarmLogController : ControllerBase
 	[HttpPost("ack")]
 	public async Task<IActionResult> AckAlarmLogs([FromBody] [Required] int[] alarmLogIDs)
 	{
-		return new ApiResponseObject(await _alarmLogService.AckAlarmLogs(alarmLogIDs)).SuccessResult();
+		List<DTOFAlarmLog> result;
+		try
+		{
+			result = await _alarmLogService.AckAlarmLogs(alarmLogIDs);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
 	}
 }
