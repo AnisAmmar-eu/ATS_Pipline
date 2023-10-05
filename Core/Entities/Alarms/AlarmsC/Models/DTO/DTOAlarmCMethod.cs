@@ -8,6 +8,10 @@ public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, DTOAlarmC>
 {
 	public DTOAlarmC()
 	{
+		RID = "";
+		Name = "";
+		Description = "";
+		Category = "";
 	}
 
 	public DTOAlarmC(AlarmC alarmC)
@@ -17,6 +21,8 @@ public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, DTOAlarmC>
 		RID = alarmC.RID;
 		Name = alarmC.Name;
 		Description = alarmC.Description;
+		Category = alarmC.Category;
+		Severity = alarmC.Severity;
 	}
 
 	public override AlarmC ToModel()

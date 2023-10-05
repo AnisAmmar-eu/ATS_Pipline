@@ -10,6 +10,8 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 	{
 		Name = "";
 		Description = "";
+		RID = "";
+		Category = "";
 	}
 
 	public AlarmC(DTOAlarmC alarmC)
@@ -19,6 +21,8 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 		RID = alarmC.RID;
 		Name = alarmC.Name;
 		Description = alarmC.Description;
+		Category = alarmC.Category;
+		Severity = alarmC.Severity;
 	}
 
 	public override DTOAlarmC ToDTO()

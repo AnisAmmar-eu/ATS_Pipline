@@ -12,6 +12,8 @@ public partial class DTOAlarmC : DTOBaseEntity, IDTO<AlarmC, DTOAlarmC>
 	public string RID { get; set; }
 	public string Name { get; set; }
 	public string Description { get; set; }
+	public string Category { get; set; }
+	public int Severity { get; set; }
 	public virtual ICollection<DTOAlarmLog>? Journals { get; set; }
 	public virtual DTOAlarmRT? AlarmRT { get; set; }
 }
