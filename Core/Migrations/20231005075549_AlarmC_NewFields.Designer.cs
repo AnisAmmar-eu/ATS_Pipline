@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AlarmCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231005075549_AlarmC_NewFields")]
+    partial class AlarmC_NewFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,64 +256,6 @@ namespace Core.Migrations
                     b.HasIndex("ServiceID");
 
                     b.ToTable("ExtTag");
-                });
-
-            modelBuilder.Entity("Core.Entities.KPI.KPICs.Models.DB.KPIC", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("KPIC");
-                });
-
-            modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPILogs.KPILog", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<int>("KPICID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("KPICID");
-
-                    b.ToTable("KPILog");
-                });
-
-            modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs.KPIRT", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<int>("KPICID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("KPICID");
-
-                    b.ToTable("KPIRT");
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Packet", b =>
@@ -910,28 +854,6 @@ namespace Core.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPILogs.KPILog", b =>
-                {
-                    b.HasOne("Core.Entities.KPI.KPICs.Models.DB.KPIC", "KPIC")
-                        .WithMany("LogEntries")
-                        .HasForeignKey("KPICID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("KPIC");
-                });
-
-            modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs.KPIRT", b =>
-                {
-                    b.HasOne("Core.Entities.KPI.KPICs.Models.DB.KPIC", "KPIC")
-                        .WithMany("RTEntries")
-                        .HasForeignKey("KPICID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("KPIC");
-                });
-
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>
                 {
                     b.HasOne("Core.Entities.User.Models.DB.Acts.Act", "Act")
@@ -1011,13 +933,6 @@ namespace Core.Migrations
 
                     b.Navigation("AlarmRT")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Core.Entities.KPI.KPICs.Models.DB.KPIC", b =>
-                {
-                    b.Navigation("LogEntries");
-
-                    b.Navigation("RTEntries");
                 });
 
             modelBuilder.Entity("Core.Entities.ServicesMonitors.Models.DB.ServicesMonitor", b =>

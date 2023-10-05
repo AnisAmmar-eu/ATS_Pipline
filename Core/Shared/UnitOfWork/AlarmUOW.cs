@@ -5,6 +5,9 @@ using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.BIPeriodicLogs.Repositories;
 using Core.Entities.ExtTags.Repositories;
+using Core.Entities.KPI.KPICs.Repositories;
+using Core.Entities.KPI.KPIEntries.Models.DB;
+using Core.Entities.KPI.KPIEntries.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
 using Core.Entities.User.Repositories.Acts;
@@ -37,6 +40,9 @@ public class AlarmUOW : IAlarmUOW
 		Packet = new PacketRepository(_alarmCTX);
 		AlarmCycle = new AlarmCycleRepository(_alarmCTX);
 
+		KPIC = new KPICRepository(_alarmCTX);
+		KPIEntry = new KPIEntryRepository(_alarmCTX);
+
 		ExtTag = new ExtTagRepository(_alarmCTX);
 		ServicesMonitor = new ServicesMonitorRepository(_alarmCTX);
 		BIPeriodicLog = new BIPeriodicLogRepository(_alarmCTX);
@@ -55,6 +61,10 @@ public class AlarmUOW : IAlarmUOW
 
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
+	
+	// KPI
+	public IKPICRepository KPIC { get; }
+	public IKPIEntryRepository KPIEntry { get;  }
 
 	public IExtTagRepository ExtTag { get; }
 	public IServicesMonitorRepository ServicesMonitor { get; }
@@ -71,6 +81,9 @@ public class AlarmUOW : IAlarmUOW
 
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
+			
+			_ when repo == typeof(IKPICRepository) => KPIC,
+			_ when repo == typeof(IKPIEntryRepository) => KPIEntry,
 
 			_ when repo == typeof(IExtTagRepository) => ExtTag,
 			_ when repo == typeof(IServicesMonitorRepository) => ServicesMonitor,

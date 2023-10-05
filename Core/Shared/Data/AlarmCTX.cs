@@ -4,15 +4,21 @@ using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.BIPeriodicLogs.Models.DB;
+using Core.Entities.BIPeriodicLogs.Models.DB.Entries;
 using Core.Entities.BIPeriodicLogs.Models.DB.Entries.AnnualEntries;
 using Core.Entities.BIPeriodicLogs.Models.DB.Entries.DailyEntries;
 using Core.Entities.BIPeriodicLogs.Models.DB.Entries.MonthlyEntries;
 using Core.Entities.BIPeriodicLogs.Models.DB.Entries.WeeklyEntries;
+using Core.Entities.BIPeriodicLogs.Models.DB.RT;
 using Core.Entities.BIPeriodicLogs.Models.DB.RT.AnnualRTs;
 using Core.Entities.BIPeriodicLogs.Models.DB.RT.DailyRTs;
 using Core.Entities.BIPeriodicLogs.Models.DB.RT.MonthlyRTs;
 using Core.Entities.BIPeriodicLogs.Models.DB.RT.WeeklyRTs;
 using Core.Entities.ExtTags.Models.DB;
+using Core.Entities.KPI.KPICs.Models.DB;
+using Core.Entities.KPI.KPIEntries.Models.DB;
+using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
+using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
@@ -62,9 +68,16 @@ public class AlarmCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
 	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
+	
+	// KPI
+	public DbSet<KPIC> KPIC => Set<KPIC>();
+	public DbSet<KPILog> KPILog => Set<KPILog>();
+	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
 
+	/*
 	// BIPeriodicLogs
-	public DbSet<BIPeriodicLog> BIPeriodicLog => Set<BIPeriodicLog>();
+	public DbSet<Entry> Entry => Set<Entry>();
+	public DbSet<RT> RT => Set<RT>();
 	public DbSet<DailyEntry> DailyEntry => Set<DailyEntry>();
 	public DbSet<WeeklyEntry> WeeklyEntry => Set<WeeklyEntry>();
 	public DbSet<MonthlyEntry> MonthlyEntry => Set<MonthlyEntry>();
@@ -73,6 +86,7 @@ public class AlarmCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<WeeklyRT> WeeklyRT => Set<WeeklyRT>();
 	public DbSet<MonthlyRT> MonthlyRT => Set<MonthlyRT>();
 	public DbSet<AnnualRT> AnnualRT => Set<AnnualRT>();
+	*/
 
 	// Action
 	public DbSet<Act> Acts => Set<Act>();
@@ -105,5 +119,15 @@ public class AlarmCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithOne(extTag => extTag.Service)
 			.HasForeignKey(extTag => extTag.ServiceID)
 			.IsRequired();
+
+		modelBuilder.Entity<KPILog>()
+			.HasOne(kpiLog => kpiLog.KPIC)
+			.WithMany(kpic => kpic.LogEntries)
+			.HasForeignKey(kpiLog => kpiLog.KPICID);
+
+		modelBuilder.Entity<KPIRT>()
+			.HasOne(kpiRT => kpiRT.KPIC)
+			.WithMany(kpic => kpic.RTEntries)
+			.HasForeignKey(kpiRT => kpiRT.KPICID);
 	}
 }

@@ -5,6 +5,8 @@ using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.BIPeriodicLogs.Repositories;
 using Core.Entities.ExtTags.Repositories;
+using Core.Entities.KPI.KPICs.Repositories;
+using Core.Entities.KPI.KPIEntries.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
 using Core.Entities.User.Repositories.Acts;
@@ -25,6 +27,10 @@ public interface IAlarmUOW : IDisposable
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }
 
+	// KPI
+	IKPICRepository KPIC { get; }
+	IKPIEntryRepository KPIEntry { get;  }
+	
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
 
