@@ -38,4 +38,28 @@ public class AlarmRTController : ControllerBase
 
 		return await new ApiResponseObject(dtoAlarmRTs).SuccessResult(_logsService, ControllerContext);
 	}
+
+	/// <summary>
+	///		This function returns the statistics of AlarmRT. The result will always be an array of length 3.
+	/// </summary>
+	/// <returns>
+	///		res[0] => Nb No Alarms
+	///		res[1] => Nb NonAck
+	///		res[2] => Nb Active alarms;
+	/// </returns>
+	[HttpGet("stats")]
+	public async Task<IActionResult> GetAlarmRTStats()
+	{
+		int[] res = new int[3];
+		try
+		{
+			res = await _alarmRTService.GetAlarmRTStats();
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(res).SuccessResult(_logsService, ControllerContext);
+	}
 }

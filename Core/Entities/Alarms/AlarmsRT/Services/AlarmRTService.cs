@@ -1,11 +1,10 @@
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using System.Linq.Expressions;
-using Core.Shared.UnitOfWork;
+using Core.Entities.Alarms.AlarmsC.Models.DB;
 
 namespace Core.Entities.Alarms.AlarmsRT.Services;
 
@@ -22,5 +21,17 @@ public class AlarmRTService : ServiceBaseEntity<IAlarmRTRepository, AlarmRT, DTO
 	{
 		return (await AlarmUOW.AlarmRT.GetAllWithInclude(filters, orderBy, withTracking)).ConvertAll(alarmRT =>
 			alarmRT.ToDTO());
+	}
+
+	public async Task<int[]> GetAlarmRTStats()
+	{
+		List<AlarmRT> alarmRts = await AlarmUOW.AlarmRT.GetAll(withTracking: false);
+		List<AlarmC> alarmCs = await AlarmUOW.AlarmC.GetAll(withTracking: false);
+		int nbActiveAlarms = alarmRts.Count(alarmRT => alarmRT.IsActive);
+		int[] stats = new int[3];
+		stats[0] = alarmCs.Count - nbActiveAlarms;
+		stats[1] = (int)alarmRts.Sum(alarmRT => alarmRT.NbNonAck)!;
+		stats[2] = nbActiveAlarms;
+		return stats;
 	}
 }
