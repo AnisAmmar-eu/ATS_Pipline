@@ -29,7 +29,7 @@ public class AlarmRTController : ControllerBase
 		List<DTOAlarmRT> dtoAlarmRTs;
 		try
 		{
-			dtoAlarmRTs = await _alarmRTService.GetAll();
+			dtoAlarmRTs = await _alarmRTService.GetAll(includes: "Alarm");
 		}
 		catch (Exception e)
 		{
