@@ -7,9 +7,9 @@ namespace Core.Entities.KPI.KPIEntries.Models.DTO;
 
 public partial class DTOKPIEntry : DTOBaseEntity, IDTO<KPIEntry, DTOKPIEntry>
 {
-	public int KPICID;
-	public int StationID;
-	public int Value;
-	public string Period;
-	public DTOKPIC KPIC;
+	public int KPICID { get; set; }
+	public int StationID { get; set; }
+	public int Value { get; set; }
+	public string Period { get; set; }
+	public DTOKPIC KPIC { get; set; }
 }

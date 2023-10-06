@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AlarmCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231005092539_kpi2")]
+    partial class kpi2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("AlarmC", (string)null);
+                    b.ToTable("AlarmC");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsCycle.Models.DB.AlarmCycle", b =>
@@ -85,7 +87,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmListPacketID");
 
-                    b.ToTable("AlarmCycle", (string)null);
+                    b.ToTable("AlarmCycle");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsLog.Models.DB.AlarmLog", b =>
@@ -133,7 +135,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmID");
 
-                    b.ToTable("AlarmLog", (string)null);
+                    b.ToTable("AlarmLog");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsPLC.Models.DB.AlarmPLC", b =>
@@ -158,7 +160,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("AlarmPLC", (string)null);
+                    b.ToTable("AlarmPLC");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsRT.Models.DB.AlarmRT", b =>
@@ -199,7 +201,7 @@ namespace Core.Migrations
                     b.HasIndex("AlarmID")
                         .IsUnique();
 
-                    b.ToTable("AlarmRT", (string)null);
+                    b.ToTable("AlarmRT");
                 });
 
             modelBuilder.Entity("Core.Entities.ExtTags.Models.DB.ExtTag", b =>
@@ -253,7 +255,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ServiceID");
 
-                    b.ToTable("ExtTag", (string)null);
+                    b.ToTable("ExtTag");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPICs.Models.DB.KPIC", b =>
@@ -281,7 +283,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("KPIC", (string)null);
+                    b.ToTable("KPIC");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPILogs.KPILog", b =>
@@ -312,7 +314,7 @@ namespace Core.Migrations
 
                     b.HasIndex("KPICID");
 
-                    b.ToTable("KPILog", (string)null);
+                    b.ToTable("KPILog");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs.KPIRT", b =>
@@ -343,7 +345,7 @@ namespace Core.Migrations
 
                     b.HasIndex("KPICID");
 
-                    b.ToTable("KPIRT", (string)null);
+                    b.ToTable("KPIRT");
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Packet", b =>
@@ -374,7 +376,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Packet", (string)null);
+                    b.ToTable("Packet");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Packet");
                 });
@@ -411,7 +413,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ServicesMonitor", (string)null);
+                    b.ToTable("ServicesMonitor");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.Act", b =>
@@ -437,7 +439,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Acts", (string)null);
+                    b.ToTable("Acts");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>
@@ -471,7 +473,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActID");
 
-                    b.ToTable("ActEntities", (string)null);
+                    b.ToTable("ActEntities");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles.ActEntityRole", b =>
@@ -507,7 +509,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActEntityID");
 
-                    b.ToTable("ActEntityRoles", (string)null);
+                    b.ToTable("ActEntityRoles");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Roles.ApplicationRole", b =>
@@ -653,7 +655,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Log", (string)null);
+                    b.ToTable("Log");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

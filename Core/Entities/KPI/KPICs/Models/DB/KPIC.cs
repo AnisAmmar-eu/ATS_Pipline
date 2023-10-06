@@ -9,14 +9,14 @@ namespace Core.Entities.KPI.KPICs.Models.DB;
 
 public partial class KPIC : BaseEntity, IBaseEntity<KPIC, DTOKPIC>
 {
-	public string RID;
-	public string Name;
-	public string Description;
-	
+	public string RID { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
+
 	#region Nav Properties
 
-	public List<KPILog> LogEntries { get; set; } = new List<KPILog>();
-	public List<KPIRT> RTEntries { get; set; } = new List<KPIRT>();
+	public ICollection<KPILog> LogEntries { get; set; } = new List<KPILog>();
+	public ICollection<KPIRT> RTEntries { get; set; } = new List<KPIRT>();
 
 	#endregion
 }

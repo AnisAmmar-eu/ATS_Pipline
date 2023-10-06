@@ -8,7 +8,7 @@ namespace Core.Entities.KPI.KPICs.Services;
 
 public class KPICService : ServiceBaseEntity<KPICRepository, KPIC, DTOKPIC>, IKPICService
 {
-	protected KPICService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	public KPICService(IAlarmUOW alarmUOW) : base(alarmUOW)
 	{
 	}
 }

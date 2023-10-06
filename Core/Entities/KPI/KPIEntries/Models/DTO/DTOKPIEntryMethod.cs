@@ -8,10 +8,10 @@ public partial class DTOKPIEntry : DTOBaseEntity, IDTO<KPIEntry, DTOKPIEntry>
 {
 	public DTOKPIEntry(KPIEntry kpiEntry)
 	{
-		KPICID = kpiEntry.KPICID;
 		StationID = kpiEntry.StationID;
 		Value = kpiEntry.Value;
 		Period = kpiEntry.Period;
+		KPICID = kpiEntry.KPICID;
 		KPIC = kpiEntry.KPIC.ToDTO();
 	}
 }

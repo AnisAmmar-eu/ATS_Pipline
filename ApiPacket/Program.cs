@@ -2,10 +2,14 @@ using System.Text;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
+using Core.Entities.KPI.KPICs.Services;
+using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
+using Core.Entities.KPI.KPIEntries.Services.KPILogs;
+using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Entities.Packets.Services;
 using Core.Entities.ServicesMonitors.Services;
 using Core.Shared.Data;
-using Core.Shared.Services.Background;
+using Core.Shared.Services.Background.KPI.KPILog;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
@@ -71,6 +75,10 @@ builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 builder.Services.AddScoped<IAlarmRTService, AlarmRTService>();
 
+builder.Services.AddScoped<IKPICService, KPICService>();
+builder.Services.AddScoped<IKPILogService, KPILogService>();
+builder.Services.AddScoped<IKPIRTService, KPIRTService>();
+
 builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddSignalR();
@@ -80,10 +88,12 @@ builder.Services.AddScoped<IServicesMonitorService, ServicesMonitorService>();
 
 builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
 
-//builder.Services.AddSingleton<CollectService>();
-//builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
-builder.Services.AddSingleton<MonitorService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<MonitorService>());
+// builder.Services.AddSingleton<CollectService>();
+// builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
+builder.Services.AddSingleton<DailyKPILogService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<DailyKPILogService>());
+// builder.Services.AddSingleton<MonitorService>();
+// builder.Services.AddHostedService(provider => provider.GetRequiredService<MonitorService>());
 
 WebApplication app = builder.Build();
 

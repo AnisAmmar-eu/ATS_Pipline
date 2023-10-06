@@ -6,7 +6,7 @@ namespace Core.Entities.KPI.KPICs.Models.DTO;
 
 public partial class DTOKPIC : DTOBaseEntity, IDTO<KPIC, DTOKPIC>
 {
-	public string RID;
-	public string Name;
-	public string Description;
+	public string RID { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
 }

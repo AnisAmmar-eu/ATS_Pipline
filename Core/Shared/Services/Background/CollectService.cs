@@ -9,7 +9,7 @@ public class CollectService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<CollectService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromMilliseconds(100);
+	private readonly TimeSpan _period = TimeSpan.FromMilliseconds(1000000);
 	private int _executionCount;
 
 	public CollectService(ILogger<CollectService> logger, IServiceScopeFactory factory)

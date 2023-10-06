@@ -15,7 +15,7 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 	private readonly TRepository _repository;
 	protected readonly IAlarmUOW AlarmUOW;
 
-	protected ServiceBaseEntity(IAlarmUOW alarmUOW)
+	public ServiceBaseEntity(IAlarmUOW alarmUOW)
 	{
 		AlarmUOW = alarmUOW;
 		_repository = (TRepository?)alarmUOW.GetRepoByType(typeof(TRepository)) ??
@@ -47,6 +47,21 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 		AlarmUOW.Commit();
 		await AlarmUOW.CommitTransaction();
 		return entity.ToDTO();
+	}
+
+	public async Task<List<TDTO>> AddAll(IEnumerable<T> entities)
+	{
+		await AlarmUOW.StartTransaction();
+		List<TDTO> result = new List<TDTO>();
+		foreach (T entity in entities)
+		{
+			await _repository.Add(entity);
+			result.Add(entity.ToDTO());
+		}
+
+		AlarmUOW.Commit();
+		await AlarmUOW.CommitTransaction();
+		return result;
 	}
 
 	public async Task<TDTO> Update(T entity)

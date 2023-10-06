@@ -20,6 +20,7 @@ public interface IServiceBaseEntity<T, TDTO>
 		params string[] includes);
 
 	public Task<TDTO> Add(T entity);
+	public Task<List<TDTO>> AddAll(IEnumerable<T> entities);
 	public Task<TDTO> Update(T entity);
 	public Task<TDTO> Remove(T entity);
 }
