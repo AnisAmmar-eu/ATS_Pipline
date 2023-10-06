@@ -12,6 +12,7 @@ public partial class ServicesMonitor : BaseEntity, IBaseEntity<ServicesMonitor, 
 	public string Description { get; set; }
 	public string IPAddress { get; set; }
 	public bool IsConnected { get; set; }
+	// TODO Add Type (See .simp)
 
 	public List<ExtTag> ExtTags { get; set; } = new();
 }

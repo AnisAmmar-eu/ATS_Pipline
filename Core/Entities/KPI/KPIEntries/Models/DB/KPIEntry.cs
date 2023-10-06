@@ -10,7 +10,7 @@ public partial class KPIEntry : BaseEntity, IBaseEntity<KPIEntry, DTOKPIEntry>
 {
 	public int KPICID { get; set; }
 	public int StationID { get; set; }
-	public int Value { get; set; }
+	public string Value { get; set; }
 	public string Period { get; set; }
 	#region Nav Properties
 

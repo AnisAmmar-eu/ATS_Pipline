@@ -6,5 +6,5 @@ public interface IBaseKPI<TValue>
 {
 	public TValue GetValue();
 	public string[] GetKPICRID();
-	public Func<TValue, TValue>[] GetComputedValue();
+	public Func<List<TValue>, string>[] GetComputedValue();
 }

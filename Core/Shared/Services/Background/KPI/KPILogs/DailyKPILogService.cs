@@ -47,30 +47,37 @@ public class DailyKPILogService : BackgroundService
 		await Task.Delay(TimeToWaitUntilMidnight() + TimeSpan.FromMinutes(5));
 		using PeriodicTimer timer = new(_period);
 		do
-			try
+		{
+			bool retry = true;
+			while (retry)
 			{
-				_logger.LogInformation("DailyKPILogService running at: {time}", DateTimeOffset.Now);
+				try
+				{
+					_logger.LogInformation("DailyKPILogService running at: {time}", DateTimeOffset.Now);
 
-				List<string> periods = GetPeriodsList();
-				_logger.LogInformation("DailyKPILogService periods to be saved are: {periods}", periods.ToString());
+					List<string> periods = GetPeriodsList();
+					_logger.LogInformation("DailyKPILogService periods to be saved are: {periods}", periods.ToString());
 
-				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-				IKPIRTService kpirtService =
-					asyncScope.ServiceProvider.GetRequiredService<IKPIRTService>();
+					await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+					IKPIRTService kpirtService =
+						asyncScope.ServiceProvider.GetRequiredService<IKPIRTService>();
 
-				List<DTOKPILog> dtoKPILogs = await kpirtService.SaveRTsToLogs(periods);
-				_logger.LogInformation("DailyKPILogService saved the following logs: {logs}", dtoKPILogs.ToString());
+					List<DTOKPILog> dtoKPILogs = await kpirtService.SaveRTsToLogs(periods);
+					_logger.LogInformation("DailyKPILogService saved the following logs: {logs}",
+						dtoKPILogs.ToString());
 
-				_executionCount++;
-				_logger.LogInformation("Executed DailyKPILogService - Count: {count}", _executionCount);
+					_executionCount++;
+					_logger.LogInformation("Executed DailyKPILogService - Count: {count}", _executionCount);
+					retry = false;
+				}
+				catch (Exception ex)
+				{
+					_logger.LogInformation(
+						"Failed to execute DailyKPILogService with exception message {message}. Good luck next round!",
+						ex.Message);
+				}
 			}
-			catch (Exception ex)
-			{
-				_logger.LogInformation(
-					"Failed to execute DailyKPILogService with exception message {message}. Good luck next round!",
-					ex.Message);
-			}
-		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken));
+		} while (!stoppingToken.IsCancellationRequested
+		         && await timer.WaitForNextTickAsync(stoppingToken));
 	}
 }

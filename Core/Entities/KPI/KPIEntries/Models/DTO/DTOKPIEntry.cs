@@ -9,7 +9,7 @@ public partial class DTOKPIEntry : DTOBaseEntity, IDTO<KPIEntry, DTOKPIEntry>
 {
 	public int KPICID { get; set; }
 	public int StationID { get; set; }
-	public int Value { get; set; }
+	public string Value { get; set; }
 	public string Period { get; set; }
 	public DTOKPIC KPIC { get; set; }
 }

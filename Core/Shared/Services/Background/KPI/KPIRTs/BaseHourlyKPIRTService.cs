@@ -1,39 +1,43 @@
+using System.Linq.Expressions;
+using Core.Entities.KPI.KPIEntries.Dictionaries;
+using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
+using Core.Entities.KPI.KPIEntries.Models.DTO.KPIRTs;
+using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
-using Core.Shared.Services.Background.KPI.KPILog;
 using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Core.Shared.Services.Background.KPI.KPIRT;
+namespace Core.Shared.Services.Background.KPI.KPIRTs;
 
-public class BaseKPIRTService<T, TDTO, TService, TValue> : BackgroundService
-	where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
-	where TDTO : class, IDTO<T, TDTO>
+public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundService
+	where T : class, IBaseEntity<T, TDTO>
+	where TDTO : class, IDTO<T, TDTO>, IBaseKPI<TValue>
 	where TService : class, IServiceBaseEntity<T, TDTO>
 {
 	private readonly IServiceScopeFactory _factory;
-	private readonly ILogger<BaseKPIRTService<T, TDTO, TService, TValue>> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromHours(24);
+	private readonly ILogger<BaseHourlyKPIRTService<T, TDTO, TService, TValue>> _logger;
+	private readonly TimeSpan _period = TimeSpan.FromHours(1);
 	private int _executionCount;
 
-	public BaseKPIRTService(IServiceScopeFactory factory, ILogger<BaseKPIRTService<T, TDTO, TService, TValue>> logger)
+	public BaseHourlyKPIRTService(IServiceScopeFactory factory, ILogger<BaseHourlyKPIRTService<T, TDTO, TService, TValue>> logger)
 	{
 		_factory = factory;
 		_logger = logger;
 	}
 
-	private TimeSpan TimeToWaitUntilMidnight()
+	private TimeSpan TimeToWaitUntilNextHour()
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
-		DateTimeOffset nextDayStart = DateTimeOffset.Now.DateTime.Date.AddDays(1);
-		return nextDayStart - now;
+		return TimeSpan.FromMinutes(60 - now.Minute);
+
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await Task.Delay(TimeToWaitUntilMidnight());
+		await Task.Delay(TimeToWaitUntilNextHour());
 		using PeriodicTimer timer = new(_period);
 		do
 			try
@@ -43,8 +47,11 @@ public class BaseKPIRTService<T, TDTO, TService, TValue> : BackgroundService
 				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 				TService tService =
 					asyncScope.ServiceProvider.GetRequiredService<TService>();
-				
-				// TODO Logic -> GetAll of T, get its KPICRIDs (create KPIC and KPIRT if necessary) and make the computations on it.
+				IKPIRTService kpirtService =
+					asyncScope.ServiceProvider.GetRequiredService<IKPIRTService>();
+
+				_logger.LogInformation("Calling ComputeKPIRTs");
+				await kpirtService.ComputeKPIRTs<T, TDTO, TService, TValue>(tService);
 
 				_executionCount++;
 				_logger.LogInformation("Executed BaseKPIRTService - Count: {count}", _executionCount);
