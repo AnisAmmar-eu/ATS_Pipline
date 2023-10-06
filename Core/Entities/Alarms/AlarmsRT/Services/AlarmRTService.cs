@@ -1,14 +1,16 @@
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
+using System.Linq.Expressions;
 
 namespace Core.Entities.Alarms.AlarmsRT.Services;
 
 public class AlarmRTService : ServiceBaseEntity<IAlarmRTRepository, AlarmRT, DTOAlarmRT>, IAlarmRTService
 {
-	public AlarmRTService(IAlarmUOW alarmUOW) : base(alarmUOW)
-	{
-	}
+    public AlarmRTService(IAlarmUOW alarmUOW) : base(alarmUOW)
+    {
+    }
 }
