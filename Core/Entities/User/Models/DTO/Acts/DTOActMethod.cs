@@ -9,12 +9,10 @@ public partial class DTOAct : DTOBaseEntity, IDTO<Act, DTOAct>
 	public DTOAct()
 	{
 		RID = "";
-		Name = "";
 	}
 
 	public DTOAct(Act act)
 	{
-		// TODO No lang => Name? Desc?
 		ID = act.ID;
 		RID = act.RID;
 		EntityType = act.EntityType;
