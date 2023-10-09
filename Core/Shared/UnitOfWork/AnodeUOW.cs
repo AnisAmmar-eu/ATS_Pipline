@@ -9,6 +9,7 @@ using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 using Core.Entities.KPI.KPITests.Repositories;
 using Core.Entities.Packets.Repositories;
+using Core.Entities.Parameters.CameraParams.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
@@ -45,6 +46,8 @@ public class AnodeUOW : IAnodeUOW
 		KPIRT = new KPIRTRepository(_anodeCTX);
 		KPITest = new KPITestRepository(_anodeCTX);
 
+		CameraParam = new CameraParamRepository(_anodeCTX);
+
 		ExtTag = new ExtTagRepository(_anodeCTX);
 		ServicesMonitor = new ServicesMonitorRepository(_anodeCTX);
 
@@ -69,6 +72,8 @@ public class AnodeUOW : IAnodeUOW
 	public IKPIRTRepository KPIRT { get; }
 	public IKPITestRepository KPITest { get; }
 
+	// Params
+	public ICameraParamRepository CameraParam { get; }
 	public IExtTagRepository ExtTag { get; }
 	public IServicesMonitorRepository ServicesMonitor { get; }
 
@@ -88,6 +93,8 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IKPILogRepository) => KPILog,
 			_ when repo == typeof(IKPIRTRepository) => KPIRT,
 			_ when repo == typeof(IKPITestRepository) => KPITest,
+			
+			_ when repo == typeof(ICameraParamRepository) => CameraParam,
 
 			_ when repo == typeof(IExtTagRepository) => ExtTag,
 			_ when repo == typeof(IServicesMonitorRepository) => ServicesMonitor,

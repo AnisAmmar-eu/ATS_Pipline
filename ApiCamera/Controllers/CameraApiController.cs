@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using Core.Entities.Parameters.CameraParams.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
@@ -52,6 +53,25 @@ public class CameraApiController : ControllerBase
 		}
 
 		return Ok(Result);
+	}
+
+	[HttpPost("SetDeviceParameters")]
+	public IActionResult SetDeviceParameters([FromBody] [Required] DTOCameraParam dtoCameraParam)
+	{
+		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\\GenICam.vin";
+		try
+		{
+			Device device = DeviceFactory.Open(driverString);
+			device.Stream.Stop();
+			dtoCameraParam.SetCameraParams(device);
+			device.Stream.Start();
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+
+		return Ok();
 	}
 
 	#endregion
@@ -134,6 +154,12 @@ public class CameraApiController : ControllerBase
 			while (true)
 				try
 				{
+					// If the stream is stopped because parameters are being modified, waits for it to come back.
+					if (!stream.IsRunning)
+					{
+						Thread.Sleep(100);
+						continue;
+					}
 					// Check if the camera is connected
 					if (device.ConnectionState.HasFlag(ConnectionState.Connected) != true)
 					{
