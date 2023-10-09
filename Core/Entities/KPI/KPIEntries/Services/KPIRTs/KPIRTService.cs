@@ -20,20 +20,20 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 {
 	private IKPILogService _kpiLogService;
 
-	public KPIRTService(IAlarmUOW alarmUOW, IKPILogService kpiLogService) : base(alarmUOW)
+	public KPIRTService(IAnodeUOW anodeUOW, IKPILogService kpiLogService) : base(anodeUOW)
 	{
 		_kpiLogService = kpiLogService;
 	}
 
 	public async Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave)
 	{
-		List<KPIRT> kpiRTs = await AlarmUOW.KPIRT.GetAll(new Expression<Func<KPIRT, bool>>[]
+		List<KPIRT> kpiRTs = await AnodeUOW.KPIRT.GetAll(new Expression<Func<KPIRT, bool>>[]
 		{
 			kpiRT => periodsToSave.Contains(kpiRT.Period)
 		}, null, false, null);
 		List<KPILog> kpiLogs = new();
 		foreach (KPIRT kpiRT in kpiRTs)
-			kpiLogs.Add(kpiRT.ToLog(await AlarmUOW.KPIC.GetById(kpiRT.KPICID)));
+			kpiLogs.Add(kpiRT.ToLog(await AnodeUOW.KPIC.GetById(kpiRT.KPICID)));
 
 		return await _kpiLogService.AddAll(kpiLogs);
 	}
@@ -57,7 +57,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 
 		List<List<TValue>> tValuesPerPeriods = GetValuesFromPeriods<T, TDTO, TValue>(tDTOs, periods);
 
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		Func<List<TValue>, string>[] functions = tDTOs[0].GetComputedValue();
 		for (int i = 0; i < kpiRTs.Count; ++i)
 		{
@@ -65,12 +65,12 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 			for (int j = 0; j < kpiRTPerC.Count; ++j)
 			{
 				kpiRTPerC[j].Value = functions[i].Invoke(tValuesPerPeriods[j]);
-				AlarmUOW.KPIRT.Update(kpiRTPerC[j]);
+				AnodeUOW.KPIRT.Update(kpiRTPerC[j]);
 			}
 		}
 
-		AlarmUOW.Commit();
-		await AlarmUOW.CommitTransaction();
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 	}
 
 	/// <summary>
@@ -92,11 +92,11 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	private async Task<List<List<KPIRT>>> GetKPIRTsFromKPICsAndPeriods(string[] kpiCRIDs, string[] periods)
 	{
 		List<List<KPIRT>> kpiRTs = new();
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		foreach (string kpiCRID in kpiCRIDs)
 		{
 			List<KPIRT> localKPIRTs = new(periods.Length);
-			List<KPIRT> availableKPIRTs = await AlarmUOW.KPIRT.GetAll(
+			List<KPIRT> availableKPIRTs = await AnodeUOW.KPIRT.GetAll(
 				filters: new Expression<Func<KPIRT, bool>>[]
 				{
 					kpiRT => kpiRT.KPIC.RID == kpiCRID
@@ -106,7 +106,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 				KPIRT? kpiRT = availableKPIRTs.FirstOrDefault(kpiRT => kpiRT.Period == periods[i]);
 				if (kpiRT == null)
 				{
-					KPIC kpiC = await AlarmUOW.KPIC.GetBy(filters: new Expression<Func<KPIC, bool>>[]
+					KPIC kpiC = await AnodeUOW.KPIC.GetBy(filters: new Expression<Func<KPIC, bool>>[]
 					{
 						kpiC => kpiC.RID == kpiCRID
 					});
@@ -118,8 +118,8 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 						Period = periods[i],
 						KPIC = kpiC,
 					};
-					await AlarmUOW.KPIRT.Add(kpiRT);
-					AlarmUOW.Commit();
+					await AnodeUOW.KPIRT.Add(kpiRT);
+					AnodeUOW.Commit();
 				}
 
 				localKPIRTs[i] = kpiRT;
@@ -128,7 +128,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 			kpiRTs.Add(localKPIRTs);
 		}
 
-		await AlarmUOW.CommitTransaction();
+		await AnodeUOW.CommitTransaction();
 		return kpiRTs;
 	}
 

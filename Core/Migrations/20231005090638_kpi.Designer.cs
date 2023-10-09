@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20231005090638_kpi")]
     partial class kpi
     {

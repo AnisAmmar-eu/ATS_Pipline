@@ -29,16 +29,16 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 		return new DTOAlarmList(this);
 	}
 
-	protected override async Task<DTOPacket> InheritedBuild(IAlarmUOW alarmUOW, DTOPacket dtoPacket)
+	protected override async Task<DTOPacket> InheritedBuild(IAnodeUOW anodeUOW, DTOPacket dtoPacket)
 	{
 		DTOAlarmList dtoAlarmList = (DTOAlarmList)dtoPacket;
-		List<AlarmRT> alarmRTs = await alarmUOW.AlarmRT.GetAllWithInclude();
+		List<AlarmRT> alarmRTs = await anodeUOW.AlarmRT.GetAllWithInclude();
 		foreach (AlarmRT alarmRT in alarmRTs)
 		{
 			AlarmCycle alarmCycle = new(alarmRT);
 			alarmCycle.AlarmListPacketID = dtoAlarmList.ID;
-			await alarmUOW.AlarmCycle.Add(alarmCycle);
-			alarmUOW.Commit();
+			await anodeUOW.AlarmCycle.Add(alarmCycle);
+			anodeUOW.Commit();
 			dtoAlarmList.AlarmList.Add(alarmCycle.ToDTO());
 		}
 

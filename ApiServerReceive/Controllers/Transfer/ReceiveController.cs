@@ -42,8 +42,8 @@ public class ReceiveController : ControllerBase
 			/*
 			var truncateSql = "TRUNCATE TABLE AlarmLog ";
 			var truncateSqlRT = "TRUNCATE TABLE AlarmRT ";
-			_alarmCtx.Database.ExecuteSqlRaw(truncateSql);
-			_alarmCtx.Database.ExecuteSqlRaw(truncateSqlRT);
+			_anodeCTX.Database.ExecuteSqlRaw(truncateSql);
+			_anodeCTX.Database.ExecuteSqlRaw(truncateSqlRT);
 			*/
 
 

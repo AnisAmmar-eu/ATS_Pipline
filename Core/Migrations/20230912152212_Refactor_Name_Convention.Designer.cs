@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20230912152212_Refactor_Name_Convention")]
     partial class Refactor_Name_Convention
     {

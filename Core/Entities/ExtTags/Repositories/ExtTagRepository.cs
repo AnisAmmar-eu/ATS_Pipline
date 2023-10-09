@@ -5,9 +5,9 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.ExtTags.Repositories;
 
-public class ExtTagRepository : RepositoryBaseEntity<AlarmCTX, ExtTag, DTOExtTag>, IExtTagRepository
+public class ExtTagRepository : RepositoryBaseEntity<AnodeCTX, ExtTag, DTOExtTag>, IExtTagRepository
 {
-	public ExtTagRepository(AlarmCTX context) : base(context)
+	public ExtTagRepository(AnodeCTX context) : base(context)
 	{
 	}
 }

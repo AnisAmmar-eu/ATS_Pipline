@@ -10,26 +10,26 @@ namespace Core.Entities.Packets.Services;
 
 public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPacket>, IPacketService
 {
-	public PacketService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	public PacketService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
 	public async Task<DTOPacket> BuildPacket(DTOPacket dtoPacket)
 	{
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 
 		Packet packet = dtoPacket.ToModel();
-		await packet.Create(AlarmUOW);
+		await packet.Create(AnodeUOW);
 
-		await packet.Build(AlarmUOW, packet.ToDTO());
+		await packet.Build(AnodeUOW, packet.ToDTO());
 
-		await AlarmUOW.CommitTransaction();
+		await AnodeUOW.CommitTransaction();
 		return packet.ToDTO();
 	}
 
 	public async Task<HttpResponseMessage> SendPacketsToServer()
 	{
-		List<Packet> packets = await AlarmUOW.Packet.GetAll();
+		List<Packet> packets = await AnodeUOW.Packet.GetAll();
 		const string api2Url = "https://localhost:7207/api/receive/packet";
 		string jsonData = JsonConvert.SerializeObject(packets.ConvertAll(packet => packet.ToDTO()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
@@ -40,10 +40,10 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 
 			if (!response.IsSuccessStatusCode) return response;
 
-			await AlarmUOW.StartTransaction();
-			packets.ForEach(packet => { AlarmUOW.Packet.Remove(packet); });
-			AlarmUOW.Commit();
-			await AlarmUOW.CommitTransaction();
+			await AnodeUOW.StartTransaction();
+			packets.ForEach(packet => { AnodeUOW.Packet.Remove(packet); });
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
 
 			return response;
 		}
@@ -51,14 +51,14 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 
 	public async Task ReceivePacket(IEnumerable<DTOPacket> packets)
 	{
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		foreach (DTOPacket packet in packets)
 		{
 			packet.ID = 0;
-			await AlarmUOW.Packet.Add(packet.ToModel());
+			await AnodeUOW.Packet.Add(packet.ToModel());
 		}
 
-		AlarmUOW.Commit();
-		await AlarmUOW.CommitTransaction();
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 	}
 }

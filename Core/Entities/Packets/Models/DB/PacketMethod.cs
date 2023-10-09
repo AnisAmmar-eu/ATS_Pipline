@@ -29,21 +29,21 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 		return new DTOPacket(this);
 	}
 
-	public virtual async Task Create(IAlarmUOW alarmUOW)
+	public virtual async Task Create(IAnodeUOW anodeUOW)
 	{
-		await alarmUOW.Packet.Add(this);
-		alarmUOW.Commit();
+		await anodeUOW.Packet.Add(this);
+		anodeUOW.Commit();
 	}
 
-	public async Task<DTOPacket> Build(IAlarmUOW alarmUOW, DTOPacket dtoPacket)
+	public async Task<DTOPacket> Build(IAnodeUOW anodeUOW, DTOPacket dtoPacket)
 	{
-		dtoPacket = await InheritedBuild(alarmUOW, dtoPacket);
-		alarmUOW.Packet.Update(this);
-		alarmUOW.Commit();
+		dtoPacket = await InheritedBuild(anodeUOW, dtoPacket);
+		anodeUOW.Packet.Update(this);
+		anodeUOW.Commit();
 		return dtoPacket;
 	}
 
-	protected virtual Task<DTOPacket> InheritedBuild(IAlarmUOW alarmUOW, DTOPacket dtoPacket)
+	protected virtual Task<DTOPacket> InheritedBuild(IAnodeUOW anodeUOW, DTOPacket dtoPacket)
 	{
 		return Task.FromResult(dtoPacket);
 	}

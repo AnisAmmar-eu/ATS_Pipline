@@ -25,7 +25,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<AlarmCTX>(options =>
+builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -36,7 +36,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 		options.Password.RequireNonAlphanumeric = false;
 		options.Password.RequireDigit = false;
 	})
-	.AddEntityFrameworkStores<AlarmCTX>()
+	.AddEntityFrameworkStores<AnodeCTX>()
 	.AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
@@ -92,7 +92,7 @@ builder.Services.AddScoped<ILogsService, LogsService>();
 builder.Services.AddScoped<IMailsService, MailsService>();
 
 // UnitOfWork
-builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
+builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

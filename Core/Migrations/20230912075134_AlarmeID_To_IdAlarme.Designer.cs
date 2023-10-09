@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20230912075134_AlarmeID_To_IdAlarme")]
     partial class AlarmeID_To_IdAlarme
     {

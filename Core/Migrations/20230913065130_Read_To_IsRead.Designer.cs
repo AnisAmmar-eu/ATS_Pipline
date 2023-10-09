@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20230913065130_Read_To_IsRead")]
     partial class Read_To_IsRead
     {

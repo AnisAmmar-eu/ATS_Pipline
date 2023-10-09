@@ -17,12 +17,12 @@ builder.Services.AddSwaggerGen();
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<AlarmCTX>(options =>
+builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IAlarmPLCService, AlarmPLCService>();
 
-builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
+builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddSingleton<IServiceProvider>(sp => sp);
 

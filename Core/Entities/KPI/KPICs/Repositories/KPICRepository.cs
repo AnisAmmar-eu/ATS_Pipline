@@ -5,9 +5,9 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.KPI.KPICs.Repositories;
 
-public class KPICRepository : RepositoryBaseEntity<AlarmCTX, KPIC, DTOKPIC>, IKPICRepository
+public class KPICRepository : RepositoryBaseEntity<AnodeCTX, KPIC, DTOKPIC>, IKPICRepository
 {
-	public KPICRepository(AlarmCTX context) : base(context)
+	public KPICRepository(AnodeCTX context) : base(context)
 	{
 	}
 }

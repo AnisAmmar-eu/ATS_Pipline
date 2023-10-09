@@ -20,7 +20,7 @@ namespace Core.Shared.UnitOfWork.Interfaces;
 /// <summary>
 ///     Interface IUnitOfWork defines the methods that are required to be implemented by a Unit of Work class.
 /// </summary>
-public interface IAlarmUOW : IDisposable
+public interface IAnodeUOW : IDisposable
 {
 	ILogRepository Log { get; }
 	IAlarmCRepository AlarmC { get; }

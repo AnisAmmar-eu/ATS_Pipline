@@ -26,8 +26,8 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 	private readonly ISignalRService _signalRService;
 
 
-	public AlarmLogService(IAlarmUOW alarmUOW, IConfiguration configuration, ISignalRService signalRService,
-		IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext) : base(alarmUOW)
+	public AlarmLogService(IAnodeUOW anodeUOW, IConfiguration configuration, ISignalRService signalRService,
+		IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext) : base(anodeUOW)
 	{
 		_configuration = configuration;
 		_signalRService = signalRService;
@@ -40,9 +40,9 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 	{
 		IConfigurationSection? appSettingsSection = _configuration.GetSection("stationConfig");
 
-		List<AlarmPLC> allAlarmsPLC = await AlarmUOW.AlarmPLC.GetAll(withTracking: false);
+		List<AlarmPLC> allAlarmsPLC = await AnodeUOW.AlarmPLC.GetAll(withTracking: false);
 		if (allAlarmsPLC.Count == 0) return Array.Empty<DTOAlarmPLC>();
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		for (int index = 0; index < allAlarmsPLC.Count; index++)
 		{
 			try
@@ -50,7 +50,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 				int i = index; // Copied here because of try catch scoping to remove a warning.
 
 				// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
-				AlarmLog alarmWithStatus1 = await AlarmUOW.AlarmLog.GetByWithIncludes(
+				AlarmLog alarmWithStatus1 = await AnodeUOW.AlarmLog.GetByWithIncludes(
 					new Expression<Func<AlarmLog, bool>>[]
 					{
 						alarm => alarm.IsActive && alarm.AlarmID == allAlarmsPLC[i].AlarmID
@@ -63,15 +63,15 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 				alarmWithStatus1.TS = DateTime.Now;
 				alarmWithStatus1.IsAck = false;
 				alarmWithStatus1.HasBeenSent = false;
-				AlarmUOW.AlarmLog.Update(alarmWithStatus1);
-				AlarmUOW.Commit();
+				AnodeUOW.AlarmLog.Update(alarmWithStatus1);
+				AnodeUOW.Commit();
 			}
 			catch (EntityNotFoundException)
 			{
 				if (!allAlarmsPLC[index].IsActive) continue; // alarmLog is already inactive or cleared.
 
 				// If an alarmLog doesn't exist, this alarm just raised.
-				AlarmLog newAlarmLog = new(await AlarmUOW.AlarmC.GetById(allAlarmsPLC[index].AlarmID));
+				AlarmLog newAlarmLog = new(await AnodeUOW.AlarmC.GetById(allAlarmsPLC[index].AlarmID));
 				newAlarmLog.Station = appSettingsSection["nameStation"];
 				newAlarmLog.AlarmID = allAlarmsPLC[index].AlarmID;
 				newAlarmLog.TS = DateTime.Now;
@@ -87,16 +87,16 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 				}
 
 				newAlarmLog.TSRaised = allAlarmsPLC[index].TS;
-				await AlarmUOW.AlarmLog.Add(newAlarmLog);
-				AlarmUOW.Commit();
+				await AnodeUOW.AlarmLog.Add(newAlarmLog);
+				AnodeUOW.Commit();
 			}
 
-			AlarmUOW.AlarmPLC.Remove(allAlarmsPLC[index]);
-			AlarmUOW.Commit();
+			AnodeUOW.AlarmPLC.Remove(allAlarmsPLC[index]);
+			AnodeUOW.Commit();
 		}
 
 		// await  _myHub.RequestAlarmLogData();
-		await AlarmUOW.CommitTransaction();
+		await AnodeUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
 		return allAlarmsPLC.ConvertAll(alarmPLC => alarmPLC.ToDTO());
@@ -121,10 +121,10 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 	public async Task<List<DTOFAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
 	{
 		List<DTOFAlarmLog> ackAlarmLogs = new();
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		foreach (int idAlarmLog in idAlarmLogs)
 		{
-			AlarmLog alarmLogToAck = await AlarmUOW.AlarmLog.GetByIdWithIncludes(idAlarmLog,
+			AlarmLog alarmLogToAck = await AnodeUOW.AlarmLog.GetByIdWithIncludes(idAlarmLog,
 				new Expression<Func<AlarmLog, bool>>[]
 				{
 					alarmLog => !alarmLog.IsAck
@@ -132,10 +132,10 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 			alarmLogToAck.IsAck = true;
 			alarmLogToAck.TSRead = DateTime.Now;
 			ackAlarmLogs.Add(alarmLogToAck.ToDTOF());
-			AlarmUOW.Commit();
+			AnodeUOW.Commit();
 		}
 
-		await AlarmUOW.CommitTransaction();
+		await AnodeUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
 		return ackAlarmLogs;
@@ -144,13 +144,13 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 
 	public async Task<List<DTOFAlarmLog>> GetAllForFront()
 	{
-		List<AlarmLog> allAlarmLogs = await AlarmUOW.AlarmLog.GetAllWithIncludes();
+		List<AlarmLog> allAlarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes();
 		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOF());
 	}
 
 	public async Task<List<DTOFAlarmLog>> GetByClassID(int alarmID)
 	{
-		return (await AlarmUOW.AlarmLog.GetAllWithIncludes(new Expression<Func<AlarmLog, bool>>[]
+		return (await AnodeUOW.AlarmLog.GetAllWithIncludes(new Expression<Func<AlarmLog, bool>>[]
 		{
 			alarmLog => alarmLog.AlarmID == alarmID
 		})).ConvertAll(alarmLog => alarmLog.ToDTOF());
@@ -159,7 +159,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
 		const string api2Url = "https://localhost:7207/api/receive/alarm-log";
-		List<AlarmLog> alarmLogs = await AlarmUOW.AlarmLog.GetAllWithIncludes(
+		List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes(
 			new Expression<Func<AlarmLog, bool>>[]
 			{
 				alarmLog => !alarmLog.HasBeenSent
@@ -173,14 +173,14 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 
 			if (!response.IsSuccessStatusCode) return response;
 
-			await AlarmUOW.StartTransaction();
+			await AnodeUOW.StartTransaction();
 			alarmLogs.ForEach(alarmLog =>
 			{
 				alarmLog.HasBeenSent = true;
-				AlarmUOW.AlarmLog.Update(alarmLog);
+				AnodeUOW.AlarmLog.Update(alarmLog);
 			});
-			AlarmUOW.Commit();
-			await AlarmUOW.CommitTransaction();
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
 
 			return response;
 		}

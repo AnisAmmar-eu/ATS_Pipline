@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20231003132907_Added_ExtTag_ServicesMonitor_and_Packets")]
     partial class Added_ExtTag_ServicesMonitor_and_Packets
     {

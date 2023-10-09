@@ -11,32 +11,32 @@ namespace Core.Entities.User.Data;
 
 public class UserInitializer
 {
-	public static async Task Initialize(AlarmCTX alarmCTX, UserManager<ApplicationUser> userManager)
+	public static async Task Initialize(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{
 		#region Roles
 
-		if (!alarmCTX.Roles.Any())
+		if (!anodeCTX.Roles.Any())
 		{
-			alarmCTX.Roles.Add(new ApplicationRole
+			anodeCTX.Roles.Add(new ApplicationRole
 			{
 				Name = "Ekidi-Administrator",
 				NormalizedName = "EKIDI-ADMINISTRATOR",
 				Type = ApplicationRoleType.SYSTEM_EKIDI
 			});
-			alarmCTX.Roles.Add(new ApplicationRole
+			anodeCTX.Roles.Add(new ApplicationRole
 			{
 				Name = "Ekium-Administrator",
 				NormalizedName = "EKIUM-ADMINISTRATOR",
 				Type = ApplicationRoleType.SYSTEM_EKIUM
 			});
-			alarmCTX.SaveChanges();
+			anodeCTX.SaveChanges();
 		}
 
 		#endregion
 
 		#region Users
 
-		if (!alarmCTX.Users.Any())
+		if (!anodeCTX.Users.Any())
 		{
 			// Create User
 			ApplicationUser newUser = new ApplicationUser
@@ -57,48 +57,48 @@ public class UserInitializer
 
 		#region Acts
 
-		if (!alarmCTX.Acts.Any())
+		if (!anodeCTX.Acts.Any())
 		{
-			alarmCTX.Acts.Add(new Act { RID = ActionRID.ADMIN_GENERAL_RIGHTS });
-			alarmCTX.SaveChanges();
+			anodeCTX.Acts.Add(new Act { RID = ActionRID.ADMIN_GENERAL_RIGHTS });
+			anodeCTX.SaveChanges();
 		}
 
 		#endregion
 
 		#region ActEntities
 
-		if (!alarmCTX.ActEntities.Any())
+		if (!anodeCTX.ActEntities.Any())
 		{
-			alarmCTX.ActEntities.Add(new ActEntity
+			anodeCTX.ActEntities.Add(new ActEntity
 			{
 				RID = ActionRID.ADMIN_GENERAL_RIGHTS,
-				ActID = alarmCTX.Acts.First(a => a.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
+				ActID = anodeCTX.Acts.First(a => a.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
 			});
-			alarmCTX.SaveChanges();
+			anodeCTX.SaveChanges();
 		}
 
 		#endregion
 
 		#region ActEntityRoles
 
-		if (!alarmCTX.ActEntityRoles.Any())
+		if (!anodeCTX.ActEntityRoles.Any())
 		{
-			alarmCTX.ActEntityRoles.Add(new ActEntityRole
+			anodeCTX.ActEntityRoles.Add(new ActEntityRole
 			{
 				RID = ActionRID.ADMIN_GENERAL_RIGHTS + "." + ApplicationRoleType.SYSTEM_EKIUM,
 				ApplicationType = ApplicationTypeRID.ROLE,
-				ApplicationID = alarmCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_EKIUM).Id,
-				ActEntityID = alarmCTX.ActEntities.First(ae => ae.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
+				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_EKIUM).Id,
+				ActEntityID = anodeCTX.ActEntities.First(ae => ae.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
 			});
 
-			alarmCTX.ActEntityRoles.Add(new ActEntityRole
+			anodeCTX.ActEntityRoles.Add(new ActEntityRole
 			{
 				RID = ActionRID.ADMIN_GENERAL_RIGHTS + "." + ApplicationRoleType.SYSTEM_EKIDI,
 				ApplicationType = ApplicationTypeRID.ROLE,
-				ApplicationID = alarmCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_EKIDI).Id,
-				ActEntityID = alarmCTX.ActEntities.First(ae => ae.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
+				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_EKIDI).Id,
+				ActEntityID = anodeCTX.ActEntities.First(ae => ae.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
 			});
-			alarmCTX.SaveChanges();
+			anodeCTX.SaveChanges();
 		}
 
 		#endregion

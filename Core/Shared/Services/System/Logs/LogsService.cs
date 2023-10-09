@@ -6,16 +6,16 @@ namespace Core.Shared.Services.System.Logs;
 
 public class LogsService : ILogsService
 {
-	private readonly IAlarmUOW _alarmUOW;
+	private readonly IAnodeUOW _anodeUOW;
 
-	public LogsService(IAlarmUOW alarmUOW)
+	public LogsService(IAnodeUOW anodeUOW)
 	{
-		_alarmUOW = alarmUOW;
+		_anodeUOW = anodeUOW;
 	}
 
 	public async Task<List<DTOLog>> GetAll()
 	{
-		return (await _alarmUOW.Log.GetAll(
+		return (await _anodeUOW.Log.GetAll(
 				withTracking: false,
 				orderBy: query => query.OrderByDescending(l => l.TS))
 			)
@@ -34,7 +34,7 @@ public class LogsService : ILogsService
 		string value
 	)
 	{
-		await _alarmUOW.Log.Add(new Log(server, api, controller, function, endpoint, code, value));
-		_alarmUOW.Commit();
+		await _anodeUOW.Log.Add(new Log(server, api, controller, function, endpoint, code, value));
+		_anodeUOW.Commit();
 	}
 }

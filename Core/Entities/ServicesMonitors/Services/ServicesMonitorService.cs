@@ -11,13 +11,13 @@ public class ServicesMonitorService :
 	ServiceBaseEntity<IServicesMonitorRepository, ServicesMonitor, DTOServicesMonitor>,
 	IServicesMonitorService
 {
-	public ServicesMonitorService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	public ServicesMonitorService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
 	public async Task PingAllAndUpdate()
 	{
-		List<ServicesMonitor> services = await AlarmUOW.ServicesMonitor.GetAll();
+		List<ServicesMonitor> services = await AnodeUOW.ServicesMonitor.GetAll();
 		List<Tuple<Task<PingReply>, ServicesMonitor>> replies = new();
 		foreach (ServicesMonitor service in services)
 		{

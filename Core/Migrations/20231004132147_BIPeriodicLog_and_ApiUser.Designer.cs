@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20231004132147_BIPeriodicLog_and_ApiUser")]
     partial class BIPeriodicLog_and_ApiUser
     {

@@ -4,9 +4,9 @@ namespace Core.Entities.User.Repositories.Roles;
 
 public class RoleRepository : IRoleRepository
 {
-	private readonly AlarmCTX _context;
+	private readonly AnodeCTX _context;
 
-	public RoleRepository(AlarmCTX context)
+	public RoleRepository(AnodeCTX context)
 	{
 		_context = context;
 	}

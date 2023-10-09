@@ -20,36 +20,36 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Core.Shared.UnitOfWork;
 
-public class AlarmUOW : IAlarmUOW
+public class AnodeUOW : IAnodeUOW
 {
-	private readonly AlarmCTX _alarmCTX;
+	private readonly AnodeCTX _anodeCTX;
 	private IDbContextTransaction? _transaction;
 	private int _transactionCount;
 
-	public AlarmUOW(AlarmCTX alarmCTX)
+	public AnodeUOW(AnodeCTX anodeCTX)
 	{
-		_alarmCTX = alarmCTX;
+		_anodeCTX = anodeCTX;
 
-		Log = new LogRepository(_alarmCTX);
+		Log = new LogRepository(_anodeCTX);
 
-		AlarmC = new AlarmCRepository(_alarmCTX);
-		AlarmPLC = new AlarmPLCRepository(_alarmCTX);
-		AlarmLog = new AlarmLogRepository(_alarmCTX);
-		AlarmRT = new AlarmRTRepository(_alarmCTX);
+		AlarmC = new AlarmCRepository(_anodeCTX);
+		AlarmPLC = new AlarmPLCRepository(_anodeCTX);
+		AlarmLog = new AlarmLogRepository(_anodeCTX);
+		AlarmRT = new AlarmRTRepository(_anodeCTX);
 
-		Packet = new PacketRepository(_alarmCTX);
-		AlarmCycle = new AlarmCycleRepository(_alarmCTX);
+		Packet = new PacketRepository(_anodeCTX);
+		AlarmCycle = new AlarmCycleRepository(_anodeCTX);
 
-		KPIC = new KPICRepository(_alarmCTX);
-		KPILog = new KPILogRepository(_alarmCTX);
-		KPIRT = new KPIRTRepository(_alarmCTX);
+		KPIC = new KPICRepository(_anodeCTX);
+		KPILog = new KPILogRepository(_anodeCTX);
+		KPIRT = new KPIRTRepository(_anodeCTX);
 
-		ExtTag = new ExtTagRepository(_alarmCTX);
-		ServicesMonitor = new ServicesMonitorRepository(_alarmCTX);
+		ExtTag = new ExtTagRepository(_anodeCTX);
+		ServicesMonitor = new ServicesMonitorRepository(_anodeCTX);
 
-		Acts = new ActRepository(_alarmCTX);
-		ActEntities = new ActEntityRepository(_alarmCTX);
-		Roles = new RoleRepository(_alarmCTX);
+		Acts = new ActRepository(_anodeCTX);
+		ActEntities = new ActEntityRepository(_anodeCTX);
+		Roles = new RoleRepository(_anodeCTX);
 	}
 
 	public ILogRepository Log { get; }
@@ -100,7 +100,7 @@ public class AlarmUOW : IAlarmUOW
 	{
 		try
 		{
-			return _alarmCTX.SaveChangesAsync().Result;
+			return _anodeCTX.SaveChangesAsync().Result;
 		}
 		catch (Exception e)
 		{
@@ -125,7 +125,7 @@ public class AlarmUOW : IAlarmUOW
 		if (_transaction == null)
 			try
 			{
-				_transaction = await _alarmCTX.Database.BeginTransactionAsync();
+				_transaction = await _anodeCTX.Database.BeginTransactionAsync();
 			}
 			catch (Exception e)
 			{
@@ -155,7 +155,7 @@ public class AlarmUOW : IAlarmUOW
 
 	public void Dispose()
 	{
-		_alarmCTX.Dispose();
+		_anodeCTX.Dispose();
 	}
 
 	#region Users

@@ -9,12 +9,12 @@ namespace Core.Entities.User.Services.Roles;
 
 public class RolesService : IRolesService
 {
-	private readonly IAlarmUOW _alarmUOW;
+	private readonly IAnodeUOW _anodeUOW;
 	private readonly RoleManager<ApplicationRole> _roleManager;
 
-	public RolesService(IAlarmUOW alarmUOW, RoleManager<ApplicationRole> roleManager)
+	public RolesService(IAnodeUOW anodeUOW, RoleManager<ApplicationRole> roleManager)
 	{
-		_alarmUOW = alarmUOW;
+		_anodeUOW = anodeUOW;
 		_roleManager = roleManager;
 	}
 
@@ -60,7 +60,7 @@ public class RolesService : IRolesService
 		if (await _roleManager.RoleExistsAsync(dtoRole.RID))
 			throw new EntityNotFoundException("Role RID already exist.");
 
-		await _alarmUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
 		// Create Role with the common type USER
 		ApplicationRole role = new(dtoRole.RID);
@@ -69,7 +69,7 @@ public class RolesService : IRolesService
 		if (!result.Succeeded)
 			throw new EntityNotFoundException("An error happenened during the role creation.");
 
-		await _alarmUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 
 		return role.ToDTO();
 	}
@@ -89,7 +89,7 @@ public class RolesService : IRolesService
 		if (role == null)
 			throw new EntityNotFoundException("Unable to find a role with RID {" + rid + "}.");
 
-		_alarmUOW.Commit();
+		_anodeUOW.Commit();
 
 		return role.ToDTO();
 	}

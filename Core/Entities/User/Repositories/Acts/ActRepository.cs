@@ -7,9 +7,9 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.User.Repositories.Acts;
 
-public class ActRepository : RepositoryBaseEntity<AlarmCTX, Act, DTOAct>, IActRepository
+public class ActRepository : RepositoryBaseEntity<AnodeCTX, Act, DTOAct>, IActRepository
 {
-	public ActRepository(AlarmCTX context) : base(context)
+	public ActRepository(AnodeCTX context) : base(context)
 	{
 	}
 

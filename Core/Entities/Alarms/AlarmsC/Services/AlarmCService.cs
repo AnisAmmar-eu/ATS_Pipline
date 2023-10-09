@@ -10,7 +10,7 @@ namespace Core.Entities.Alarms.AlarmsC.Services;
 
 public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAlarmC>, IAlarmCService
 {
-	public AlarmCService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	public AlarmCService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
@@ -21,7 +21,7 @@ public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAla
 	/// <returns></returns>
 	public async Task<DTOAlarmC> GetByRID(string RID)
 	{
-		return (await AlarmUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[]
+		return (await AnodeUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[]
 		{
 			alarm => alarm.RID == RID
 		})).ToDTO();
@@ -42,12 +42,12 @@ public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAla
 		}
 		catch (EntityNotFoundException e)
 		{
-			await AlarmUOW.StartTransaction();
+			await AnodeUOW.StartTransaction();
 			AlarmC model = received.ToModel();
 			model.ID = 0;
-			await AlarmUOW.AlarmC.Add(model);
-			AlarmUOW.Commit();
-			await AlarmUOW.CommitTransaction();
+			await AnodeUOW.AlarmC.Add(model);
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
 			return model.ToDTO();
 		}
 	}

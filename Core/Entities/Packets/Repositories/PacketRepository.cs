@@ -5,9 +5,9 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.Packets.Repositories;
 
-public class PacketRepository : RepositoryBaseEntity<AlarmCTX, Packet, DTOPacket>, IPacketRepository
+public class PacketRepository : RepositoryBaseEntity<AnodeCTX, Packet, DTOPacket>, IPacketRepository
 {
-	public PacketRepository(AlarmCTX context) : base(context)
+	public PacketRepository(AnodeCTX context) : base(context)
 	{
 	}
 }

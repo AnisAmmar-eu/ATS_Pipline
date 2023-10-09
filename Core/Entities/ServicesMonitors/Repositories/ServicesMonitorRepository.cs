@@ -5,10 +5,10 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.ServicesMonitors.Repositories;
 
-public class ServicesMonitorRepository : RepositoryBaseEntity<AlarmCTX, ServicesMonitor, DTOServicesMonitor>,
+public class ServicesMonitorRepository : RepositoryBaseEntity<AnodeCTX, ServicesMonitor, DTOServicesMonitor>,
 	IServicesMonitorRepository
 {
-	public ServicesMonitorRepository(AlarmCTX context) : base(context)
+	public ServicesMonitorRepository(AnodeCTX context) : base(context)
 	{
 	}
 }

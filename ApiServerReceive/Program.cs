@@ -19,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddDbContext<AlarmCTX>(options =>
+builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
@@ -34,7 +34,7 @@ builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 
-builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
+builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 
 builder.Services.AddCors(options =>

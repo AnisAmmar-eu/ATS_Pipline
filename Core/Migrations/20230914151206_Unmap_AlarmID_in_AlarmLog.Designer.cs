@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20230914151206_Unmap_AlarmID_in_AlarmLog")]
     partial class Unmap_AlarmID_in_AlarmLog
     {

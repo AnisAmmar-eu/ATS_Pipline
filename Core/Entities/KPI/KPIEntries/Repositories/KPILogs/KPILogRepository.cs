@@ -6,9 +6,9 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 
-public class KPILogRepository : RepositoryBaseEntity<AlarmCTX, KPILog, DTOKPILog>, IKPILogRepository
+public class KPILogRepository : RepositoryBaseEntity<AnodeCTX, KPILog, DTOKPILog>, IKPILogRepository
 {
-	public KPILogRepository(AlarmCTX context) : base(context)
+	public KPILogRepository(AnodeCTX context) : base(context)
 	{
 	}
 }

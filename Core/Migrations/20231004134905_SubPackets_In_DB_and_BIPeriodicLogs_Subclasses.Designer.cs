@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AlarmCTX))]
+    [DbContext(typeof(AnodeCTX))]
     [Migration("20231004134905_SubPackets_In_DB_and_BIPeriodicLogs_Subclasses")]
     partial class SubPackets_In_DB_and_BIPeriodicLogs_Subclasses
     {

@@ -8,7 +8,7 @@ namespace Core.Entities.Alarms.AlarmsPLC.Services;
 
 public class AlarmPLCService : ServiceBaseEntity<IAlarmPLCRepository, AlarmPLC, DTOAlarmPLC>, IAlarmPLCService
 {
-	public AlarmPLCService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	public AlarmPLCService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 }

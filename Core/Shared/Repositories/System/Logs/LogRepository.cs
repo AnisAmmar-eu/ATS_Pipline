@@ -5,9 +5,9 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Shared.Repositories.System.Logs;
 
-public class LogRepository : RepositoryBaseEntity<AlarmCTX, Log, DTOLog>, ILogRepository
+public class LogRepository : RepositoryBaseEntity<AnodeCTX, Log, DTOLog>, ILogRepository
 {
-	public LogRepository(AlarmCTX context) : base(context)
+	public LogRepository(AnodeCTX context) : base(context)
 	{
 	}
 }

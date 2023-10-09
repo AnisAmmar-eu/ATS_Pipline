@@ -13,12 +13,12 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 	where TRepository : IRepositoryBaseEntity<T, TDTO>
 {
 	private readonly TRepository _repository;
-	protected readonly IAlarmUOW AlarmUOW;
+	protected readonly IAnodeUOW AnodeUOW;
 
-	public ServiceBaseEntity(IAlarmUOW alarmUOW)
+	public ServiceBaseEntity(IAnodeUOW anodeUOW)
 	{
-		AlarmUOW = alarmUOW;
-		_repository = (TRepository?)alarmUOW.GetRepoByType(typeof(TRepository)) ??
+		AnodeUOW = anodeUOW;
+		_repository = (TRepository?)anodeUOW.GetRepoByType(typeof(TRepository)) ??
 		              throw new InvalidOperationException("Repo is null");
 	}
 
@@ -42,16 +42,16 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 
 	public async Task<TDTO> Add(T entity)
 	{
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		await _repository.Add(entity);
-		AlarmUOW.Commit();
-		await AlarmUOW.CommitTransaction();
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 
 	public async Task<List<TDTO>> AddAll(IEnumerable<T> entities)
 	{
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		List<TDTO> result = new List<TDTO>();
 		foreach (T entity in entities)
 		{
@@ -59,26 +59,26 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 			result.Add(entity.ToDTO());
 		}
 
-		AlarmUOW.Commit();
-		await AlarmUOW.CommitTransaction();
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 		return result;
 	}
 
 	public async Task<TDTO> Update(T entity)
 	{
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		_repository.Update(entity);
-		AlarmUOW.Commit();
-		await AlarmUOW.CommitTransaction();
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 
 	public async Task<TDTO> Remove(T entity)
 	{
-		await AlarmUOW.StartTransaction();
+		await AnodeUOW.StartTransaction();
 		_repository.Remove(entity);
-		AlarmUOW.Commit();
-		await AlarmUOW.CommitTransaction();
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 }

@@ -23,11 +23,11 @@ public class ActsService : IActsService
 	private readonly IAuthService _authService;
 	private readonly IJwtService _jwtService;
 	private readonly RoleManager<ApplicationRole> _rolesManager;
-	private readonly IAlarmUOW _unitOfWork;
+	private readonly IAnodeUOW _unitOfWork;
 	private readonly UserManager<ApplicationUser> _usersManager;
 
 	public ActsService(
-		IAlarmUOW unitOfWork,
+		IAnodeUOW unitOfWork,
 		IAuthService authService,
 		IJwtService jwtService,
 		UserManager<ApplicationUser> usersManager,

@@ -6,9 +6,9 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 
-public class KPIRTRepository : RepositoryBaseEntity<AlarmCTX, KPIRT, DTOKPIRT>, IKPIRTRepository
+public class KPIRTRepository : RepositoryBaseEntity<AnodeCTX, KPIRT, DTOKPIRT>, IKPIRTRepository
 {
-	public KPIRTRepository(AlarmCTX context) : base(context)
+	public KPIRTRepository(AnodeCTX context) : base(context)
 	{
 	}
 }

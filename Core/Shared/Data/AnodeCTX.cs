@@ -28,9 +28,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Shared.Data;
 
-public class AlarmCTX : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 {
-	public AlarmCTX(DbContextOptions<AlarmCTX> options) : base(options)
+	public AnodeCTX(DbContextOptions<AnodeCTX> options) : base(options)
 	{
 	}
 

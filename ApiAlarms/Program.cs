@@ -27,7 +27,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddDbContext<AlarmCTX>(options =>
+builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(options =>
@@ -78,7 +78,7 @@ builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 
-builder.Services.AddScoped<IAlarmUOW, AlarmUOW>();
+builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddSingleton<CollectService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());

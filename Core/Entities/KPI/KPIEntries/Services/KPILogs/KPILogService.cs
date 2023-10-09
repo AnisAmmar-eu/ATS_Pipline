@@ -8,7 +8,7 @@ namespace Core.Entities.KPI.KPIEntries.Services.KPILogs;
 
 public class KPILogService : ServiceBaseEntity<IKPILogRepository, KPILog, DTOKPILog>, IKPILogService
 {
-	public KPILogService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	public KPILogService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 }

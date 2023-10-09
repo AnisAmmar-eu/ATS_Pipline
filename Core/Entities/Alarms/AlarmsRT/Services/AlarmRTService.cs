@@ -10,7 +10,7 @@ namespace Core.Entities.Alarms.AlarmsRT.Services;
 
 public class AlarmRTService : ServiceBaseEntity<IAlarmRTRepository, AlarmRT, DTOAlarmRT>, IAlarmRTService
 {
-	public AlarmRTService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	public AlarmRTService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
@@ -19,14 +19,14 @@ public class AlarmRTService : ServiceBaseEntity<IAlarmRTRepository, AlarmRT, DTO
 		int? maxCount = null,
 		params string[] includes)
 	{
-		return (await AlarmUOW.AlarmRT.GetAllWithInclude(filters, orderBy, withTracking)).ConvertAll(alarmRT =>
+		return (await AnodeUOW.AlarmRT.GetAllWithInclude(filters, orderBy, withTracking)).ConvertAll(alarmRT =>
 			alarmRT.ToDTO());
 	}
 
 	public async Task<int[]> GetAlarmRTStats()
 	{
-		List<AlarmRT> alarmRts = await AlarmUOW.AlarmRT.GetAll(withTracking: false);
-		List<AlarmC> alarmCs = await AlarmUOW.AlarmC.GetAll(withTracking: false);
+		List<AlarmRT> alarmRts = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
+		List<AlarmC> alarmCs = await AnodeUOW.AlarmC.GetAll(withTracking: false);
 		int nbActiveAlarms = alarmRts.Count(alarmRT => alarmRT.IsActive);
 		int[] stats = new int[3];
 		stats[0] = alarmCs.Count - nbActiveAlarms;

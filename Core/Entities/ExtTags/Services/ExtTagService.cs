@@ -8,7 +8,7 @@ namespace Core.Entities.ExtTags.Services;
 
 public class ExtTagService : ServiceBaseEntity<IExtTagRepository, ExtTag, DTOExtTag>, IExtTagService
 {
-	protected ExtTagService(IAlarmUOW alarmUOW) : base(alarmUOW)
+	protected ExtTagService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 }
