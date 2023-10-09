@@ -1,4 +1,4 @@
-﻿namespace Core.Shared.Dictionary;
+﻿namespace Core.Shared.Dictionaries;
 
 #region List
 

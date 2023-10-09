@@ -8,7 +8,7 @@ using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Entities.Packets.Services;
 using Core.Entities.ServicesMonitors.Services;
 using Core.Shared.Data;
-using Core.Shared.Services.Background.KPI.KPILog;
+using Core.Shared.Services.Background.KPI.KPILogs;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;

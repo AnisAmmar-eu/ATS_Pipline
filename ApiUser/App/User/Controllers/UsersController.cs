@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Core.Entities.User.Dictionary;
+using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DTO.Users;
 using Core.Entities.User.Services.Users;
 using Core.Shared.Authorize;

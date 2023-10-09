@@ -1,6 +1,6 @@
 ﻿using Core.Entities.User.Models.DTO.Acts;
 
-namespace Core.Entities.User.Dictionary;
+namespace Core.Entities.User.Dictionaries;
 
 public class ActionRID
 {

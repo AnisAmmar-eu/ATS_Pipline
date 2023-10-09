@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Core.Entities.User.Dictionary;
+using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;

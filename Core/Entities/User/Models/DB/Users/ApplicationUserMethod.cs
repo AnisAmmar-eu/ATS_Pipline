@@ -1,5 +1,5 @@
 ﻿using System.DirectoryServices.AccountManagement;
-using Core.Entities.User.Dictionary;
+using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DTO.Auth.Register;
 using Core.Entities.User.Models.DTO.Users;
 using Microsoft.AspNetCore.Identity;

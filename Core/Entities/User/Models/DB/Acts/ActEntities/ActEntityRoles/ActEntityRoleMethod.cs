@@ -1,4 +1,4 @@
-﻿using Core.Entities.User.Dictionary;
+﻿using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.User.Models.DTO.Acts.ActEntities.ActEntityRoles;

@@ -1,4 +1,4 @@
-﻿using Core.Entities.User.Dictionary;
+﻿using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DTO.Roles;
 using Microsoft.AspNetCore.Identity;
 

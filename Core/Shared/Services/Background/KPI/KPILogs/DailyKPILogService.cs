@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Core.Shared.Services.Background.KPI.KPILog;
+namespace Core.Shared.Services.Background.KPI.KPILogs;
 
 public class DailyKPILogService : BackgroundService
 {

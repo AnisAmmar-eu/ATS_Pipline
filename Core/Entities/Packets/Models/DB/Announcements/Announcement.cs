@@ -1,4 +1,4 @@
-using Core.Entities.Packets.Dictionary;
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 

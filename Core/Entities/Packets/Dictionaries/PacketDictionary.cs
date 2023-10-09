@@ -1,4 +1,4 @@
-namespace Core.Entities.Packets.Dictionary;
+namespace Core.Entities.Packets.Dictionaries;
 
 public enum PacketStatus
 {
