@@ -94,21 +94,21 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		await AnodeUOW.StartTransaction();
 		foreach (string kpiCRID in kpiCRIDs)
 		{
+			KPIC kpiC = await AnodeUOW.KPIC.GetBy(new Expression<Func<KPIC, bool>>[]
+			{
+				kpiC => kpiC.RID == kpiCRID
+			}, withTracking: true);
 			List<KPIRT> localKPIRTs = new(periods.Length);
 			List<KPIRT> availableKPIRTs = await AnodeUOW.KPIRT.GetAll(
 				new Expression<Func<KPIRT, bool>>[]
 				{
-					kpiRT => kpiRT.KPIC.RID == kpiCRID
-				}, includes: "KPIC");
-			for (int i = 0; i < localKPIRTs.Count; ++i)
+					kpiRT => kpiRT.KPICID == kpiC.ID
+				}, withTracking: false);
+			for (int i = 0; i < periods.Length; ++i)
 			{
 				KPIRT? kpiRT = availableKPIRTs.FirstOrDefault(kpiRT => kpiRT.Period == periods[i]);
 				if (kpiRT == null)
 				{
-					KPIC kpiC = await AnodeUOW.KPIC.GetBy(new Expression<Func<KPIC, bool>>[]
-					{
-						kpiC => kpiC.RID == kpiCRID
-					});
 					kpiRT = new KPIRT
 					{
 						KPICID = kpiC.ID,
@@ -120,8 +120,8 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 					await AnodeUOW.KPIRT.Add(kpiRT);
 					AnodeUOW.Commit();
 				}
-
-				localKPIRTs[i] = kpiRT;
+				else kpiRT.KPIC = kpiC;
+				localKPIRTs.Add(kpiRT);
 			}
 
 			kpiRTs.Add(localKPIRTs);
@@ -147,26 +147,19 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>, IBaseKPI<TValue>
 	{
-		// TODO Optimise in one list iteration
 		DateTimeOffset now = DateTimeOffset.Now;
-		List<List<TDTO>> tDTOsPerPeriod = new(periods.Length + 1) { [periods.Length] = tDTOs };
-		List<List<TValue>> tValuesPerPeriods = new(periods.Length);
-		for (int i = periods.Length - 1; i <= 0; --i)
+		List<List<TValue>> tValuesPerPeriods = new();
+		List<DateTimeOffset> periodsStartRange = new();
+		foreach (string period in periods)
 		{
-			DateTimeOffset startRange = KPIPeriod.GetStartRange(periods[i], now);
-			List<TDTO> tDTOPeriod = new();
-			List<TValue> tValuePeriod = new();
-			foreach (TDTO tDTO in tDTOsPerPeriod[i + 1])
-			{
-				if (tDTO.TS < startRange)
-					continue;
-				tDTOPeriod.Add(tDTO);
-				tValuePeriod.Add(tDTO.GetValue());
-			}
-
-			tDTOsPerPeriod.Add(tDTOPeriod);
-			tValuesPerPeriods.Add(tValuePeriod);
+			tValuesPerPeriods.Add(new List<TValue>());
+			periodsStartRange.Add(KPIPeriod.GetStartRange(period, now));
 		}
+
+		foreach (TDTO tDTO in tDTOs)
+			for (int i = 0; i < periods.Length; ++i)
+				if (tDTO.TS >= periodsStartRange[i])
+					tValuesPerPeriods[i].Add(tDTO.GetValue());
 
 		return tValuesPerPeriods;
 	}

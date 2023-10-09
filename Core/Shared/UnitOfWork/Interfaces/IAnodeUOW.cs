@@ -7,6 +7,7 @@ using Core.Entities.ExtTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
 using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
+using Core.Entities.KPI.KPITests.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
 using Core.Entities.User.Repositories.Acts;
@@ -31,6 +32,7 @@ public interface IAnodeUOW : IDisposable
 	IKPICRepository KPIC { get; }
 	IKPILogRepository KPILog { get; }
 	IKPIRTRepository KPIRT { get; }
+	IKPITestRepository KPITest { get; }
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }

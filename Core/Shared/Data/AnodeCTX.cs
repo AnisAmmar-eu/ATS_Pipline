@@ -7,6 +7,7 @@ using Core.Entities.ExtTags.Models.DB;
 using Core.Entities.KPI.KPICs.Models.DB;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
+using Core.Entities.KPI.KPITests.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
@@ -61,6 +62,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<KPIC> KPIC => Set<KPIC>();
 	public DbSet<KPILog> KPILog => Set<KPILog>();
 	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
+	public DbSet<KPITest> KPITest => Set<KPITest>();
 
 	// Action
 	public DbSet<Act> Acts => Set<Act>();
