@@ -217,31 +217,71 @@ public class CameraApiController : ControllerBase
 			exposureTime.Value = 30000.0;
 
 		if (deviceNodeMap["PixelFormat"] is EnumerationNode pixelFormat)
-			pixelFormat.Value = "RGB8";
+			pixelFormat.Value = "BayerRG8";
 
+		if (deviceNodeMap["Width"] is IntegerNode width)
+			width.Value = 2464;
 
+		if (deviceNodeMap["Height"] is IntegerNode height)
+			height.Value = 2056;
+
+		if (deviceNodeMap["AcquisitionFrameRateEnable"] is EnumerationNode frameRateEnable)
+			frameRateEnable.Value = "Off";
+
+		if (deviceNodeMap["Gain"] is FloatNode gain)
+			gain.Value = 10;
+
+		if (deviceNodeMap["BlackLevel"] is FloatNode blackLevel)
+			blackLevel.Value = 50;
+
+		if (deviceNodeMap["Gamma"] is FloatNode gamma)
+			gamma.Value = 1;
+
+		if (deviceNodeMap["BalanceRatio"] is FloatNode balanceRatio)
+			balanceRatio.Value = 2.35498;
+
+		if (deviceNodeMap["ConvolutionMode"] is EnumerationNode convolutionMode && convolutionMode.IsWritable)
+			convolutionMode.Value = "Off";
+
+		if (deviceNodeMap["AdaptiveNoiseSuppressionFactor"] is FloatNode noiseFactor)
+			noiseFactor.Value = 1;
+
+		if (deviceNodeMap["Sharpness"] is IntegerNode sharpness && sharpness.IsWritable)
+			sharpness.Value = 0;
+
+		if (deviceNodeMap["AcquisitionFrameRate"] is FloatNode frameRate && frameRate.IsWritable)
+			frameRate.Value = 23.9798;
 		return device;
 	}
-	// Exposure Time
-	// Gain
-	// Black level
-	// Gamma
-	// Balance Ratio
-	// Convolution Mode => AdaptiveNoiseSuppressionFactor
-	//                  => Sharpness
+	// Exposure Time => AcquisitionControl
+
+	// Gain => AnalogControl => GainSelector
+
+	// Black level => AnalogControl => BlackLevelSelector
+
+	// Gamma => MultipleRegionControl (SubRegionSelector) & Analog Control
+
+	// Balance Ratio => MultipleRegionControl (SubRegionSelector) & AnalogControl (BalanceRatioSelector Red || Blue)
+
+	// Convolution Mode => ImageProcessingControl
+
+	// AdaptiveNoiseSuppressionFactor => ImageProcessingControl
+
+	// Sharpness => ImageProcessingControl
+
 	// Not configurable but displayed : AcquisitionFrameRate (w/ AcquisitionFrameRateEnable=false)
 	//      displayed after ExposureTime
+	// AcquisitionFrameRate => AcquisitionControl
+
 	// AutoBalance, Correlation etc... => off
+
 	// PixelFormat = BayerRG8
+
 	// Resolution = 2464 (H) x 2056 (V); 5.1 MP
+
 	// Image format is uncompressed jpg format
 
 	/*
-	if (deviceNodeMap["Width"] is IntegerNode width)
-	    width.Value = 2464;
-
-	if (deviceNodeMap["Height"] is IntegerNode height)
-	    height.Value = 2056;
 	*/
 
 	#endregion
