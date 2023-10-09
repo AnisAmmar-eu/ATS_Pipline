@@ -55,6 +55,24 @@ public class CameraApiController : ControllerBase
 		return Ok(Result);
 	}
 
+	[HttpGet("parameters")]
+	public IActionResult GetDeviceParameters()
+	{
+		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\\GenICam.vin";
+		DTOCameraParam dtoCameraParam = new();
+		try
+		{
+			Device device = DeviceFactory.Open(driverString);
+			dtoCameraParam.GetCameraParams(device);
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+
+		return Ok(dtoCameraParam);
+	}
+
 	[HttpPost("SetDeviceParameters")]
 	public IActionResult SetDeviceParameters([FromBody] [Required] DTOCameraParam dtoCameraParam)
 	{
@@ -62,9 +80,11 @@ public class CameraApiController : ControllerBase
 		try
 		{
 			Device device = DeviceFactory.Open(driverString);
-			device.Stream.Stop();
+			if (device.Stream.IsRunning)
+				device.Stream.Stop();
 			dtoCameraParam.SetCameraParams(device);
-			device.Stream.Start();
+			if (!device.Stream.IsRunning)
+				device.Stream.Start();
 		}
 		catch (Exception e)
 		{
@@ -160,6 +180,7 @@ public class CameraApiController : ControllerBase
 						Thread.Sleep(100);
 						continue;
 					}
+
 					// Check if the camera is connected
 					if (device.ConnectionState.HasFlag(ConnectionState.Connected) != true)
 					{
