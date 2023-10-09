@@ -6,5 +6,4 @@ namespace Core.Entities.KPI.KPICs.Services;
 
 public interface IKPICService : IServiceBaseEntity<KPIC, DTOKPIC>
 {
-	
 }

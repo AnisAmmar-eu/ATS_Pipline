@@ -1,4 +1,3 @@
-using Core.Entities.KPI.KPICs.Models.DB;
 using Core.Entities.KPI.KPIEntries.Models.DTO.KPILogs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 

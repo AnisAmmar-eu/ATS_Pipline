@@ -6,5 +6,4 @@ namespace Core.Entities.KPI.KPICs.Repositories;
 
 public interface IKPICRepository : IRepositoryBaseEntity<KPIC, DTOKPIC>
 {
-	
 }

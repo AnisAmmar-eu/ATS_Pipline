@@ -9,7 +9,7 @@ public class MailsService : IMailsService
 {
 	public async Task SendEmail(string to, string subject, string body)
 	{
-		MimeMessage email = new MimeMessage();
+		MimeMessage email = new();
 
 		email.To.Add(MailboxAddress.Parse(to));
 
@@ -18,7 +18,7 @@ public class MailsService : IMailsService
 
 	public async Task SendEmail(List<string> tos, string subject, string body)
 	{
-		MimeMessage email = new MimeMessage();
+		MimeMessage email = new();
 
 		foreach (string to in tos) email.To.Add(MailboxAddress.Parse(to));
 
@@ -31,7 +31,7 @@ public class MailsService : IMailsService
 		email.Subject = subject;
 		email.Body = new TextPart(TextFormat.Plain) { Text = body };
 
-		using SmtpClient smtp = new SmtpClient();
+		using SmtpClient smtp = new();
 
 		//smtp.Connect("smtp.ionos.fr", 465, SecureSocketOptions.Auto); // ok local
 		smtp.Connect("smtp.ionos.fr", 587, SecureSocketOptions.StartTls); // ok local

@@ -5,7 +5,6 @@ using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.ExtTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
-using Core.Entities.KPI.KPIEntries.Repositories;
 using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 using Core.Entities.Packets.Repositories;
@@ -32,7 +31,7 @@ public interface IAnodeUOW : IDisposable
 	IKPICRepository KPIC { get; }
 	IKPILogRepository KPILog { get; }
 	IKPIRTRepository KPIRT { get; }
-	
+
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
 

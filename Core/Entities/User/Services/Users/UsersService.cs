@@ -27,11 +27,11 @@ public class UsersService : IUsersService
 		_configuration = configuration;
 	}
 
-    /// <summary>
-    ///     Get all users
-    /// </summary>
-    /// <returns>A <see cref="List{DTOUser}" /></returns>
-    public async Task<List<DTOUser>> GetAll()
+	/// <summary>
+	///     Get all users
+	/// </summary>
+	/// <returns>A <see cref="List{DTOUser}" /></returns>
+	public async Task<List<DTOUser>> GetAll()
 	{
 		List<DTOUser> users = await _userManager.Users.Where(u => u.UserName != "ekium-admin")
 			.AsNoTracking()
@@ -43,13 +43,13 @@ public class UsersService : IUsersService
 		return users;
 	}
 
-    /// <summary>
-    ///     Get a user by its username
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns>A <see cref="DTOUser" /></returns>
-    /// <exception cref="EntityNotFoundException"></exception>
-    public async Task<DTOUser> GetByUsername(string username)
+	/// <summary>
+	///     Get a user by its username
+	/// </summary>
+	/// <param name="username"></param>
+	/// <returns>A <see cref="DTOUser" /></returns>
+	/// <exception cref="EntityNotFoundException"></exception>
+	public async Task<DTOUser> GetByUsername(string username)
 	{
 		DTOUser? user = await _userManager.Users.Where(u => u.UserName == username)
 			.AsNoTracking()
@@ -64,13 +64,13 @@ public class UsersService : IUsersService
 		return user;
 	}
 
-    /// <summary>
-    ///     Get a user by ID
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns>A <see cref="DTOUser" /></returns>
-    /// <exception cref="EntityNotFoundException"></exception>
-    public async Task<DTOUser> GetById(string id)
+	/// <summary>
+	///     Get a user by ID
+	/// </summary>
+	/// <param name="id"></param>
+	/// <returns>A <see cref="DTOUser" /></returns>
+	/// <exception cref="EntityNotFoundException"></exception>
+	public async Task<DTOUser> GetById(string id)
 	{
 		DTOUser? user = await _userManager.Users.Where(u => u.Id == id)
 			.AsNoTracking()
@@ -85,13 +85,13 @@ public class UsersService : IUsersService
 		return user;
 	}
 
-    /// <summary>
-    ///     Get a user ID by its username
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns>A <see cref="string" /></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task<string> GetIdByUsername(string username)
+	/// <summary>
+	///     Get a user ID by its username
+	/// </summary>
+	/// <param name="username"></param>
+	/// <returns>A <see cref="string" /></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task<string> GetIdByUsername(string username)
 	{
 		string? userId = await _userManager.Users
 			.Where(u => u.UserName == username)
@@ -105,13 +105,13 @@ public class UsersService : IUsersService
 		return userId;
 	}
 
-    /// <summary>
-    ///     Get a user email by its username
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns>A <see cref="string" /></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task<string> GetEmailByUsername(string username)
+	/// <summary>
+	///     Get a user email by its username
+	/// </summary>
+	/// <param name="username"></param>
+	/// <returns>A <see cref="string" /></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task<string> GetEmailByUsername(string username)
 	{
 		string? userEmail = await _userManager.Users
 			.Where(u => u.UserName == username)
@@ -125,13 +125,13 @@ public class UsersService : IUsersService
 		return userEmail;
 	}
 
-    /// <summary>
-    ///     Get all roles of a user
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns>A <see cref="List{DTORole}" /></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task<List<DTORole>> GetRolesByUsername(string username)
+	/// <summary>
+	///     Get all roles of a user
+	/// </summary>
+	/// <param name="username"></param>
+	/// <returns>A <see cref="List{DTORole}" /></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task<List<DTORole>> GetRolesByUsername(string username)
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == username)
@@ -150,25 +150,25 @@ public class UsersService : IUsersService
 			.ToListAsync();
 	}
 
-    /// <summary>
-    ///     Get all users with a specific role
-    /// </summary>
-    /// <param name="roleName"></param>
-    /// <returns>An <see cref="List{ApplicationUser}" /></returns>
-    public async Task<List<ApplicationUser>> GetAllByRole(string roleName)
+	/// <summary>
+	///     Get all users with a specific role
+	/// </summary>
+	/// <param name="roleName"></param>
+	/// <returns>An <see cref="List{ApplicationUser}" /></returns>
+	public async Task<List<ApplicationUser>> GetAllByRole(string roleName)
 	{
 		return (await _userManager.GetUsersInRoleAsync(roleName))
 			.ToList();
 	}
 
-    /// <summary>
-    ///     Update a user by its username
-    /// </summary>
-    /// <param name="username"></param>
-    /// <param name="dtoUser"></param>
-    /// <returns>The updated <see cref="DTOUser" /></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task<DTOUser> Update(string username, DTOUser dtoUser)
+	/// <summary>
+	///     Update a user by its username
+	/// </summary>
+	/// <param name="username"></param>
+	/// <param name="dtoUser"></param>
+	/// <returns>The updated <see cref="DTOUser" /></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task<DTOUser> Update(string username, DTOUser dtoUser)
 	{
 		ApplicationUser? user = await _userManager.Users.Where(u => u.UserName == username).FirstOrDefaultAsync();
 
@@ -199,14 +199,14 @@ public class UsersService : IUsersService
 		return dtoUser;
 	}
 
-    /// <summary>
-    ///     Set a user as admin
-    /// </summary>
-    /// <param name="username"></param>
-    /// <param name="toAdmin"></param>
-    /// <returns>True/False</returns>
-    /// <exception cref="Exception"></exception>
-    public async Task<bool> SetAdmin(string username, bool toAdmin)
+	/// <summary>
+	///     Set a user as admin
+	/// </summary>
+	/// <param name="username"></param>
+	/// <param name="toAdmin"></param>
+	/// <returns>True/False</returns>
+	/// <exception cref="Exception"></exception>
+	public async Task<bool> SetAdmin(string username, bool toAdmin)
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == username)
@@ -224,13 +224,13 @@ public class UsersService : IUsersService
 		return result;
 	}
 
-    /// <summary>
-    ///     Delete a user
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task Delete(string username)
+	/// <summary>
+	///     Delete a user
+	/// </summary>
+	/// <param name="username"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task Delete(string username)
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(r => r.UserName == username)
@@ -243,14 +243,14 @@ public class UsersService : IUsersService
 	}
 
 
-    /// <summary>
-    ///     Change the user password using the username
-    /// </summary>
-    /// <param name="username"></param>
-    /// <param name="newPassword"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task UpdatePasswordByAdmin(string username, string newPassword)
+	/// <summary>
+	///     Change the user password using the username
+	/// </summary>
+	/// <param name="username"></param>
+	/// <param name="newPassword"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task UpdatePasswordByAdmin(string username, string newPassword)
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == username)
@@ -274,15 +274,15 @@ public class UsersService : IUsersService
 		}
 	}
 
-    /// <summary>
-    ///     Change the user password using the name
-    /// </summary>
-    /// <param name="username"></param>
-    /// <param name="oldPassword"></param>
-    /// <param name="newPassword"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task UpdatePasswordByUser(string username, string oldPassword, string newPassword)
+	/// <summary>
+	///     Change the user password using the name
+	/// </summary>
+	/// <param name="username"></param>
+	/// <param name="oldPassword"></param>
+	/// <param name="newPassword"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task UpdatePasswordByUser(string username, string oldPassword, string newPassword)
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == username)
@@ -308,13 +308,13 @@ public class UsersService : IUsersService
 		}
 	}
 
-    /// <summary>
-    ///     Reset the user password using the name
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public async Task ResetPassword(string name)
+	/// <summary>
+	///     Reset the user password using the name
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public async Task ResetPassword(string name)
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == name)
@@ -338,17 +338,17 @@ public class UsersService : IUsersService
 		}
 	}
 
-    /// <summary>
-    ///     Get all user from the Active Directory
-    /// </summary>
-    /// <returns>A <see cref="List{DTOUser}" /></returns>
-    public List<DTOUser> GetAllFromAD()
+	/// <summary>
+	///     Get all user from the Active Directory
+	/// </summary>
+	/// <returns>A <see cref="List{DTOUser}" /></returns>
+	public List<DTOUser> GetAllFromAD()
 	{
 		List<DTOUser> dtoUsers = new();
-		PrincipalContext adContext = new PrincipalContext(ContextType.Domain, _configuration["AdHost"],
+		PrincipalContext adContext = new(ContextType.Domain, _configuration["AdHost"],
 			"OU=Bron,OU=Utilisateurs,OU=Ekium,DC=ekium,DC=lan");
 
-		using (PrincipalSearcher searcher = new PrincipalSearcher(new UserPrincipal(adContext)))
+		using (PrincipalSearcher searcher = new(new UserPrincipal(adContext)))
 		{
 			foreach (UserPrincipal user in searcher.FindAll().OrderBy(x => x.SamAccountName))
 				dtoUsers.Add(new DTOUser

@@ -56,7 +56,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
 	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
-	
+
 	// KPI
 	public DbSet<KPIC> KPIC => Set<KPIC>();
 	public DbSet<KPILog> KPILog => Set<KPILog>();

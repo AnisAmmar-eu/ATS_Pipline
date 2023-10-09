@@ -5,7 +5,6 @@ using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.ExtTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
-using Core.Entities.KPI.KPIEntries.Repositories;
 using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 using Core.Entities.Packets.Repositories;
@@ -61,7 +60,7 @@ public class AnodeUOW : IAnodeUOW
 
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
-	
+
 	// KPI
 	public IKPICRepository KPIC { get; }
 	public IKPILogRepository KPILog { get; }
@@ -81,7 +80,7 @@ public class AnodeUOW : IAnodeUOW
 
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
-			
+
 			_ when repo == typeof(IKPICRepository) => KPIC,
 			_ when repo == typeof(IKPILogRepository) => KPILog,
 			_ when repo == typeof(IKPIRTRepository) => KPIRT,

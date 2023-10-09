@@ -1,5 +1,4 @@
 using Core.Entities.KPI.KPICs.Models.DTO;
-using Core.Entities.KPI.KPIEntries.Models.DB;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
 using Core.Shared.Models.DB.Kernel;

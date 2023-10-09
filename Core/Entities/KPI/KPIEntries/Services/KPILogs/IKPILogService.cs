@@ -6,5 +6,4 @@ namespace Core.Entities.KPI.KPIEntries.Services.KPILogs;
 
 public interface IKPILogService : IServiceBaseEntity<KPILog, DTOKPILog>
 {
-	
 }

@@ -1,5 +1,4 @@
 using Core.Entities.KPI.KPICs.Models.DB;
-using Core.Entities.KPI.KPIEntries.Dictionaries;
 using Core.Entities.KPI.KPIEntries.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -12,6 +11,7 @@ public partial class KPIEntry : BaseEntity, IBaseEntity<KPIEntry, DTOKPIEntry>
 	public int StationID { get; set; }
 	public string Value { get; set; }
 	public string Period { get; set; }
+
 	#region Nav Properties
 
 	private KPIC? _kpic;

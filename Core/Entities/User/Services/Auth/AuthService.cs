@@ -30,13 +30,13 @@ public class AuthService : IAuthService
 		_jwtService = jwtService;
 	}
 
-    /// <summary>
-    ///     Create a User and add Roles to him
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    /// <exception cref="EntityNotFoundException"></exception>
-    public async Task Register(DTORegister dtoRegister)
+	/// <summary>
+	///     Create a User and add Roles to him
+	/// </summary>
+	/// <param name="model"></param>
+	/// <returns></returns>
+	/// <exception cref="EntityNotFoundException"></exception>
+	public async Task Register(DTORegister dtoRegister)
 	{
 		if (dtoRegister.Username == null || dtoRegister.Email == null)
 			throw new EntityNotFoundException("Empty values.");
@@ -66,13 +66,13 @@ public class AuthService : IAuthService
 		}
 	}
 
-    /// <summary>
-    ///     Check credentials (username + password)
-    /// </summary>
-    /// <param name="dtoLogin"></param>
-    /// <returns>The user</returns>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    public async Task<ApplicationUser> CheckCredentials(DTOLogin dtoLogin)
+	/// <summary>
+	///     Check credentials (username + password)
+	/// </summary>
+	/// <param name="dtoLogin"></param>
+	/// <returns>The user</returns>
+	/// <exception cref="UnauthorizedAccessException"></exception>
+	public async Task<ApplicationUser> CheckCredentials(DTOLogin dtoLogin)
 	{
 		ApplicationUser user = await _userManager.FindByNameAsync(dtoLogin.Username);
 		if (user == null)
@@ -98,13 +98,13 @@ public class AuthService : IAuthService
 		return userData;
 	}
 
-    /// <summary>
-    ///     Register a user with one of our sources
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    public async Task<DTOLoginResponse> RegisterSource(DTOLogin model)
+	/// <summary>
+	///     Register a user with one of our sources
+	/// </summary>
+	/// <param name="model"></param>
+	/// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>
+	/// <exception cref="UnauthorizedAccessException"></exception>
+	public async Task<DTOLoginResponse> RegisterSource(DTOLogin model)
 	{
 		if (model == null) throw new UnauthorizedAccessException("Invalid credentials");
 
@@ -129,14 +129,14 @@ public class AuthService : IAuthService
 		throw new UnauthorizedAccessException("Invalid credentials");
 	}
 
-    /// <summary>
-    ///     Verify email and password + generate a token valid for 3 hours
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    /// <exception cref="EntityNotFoundException"></exception>
-    public async Task<DTOLoginResponse> Login(DTOLogin model)
+	/// <summary>
+	///     Verify email and password + generate a token valid for 3 hours
+	/// </summary>
+	/// <param name="model"></param>
+	/// <returns></returns>
+	/// <exception cref="UnauthorizedAccessException"></exception>
+	/// <exception cref="EntityNotFoundException"></exception>
+	public async Task<DTOLoginResponse> Login(DTOLogin model)
 	{
 		ApplicationUser? user = await _userManager.FindByNameAsync(model.Username);
 		if (user == null)
@@ -155,34 +155,34 @@ public class AuthService : IAuthService
 		return ClaimsToken(user);
 	}
 
-    /// <summary>
-    ///     Get all roles of a user
-    /// </summary>
-    /// <param name="user"></param>
-    /// <returns>A list of roles</returns>
-    public async Task<IList<string>> GetRoles(ApplicationUser user)
+	/// <summary>
+	///     Get all roles of a user
+	/// </summary>
+	/// <param name="user"></param>
+	/// <returns>A list of roles</returns>
+	public async Task<IList<string>> GetRoles(ApplicationUser user)
 	{
 		return await _userManager.GetRolesAsync(user);
 	}
 
-    /// <summary>
-    ///     Get any property from the httpContext claims
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <param name="property"></param>
-    /// <returns>The value of the property</returns>
-    public string? GetUserPropertyFromContext(HttpContext httpContext, string property)
+	/// <summary>
+	///     Get any property from the httpContext claims
+	/// </summary>
+	/// <param name="httpContext"></param>
+	/// <param name="property"></param>
+	/// <returns>The value of the property</returns>
+	public string? GetUserPropertyFromContext(HttpContext httpContext, string property)
 	{
 		return httpContext.User.Claims.Where(x => x.Type == property).Select(c => c.Value).FirstOrDefault();
 	}
 
-    /// <summary>
-    ///     Set httpContext items with user values
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <returns></returns>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    public async Task SetContextWithUser(HttpContext httpContext)
+	/// <summary>
+	///     Set httpContext items with user values
+	/// </summary>
+	/// <param name="httpContext"></param>
+	/// <returns></returns>
+	/// <exception cref="UnauthorizedAccessException"></exception>
+	public async Task SetContextWithUser(HttpContext httpContext)
 	{
 		string? userId = httpContext.User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).FirstOrDefault();
 		if (userId == null)
@@ -203,13 +203,13 @@ public class AuthService : IAuthService
 		httpContext.Items["UserRolesId"] = await GetRolesIdFromUser(user, httpContext);
 	}
 
-    /// <summary>
-    ///     Get all roles of a connected user + check if it is an admin
-    /// </summary>
-    /// <param name="user"></param>
-    /// <param name="httpContext"></param>
-    /// <returns>The list of roles</returns>
-    public async Task<List<string>> GetRolesIdFromUser(ApplicationUser user, HttpContext httpContext)
+	/// <summary>
+	///     Get all roles of a connected user + check if it is an admin
+	/// </summary>
+	/// <param name="user"></param>
+	/// <param name="httpContext"></param>
+	/// <returns>The list of roles</returns>
+	public async Task<List<string>> GetRolesIdFromUser(ApplicationUser user, HttpContext httpContext)
 	{
 		List<string> userRolesID = new();
 
@@ -226,15 +226,15 @@ public class AuthService : IAuthService
 		return userRolesID;
 	}
 
-    /// <summary>
-    ///     Verify email and password + generate a token valid for 3 hours
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>
-    private DTOLoginResponse ClaimsToken(ApplicationUser user)
+	/// <summary>
+	///     Verify email and password + generate a token valid for 3 hours
+	/// </summary>
+	/// <param name="model"></param>
+	/// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>
+	private DTOLoginResponse ClaimsToken(ApplicationUser user)
 	{
 		// Set claims list to add in the token
-		List<Claim> authClaims = new List<Claim>
+		List<Claim> authClaims = new()
 		{
 			new("Id", user.Id),
 			new(ClaimTypes.Name, user.UserName),

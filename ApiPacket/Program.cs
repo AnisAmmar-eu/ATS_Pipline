@@ -3,7 +3,6 @@ using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.KPI.KPICs.Services;
-using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Entities.Packets.Services;

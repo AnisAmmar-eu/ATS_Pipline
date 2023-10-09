@@ -1,7 +1,3 @@
-using System.Linq.Expressions;
-using Core.Entities.KPI.KPIEntries.Dictionaries;
-using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
-using Core.Entities.KPI.KPIEntries.Models.DTO.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
@@ -22,7 +18,8 @@ public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundServi
 	private readonly TimeSpan _period = TimeSpan.FromHours(1);
 	private int _executionCount;
 
-	public BaseHourlyKPIRTService(IServiceScopeFactory factory, ILogger<BaseHourlyKPIRTService<T, TDTO, TService, TValue>> logger)
+	public BaseHourlyKPIRTService(IServiceScopeFactory factory,
+		ILogger<BaseHourlyKPIRTService<T, TDTO, TService, TValue>> logger)
 	{
 		_factory = factory;
 		_logger = logger;
@@ -32,7 +29,6 @@ public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundServi
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
 		return TimeSpan.FromMinutes(60 - now.Minute);
-
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,6 +36,7 @@ public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundServi
 		await Task.Delay(TimeToWaitUntilNextHour());
 		using PeriodicTimer timer = new(_period);
 		do
+		{
 			try
 			{
 				_logger.LogInformation("BaseKPIRTService running at: {time}", DateTimeOffset.Now);
@@ -62,7 +59,7 @@ public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundServi
 					"Failed to execute BaseKPIRTService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken));
+		} while (!stoppingToken.IsCancellationRequested
+		         && await timer.WaitForNextTickAsync(stoppingToken));
 	}
 }

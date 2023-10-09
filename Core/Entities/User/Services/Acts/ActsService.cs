@@ -40,13 +40,13 @@ public class ActsService : IActsService
 		_rolesManager = rolesManager;
 	}
 
-    /// <summary>
-    ///     Get all actions from a list and return them with their visibility status
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <param name="dtoActEntitiesStatus"></param>
-    /// <returns>A <see cref="DTOActEntityStatus" /></returns>
-    public async Task<List<DTOActEntityStatus>> ActionsFromList(HttpContext httpContext,
+	/// <summary>
+	///     Get all actions from a list and return them with their visibility status
+	/// </summary>
+	/// <param name="httpContext"></param>
+	/// <param name="dtoActEntitiesStatus"></param>
+	/// <returns>A <see cref="DTOActEntityStatus" /></returns>
+	public async Task<List<DTOActEntityStatus>> ActionsFromList(HttpContext httpContext,
 		List<DTOActEntityStatus> dtoActEntitiesStatus)
 	{
 		List<DTOActEntityStatus> dtoActEntities = new();
@@ -57,13 +57,13 @@ public class ActsService : IActsService
 		return dtoActEntities;
 	}
 
-    /// <summary>
-    ///     Get the visibility status of an action
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <param name="dtoActEntityStatus"></param>
-    /// <returns>A <see cref="DTOActEntityStatus" /></returns>
-    public async Task<DTOActEntityStatus> GetAction(HttpContext httpContext, DTOActEntityStatus dtoActEntityStatus)
+	/// <summary>
+	///     Get the visibility status of an action
+	/// </summary>
+	/// <param name="httpContext"></param>
+	/// <param name="dtoActEntityStatus"></param>
+	/// <returns>A <see cref="DTOActEntityStatus" /></returns>
+	public async Task<DTOActEntityStatus> GetAction(HttpContext httpContext, DTOActEntityStatus dtoActEntityStatus)
 	{
 		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntityStatus.Act?.RID,
 			dtoActEntityStatus.Act?.EntityType, dtoActEntityStatus.Act?.ParentType);
@@ -118,12 +118,12 @@ public class ActsService : IActsService
 		return dtoActEntityStatus;
 	}
 
-    /// <summary>
-    ///     Get all actEntityRoles of an actEntity
-    /// </summary>
-    /// <param name="dtoActEntity"></param>
-    /// <returns>A <see cref="DTOActEntity" /></returns>
-    public async Task<DTOActEntity> GetActionEntityRoles(DTOActEntity dtoActEntity)
+	/// <summary>
+	///     Get all actEntityRoles of an actEntity
+	/// </summary>
+	/// <param name="dtoActEntity"></param>
+	/// <returns>A <see cref="DTOActEntity" /></returns>
+	public async Task<DTOActEntity> GetActionEntityRoles(DTOActEntity dtoActEntity)
 	{
 		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID,
 			dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
@@ -252,16 +252,16 @@ public class ActsService : IActsService
 		await _unitOfWork.CommitTransaction();
 	}
 
-    /// <summary>
-    ///     Delete an actionEntities based on an act and some ids
-    /// </summary>
-    /// <param name="actRID"></param>
-    /// <param name="parentID"></param>
-    /// <param name="entityID"></param>
-    /// <param name="parentType"></param>
-    /// <param name="entityType"></param>
-    /// <returns></returns>
-    public async Task DeleteActionEntity(string actRID, string? entityType = null, int? entityID = null,
+	/// <summary>
+	///     Delete an actionEntities based on an act and some ids
+	/// </summary>
+	/// <param name="actRID"></param>
+	/// <param name="parentID"></param>
+	/// <param name="entityID"></param>
+	/// <param name="parentType"></param>
+	/// <param name="entityType"></param>
+	/// <returns></returns>
+	public async Task DeleteActionEntity(string actRID, string? entityType = null, int? entityID = null,
 		string? parentType = null, int? parentID = null)
 	{
 		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(actRID, entityType, parentType);
@@ -276,13 +276,13 @@ public class ActsService : IActsService
 		}
 	}
 
-    /// <summary>
-    ///     Duplicate actionEntities
-    /// </summary>
-    /// <param name="dtoActToDuplicate"></param>
-    /// <param name="dtoAct"></param>
-    /// <returns>True/False</returns>
-    public async Task<bool> DuplicateActionEntities(DTOActEntityToValid dtoActToDuplicate, DTOActEntityToValid dtoAct)
+	/// <summary>
+	///     Duplicate actionEntities
+	/// </summary>
+	/// <param name="dtoActToDuplicate"></param>
+	/// <param name="dtoAct"></param>
+	/// <returns>True/False</returns>
+	public async Task<bool> DuplicateActionEntities(DTOActEntityToValid dtoActToDuplicate, DTOActEntityToValid dtoAct)
 	{
 		Act actFromDuplicate = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActToDuplicate.Act?.RID,
 			dtoActToDuplicate.Act?.EntityType, dtoActToDuplicate.Act?.ParentType);
@@ -346,14 +346,14 @@ public class ActsService : IActsService
 		return true;
 	}
 
-    /// <summary>
-    ///     Check the rights to do action with entity in order to generate a token
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <param name="dtoActEntityToValid"></param>
-    /// <returns>The action token as a string</returns>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    public async Task<string> HasRights(HttpContext httpContext, DTOActEntityToValid dtoActEntityToValid)
+	/// <summary>
+	///     Check the rights to do action with entity in order to generate a token
+	/// </summary>
+	/// <param name="httpContext"></param>
+	/// <param name="dtoActEntityToValid"></param>
+	/// <returns>The action token as a string</returns>
+	/// <exception cref="UnauthorizedAccessException"></exception>
+	public async Task<string> HasRights(HttpContext httpContext, DTOActEntityToValid dtoActEntityToValid)
 	{
 		await _authService.SetContextWithUser(httpContext);
 
@@ -440,13 +440,13 @@ public class ActsService : IActsService
 	}
 
 
-    /// <summary>
-    ///     To call in each method like GET operation, ...
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <param name="dtoActEntitiesToValid"></param>
-    /// <returns>True/False</returns>
-    public bool ValidActionToken(HttpContext httpContext, List<DTOActEntityToValid> dtoActEntitiesToValid)
+	/// <summary>
+	///     To call in each method like GET operation, ...
+	/// </summary>
+	/// <param name="httpContext"></param>
+	/// <param name="dtoActEntitiesToValid"></param>
+	/// <returns>True/False</returns>
+	public bool ValidActionToken(HttpContext httpContext, List<DTOActEntityToValid> dtoActEntitiesToValid)
 	{
 		string? actionToken = httpContext.Request.Headers["x-action-token"];
 
@@ -489,12 +489,12 @@ public class ActsService : IActsService
 		return false;
 	}
 
-    /// <summary>
-    ///     Get all users email from an actionEntity
-    /// </summary>
-    /// <param name="dtoActEntity"></param>
-    /// <returns>All the emails</returns>
-    public async Task<List<string>> GetAllEmailsByActionEntity(DTOActEntity dtoActEntity)
+	/// <summary>
+	///     Get all users email from an actionEntity
+	/// </summary>
+	/// <param name="dtoActEntity"></param>
+	/// <returns>All the emails</returns>
+	public async Task<List<string>> GetAllEmailsByActionEntity(DTOActEntity dtoActEntity)
 	{
 		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID,
 			dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
@@ -544,7 +544,7 @@ public class ActsService : IActsService
 	private string GenerateActionToken(HttpContext httpContext, ActEntity actEntity)
 	{
 		// Set claims list to add in the token
-		List<Claim> claims = new List<Claim>
+		List<Claim> claims = new()
 		{
 			new("UserId", httpContext.Items["UserId"]?.ToString() ?? ""),
 			new("ActionRID", actEntity.Act.RID),

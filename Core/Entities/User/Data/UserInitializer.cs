@@ -39,7 +39,7 @@ public class UserInitializer
 		if (!anodeCTX.Users.Any())
 		{
 			// Create User
-			ApplicationUser newUser = new ApplicationUser
+			ApplicationUser newUser = new()
 			{
 				UserName = "ekium-admin",
 				Email = "ekium-admin@admin.com",

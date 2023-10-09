@@ -24,6 +24,7 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 		get => _alarmRT
 		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(AlarmRT));
 	}
+
 	public virtual ICollection<AlarmLog> AlarmLogs { get; set; } = new List<AlarmLog>();
 
 	#endregion

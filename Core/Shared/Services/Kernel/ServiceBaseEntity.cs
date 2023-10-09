@@ -52,7 +52,7 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 	public async Task<List<TDTO>> AddAll(IEnumerable<T> entities)
 	{
 		await AnodeUOW.StartTransaction();
-		List<TDTO> result = new List<TDTO>();
+		List<TDTO> result = new();
 		foreach (T entity in entities)
 		{
 			await _repository.Add(entity);

@@ -50,7 +50,6 @@ public class DailyKPILogService : BackgroundService
 		{
 			bool retry = true;
 			while (retry)
-			{
 				try
 				{
 					_logger.LogInformation("DailyKPILogService running at: {time}", DateTimeOffset.Now);
@@ -76,7 +75,6 @@ public class DailyKPILogService : BackgroundService
 						"Failed to execute DailyKPILogService with exception message {message}. Good luck next round!",
 						ex.Message);
 				}
-			}
 		} while (!stoppingToken.IsCancellationRequested
 		         && await timer.WaitForNextTickAsync(stoppingToken));
 	}

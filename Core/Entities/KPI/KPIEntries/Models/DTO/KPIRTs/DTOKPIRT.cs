@@ -5,5 +5,4 @@ namespace Core.Entities.KPI.KPIEntries.Models.DTO.KPIRTs;
 
 public partial class DTOKPIRT : DTOKPIEntry, IDTO<KPIRT, DTOKPIRT>
 {
-	
 }

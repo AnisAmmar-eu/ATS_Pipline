@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Core.Entities.KPI.KPICs.Models.DB;
-using Core.Entities.KPI.KPICs.Services;
 using Core.Entities.KPI.KPIEntries.Dictionaries;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
@@ -18,7 +17,7 @@ namespace Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 
 public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>, IKPIRTService
 {
-	private IKPILogService _kpiLogService;
+	private readonly IKPILogService _kpiLogService;
 
 	public KPIRTService(IAnodeUOW anodeUOW, IKPILogService kpiLogService) : base(anodeUOW)
 	{
@@ -30,7 +29,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		List<KPIRT> kpiRTs = await AnodeUOW.KPIRT.GetAll(new Expression<Func<KPIRT, bool>>[]
 		{
 			kpiRT => periodsToSave.Contains(kpiRT.Period)
-		}, null, false, null);
+		}, null, false);
 		List<KPILog> kpiLogs = new();
 		foreach (KPIRT kpiRT in kpiRTs)
 			kpiLogs.Add(kpiRT.ToLog(await AnodeUOW.KPIC.GetById(kpiRT.KPICID)));
@@ -74,20 +73,20 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	}
 
 	/// <summary>
-	///		Split the KPIRTs depending on kpiCRIDs. It is then subdivided into periods.
-	///		eg. If there is 2 kpiCRIDS, there would be 2 lists of 4 KPIRTs each.
-	///		Every member of each list has the same KPICID than other KPIRTs in its list.
-	///		Then, the index in the sublists determine to which period it is associated.
-	///		If there is no KPIRT associated with given KPICRID & period, a new one will be created.
+	///     Split the KPIRTs depending on kpiCRIDs. It is then subdivided into periods.
+	///     eg. If there is 2 kpiCRIDS, there would be 2 lists of 4 KPIRTs each.
+	///     Every member of each list has the same KPICID than other KPIRTs in its list.
+	///     Then, the index in the sublists determine to which period it is associated.
+	///     If there is no KPIRT associated with given KPICRID & period, a new one will be created.
 	/// </summary>
 	/// <param name="kpiCRIDs">
-	///		List of kpiCRIDs used to divide KPIRTs into period lists.
+	///     List of kpiCRIDs used to divide KPIRTs into period lists.
 	/// </param>
 	/// <param name="periods">
-	///		List of periods used to subdivide KPIRTs depending on which period they cover.
+	///     List of periods used to subdivide KPIRTs depending on which period they cover.
 	/// </param>
 	/// <returns>
-	///		A list of lists of KPIRTs. First level divides by KPICID, second level by period.
+	///     A list of lists of KPIRTs. First level divides by KPICID, second level by period.
 	/// </returns>
 	private async Task<List<List<KPIRT>>> GetKPIRTsFromKPICsAndPeriods(string[] kpiCRIDs, string[] periods)
 	{
@@ -97,7 +96,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		{
 			List<KPIRT> localKPIRTs = new(periods.Length);
 			List<KPIRT> availableKPIRTs = await AnodeUOW.KPIRT.GetAll(
-				filters: new Expression<Func<KPIRT, bool>>[]
+				new Expression<Func<KPIRT, bool>>[]
 				{
 					kpiRT => kpiRT.KPIC.RID == kpiCRID
 				}, includes: "KPIC");
@@ -106,7 +105,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 				KPIRT? kpiRT = availableKPIRTs.FirstOrDefault(kpiRT => kpiRT.Period == periods[i]);
 				if (kpiRT == null)
 				{
-					KPIC kpiC = await AnodeUOW.KPIC.GetBy(filters: new Expression<Func<KPIC, bool>>[]
+					KPIC kpiC = await AnodeUOW.KPIC.GetBy(new Expression<Func<KPIC, bool>>[]
 					{
 						kpiC => kpiC.RID == kpiCRID
 					});
@@ -116,7 +115,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 						StationID = 0, // TODO
 						Value = "",
 						Period = periods[i],
-						KPIC = kpiC,
+						KPIC = kpiC
 					};
 					await AnodeUOW.KPIRT.Add(kpiRT);
 					AnodeUOW.Commit();
@@ -133,7 +132,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	}
 
 	/// <summary>
-	///		Will get every value from tDTOs split into time periods from smallest time period to largest.
+	///     Will get every value from tDTOs split into time periods from smallest time period to largest.
 	/// </summary>
 	/// <param name="tDTOs">List of DTOS of type tDTO</param>
 	/// <param name="periods">List of periods used to determine time periods</param>
@@ -141,8 +140,8 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	/// <typeparam name="TDTO">DTO type</typeparam>
 	/// <typeparam name="TValue">Type of the value used in T to send to KPI</typeparam>
 	/// <returns>
-	///		A list of list of TValues, first level split those lists depending on time frames,
-	///		second level is a collection of all values of all tDTOs in corresponding time frame.
+	///     A list of list of TValues, first level split those lists depending on time frames,
+	///     second level is a collection of all values of all tDTOs in corresponding time frame.
 	/// </returns>
 	private List<List<TValue>> GetValuesFromPeriods<T, TDTO, TValue>(List<TDTO> tDTOs, string[] periods)
 		where T : class, IBaseEntity<T, TDTO>

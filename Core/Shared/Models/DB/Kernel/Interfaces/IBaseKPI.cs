@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
 namespace Core.Shared.Models.DB.Kernel.Interfaces;
 
 public interface IBaseKPI<TValue>

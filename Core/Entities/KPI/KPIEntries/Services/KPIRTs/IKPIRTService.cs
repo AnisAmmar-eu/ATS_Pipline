@@ -12,8 +12,8 @@ public interface IKPIRTService : IServiceBaseEntity<KPIRT, DTOKPIRT>
 	public Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave);
 
 	/// <summary>
-	///		This function will compute KPIRTs values for every period and every KPICRID for T class as a T class
-	///		may have multiple values worth to be monitored.
+	///     This function will compute KPIRTs values for every period and every KPICRID for T class as a T class
+	///     may have multiple values worth to be monitored.
 	/// </summary>
 	/// <param name="tService">Service of type T</param>
 	/// <typeparam name="T">Monitored entity type</typeparam>

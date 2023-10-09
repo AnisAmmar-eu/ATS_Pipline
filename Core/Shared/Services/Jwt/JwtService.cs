@@ -23,11 +23,10 @@ public class JwtService : IJwtService
 	/// <returns>The created token</returns>
 	public string GenerateToken(List<Claim> claims, int time = 120)
 	{
-		SymmetricSecurityKey authSigningKey =
-			new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+		SymmetricSecurityKey authSigningKey = new(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
 		// Generate token with claims and secret key
-		JwtSecurityToken token = new JwtSecurityToken(
+		JwtSecurityToken token = new(
 			_configuration["JWT:ValidIssuer"],
 			_configuration["JWT:ValidAudience"],
 			expires: DateTime.Now.AddMinutes(time),
@@ -42,7 +41,7 @@ public class JwtService : IJwtService
 	{
 		try
 		{
-			JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+			JwtSecurityTokenHandler tokenHandler = new();
 			byte[] key = Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]);
 			tokenHandler.ValidateToken(token, new TokenValidationParameters
 			{

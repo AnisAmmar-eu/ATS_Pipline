@@ -6,5 +6,4 @@ namespace Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 
 public interface IKPILogRepository : IRepositoryBaseEntity<KPILog, DTOKPILog>
 {
-	
 }

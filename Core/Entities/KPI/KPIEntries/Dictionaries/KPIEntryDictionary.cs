@@ -8,6 +8,7 @@ public class KPIPeriod
 	public const string Year = "YEAR";
 
 	#region Methods
+
 	public static DateTimeOffset GetStartRange(string period, DateTimeOffset now)
 	{
 		return period switch
@@ -29,7 +30,8 @@ public class KPIPeriod
 
 	private static bool IsLeapYear(int year)
 	{
-		return year % 4 == 0 && (year % 100 == 4 && year % 400 != 0);
+		return year % 4 == 0 && year % 100 == 4 && year % 400 != 0;
 	}
+
 	#endregion
 }

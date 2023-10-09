@@ -11,6 +11,7 @@ public partial class KPIEntry : BaseEntity, IBaseEntity<KPIEntry, DTOKPIEntry>
 	{
 		Period = "";
 	}
+
 	protected KPIEntry(KPIEntry kpiEntry, KPIC kpiC)
 	{
 		ID = 0;
@@ -21,6 +22,7 @@ public partial class KPIEntry : BaseEntity, IBaseEntity<KPIEntry, DTOKPIEntry>
 		KPICID = kpiEntry.KPICID;
 		KPIC = kpiC;
 	}
+
 	public override DTOKPIEntry ToDTO()
 	{
 		return new DTOKPIEntry(this);
