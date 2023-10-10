@@ -26,13 +26,16 @@ public class CameraParamService : ServiceBaseEntity<ICameraParamRepository, Came
 		return dtoCameraParam;
 	}
 
-	public void SetDeviceParameters(Device device, DTOCameraParam dtoCameraParam)
+	public DTOCameraParam SetDeviceParameters(Device device, DTOCameraParam dtoCameraParam)
 	{
 		if (device.Stream.IsRunning)
 			device.Stream.Stop();
 		dtoCameraParam.SetCameraParams(device);
 		if (!device.Stream.IsRunning)
 			device.Stream.Start();
+		// Allows to see if certain parameters weren't modified.
+		dtoCameraParam.GetCameraParams(device);
+		return dtoCameraParam;
 	}
 
 	public async Task RunAcquisitionAsync(Device device, DTOCameraParam dtoCameraParam, string extension)

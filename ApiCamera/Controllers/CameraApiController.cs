@@ -92,17 +92,18 @@ public class CameraApiController : ControllerBase
 	public async Task<IActionResult> SetDeviceParameters([FromBody] [Required] DTOCameraParam dtoCameraParam)
 	{
 		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\\GenICam.vin";
+		DTOCameraParam dtoResult;
 		try
 		{
 			Device device = DeviceFactory.Open(driverString);
-			_cameraParamService.SetDeviceParameters(device, dtoCameraParam);
+			dtoResult = _cameraParamService.SetDeviceParameters(device, dtoCameraParam);
 		}
 		catch (Exception e)
 		{
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoResult).SuccessResult(_logsService, ControllerContext);
 	}
 
 	#endregion
