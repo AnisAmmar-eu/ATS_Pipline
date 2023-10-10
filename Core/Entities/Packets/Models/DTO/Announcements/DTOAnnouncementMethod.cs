@@ -7,6 +7,6 @@ public partial class DTOAnnouncement : DTOPacket, IDTO<Announcement, DTOAnnounce
 {
 	public DTOAnnouncement(Announcement announcement) : base(announcement)
 	{
-		AnodeType = (int)announcement.AnodeType;
+		AnodeType = announcement.AnodeType;
 	}
 }

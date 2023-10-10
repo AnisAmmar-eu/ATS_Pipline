@@ -7,7 +7,7 @@ public partial class DTODetection : DTOPacket, IDTO<Detection, DTODetection>
 {
 	public DTODetection(Detection detection) : base(detection)
 	{
-		MeasuredType = (int)detection.MeasuredType;
+		MeasuredType = detection.MeasuredType;
 		IsMismatched = detection.IsMismatched;
 		AnodeSize = detection.AnodeSize;
 	}

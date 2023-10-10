@@ -7,5 +7,5 @@ namespace Core.Entities.Packets.Models.DB.Announcements;
 
 public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnouncement>
 {
-	public AnodeType AnodeType { get; set; }
+	public string AnodeType { get; set; }
 }

@@ -5,5 +5,5 @@ namespace Core.Entities.Packets.Models.DTO.Announcements;
 
 public partial class DTOAnnouncement : DTOPacket, IDTO<Announcement, DTOAnnouncement>
 {
-	public int AnodeType { get; set; }
+	public string AnodeType { get; set; }
 }

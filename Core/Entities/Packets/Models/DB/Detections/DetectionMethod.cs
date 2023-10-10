@@ -16,7 +16,7 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 	{
 		Type = PacketType.Detection;
 		//CycleStationRID = detectionStruct.CycleStationRID; // TODO will be a struct
-		MeasuredType = (AnodeType)detectionStruct.MeasuredType;
+		// MeasuredType = detectionStruct.MeasuredType; // TODO How will it be returned?
 		IsMismatched = detectionStruct.IsMismatched;
 		AnodeSize = detectionStruct.AnodeSize;
 	}

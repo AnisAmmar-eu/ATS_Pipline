@@ -7,5 +7,5 @@ public partial class DTODetection : DTOPacket, IDTO<Detection, DTODetection>
 {
 	public int AnodeSize { get; set; } // Millimeters
 	public bool IsMismatched { get; set; }
-	public int MeasuredType { get; set; } // Enum AnodeType
+	public string MeasuredType { get; set; } // Enum AnodeType
 }

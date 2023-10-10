@@ -1,7 +1,7 @@
 namespace Core.Shared.Dictionaries;
 
-public enum AnodeType
+public class AnodeType
 {
-	D20,
-	DX
+	public static string D20 = "D20";
+	public static string DX = "DX";
 }

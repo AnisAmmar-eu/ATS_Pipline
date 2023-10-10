@@ -16,7 +16,7 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 	{
 		// TODO
 		// CycleStationRID = adsStruct.CycleStationRID;
-		AnodeType = (AnodeType)adsStruct.AnodeType;
+		// AnodeType = adsStruct.AnodeType;
 	}
 
 	public override DTOAnnouncement ToDTO()
