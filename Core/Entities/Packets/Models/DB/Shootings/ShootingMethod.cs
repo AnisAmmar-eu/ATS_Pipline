@@ -56,15 +56,13 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		FileInfo? firstHole = null;
 		FileInfo? thirdHole = null;
 		DateTimeOffset? tsFirstImage = null;
-		string? rid = null;
+		string rid = String.Empty;
 		while (firstHole == null || thirdHole == null)
 		{
 			if (tsFirstImage != null && DateTimeOffset.Now - tsFirstImage > TimeSpan.FromSeconds(30))
 				break;
 			if (firstHole == null)
 			{
-				List<FileInfo> images1 = directory1.EnumerateFiles().ToList();
-				OrderByCreationTime(images1);
 				firstHole = GetImageInDirectory(directory1, rid);
 				if (firstHole != null)
 				{
@@ -78,8 +76,6 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 
 			if (thirdHole == null)
 			{
-				List<FileInfo> images2 = directory2.EnumerateFiles().ToList();
-				OrderByCreationTime(images2);
 				thirdHole = GetImageInDirectory(directory2, rid);
 				if (thirdHole != null)
 				{
@@ -99,22 +95,22 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 			}, withTracking: false);
 		stationCycle.ShootingPacket = this;
 		stationCycle.ShootingID = ID;
-		if (firstHole != null)
-			firstHole.MoveTo(ShootingFolders.Archive1 + firstHole.Name);
-		if (thirdHole != null)
-			thirdHole.MoveTo(ShootingFolders.Archive2 + thirdHole.Name);
+		// ?. => If firstHole not null then...
+		firstHole?.MoveTo(ShootingFolders.Archive1 + firstHole.Name);
+		thirdHole?.MoveTo(ShootingFolders.Archive2 + thirdHole.Name);
 		Status = PacketStatus.Completed;
 		ShootingTS = (DateTimeOffset)tsFirstImage!;
 		HasError = firstHole == null || thirdHole == null;
+		StationCycleRID = rid!;
 		stationCycle.ShootingStatus = Status;
 		anodeUOW.StationCycle.Update(stationCycle);
 		return ToDTO();
 	}
 
-	private FileInfo? GetImageInDirectory(DirectoryInfo directory, string? rid)
+	private FileInfo? GetImageInDirectory(DirectoryInfo directory, string rid)
 	{
 		List<FileInfo> images = directory.EnumerateFiles().ToList()
-			.FindAll(fileInfo => rid == null || ExtractRIDFromName(fileInfo.Name) == rid);
+			.FindAll(fileInfo => rid == String.Empty || ExtractRIDFromName(fileInfo.Name) == rid);
 		images.Sort((x, y) => DateTime.Compare(x.CreationTime, y.CreationTime));
 		if (images.Count == 0)
 			return null;
@@ -148,9 +144,5 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		}
 
 		return String.Empty;
-	}
-
-	private void OrderByCreationTime(List<FileInfo> files)
-	{
 	}
 }

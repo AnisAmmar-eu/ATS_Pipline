@@ -555,7 +555,7 @@ namespace Core.Migrations
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("TSClosed")
+                    b.Property<DateTimeOffset?>("TSClosed")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");

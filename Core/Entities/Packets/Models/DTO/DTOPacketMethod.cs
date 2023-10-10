@@ -10,7 +10,7 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 	{
 		ID = detection.ID;
 		TS = detection.TS;
-		CycleStationRID = detection.StationCycleRID;
+		StationCycleRID = detection.StationCycleRID;
 		Status = detection.Status;
 		Type = detection.Type;
 		HasError = detection.HasError;
@@ -18,7 +18,7 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 
 	public DTOPacket()
 	{
-		CycleStationRID = "";
+		StationCycleRID = "";
 		Type = "";
 		Status = "";
 	}
