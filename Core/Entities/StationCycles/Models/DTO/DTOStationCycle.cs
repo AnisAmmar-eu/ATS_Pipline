@@ -16,7 +16,7 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	public int? AnnounceID { get; set; } // Different from AnnouncementPacket
 	public string RID { get; set; }
 	public string Status { get; set; } = CycleStatus.Initialized;
-	public DateTimeOffset TSClosed { get; set; }
+	public DateTimeOffset? TSClosed { get; set; }
 	
 	public string? AnnouncementStatus { get; set; }
 	public int? AnnouncementID { get; set; }
