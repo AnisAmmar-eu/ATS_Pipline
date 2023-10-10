@@ -1,3 +1,11 @@
+using Core.Entities.Parameters.CameraParams.Services;
+using Core.Shared.Data;
+using Core.Shared.Services.System.Logs;
+using Core.Shared.UnitOfWork;
+using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +14,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<AnodeCTX>(options =>
+	options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ICameraParamService, CameraParamService>();
+builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 WebApplication app = builder.Build();
 

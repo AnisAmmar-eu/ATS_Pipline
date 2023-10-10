@@ -23,4 +23,32 @@ public partial class DTOCameraParam : DTOBaseEntity, IDTO<CameraParam, DTOCamera
 	public double AdaptiveNoiseSuppressionFactor { get; set; } = 1;
 	public long Sharpness { get; set; } = 0;
 	public double AcquisitionFrameRate { get; set; } = 23.9798;
+	
+	// Exposure Time => AcquisitionControl
+
+	// Gain => AnalogControl => GainSelector
+
+	// Black level => AnalogControl => BlackLevelSelector
+
+	// Gamma => MultipleRegionControl (SubRegionSelector) & Analog Control
+
+	// Balance Ratio => MultipleRegionControl (SubRegionSelector) & AnalogControl (BalanceRatioSelector Red || Blue)
+
+	// Convolution Mode => ImageProcessingControl
+
+	// AdaptiveNoiseSuppressionFactor => ImageProcessingControl
+
+	// Sharpness => ImageProcessingControl
+
+	// Not configurable but displayed : AcquisitionFrameRate (w/ AcquisitionFrameRateEnable=false)
+	//      displayed after ExposureTime
+	// AcquisitionFrameRate => AcquisitionControl
+
+	// AutoBalance, Correlation etc... => off
+
+	// PixelFormat = BayerRG8
+
+	// Resolution = 2464 (H) x 2056 (V); 5.1 MP
+
+	// Image format is uncompressed jpg format
 }
