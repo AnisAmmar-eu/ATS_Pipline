@@ -112,14 +112,14 @@ public class CameraApiController : ControllerBase
 	#region Acquisition
 
 	[HttpGet("/acquisition")]
-	public async Task<IActionResult> AcquisitionAsync([Required] string extension)
+	public async Task<IActionResult> AcquisitionAsync()
 	{
 		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\\GenICam.vin";
 		try
 		{
 			// Create an instance of the camera
 			Device? device = DeviceFactory.Open(driverString);
-			await _cameraParamService.RunAcquisitionAsync(device, new DTOCameraParam(), extension);
+			await _cameraParamService.RunAcquisitionAsync(device, new DTOCameraParam(), "jpg");
 		}
 		catch (Exception e)
 		{
