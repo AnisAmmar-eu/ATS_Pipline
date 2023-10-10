@@ -5,7 +5,6 @@ using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DTO;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -56,7 +55,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		FileInfo? firstHole = null;
 		FileInfo? thirdHole = null;
 		DateTimeOffset? tsFirstImage = null;
-		string rid = String.Empty;
+		string rid = string.Empty;
 		while (firstHole == null || thirdHole == null)
 		{
 			if (tsFirstImage != null && DateTimeOffset.Now - tsFirstImage > TimeSpan.FromSeconds(30))
@@ -69,7 +68,8 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 					if (thirdHole == null)
 						rid = ExtractRIDFromName(firstHole.Name);
 					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, rid), "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture.DateTimeFormat);
+						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, rid), "yyyyMMddHHmmssfff",
+							CultureInfo.InvariantCulture.DateTimeFormat);
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
 			}
@@ -89,7 +89,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		}
 
 		StationCycle stationCycle = await anodeUOW.StationCycle.GetBy(
-			filters: new Expression<Func<StationCycle, bool>>[]
+			new Expression<Func<StationCycle, bool>>[]
 			{
 				stationCycle => stationCycle.RID == rid
 			}, withTracking: false);
@@ -110,7 +110,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	private FileInfo? GetImageInDirectory(DirectoryInfo directory, string rid)
 	{
 		List<FileInfo> images = directory.EnumerateFiles().ToList()
-			.FindAll(fileInfo => rid == String.Empty || ExtractRIDFromName(fileInfo.Name) == rid);
+			.FindAll(fileInfo => rid == string.Empty || ExtractRIDFromName(fileInfo.Name) == rid);
 		images.Sort((x, y) => DateTime.Compare(x.CreationTime, y.CreationTime));
 		if (images.Count == 0)
 			return null;
@@ -119,30 +119,24 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 
 	private string ExtractRIDFromName(string fileName)
 	{
-		if (!String.IsNullOrWhiteSpace(fileName))
+		if (!string.IsNullOrWhiteSpace(fileName))
 		{
 			int charLocation = fileName.IndexOf("-", StringComparison.Ordinal);
-			if (charLocation > 0)
-			{
-				return fileName.Substring(0, charLocation);
-			}
+			if (charLocation > 0) return fileName.Substring(0, charLocation);
 		}
 
-		return String.Empty;
+		return string.Empty;
 	}
 
 	private string ExtractTSFromName(string fileName, string? rid)
 	{
-		if (rid != null && !String.IsNullOrWhiteSpace(fileName))
+		if (rid != null && !string.IsNullOrWhiteSpace(fileName))
 		{
 			int charLocation = fileName.IndexOf(".", StringComparison.Ordinal);
 			charLocation = (charLocation == 0 ? fileName.Length : charLocation) - rid.Length - 1;
-			if (charLocation > rid.Length + 1)
-			{
-				return fileName.Substring(rid.Length + 1, charLocation);
-			}
+			if (charLocation > rid.Length + 1) return fileName.Substring(rid.Length + 1, charLocation);
 		}
 
-		return String.Empty;
+		return string.Empty;
 	}
 }

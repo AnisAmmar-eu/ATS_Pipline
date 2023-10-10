@@ -4,7 +4,6 @@ using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using Stemmer.Cvb.GenApi;
-using TwinCAT.Ads;
-using TwinCAT.TypeSystem;
 
 namespace ApiCamera.Controllers;
 
@@ -17,8 +15,8 @@ namespace ApiCamera.Controllers;
 [Route("[controller]")]
 public class CameraApiController : ControllerBase
 {
-	private readonly ILogsService _logsService;
 	private readonly ICameraParamService _cameraParamService;
+	private readonly ILogsService _logsService;
 
 	public CameraApiController(ICameraParamService cameraParamService, ILogsService logsService)
 	{
@@ -68,6 +66,29 @@ public class CameraApiController : ControllerBase
 
 	#endregion
 
+
+	#region Acquisition
+
+	[HttpGet("/acquisition")]
+	public async Task<IActionResult> AcquisitionAsync()
+	{
+		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\\GenICam.vin";
+		try
+		{
+			// Create an instance of the camera
+			Device? device = DeviceFactory.Open(driverString);
+			await _cameraParamService.RunAcquisitionAsync(device, new DTOCameraParam(), "jpg");
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	#endregion
+
 	#region Parameters
 
 	[HttpGet("parameters")]
@@ -104,30 +125,6 @@ public class CameraApiController : ControllerBase
 		}
 
 		return await new ApiResponseObject(dtoResult).SuccessResult(_logsService, ControllerContext);
-	}
-
-	#endregion
-
-
-	#region Acquisition
-
-	[HttpGet("/acquisition")]
-	public async Task<IActionResult> AcquisitionAsync()
-	{
-		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\\GenICam.vin";
-		try
-		{
-			// Create an instance of the camera
-			Device? device = DeviceFactory.Open(driverString);
-			await _cameraParamService.RunAcquisitionAsync(device, new DTOCameraParam(), "jpg");
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
-		}
-
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
-
 	}
 
 	#endregion

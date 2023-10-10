@@ -6,5 +6,4 @@ namespace Core.Entities.StationCycles.Repositories;
 
 public interface IStationCycleRepository : IRepositoryBaseEntity<StationCycle, DTOStationCycle>
 {
-	
 }

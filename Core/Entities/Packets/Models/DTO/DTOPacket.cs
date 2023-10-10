@@ -1,5 +1,3 @@
-using System.DirectoryServices.ActiveDirectory;
-using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO.Binders;
 using Core.Shared.Models.DTO.Kernel;

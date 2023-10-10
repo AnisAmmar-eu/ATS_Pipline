@@ -23,7 +23,7 @@ public partial class DTOCameraParam : DTOBaseEntity, IDTO<CameraParam, DTOCamera
 	public double AdaptiveNoiseSuppressionFactor { get; set; } = 1;
 	public long Sharpness { get; set; } = 0;
 	public double AcquisitionFrameRate { get; set; } = 23.9798;
-	
+
 	// Exposure Time => AcquisitionControl
 
 	// Gain => AnalogControl => GainSelector

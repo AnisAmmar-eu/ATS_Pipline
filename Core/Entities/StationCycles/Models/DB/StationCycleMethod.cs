@@ -6,10 +6,6 @@ namespace Core.Entities.StationCycles.Models.DB;
 
 public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOStationCycle>
 {
-	public StationCycle()
-	{
-	}
-
 	public override DTOStationCycle ToDTO()
 	{
 		return new DTOStationCycle(this);

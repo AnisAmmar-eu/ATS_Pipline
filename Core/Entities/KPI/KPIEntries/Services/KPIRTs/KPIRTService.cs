@@ -120,7 +120,11 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 					await AnodeUOW.KPIRT.Add(kpiRT);
 					AnodeUOW.Commit();
 				}
-				else kpiRT.KPIC = kpiC;
+				else
+				{
+					kpiRT.KPIC = kpiC;
+				}
+
 				localKPIRTs.Add(kpiRT);
 			}
 

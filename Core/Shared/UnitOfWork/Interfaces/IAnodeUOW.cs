@@ -29,7 +29,7 @@ public interface IAnodeUOW : IDisposable
 	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }
-	
+
 	// StationCycle
 	IStationCycleRepository StationCycle { get; }
 

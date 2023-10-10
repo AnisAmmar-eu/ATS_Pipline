@@ -31,10 +31,9 @@
     </ItemGroup>
 
 
-
     <ItemGroup>
-      <Folder Include="Archives1\" />
-      <Folder Include="Archives2\" />
+        <Folder Include="Archives1\"/>
+        <Folder Include="Archives2\"/>
     </ItemGroup>
 
 </Project>

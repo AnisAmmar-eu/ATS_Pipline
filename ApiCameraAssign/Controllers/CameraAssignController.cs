@@ -11,8 +11,8 @@ namespace ApiAlarms.Controllers;
 [Route("[controller]")]
 public class CameraAssignController : ControllerBase
 {
-	private ILogsService _logsService;
-	private IPacketService _packetService;
+	private readonly ILogsService _logsService;
+	private readonly IPacketService _packetService;
 
 	public CameraAssignController(ILogsService logsService, IPacketService packetService)
 	{

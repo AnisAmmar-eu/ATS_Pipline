@@ -8,9 +8,9 @@ public partial class S1S2Cycle : StationCycle, IBaseEntity<S1S2Cycle, DTOS1S2Cyc
 {
 	public string AnnouncementStatus2 { get; set; }
 	public int AnnouncementID2 { get; set; }
-	
+
 	#region Nav Properties
-	
+
 	private Announcement? _announcement2;
 
 	public virtual Announcement AnnouncementPacket2
@@ -19,6 +19,6 @@ public partial class S1S2Cycle : StationCycle, IBaseEntity<S1S2Cycle, DTOS1S2Cyc
 		get => _announcement2
 		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Announcement));
 	}
-	
+
 	#endregion
 }

@@ -6,5 +6,4 @@ namespace Core.Entities.Parameters.CameraParams.Repositories;
 
 public interface ICameraParamRepository : IRepositoryBaseEntity<CameraParam, DTOCameraParam>
 {
-	
 }

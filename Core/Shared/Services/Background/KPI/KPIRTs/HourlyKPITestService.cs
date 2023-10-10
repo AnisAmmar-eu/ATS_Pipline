@@ -8,7 +8,8 @@ namespace Core.Shared.Services.Background.KPI.KPIRTs;
 
 public class HourlyKPITestService : BaseHourlyKPIRTService<KPITest, DTOKPITest, IKPITestService, double>
 {
-	public HourlyKPITestService(IServiceScopeFactory factory, ILogger<BaseHourlyKPIRTService<KPITest, DTOKPITest, IKPITestService, double>> logger) : base(factory, logger)
+	public HourlyKPITestService(IServiceScopeFactory factory,
+		ILogger<BaseHourlyKPIRTService<KPITest, DTOKPITest, IKPITestService, double>> logger) : base(factory, logger)
 	{
 	}
 }

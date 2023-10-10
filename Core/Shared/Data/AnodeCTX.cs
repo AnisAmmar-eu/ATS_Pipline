@@ -59,7 +59,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
 	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
-	
+
 	// StationCycle
 	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
 
@@ -68,7 +68,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<KPILog> KPILog => Set<KPILog>();
 	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
 	public DbSet<KPITest> KPITest => Set<KPITest>();
-	
+
 	// Parameters
 	public DbSet<CameraParam> CameraParam => Set<CameraParam>();
 

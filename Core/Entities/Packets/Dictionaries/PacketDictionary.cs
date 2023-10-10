@@ -8,7 +8,6 @@ public class PacketStatus
 	public const string Sent = "Sent";
 }
 
-
 public class PacketType
 {
 	public const string Alarm = "ALARM";

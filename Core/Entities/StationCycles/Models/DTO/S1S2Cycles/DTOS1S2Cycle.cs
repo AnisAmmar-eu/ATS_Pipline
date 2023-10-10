@@ -1,6 +1,5 @@
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
-using Core.Entities.User.Models.DTO.Acts;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Models.DTO.S1S2Cycles;

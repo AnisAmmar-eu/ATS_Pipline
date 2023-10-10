@@ -236,13 +236,13 @@ public class AuthService : IAuthService
 		// Set claims list to add in the token
 		List<Claim> authClaims = new()
 		{
-			new("Id", user.Id),
-			new(ClaimTypes.Name, user.UserName),
-			new("Username", user.UserName),
-			new("Firstname", user.Firstname ?? ""),
-			new("Lastname", user.Lastname ?? ""),
-			new("IsEkium", user.IsEkium.ToString()),
-			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+			new Claim("Id", user.Id),
+			new Claim(ClaimTypes.Name, user.UserName),
+			new Claim("Username", user.UserName),
+			new Claim("Firstname", user.Firstname ?? ""),
+			new Claim("Lastname", user.Lastname ?? ""),
+			new Claim("IsEkium", user.IsEkium.ToString()),
+			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 		};
 
 		// Check if in dev mode

@@ -546,10 +546,10 @@ public class ActsService : IActsService
 		// Set claims list to add in the token
 		List<Claim> claims = new()
 		{
-			new("UserId", httpContext.Items["UserId"]?.ToString() ?? ""),
-			new("ActionRID", actEntity.Act.RID),
-			new("Status", "Complete"),
-			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+			new Claim("UserId", httpContext.Items["UserId"]?.ToString() ?? ""),
+			new Claim("ActionRID", actEntity.Act.RID),
+			new Claim("Status", "Complete"),
+			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 		};
 		if (actEntity.EntityID != null)
 			claims.Add(new Claim("EntityId", actEntity.EntityID.ToString() ?? ""));

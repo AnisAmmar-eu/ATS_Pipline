@@ -6,5 +6,4 @@ namespace Core.Entities.KPI.KPITests.Repositories;
 
 public interface IKPITestRepository : IRepositoryBaseEntity<KPITest, DTOKPITest>
 {
-	
 }

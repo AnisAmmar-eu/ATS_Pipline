@@ -14,7 +14,7 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	{
 		ID = stationCycle.ID;
 		TS = stationCycle.TS;
-		
+
 		AnodeType = stationCycle.AnodeType;
 		AnnounceID = stationCycle.AnnounceID;
 		RID = stationCycle.RID;

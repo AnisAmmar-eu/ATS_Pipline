@@ -1,6 +1,4 @@
-using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DTO.Shootings;

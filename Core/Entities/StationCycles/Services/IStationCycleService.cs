@@ -6,5 +6,4 @@ namespace Core.Entities.StationCycles.Services;
 
 public interface IStationCycleService : IServiceBaseEntity<StationCycle, DTOStationCycle>
 {
-	
 }

@@ -6,5 +6,4 @@ namespace Core.Entities.KPI.KPITests.Services;
 
 public interface IKPITestService : IServiceBaseEntity<KPITest, DTOKPITest>
 {
-	
 }

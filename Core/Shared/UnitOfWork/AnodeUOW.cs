@@ -68,7 +68,7 @@ public class AnodeUOW : IAnodeUOW
 
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
-	
+
 	// StationCycle
 	public IStationCycleRepository StationCycle { get; }
 
@@ -94,14 +94,14 @@ public class AnodeUOW : IAnodeUOW
 
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
-			
+
 			_ when repo == typeof(IStationCycleRepository) => StationCycle,
 
 			_ when repo == typeof(IKPICRepository) => KPIC,
 			_ when repo == typeof(IKPILogRepository) => KPILog,
 			_ when repo == typeof(IKPIRTRepository) => KPIRT,
 			_ when repo == typeof(IKPITestRepository) => KPITest,
-			
+
 			_ when repo == typeof(ICameraParamRepository) => CameraParam,
 
 			_ when repo == typeof(IExtTagRepository) => ExtTag,
