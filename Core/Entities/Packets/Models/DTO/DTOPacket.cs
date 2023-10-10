@@ -1,3 +1,4 @@
+using System.DirectoryServices.ActiveDirectory;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO.Binders;
@@ -11,6 +12,7 @@ namespace Core.Entities.Packets.Models.DTO;
 public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 {
 	public string CycleStationRID { get; set; }
-	public PacketStatus Status { get; set; }
+	public string Status { get; set; }
 	public string Type { get; set; }
+	public bool HasError { get; set; } = false;
 }

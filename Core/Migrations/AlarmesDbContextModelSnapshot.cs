@@ -375,16 +375,20 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<string>("CycleStationRID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("HasError")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StationCycleRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
@@ -398,6 +402,73 @@ namespace Core.Migrations
                     b.ToTable("Packet");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Packet");
+                });
+
+            modelBuilder.Entity("Core.Entities.Parameters.CameraParams.Models.DB.CameraParam", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<double>("AcquisitionFrameRate")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("AcquisitionFrameRateEnable")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("AdaptiveNoiseSuppressionFactor")
+                        .HasColumnType("float");
+
+                    b.Property<double>("BalanceRatio")
+                        .HasColumnType("float");
+
+                    b.Property<double>("BlackLevel")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("ConvolutionMode")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("ExposureTime")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Gain")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Gamma")
+                        .HasColumnType("float");
+
+                    b.Property<long>("Height")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PixelFormat")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Sharpness")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("TriggerActivation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TriggerMode")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TriggerSource")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Width")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("CameraParam");
                 });
 
             modelBuilder.Entity("Core.Entities.ServicesMonitors.Models.DB.ServicesMonitor", b =>
@@ -433,6 +504,79 @@ namespace Core.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("ServicesMonitor");
+                });
+
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.StationCycle", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int?>("AlarmListID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AlarmListStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AnnounceID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AnnouncementID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AnnouncementStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AnodeType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DetectionID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DetectionStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ShootingID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShootingStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TSClosed")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AlarmListID")
+                        .IsUnique()
+                        .HasFilter("[AlarmListID] IS NOT NULL");
+
+                    b.HasIndex("AnnouncementID")
+                        .IsUnique()
+                        .HasFilter("[AnnouncementID] IS NOT NULL");
+
+                    b.HasIndex("DetectionID")
+                        .IsUnique()
+                        .HasFilter("[DetectionID] IS NOT NULL");
+
+                    b.HasIndex("ShootingID")
+                        .IsUnique()
+                        .HasFilter("[ShootingID] IS NOT NULL");
+
+                    b.ToTable("StationCycle");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.Act", b =>
@@ -983,6 +1127,37 @@ namespace Core.Migrations
                         .IsRequired();
 
                     b.Navigation("KPIC");
+                });
+
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.StationCycle", b =>
+                {
+                    b.HasOne("Core.Entities.Packets.Models.DB.AlarmLists.AlarmList", "AlarmListPacket")
+                        .WithOne()
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "AlarmListID")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Core.Entities.Packets.Models.DB.Announcements.Announcement", "AnnouncementPacket")
+                        .WithOne()
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "AnnouncementID")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Core.Entities.Packets.Models.DB.Detections.Detection", "DetectionPacket")
+                        .WithOne()
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "DetectionID")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Core.Entities.Packets.Models.DB.Shootings.Shooting", "ShootingPacket")
+                        .WithOne()
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "ShootingID")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("AlarmListPacket");
+
+                    b.Navigation("AnnouncementPacket");
+
+                    b.Navigation("DetectionPacket");
+
+                    b.Navigation("ShootingPacket");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>

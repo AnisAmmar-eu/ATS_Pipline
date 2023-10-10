@@ -11,6 +11,7 @@ using Core.Entities.KPI.KPITests.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.Parameters.CameraParams.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
+using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
@@ -41,6 +42,8 @@ public class AnodeUOW : IAnodeUOW
 		Packet = new PacketRepository(_anodeCTX);
 		AlarmCycle = new AlarmCycleRepository(_anodeCTX);
 
+		StationCycle = new StationCycleRepository(_anodeCTX);
+
 		KPIC = new KPICRepository(_anodeCTX);
 		KPILog = new KPILogRepository(_anodeCTX);
 		KPIRT = new KPIRTRepository(_anodeCTX);
@@ -65,6 +68,9 @@ public class AnodeUOW : IAnodeUOW
 
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
+	
+	// StationCycle
+	public IStationCycleRepository StationCycle { get; }
 
 	// KPI
 	public IKPICRepository KPIC { get; }
@@ -88,6 +94,8 @@ public class AnodeUOW : IAnodeUOW
 
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,
+			
+			_ when repo == typeof(IStationCycleRepository) => StationCycle,
 
 			_ when repo == typeof(IKPICRepository) => KPIC,
 			_ when repo == typeof(IKPILogRepository) => KPILog,

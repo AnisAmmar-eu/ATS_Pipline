@@ -4,12 +4,12 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:2044",
+      "applicationUrl": "http://localhost:2045",
       "sslPort": 44361
     }
   },
   "profiles": {
-    "AlarmsManagement": {
+    "ApiAlarms": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

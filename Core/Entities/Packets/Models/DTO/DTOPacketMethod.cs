@@ -10,15 +10,17 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 	{
 		ID = detection.ID;
 		TS = detection.TS;
-		CycleStationRID = detection.CycleStationRID;
+		CycleStationRID = detection.StationCycleRID;
 		Status = detection.Status;
 		Type = detection.Type;
+		HasError = detection.HasError;
 	}
 
 	public DTOPacket()
 	{
 		CycleStationRID = "";
 		Type = "";
+		Status = "";
 	}
 
 	public override Packet ToModel()

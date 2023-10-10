@@ -11,6 +11,7 @@ using Core.Entities.KPI.KPITests.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.Parameters.CameraParams.Repositories;
 using Core.Entities.ServicesMonitors.Repositories;
+using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
@@ -28,6 +29,9 @@ public interface IAnodeUOW : IDisposable
 	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }
+	
+	// StationCycle
+	IStationCycleRepository StationCycle { get; }
 
 	// KPI
 	IKPICRepository KPIC { get; }

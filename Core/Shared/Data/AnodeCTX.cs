@@ -19,6 +19,7 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.Parameters.CameraParams.Models.DB;
 using Core.Entities.ServicesMonitors.Models.DB;
+using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
@@ -58,6 +59,9 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
 	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
+	
+	// StationCycle
+	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
 
 	// KPI
 	public DbSet<KPIC> KPIC => Set<KPIC>();
@@ -111,5 +115,33 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithMany(kpic => kpic.RTEntries)
 			.HasForeignKey(kpiRT => kpiRT.KPICID)
 			.OnDelete(DeleteBehavior.Cascade);
+
+		modelBuilder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.AnnouncementPacket)
+			.WithOne()
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AnnouncementID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.DetectionPacket)
+			.WithOne()
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.DetectionID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.ShootingPacket)
+			.WithOne()
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.ShootingID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.AlarmListPacket)
+			.WithOne()
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AlarmListID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
 	}
 }

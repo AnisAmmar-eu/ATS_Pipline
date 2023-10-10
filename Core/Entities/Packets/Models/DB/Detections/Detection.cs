@@ -1,6 +1,7 @@
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Detections;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB.Detections;

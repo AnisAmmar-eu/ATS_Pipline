@@ -11,17 +11,16 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 	public Packet()
 	{
 		Type = "";
-		CycleStationRID = "";
-		Status = PacketStatus.Initialised;
+		StationCycleRID = "";
+		Status = PacketStatus.Initialized;
 	}
 
 	public Packet(DTOPacket dto)
 	{
-		ID = dto.ID;
-		TS = (DateTimeOffset)dto.TS!;
-		CycleStationRID = dto.CycleStationRID;
+		StationCycleRID = dto.CycleStationRID;
 		Status = dto.Status;
 		Type = dto.Type;
+		HasError = dto.HasError;
 	}
 
 	public override DTOPacket ToDTO()

@@ -1,24 +1,27 @@
 namespace Core.Entities.Packets.Dictionaries;
 
-public enum PacketStatus
+public class PacketStatus
 {
-	Initialised,
-	Running,
-	Completed,
-	Sent
+	public const string Initialized = "Initialized";
+	public const string Running = "Running";
+	public const string Completed = "Completed";
+	public const string Sent = "Sent";
 }
 
-public enum AnodeType
-{
-	D20,
-	DX
-}
 
 public class PacketType
 {
-	public const string ALARM = "ALARM";
-	public const string ANNOUNCEMENT = "ANNOUNCMENT";
-	public const string DETECTION = "DETECTION";
-	public const string SHOOTING = "SHOOTING";
-	public const string FURNACE = "FURNACE";
+	public const string Alarm = "ALARM";
+	public const string Announcement = "ANNOUNCMENT";
+	public const string Detection = "DETECTION";
+	public const string Shooting = "SHOOTING";
+	public const string Furnace = "FURNACE";
+}
+
+public class ShootingFolders
+{
+	public const string Camera1 = @"..\ApiCamera\Camera1\";
+	public const string Camera2 = @"..\ApiCamera\Camera2\";
+	public const string Archive1 = @"Archives1\";
+	public const string Archive2 = @"Archives2\";
 }

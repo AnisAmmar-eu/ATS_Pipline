@@ -39,11 +39,11 @@ public class DTOPacketBinder : IModelBinder
 
 		return type switch
 		{
-			PacketType.ALARM => typeof(DTOAlarmList),
-			PacketType.ANNOUNCEMENT => typeof(DTOAnnouncement),
-			PacketType.DETECTION => typeof(DTODetection),
-			PacketType.SHOOTING => typeof(DTOShooting),
-			PacketType.FURNACE => typeof(DTOFurnace),
+			PacketType.Alarm => typeof(DTOAlarmList),
+			PacketType.Announcement => typeof(DTOAnnouncement),
+			PacketType.Detection => typeof(DTODetection),
+			PacketType.Shooting => typeof(DTOShooting),
+			PacketType.Furnace => typeof(DTOFurnace),
 			_ => typeof(DTOPacket)
 		};
 	}

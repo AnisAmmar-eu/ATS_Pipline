@@ -6,8 +6,8 @@ namespace Core.Entities.Packets.Models.DTO.Shootings;
 public partial class DTOShooting : DTOPacket, IDTO<Shooting, DTOShooting>
 {
 	public int AnodeIDKey { get; set; } // IESA key
-	public string GlobalStationStatus { get; set; } // TODO Dictionary ?
-	public string LedStatus { get; set; } // TODO Dictionary ?
+	public string GlobalStationStatus { get; set; } = ""; // TODO Dictionary ?
+	public string LedStatus { get; set; } = ""; // TODO Dictionary ?
 	public int ProcedurePerformance { get; set; } // TODO int ?
 	public DateTimeOffset ShootingTS { get; set; } // TSWhenAnodeIsShot
 }

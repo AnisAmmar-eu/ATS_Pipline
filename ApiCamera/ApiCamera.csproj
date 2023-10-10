@@ -22,11 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Classes\"/>
-        <Folder Include="anodesImages\"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\Core\Core.csproj"/>
     </ItemGroup>
 

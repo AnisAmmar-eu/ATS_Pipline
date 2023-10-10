@@ -72,14 +72,11 @@ public class CameraParamService : ServiceBaseEntity<ICameraParamRepository, Came
 					continue;
 				}
 
-				DateTime now = DateTime.Now;
-				string imageName = ((DateTimeOffset)now).ToUnixTimeSeconds().ToString();
+				DateTimeOffset now = DateTimeOffset.Now;
 
 				// Wait for a new photo to be taken
 				using (StreamImage image = stream.Wait())
 				{
-					Stopwatch stopWatch = new();
-					stopWatch.Start();
 					CancellationToken cancel = CancellationToken.None;
 
 					AdsClient tcClient = new();
@@ -95,13 +92,11 @@ public class CameraParamService : ServiceBaseEntity<ICameraParamRepository, Came
 					ResultAnyValue resultRead = await tcClient.ReadAnyStringAsync(varHandle, 80,
 						StringMarshaler.DefaultEncoding, cancel);
 					string RID = resultRead.Value.ToString();
-					string Ts = DateTime.Now.ToString("yyyyMMddHHmmfff");
+					string Ts = DateTimeOffset.Now.ToString("yyyyMMddHHmmssfff");
 
 					string filename = RID + "-" + Ts + "." + extension;
 					// Save the photo
 					image.Save("anodesImages\\" + filename, 1);
-					stopWatch.Stop();
-					Debug.WriteLine($"{stopWatch.Elapsed.TotalMilliseconds}");
 				}
 
 				Debug.WriteLine("isRunning = " + device.Stream.IsRunning);

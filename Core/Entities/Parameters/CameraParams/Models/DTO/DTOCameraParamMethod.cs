@@ -15,6 +15,8 @@ public partial class DTOCameraParam : DTOBaseEntity, IDTO<CameraParam, DTOCamera
 
 	public DTOCameraParam(CameraParam cameraParam)
 	{
+		ID = cameraParam.ID;
+		TS = cameraParam.TS;
 		TriggerMode = cameraParam.TriggerMode ? "On" : "Off";
 		TriggerSource = cameraParam.TriggerSource;
 		TriggerActivation = cameraParam.TriggerActivation;
