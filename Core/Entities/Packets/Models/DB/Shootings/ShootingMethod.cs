@@ -96,6 +96,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		stationCycle.ShootingPacket = this;
 		stationCycle.ShootingID = ID;
 		// ?. => If firstHole not null then...
+		while (IsFileLocked(firstHole) || IsFileLocked(thirdHole));
 		firstHole?.MoveTo(ShootingFolders.Archive1 + firstHole.Name);
 		thirdHole?.MoveTo(ShootingFolders.Archive2 + thirdHole.Name);
 		Status = PacketStatus.Completed;
@@ -115,6 +116,24 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		if (images.Count == 0)
 			return null;
 		return images[0];
+	}
+
+	private bool IsFileLocked(FileInfo? file)
+	{
+		if (file == null) return false;
+		try
+		{
+			using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+			{
+				stream.Close();
+			}
+		}
+		catch (IOException)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	private string ExtractRIDFromName(string fileName)

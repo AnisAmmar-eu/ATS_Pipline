@@ -92,9 +92,9 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 // builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
 // builder.Services.AddSingleton<DailyKPILogService>();
 // builder.Services.AddHostedService(provider => provider.GetRequiredService<DailyKPILogService>());
-builder.Services.AddScoped<IKPITestService, KPITestService>();
-builder.Services.AddSingleton<HourlyKPITestService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyKPITestService>());
+//builder.Services.AddScoped<IKPITestService, KPITestService>();
+//builder.Services.AddSingleton<HourlyKPITestService>();
+//builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyKPITestService>());
 // builder.Services.AddSingleton<MonitorService>();
 // builder.Services.AddHostedService(provider => provider.GetRequiredService<MonitorService>());
 

@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Packets.Services;
 using Core.Shared.Data;
+using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -23,6 +24,9 @@ builder.Services.AddScoped<ILogsService, LogsService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
+
+builder.Services.AddSingleton<AssignService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<AssignService>());
 
 WebApplication app = builder.Build();
 
