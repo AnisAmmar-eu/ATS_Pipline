@@ -5,6 +5,7 @@ using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Shared.Data;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -14,11 +15,12 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 {
 	public Shooting()
 	{
-		Type = "SHOOTING";
+		Type = PacketType.Shooting;
 	}
 
 	public Shooting(DTOShooting dtoShooting) : base(dtoShooting)
 	{
+		Type = PacketType.Shooting;
 		AnodeIDKey = dtoShooting.AnodeIDKey;
 		GlobalStationStatus = dtoShooting.GlobalStationStatus;
 		LedStatus = dtoShooting.LedStatus;
@@ -28,6 +30,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 
 	public Shooting(ShootingStruct adsStruct)
 	{
+		Type = PacketType.Shooting;
 		// TODO
 		// CycleStationRID = adsStruct.CycleStationRID;
 		AnodeIDKey = (int)adsStruct.AnodeIDKey;
@@ -88,13 +91,13 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 			}
 		}
 
-		StationCycle stationCycle = await anodeUOW.StationCycle.GetBy(
+		StationCycle = await anodeUOW.StationCycle.GetBy(
 			new Expression<Func<StationCycle, bool>>[]
 			{
 				stationCycle => stationCycle.RID == rid
 			}, withTracking: false);
-		stationCycle.ShootingPacket = this;
-		stationCycle.ShootingID = ID;
+		StationCycle.ShootingPacket = this;
+		StationCycle.ShootingID = ID;
 		// ?. => If firstHole not null then...
 		while (IsFileLocked(firstHole) || IsFileLocked(thirdHole));
 		firstHole?.MoveTo(ShootingFolders.Archive1 + firstHole.Name);
@@ -103,8 +106,9 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		ShootingTS = (DateTimeOffset)tsFirstImage!;
 		HasError = firstHole == null || thirdHole == null;
 		StationCycleRID = rid!;
-		stationCycle.ShootingStatus = Status;
-		anodeUOW.StationCycle.Update(stationCycle);
+		StationCycle.ShootingStatus = Status;
+		anodeUOW.StationCycle.Update(StationCycle);
+		StationCycle = StationCycle;
 		return ToDTO();
 	}
 

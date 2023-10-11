@@ -1,8 +1,10 @@
 using System.Drawing.Printing;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Services;
+using Core.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -34,10 +36,18 @@ public class AssignService : BackgroundService
 				IPacketService packetService = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
 
 				_logger.LogInformation("AssignService running at: {time}", DateTimeOffset.Now);
+				
 				_logger.LogInformation("AssignService calling Assign");
 				DTOPacket dtoShooting = new DTOShooting();
 				dtoShooting = await packetService.BuildPacket(dtoShooting);
 				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}", dtoShooting.StationCycleRID);
+				
+				_logger.LogInformation("AssignService calling AlarmList");
+				DTOPacket dtoAlarmList = new DTOAlarmList();
+				dtoAlarmList.StationCycleRID = dtoShooting.StationCycleRID;
+				dtoAlarmList.StationCycle = dtoShooting.StationCycle;
+				dtoAlarmList = await packetService.BuildPacket(dtoAlarmList);
+				_logger.LogInformation("AssignService assigned alarmList packet to AnodeRID: {anodeRID}", dtoAlarmList.StationCycleRID);
 
 				_executionCount++;
 				_logger.LogInformation(

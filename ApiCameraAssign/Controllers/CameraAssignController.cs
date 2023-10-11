@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
@@ -25,13 +26,13 @@ public class CameraAssignController : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetAllShootings()
 	{
-		List<DTOPacket> packets;
+		List<DTOShooting> packets;
 		try
 		{
-			packets = await _packetService.GetAll(filters: new Expression<Func<Packet, bool>>[]
+			packets = (await _packetService.GetAll(filters: new Expression<Func<Packet, bool>>[]
 			{
-				packet => packet.Type == "SHOOTING"
-			});
+				packet => packet.Type == PacketType.Shooting
+			})).ConvertAll(packet => packet as DTOShooting)!;
 		}
 		catch (Exception e)
 		{

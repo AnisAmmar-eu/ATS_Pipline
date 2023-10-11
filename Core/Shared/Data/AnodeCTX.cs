@@ -118,28 +118,28 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 		modelBuilder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.AnnouncementPacket)
-			.WithOne()
+			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AnnouncementID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 
 		modelBuilder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.DetectionPacket)
-			.WithOne()
+			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.DetectionID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 
 		modelBuilder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.ShootingPacket)
-			.WithOne()
+			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.ShootingID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 
 		modelBuilder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.AlarmListPacket)
-			.WithOne()
+			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AlarmListID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);

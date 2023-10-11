@@ -18,6 +18,7 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 	public Packet(DTOPacket dto)
 	{
 		StationCycleRID = dto.StationCycleRID;
+		StationCycle = dto.StationCycle;
 		Status = dto.Status;
 		Type = dto.Type;
 		HasError = dto.HasError;

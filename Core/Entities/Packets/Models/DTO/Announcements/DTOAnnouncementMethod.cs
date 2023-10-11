@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -7,6 +8,7 @@ public partial class DTOAnnouncement : DTOPacket, IDTO<Announcement, DTOAnnounce
 {
 	public DTOAnnouncement(Announcement announcement) : base(announcement)
 	{
+		Type = PacketType.Announcement;
 		AnodeType = announcement.AnodeType;
 	}
 }

@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -8,10 +9,12 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 {
 	public Announcement()
 	{
+		Type = PacketType.Announcement;
 	}
 
 	public Announcement(AnnouncementStruct adsStruct)
 	{
+		Type = PacketType.Announcement;
 		// TODO
 		// CycleStationRID = adsStruct.CycleStationRID;
 		// AnodeType = adsStruct.AnodeType;

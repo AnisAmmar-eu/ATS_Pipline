@@ -7,7 +7,6 @@ namespace Core.Entities.Alarms.AlarmsRT.Models.DB;
 
 public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 {
-	private AlarmC? _alarm;
 	public string IRID { get; set; }
 	public int AlarmID { get; set; }
 	public string? Station { get; set; }
@@ -16,9 +15,15 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 	public DateTimeOffset TSRaised { get; set; }
 	public DateTimeOffset? TSClear { get; set; }
 
+	#region Nav Properties
+
+	private AlarmC? _alarm;
+
 	public AlarmC Alarm
 	{
 		set => _alarm = value;
 		get => _alarm ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Alarm));
 	}
+
+	#endregion
 }

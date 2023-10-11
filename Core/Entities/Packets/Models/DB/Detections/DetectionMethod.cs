@@ -9,6 +9,7 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 {
 	public Detection()
 	{
+		Type = PacketType.Detection;
 	}
 
 	public Detection(DetectionStruct detectionStruct)

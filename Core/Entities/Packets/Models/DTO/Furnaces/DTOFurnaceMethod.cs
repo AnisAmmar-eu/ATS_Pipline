@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Furnaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -7,5 +8,6 @@ public partial class DTOFurnace : DTOPacket, IDTO<Furnace, DTOFurnace>
 {
 	public DTOFurnace(Furnace furnace) : base(furnace)
 	{
+		Type = PacketType.Furnace;
 	}
 }

@@ -997,8 +997,14 @@ namespace Core.Migrations
                     b.Property<int>("PalletSide")
                         .HasColumnType("int");
 
+                    b.Property<int?>("StationCycleID")
+                        .HasColumnType("int")
+                        .HasColumnName("InFurnace_StationCycleID");
+
                     b.Property<DateTimeOffset?>("TSLoad")
                         .HasColumnType("datetimeoffset");
+
+                    b.HasIndex("StationCycleID");
 
                     b.HasDiscriminator().HasValue("InFurnace");
                 });
@@ -1010,11 +1016,16 @@ namespace Core.Migrations
                     b.Property<int>("FTAPickUp")
                         .HasColumnType("int");
 
+                    b.Property<int?>("StationCycleID")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset?>("TSCentralConveyor")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("TSUnpackPIT")
                         .HasColumnType("datetimeoffset");
+
+                    b.HasIndex("StationCycleID");
 
                     b.HasDiscriminator().HasValue("OutFurnace");
                 });
@@ -1135,22 +1146,22 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.StationCycle", b =>
                 {
                     b.HasOne("Core.Entities.Packets.Models.DB.AlarmLists.AlarmList", "AlarmListPacket")
-                        .WithOne()
+                        .WithOne("StationCycle")
                         .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "AlarmListID")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.Announcements.Announcement", "AnnouncementPacket")
-                        .WithOne()
+                        .WithOne("StationCycle")
                         .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "AnnouncementID")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.Detections.Detection", "DetectionPacket")
-                        .WithOne()
+                        .WithOne("StationCycle")
                         .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "DetectionID")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.Shootings.Shooting", "ShootingPacket")
-                        .WithOne()
+                        .WithOne("StationCycle")
                         .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "ShootingID")
                         .OnDelete(DeleteBehavior.NoAction);
 
@@ -1236,6 +1247,24 @@ namespace Core.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Furnaces.InFurnaces.InFurnace", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.StationCycle", "StationCycle")
+                        .WithMany()
+                        .HasForeignKey("StationCycleID");
+
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces.OutFurnace", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.StationCycle", "StationCycle")
+                        .WithMany()
+                        .HasForeignKey("StationCycleID");
+
+                    b.Navigation("StationCycle");
+                });
+
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsC.Models.DB.AlarmC", b =>
                 {
                     b.Navigation("AlarmLogs");
@@ -1264,6 +1293,23 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.AlarmLists.AlarmList", b =>
                 {
                     b.Navigation("AlarmCycles");
+
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Announcements.Announcement", b =>
+                {
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Detections.Detection", b =>
+                {
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Packets.Models.DB.Shootings.Shooting", b =>
+                {
+                    b.Navigation("StationCycle");
                 });
 #pragma warning restore 612, 618
         }
