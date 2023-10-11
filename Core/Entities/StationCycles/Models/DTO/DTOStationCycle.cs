@@ -12,7 +12,7 @@ namespace Core.Entities.StationCycles.Models.DTO;
 
 public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>
 {
-	public AnodeType AnodeType { get; set; }
+	public string AnodeType { get; set; }
 	public int? AnnounceID { get; set; } // Different from AnnouncementPacket
 	public string RID { get; set; }
 	public string Status { get; set; } = CycleStatus.Initialized;
