@@ -4,6 +4,12 @@ using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.ExtTags.Models.DB;
+using Core.Entities.IOT.IOTDevices.Models.DB;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
+using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
+using Core.Entities.IOT.IOTDevices.Models.DB.OTRockwells;
+using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.KPI.KPICs.Models.DB;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
@@ -64,6 +70,14 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	// StationCycle
 	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
+	
+	// IOT Monitoring
+	public DbSet<IOTDevice> IOTDevice => Set<IOTDevice>();
+	public DbSet<OTCamera> OTCamera => Set<OTCamera>();
+	public DbSet<OTTwinCat> OTTwinCat => Set<OTTwinCat>();
+	public DbSet<ITApi> ItApi => Set<ITApi>();
+	public DbSet<OTRockwell> OTRockwell => Set<OTRockwell>();
+	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 
 	// KPI
 	public DbSet<KPIC> KPIC => Set<KPIC>();
@@ -159,5 +173,10 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.OutFurnaceID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<IOTDevice>()
+			.HasMany(iotDevice => iotDevice.IOTTags)
+			.WithOne(iotTag => iotTag.IOTDevice)
+			.HasForeignKey(iotTag => iotTag.IOTDeviceID);
 	}
 }

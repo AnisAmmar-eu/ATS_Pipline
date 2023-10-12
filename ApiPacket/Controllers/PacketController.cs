@@ -20,6 +20,12 @@ public class PacketController : ControllerBase
 		_logsService = logsService;
 	}
 
+	[HttpGet("status")]
+	public async Task<IActionResult> GetStatus()
+	{
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
 	[HttpPost("alarms")]
 	public async Task<IActionResult> BuildAlarmPacket([FromBody] DTOAlarmList dtoAlarmList)
 	{

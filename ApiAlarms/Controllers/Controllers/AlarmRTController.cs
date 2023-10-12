@@ -1,5 +1,6 @@
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Services;
+using Core.Entities.IOT.IOTDevices.Services;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,20 @@ public class AlarmRTController : ControllerBase
 {
 	private readonly IAlarmRTService _alarmRTService;
 	private readonly ILogsService _logsService;
+	private readonly IIOTDeviceService _iotDeviceService;
 
-	public AlarmRTController(IAlarmRTService alarmRTService, ILogsService logsService)
+	public AlarmRTController(IAlarmRTService alarmRTService, ILogsService logsService, IIOTDeviceService iotDeviceService)
 	{
 		_alarmRTService = alarmRTService;
 		_logsService = logsService;
+		_iotDeviceService = iotDeviceService;
+	}
+
+	[HttpGet("aa")]
+	public async Task<IActionResult> Aaaaa()
+	{
+		await _iotDeviceService.CheckAllConnectionsAndUpdateTags();
+		return new ApiResponseObject().SuccessResult();
 	}
 
 	/// <summary>

@@ -4,6 +4,8 @@ using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.ExtTags.Repositories;
+using Core.Entities.IOT.IOTDevices.Repositories;
+using Core.Entities.IOT.IOTTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
 using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
@@ -41,6 +43,10 @@ public interface IAnodeUOW : IDisposable
 
 	// Params
 	ICameraParamRepository CameraParam { get; }
+	
+	// IOT
+	IIOTDeviceRepository IOTDevice { get; }
+	IIOTTagRepository IOTTag { get;  }
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
