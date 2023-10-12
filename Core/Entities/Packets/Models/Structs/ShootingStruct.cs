@@ -6,7 +6,7 @@ namespace Core.Entities.Packets.Models.Structs;
 
 public struct ShootingStruct : IBaseADS<Packet, ShootingStruct> // TODO Not in list variables
 {
-	public uint CycleStationRID;
+	public RIDStruct StationCycleRID;
 	public uint AnodeIDKey;
 	public string GlobalStationStatus; // TODO Dictionary?
 	public uint ProcedurePerformance; // TODO int?

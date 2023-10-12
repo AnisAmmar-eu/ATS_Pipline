@@ -6,10 +6,13 @@ namespace Core.Entities.Packets.Models.Structs;
 
 public struct OutFurnaceStruct : IBaseADS<Packet, OutFurnaceStruct>
 {
-	public uint CycleStationRID;
-	public uint TSUnpackPIT; // TSUnpackingOfPIT
-	public uint TSCentralConveyor; // TSWhenAnodeInOutletCentralConveyor
-	public uint FTAPickUp; // FTAPickUpFromPIT
+	public RIDStruct StationCycleRID;
+	public uint AnnounceID;
+
+	public uint FTAPickUp;
+	public TimestampStruct TSPickUp;
+	public TimestampStruct TSDeposit;
+	public uint InvalidPacket;
 
 	public Packet ToModel()
 	{

@@ -13,7 +13,7 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 	public OutFurnace(OutFurnaceStruct adsStruct)
 	{
 		// TODO
-		// CycleStationRID = adsStruct.CycleStationRID
+		StationCycleRID = adsStruct.StationCycleRID.ToRID();
 		// TSUnpackPIT = adsStruct.TSUnpackPIT;
 		// TSCentralConveyor = adsStruct.TSCentralConveyor;
 		FTAPickUp = (int)adsStruct.FTAPickUp;

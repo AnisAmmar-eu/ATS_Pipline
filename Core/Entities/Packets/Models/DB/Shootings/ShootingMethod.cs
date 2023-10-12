@@ -25,14 +25,13 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		GlobalStationStatus = dtoShooting.GlobalStationStatus;
 		LedStatus = dtoShooting.LedStatus;
 		ProcedurePerformance = dtoShooting.ProcedurePerformance;
-		ShootingTS = dtoShooting.ShootingTS;
+		TSShooting = dtoShooting.ShootingTS;
 	}
 
 	public Shooting(ShootingStruct adsStruct)
 	{
 		Type = PacketType.Shooting;
-		// TODO
-		// CycleStationRID = adsStruct.CycleStationRID;
+		StationCycleRID = adsStruct.StationCycleRID.ToRID();
 		AnodeIDKey = (int)adsStruct.AnodeIDKey;
 		GlobalStationStatus = adsStruct.GlobalStationStatus;
 		ProcedurePerformance = (int)adsStruct.ProcedurePerformance;
@@ -103,7 +102,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		firstHole?.MoveTo(ShootingFolders.Archive1 + firstHole.Name);
 		thirdHole?.MoveTo(ShootingFolders.Archive2 + thirdHole.Name);
 		Status = PacketStatus.Completed;
-		ShootingTS = (DateTimeOffset)tsFirstImage!;
+		TSShooting = (DateTimeOffset)tsFirstImage!;
 		HasError = firstHole == null || thirdHole == null;
 		StationCycleRID = rid!;
 		StationCycle.ShootingStatus = Status;

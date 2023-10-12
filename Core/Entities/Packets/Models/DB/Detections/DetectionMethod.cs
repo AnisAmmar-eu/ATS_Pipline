@@ -15,10 +15,10 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 	public Detection(DetectionStruct detectionStruct)
 	{
 		Type = PacketType.Detection;
-		//CycleStationRID = detectionStruct.CycleStationRID; // TODO will be a struct
+		StationCycleRID = detectionStruct.StationCycleRID.ToRID(); // TODO will be a struct
 		// MeasuredType = detectionStruct.MeasuredType; // TODO How will it be returned?
-		IsMismatched = detectionStruct.IsMismatched;
-		AnodeSize = detectionStruct.AnodeSize;
+		// IsMismatched = detectionStruct.IsMismatched;
+		// AnodeSize = detectionStruct.AnodeSize;
 	}
 
 	public override DTODetection ToDTO()

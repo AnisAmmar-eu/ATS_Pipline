@@ -6,18 +6,22 @@ namespace Core.Entities.Packets.Models.Structs;
 
 public struct InFurnaceStruct : IBaseADS<Packet, InFurnaceStruct>
 {
-	public uint CycleStationRID;
-	public uint OriginID;
-	public uint AnodePosition; // AnodePositionInThePackOf7
+	public RIDStruct StationCycleRID;
+	public uint AnnounceID;
+	
+	public uint IdOrigin; // TODO OriginID?
+	public uint PackPosition; // AnodePositionInThePackOf7
 	public uint PalletSide;
-	public uint PITNumber;
-	public uint PITSectionNumber;
-	public uint PITHeight;
-	public uint FTAinPIT;
-	public uint GreenPosition;
-	public uint BakedPosition;
-	public uint FTASuckPit;
-	public uint TSLoad;
+	public uint PitNumber;
+	public uint PitSectionNumber;
+	public uint PitHeight;
+	
+	public uint FTAPlace;
+	public uint FTASuck;
+	
+	public uint GreenConvPos;
+	public uint BakedConvPos;
+	public TimestampStruct PitLoadTS;
 
 	public Packet ToModel()
 	{

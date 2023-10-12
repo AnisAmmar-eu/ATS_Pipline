@@ -9,5 +9,5 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	public string GlobalStationStatus { get; set; } // TODO Dictionary ?
 	public string LedStatus { get; set; } // TODO Dictionary ?
 	public int ProcedurePerformance { get; set; } // TODO int ?
-	public DateTimeOffset ShootingTS { get; set; } // TSWhenAnodeIsShot
+	public DateTimeOffset TSShooting { get; set; } // TSWhenAnodeIsShot
 }

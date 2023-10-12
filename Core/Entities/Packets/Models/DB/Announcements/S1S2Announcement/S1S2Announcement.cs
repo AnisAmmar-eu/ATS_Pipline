@@ -5,6 +5,6 @@ namespace Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 
 public partial class S1S2Announcement : Announcement, IBaseEntity<S1S2Announcement, DTOS1S2Announcement>
 {
-	public int SerialNumber { get; set; }
+	public string SerialNumber { get; set; }
 	public int TrolleyNumber { get; set; }
 }
