@@ -11,8 +11,5 @@ public partial class DTOS1S2Cycle : DTOStationCycle, IDTO<S1S2Cycle, DTOS1S2Cycl
 
 	public DTOS1S2Cycle(S1S2Cycle s1S2Cycle)
 	{
-		AnnouncementStatus2 = s1S2Cycle.AnnouncementStatus2;
-		AnnouncementID2 = s1S2Cycle.AnnouncementID2;
-		AnnouncementPacket2 = s1S2Cycle.AnnouncementPacket2.ToDTO();
 	}
 }

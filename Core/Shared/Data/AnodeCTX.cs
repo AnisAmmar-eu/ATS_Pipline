@@ -20,6 +20,8 @@ using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.Parameters.CameraParams.Models.DB;
 using Core.Entities.ServicesMonitors.Models.DB;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
@@ -141,6 +143,20 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasOne(stationCycle => stationCycle.AlarmListPacket)
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AlarmListID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<S3S4Cycle>()
+			.HasOne(s3S4Cycle => s3S4Cycle.InFurnacePacket)
+			.WithOne(packet => packet.StationCycle as S3S4Cycle)
+			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.InFurnaceID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<S3S4Cycle>()
+			.HasOne(s3S4Cycle => s3S4Cycle.OutFurnacePacket)
+			.WithOne(packet => packet.StationCycle as S3S4Cycle)
+			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.OutFurnaceID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 	}

@@ -16,25 +16,24 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 		TS = stationCycle.TS;
 
 		AnodeType = stationCycle.AnodeType;
-		AnnounceID = stationCycle.AnnounceID;
 		RID = stationCycle.RID;
 		Status = stationCycle.Status;
 		TSClosed = stationCycle.TSClosed;
 
 		AnnouncementStatus = stationCycle.AnnouncementStatus;
 		AnnouncementID = stationCycle.AnnouncementID;
-		AnnouncementPacket = stationCycle.AnnouncementPacket.ToDTO();
+		AnnouncementPacket = stationCycle.AnnouncementPacket?.ToDTO();
 
 		DetectionStatus = stationCycle.DetectionStatus;
 		DetectionID = stationCycle.DetectionID;
-		DetectionPacket = stationCycle.DetectionPacket.ToDTO();
+		DetectionPacket = stationCycle.DetectionPacket?.ToDTO();
 
 		ShootingStatus = stationCycle.ShootingStatus;
 		ShootingID = stationCycle.ShootingID;
-		ShootingPacket = stationCycle.ShootingPacket.ToDTO();
+		ShootingPacket = stationCycle.ShootingPacket?.ToDTO();
 
 		AlarmListStatus = stationCycle.AlarmListStatus;
 		AlarmListID = stationCycle.AlarmListID;
-		AlarmListPacket = stationCycle.AlarmListPacket.ToDTO();
+		AlarmListPacket = stationCycle.AlarmListPacket?.ToDTO();
 	}
 }

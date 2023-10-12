@@ -9,7 +9,16 @@ public partial class DTOS3S4Cycle : DTOStationCycle, IDTO<S3S4Cycle, DTOS3S4Cycl
 	{
 	}
 
-	public DTOS3S4Cycle(S3S4Cycle s3S4Cycle)
+	public DTOS3S4Cycle(S3S4Cycle s3S4Cycle) : base(s3S4Cycle)
 	{
+		AnnounceID = s3S4Cycle.AnnounceID;
+
+		InFurnaceStatus = s3S4Cycle.InFurnaceStatus;
+		InFurnaceID = s3S4Cycle.InFurnaceID;
+		InFurnacePacket = s3S4Cycle.InFurnacePacket?.ToDTO();
+
+		OutFurnaceStatus = s3S4Cycle.OutFurnaceStatus;
+		OutFurnaceID = s3S4Cycle.OutFurnaceID;
+		OutFurnacePacket = s3S4Cycle.OutFurnacePacket?.ToDTO();
 	}
 }
