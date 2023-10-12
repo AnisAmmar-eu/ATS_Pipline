@@ -76,8 +76,6 @@ builder.Services.AddScoped<IAlarmPLCService, AlarmPLCService>();
 
 builder.Services.AddScoped<IPacketService, PacketService>();
 
-builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
-
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 

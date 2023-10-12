@@ -13,20 +13,11 @@ public class AlarmRTController : ControllerBase
 {
 	private readonly IAlarmRTService _alarmRTService;
 	private readonly ILogsService _logsService;
-	private readonly IIOTDeviceService _iotDeviceService;
 
-	public AlarmRTController(IAlarmRTService alarmRTService, ILogsService logsService, IIOTDeviceService iotDeviceService)
+	public AlarmRTController(IAlarmRTService alarmRTService, ILogsService logsService)
 	{
 		_alarmRTService = alarmRTService;
 		_logsService = logsService;
-		_iotDeviceService = iotDeviceService;
-	}
-
-	[HttpGet("aa")]
-	public async Task<IActionResult> Aaaaa()
-	{
-		await _iotDeviceService.CheckAllConnectionsAndUpdateTags();
-		return new ApiResponseObject().SuccessResult();
 	}
 
 	/// <summary>
