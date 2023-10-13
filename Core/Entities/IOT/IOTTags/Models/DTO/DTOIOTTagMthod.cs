@@ -12,6 +12,8 @@ public partial class DTOIOTTag : DTOBaseEntity, IDTO<IOTTag, DTOIOTTag>
 
 	public DTOIOTTag(IOTTag iotTag)
 	{
+		ID = iotTag.ID;
+		TS = iotTag.TS;
 		RID = iotTag.RID;
 		Name = iotTag.Name;
 		Description = iotTag.Description;

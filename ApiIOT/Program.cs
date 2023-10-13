@@ -1,10 +1,12 @@
 using Core.Entities.IOT.IOTDevices.Services;
-using Core.Entities.Parameters.CameraParams.Services;
+using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Data;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -15,30 +17,36 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
-	options.UseSqlServer(connectionString));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddScoped<ILogsService, LogsService>();
-builder.Services.AddScoped<ICameraParamService, CameraParamService>();
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
+builder.Services.AddScoped<IIOTTagService, IOTTagService>();
+
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
-
 app.UseSwagger();
 app.UseSwaggerUI();
 
+string? clientHost = builder.Configuration["ClientHost"];
+
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
+	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+	.AllowAnyHeader()
+	.AllowCredentials());
+
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

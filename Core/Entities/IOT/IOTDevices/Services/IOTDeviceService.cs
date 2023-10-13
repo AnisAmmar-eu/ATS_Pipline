@@ -1,6 +1,8 @@
+using System.Linq.Expressions;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Repositories;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -12,9 +14,27 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	{
 	}
 
-	public async Task CheckAllConnectionsAndUpdateTags()
+
+	public async Task<List<DTOIOTDevice>> GetAllWithIncludes()
+	{
+		return (await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: "IOTTags")).ConvertAll(device =>
+			device.ToDTO());
+	}
+	public async Task<DTOIOTDevice> GetByRIDWithIncludes(string rid)
+	{
+		return (await AnodeUOW.IOTDevice.GetBy(filters: new Expression<Func<IOTDevice, bool>>[]
+		{
+			device => device.RID == rid
+		}, withTracking: false, includes: new []{"IOTTags"})).ToDTO();
+	}
+
+	public async Task CheckAllConnectionsAndApplyTags()
 	{
 		List<IOTDevice> devices = await CheckAllConnections();
+		await AnodeUOW.StartTransaction();
+		IEnumerable<Task> tasks = devices.Select(async device => await device.ApplyTags(AnodeUOW));
+		await Task.WhenAll(tasks);
+		await AnodeUOW.CommitTransaction();
 	}
 
 	/// <summary>

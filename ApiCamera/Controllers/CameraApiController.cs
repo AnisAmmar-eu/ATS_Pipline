@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.Parameters.CameraParams.Models.DTO;
 using Core.Entities.Parameters.CameraParams.Services;
 using Core.Shared.Models.HttpResponse;
@@ -16,12 +17,21 @@ namespace ApiCamera.Controllers;
 public class CameraApiController : ControllerBase
 {
 	private readonly ICameraParamService _cameraParamService;
+	private readonly IIOTDeviceService _iotDeviceService;
 	private readonly ILogsService _logsService;
 
-	public CameraApiController(ICameraParamService cameraParamService, ILogsService logsService)
+	public CameraApiController(ICameraParamService cameraParamService, ILogsService logsService, IIOTDeviceService iotDeviceService)
 	{
 		_cameraParamService = cameraParamService;
 		_logsService = logsService;
+		_iotDeviceService = iotDeviceService;
+	}
+
+	[HttpGet("AAAAAAAAAAAAAAA")]
+	public async Task<IActionResult> TagStuffTest()
+	{
+		await _iotDeviceService.CheckAllConnectionsAndApplyTags();
+		return new ApiResponseObject().SuccessResult();
 	}
 
 	#region Get/Set Device Info
