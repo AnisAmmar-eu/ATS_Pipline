@@ -90,7 +90,8 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 		params string[] includes
 	)
 	{
-		T? t = await Query(filters, null, withTracking).FirstOrDefaultAsync();
+		T? t = await Query(filters, null, withTracking,
+				includes: new Dictionary<string, string[]> { { "", includes } }).FirstOrDefaultAsync();
 		if (t == null)
 			throw new EntityNotFoundException(typeof(T).Name + " not found");
 
