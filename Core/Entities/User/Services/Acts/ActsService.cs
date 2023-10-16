@@ -489,58 +489,6 @@ public class ActsService : IActsService
 		return false;
 	}
 
-	/// <summary>
-	///     Get all users email from an actionEntity
-	/// </summary>
-	/// <param name="dtoActEntity"></param>
-	/// <returns>All the emails</returns>
-	public async Task<List<string>> GetAllEmailsByActionEntity(DTOActEntity dtoActEntity)
-	{
-		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID,
-			dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
-
-		ActEntity actEntity;
-
-		try
-		{
-			actEntity = await _unitOfWork.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID,
-				dtoActEntity.ParentID);
-		}
-		catch (Exception e)
-		{
-			if (e is not EntityNotFoundException)
-				throw;
-
-			// Return all the users email if there is no actEntity because no specific users has been assigned
-			// Change this line with an empty list if we want that no one receive an email when no specific user is assigned
-			return await _usersManager.Users.Select(u => u.Email).ToListAsync();
-		}
-
-		List<string> emails = new();
-
-		foreach (ActEntityRole actEntityRole in actEntity.ActEntityRoles)
-			if (actEntityRole.ApplicationType == ApplicationTypeRID.ROLE)
-			{
-				ApplicationRole? role = await _rolesManager.FindByIdAsync(actEntityRole.ApplicationID);
-
-				if (role != null)
-				{
-					IList<ApplicationUser> users = await _usersManager.GetUsersInRoleAsync(role.Name);
-
-					foreach (ApplicationUser user in users)
-						emails.Add(user.Email);
-				}
-			}
-			else if (actEntityRole.ApplicationType == ApplicationTypeRID.USER)
-			{
-				ApplicationUser? user = await _usersManager.FindByIdAsync(actEntityRole.ApplicationID);
-
-				if (user != null) emails.Add(user.Email);
-			}
-
-		return emails.Distinct().ToList();
-	}
-
 	private string GenerateActionToken(HttpContext httpContext, ActEntity actEntity)
 	{
 		// Set claims list to add in the token

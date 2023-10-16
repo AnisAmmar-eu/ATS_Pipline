@@ -38,14 +38,10 @@ public class AuthService : IAuthService
 	/// <exception cref="EntityNotFoundException"></exception>
 	public async Task Register(DTORegister dtoRegister)
 	{
-		if (dtoRegister.Username == null || dtoRegister.Email == null)
+		if (dtoRegister.Username == null)
 			throw new EntityNotFoundException("Empty values.");
 
-		ApplicationUser? user = await _userManager.FindByEmailAsync(dtoRegister.Email);
-		if (user != null)
-			throw new EntityNotFoundException("Email already used.");
-
-		user = await _userManager.FindByNameAsync(dtoRegister.Username);
+		ApplicationUser? user = await _userManager.FindByNameAsync(dtoRegister.Username);
 		if (user != null)
 			throw new EntityNotFoundException("Username already used.");
 
@@ -130,7 +126,7 @@ public class AuthService : IAuthService
 	}
 
 	/// <summary>
-	///     Verify email and password + generate a token valid for 3 hours
+	///     Verify password + generate a token valid for 3 hours
 	/// </summary>
 	/// <param name="model"></param>
 	/// <returns></returns>
@@ -227,7 +223,7 @@ public class AuthService : IAuthService
 	}
 
 	/// <summary>
-	///     Verify email and password + generate a token valid for 3 hours
+	///     Verify password + generate a token valid for 3 hours
 	/// </summary>
 	/// <param name="model"></param>
 	/// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>

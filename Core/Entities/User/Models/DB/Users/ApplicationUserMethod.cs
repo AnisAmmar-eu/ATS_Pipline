@@ -16,7 +16,6 @@ public partial class ApplicationUser : IdentityUser
 	public ApplicationUser(DTORegister dto)
 	{
 		UserName = dto.Username;
-		Email = dto.Email;
 		Firstname = dto.Firstname;
 		Lastname = dto.Lastname;
 		IsEkium = true;
@@ -28,7 +27,6 @@ public partial class ApplicationUser : IdentityUser
 		UserName = userData.SamAccountName;
 		Lastname = userData.Surname;
 		Firstname = userData.GivenName;
-		Email = userData.EmailAddress;
 		Source = SourceAuth.AD;
 	}
 

@@ -18,5 +18,4 @@ public interface IActsService
 	Task<bool> DuplicateActionEntities(DTOActEntityToValid dtoActToDuplicate, DTOActEntityToValid dtoAct);
 	Task<string> HasRights(HttpContext httpContext, DTOActEntityToValid dtoActEntityToValid);
 	bool ValidActionToken(HttpContext httpContext, List<DTOActEntityToValid> dtoActEntitiesToValid);
-	Task<List<string>> GetAllEmailsByActionEntity(DTOActEntity dtoActEntity);
 }

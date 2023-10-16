@@ -106,26 +106,6 @@ public class UsersService : IUsersService
 	}
 
 	/// <summary>
-	///     Get a user email by its username
-	/// </summary>
-	/// <param name="username"></param>
-	/// <returns>A <see cref="string" /></returns>
-	/// <exception cref="Exception"></exception>
-	public async Task<string> GetEmailByUsername(string username)
-	{
-		string? userEmail = await _userManager.Users
-			.Where(u => u.UserName == username)
-			.AsNoTracking()
-			.Select(u => u.Email)
-			.FirstOrDefaultAsync();
-
-		if (userEmail == null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
-		return userEmail;
-	}
-
-	/// <summary>
 	///     Get all roles of a user
 	/// </summary>
 	/// <param name="username"></param>
@@ -260,17 +240,7 @@ public class UsersService : IUsersService
 
 		string? token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-		IdentityResult? result = await _userManager.ResetPasswordAsync(user, token, newPassword);
-
-		if (result.Succeeded)
-		{
-			// Send an email describing the change of password
-			string url = _configuration["ClientHost"] + "/#/auth/login";
-			await _mailService.SendEmail(user.Email, "Changement de mot de passe",
-				"Bonjour " + user.Firstname +
-				"\n\nVotre mot de passe a été changé.\n\nVous pouvez vous connecter à l'adresse suivante : \n" + url +
-				"\n\nCordialement,\nL'équipe EKIDI");
-		}
+		await _userManager.ResetPasswordAsync(user, token, newPassword);
 	}
 
 	/// <summary>
@@ -292,19 +262,8 @@ public class UsersService : IUsersService
 
 		IdentityResult? result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
-		if (result.Succeeded)
-		{
-			// Send an email describing the change of password
-			string url = _configuration["ClientHost"] + "/#/auth/login";
-			await _mailService.SendEmail(user.Email, "Changement de mot de passe",
-				"Bonjour " + user.Firstname +
-				"\n\nVotre mot de passe a été changé.\n\nVous pouvez vous connecter à l'adresse suivante : \n" + url +
-				"\n\nCordialement,\nL'équipe EKIDI");
-		}
-		else
-		{
+		if (!result.Succeeded)
 			throw new Exception("Current password is incorrect");
-		}
 	}
 
 	/// <summary>
@@ -325,16 +284,7 @@ public class UsersService : IUsersService
 
 		// Generate a random new password
 		string newPassword = Guid.NewGuid().ToString()[..8];
-		IdentityResult? result = await _userManager.ResetPasswordAsync(user, token, newPassword);
-
-		if (result.Succeeded)
-		{
-			// Send an email with this new password
-			string url = _configuration["ClientHost"] + "/#/auth/login";
-			await _mailService.SendEmail(user.Email, "Reinitialisation de mot de passe",
-				"Bonjour " + user.Firstname + "\n\nVotre nouveau mot de passe est : " + newPassword +
-				"\n\nVous pouvez vous connecter à l'adresse suivante : \n" + url + "\n\nCordialement,\nL'équipe EKIDI");
-		}
+		await _userManager.ResetPasswordAsync(user, token, newPassword);
 	}
 
 	/// <summary>

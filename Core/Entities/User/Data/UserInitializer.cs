@@ -42,7 +42,6 @@ public class UserInitializer
 			ApplicationUser newUser = new()
 			{
 				UserName = "ekium-admin",
-				Email = "ekium-admin@admin.com",
 				Firstname = "ekium",
 				Lastname = "admin",
 				IsEkium = true,

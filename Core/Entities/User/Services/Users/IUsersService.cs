@@ -12,7 +12,6 @@ public interface IUsersService
 	Task<DTOUser> Update(string username, DTOUser dtoUser);
 	Task Delete(string username);
 	Task<string> GetIdByUsername(string username);
-	Task<string> GetEmailByUsername(string username);
 	Task<List<DTORole>> GetRolesByUsername(string username);
 	Task<List<ApplicationUser>> GetAllByRole(string roleName);
 	Task<bool> SetAdmin(string username, bool toAdmin);
