@@ -21,7 +21,7 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 	public AlarmList(DTOAlarmList dto) : base(dto)
 	{
 		Type = PacketType.Alarm;
-		AlarmCycles = dto.AlarmList.ToList().ConvertAll(dtoAlarmCycle =>
+		AlarmCycles = dto.AlarmCycles.ToList().ConvertAll(dtoAlarmCycle =>
 		{
 			AlarmCycle alarmCycle = dtoAlarmCycle.ToModel();
 			alarmCycle.AlarmList = this;
@@ -34,9 +34,8 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 		return new DTOAlarmList(this);
 	}
 
-	protected override async Task<DTOPacket> InheritedBuild(IAnodeUOW anodeUOW, DTOPacket dtoPacket)
+	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
-		DTOAlarmList dtoAlarmList = (DTOAlarmList)dtoPacket;
 		List<AlarmRT> alarmRTs = await anodeUOW.AlarmRT.GetAllWithInclude(withTracking: false);
 		foreach (AlarmRT alarmRT in alarmRTs)
 		{
@@ -45,7 +44,7 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 			alarmCycle.AlarmList = this;
 			await anodeUOW.AlarmCycle.Add(alarmCycle);
 			anodeUOW.Commit();
-			dtoAlarmList.AlarmList.Add(alarmCycle.ToDTO());
+			AlarmCycles.Add(alarmCycle);
 		}
 		// StationCycleRID should already be present
 		if (StationCycle == null)
@@ -59,7 +58,5 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 		Status = PacketStatus.Completed;
 		StationCycle.AlarmListStatus = Status;
 		anodeUOW.StationCycle.Update(StationCycle);
-
-		return dtoAlarmList;
 	}
 }

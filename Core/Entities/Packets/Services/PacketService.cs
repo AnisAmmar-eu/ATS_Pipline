@@ -14,14 +14,13 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 	{
 	}
 
-	public async Task<DTOPacket> BuildPacket(DTOPacket dtoPacket)
+	public async Task<DTOPacket> BuildPacket(Packet packet)
 	{
 		await AnodeUOW.StartTransaction();
 
-		Packet packet = dtoPacket.ToModel();
 		await packet.Create(AnodeUOW);
 
-		await packet.Build(AnodeUOW, packet.ToDTO());
+		await packet.Build(AnodeUOW);
 
 		await AnodeUOW.CommitTransaction();
 		return packet.ToDTO();

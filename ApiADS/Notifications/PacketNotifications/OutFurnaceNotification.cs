@@ -1,12 +1,9 @@
-using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.Structs;
-using Core.Entities.Packets.Services;
 using TwinCAT.Ads;
 
-namespace ApiADS.Notifications;
+namespace ApiADS.Notifications.PacketNotifications;
 
-public class OutFurnaceNotification : BaseNotification<IPacketService, Packet, DTOPacket, OutFurnaceStruct>
+public class OutFurnaceNotification : PacketNotification<OutFurnaceStruct>
 {
 	public OutFurnaceNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
 		: base(resultHandle, acquitMsg, newMsg, oldEntry)

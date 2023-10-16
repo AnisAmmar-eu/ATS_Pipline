@@ -1,10 +1,8 @@
-using System.Drawing.Printing;
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.AlarmLists;
-using Core.Entities.Packets.Models.DTO.Shootings;
+using Core.Entities.Packets.Models.DB;
+using Core.Entities.Packets.Models.DB.AlarmLists;
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
-using Core.Migrations;
+using Core.Entities.StationCycles.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -34,20 +32,29 @@ public class AssignService : BackgroundService
 			{
 				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 				IPacketService packetService = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
-
+				IStationCycleService stationCycleService =
+					asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
+					
 				_logger.LogInformation("AssignService running at: {time}", DateTimeOffset.Now);
 				
 				_logger.LogInformation("AssignService calling Assign");
-				DTOPacket dtoShooting = new DTOShooting();
-				dtoShooting = await packetService.BuildPacket(dtoShooting);
-				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}", dtoShooting.StationCycleRID);
+				Packet shooting = new Shooting();
+				await packetService.BuildPacket(shooting);
+				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}", shooting.StationCycleRID);
+				
+				// TODO If StationCycleRID in MeasureStruct, call this BEFORE shooting.
+				_logger.LogInformation("AssignService calling UpdateDetection");
+				if (shooting.StationCycle == null)
+					throw new Exception("Shooting packet did not find a stationCycle for RID: " +
+					                    shooting.StationCycleRID);
+				await stationCycleService.UpdateDetectionWithMeasure(shooting.StationCycle);
 				
 				_logger.LogInformation("AssignService calling AlarmList");
-				DTOPacket dtoAlarmList = new DTOAlarmList();
-				dtoAlarmList.StationCycleRID = dtoShooting.StationCycleRID;
-				dtoAlarmList.StationCycle = dtoShooting.StationCycle;
-				dtoAlarmList = await packetService.BuildPacket(dtoAlarmList);
-				_logger.LogInformation("AssignService assigned alarmList packet to AnodeRID: {anodeRID}", dtoAlarmList.StationCycleRID);
+				Packet alarmList = new AlarmList();
+				alarmList.StationCycleRID = shooting.StationCycleRID;
+				alarmList.StationCycle = shooting.StationCycle;
+				await packetService.BuildPacket(alarmList);
+				_logger.LogInformation("AssignService assigned alarmList packet to AnodeRID: {anodeRID}", alarmList.StationCycleRID);
 
 				_executionCount++;
 				_logger.LogInformation(

@@ -4,7 +4,6 @@ using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DTO;
-using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -12,8 +11,8 @@ namespace Core.Entities.StationCycles.Models.DB;
 
 public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOStationCycle>
 {
-	public string AnodeType { get; set; }
-	public string RID { get; set; }
+	public string AnodeType { get; set; } = string.Empty;
+	public string RID { get; set; } = string.Empty;
 	public string Status { get; set; } = CycleStatus.Initialized;
 	public DateTimeOffset? TSClosed { get; set; }
 

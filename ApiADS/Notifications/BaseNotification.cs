@@ -76,8 +76,7 @@ public class
 
 		try
 		{
-			TService serviceAds = services.GetRequiredService<TService>();
-			await serviceAds.Add(entity);
+			await AddElement(services, entity);
 			tcClient.WriteAny(_acquitMsg, Utils.FinishedReading);
 		}
 		catch
@@ -85,5 +84,11 @@ public class
 			// Retry
 			tcClient.WriteAny(_acquitMsg, Utils.ErrorWhileReading);
 		}
+	}
+	
+	protected virtual async Task AddElement(IServiceProvider services, T entity)
+	{
+			TService serviceAds = services.GetRequiredService<TService>();
+			await serviceAds.Add(entity);
 	}
 }

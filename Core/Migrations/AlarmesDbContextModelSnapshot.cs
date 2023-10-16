@@ -202,60 +202,6 @@ namespace Core.Migrations
                     b.ToTable("AlarmRT");
                 });
 
-            modelBuilder.Entity("Core.Entities.ExtTags.Models.DB.ExtTag", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("CurrentValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("HasNewValue")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsReadOnly")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NewValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ServiceID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("ValueType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ServiceID");
-
-                    b.ToTable("ExtTag");
-                });
-
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>
                 {
                     b.Property<int>("ID")
@@ -313,6 +259,10 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("HasNewValue")
                         .HasColumnType("bit");
 
@@ -343,6 +293,8 @@ namespace Core.Migrations
                     b.HasIndex("IOTDeviceID");
 
                     b.ToTable("IOTTag");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IOTTag");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPICs.Models.DB.KPIC", b =>
@@ -558,41 +510,6 @@ namespace Core.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("CameraParam");
-                });
-
-            modelBuilder.Entity("Core.Entities.ServicesMonitors.Models.DB.ServicesMonitor", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IPAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsConnected")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("ServicesMonitor");
                 });
 
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.StationCycle", b =>
@@ -1048,6 +965,17 @@ namespace Core.Migrations
                     b.HasDiscriminator().HasValue("OTTwinCat");
                 });
 
+            modelBuilder.Entity("Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat.OTTagTwinCat", b =>
+                {
+                    b.HasBaseType("Core.Entities.IOT.IOTTags.Models.DB.IOTTag");
+
+                    b.Property<string>("ValueType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("OTTagTwinCat");
+                });
+
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.AlarmLists.AlarmList", b =>
                 {
                     b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
@@ -1250,17 +1178,6 @@ namespace Core.Migrations
                     b.Navigation("Alarm");
                 });
 
-            modelBuilder.Entity("Core.Entities.ExtTags.Models.DB.ExtTag", b =>
-                {
-                    b.HasOne("Core.Entities.ServicesMonitors.Models.DB.ServicesMonitor", "Service")
-                        .WithMany("ExtTags")
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Service");
-                });
-
             modelBuilder.Entity("Core.Entities.IOT.IOTTags.Models.DB.IOTTag", b =>
                 {
                     b.HasOne("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", "IOTDevice")
@@ -1433,11 +1350,6 @@ namespace Core.Migrations
                     b.Navigation("LogEntries");
 
                     b.Navigation("RTEntries");
-                });
-
-            modelBuilder.Entity("Core.Entities.ServicesMonitors.Models.DB.ServicesMonitor", b =>
-                {
-                    b.Navigation("ExtTags");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>

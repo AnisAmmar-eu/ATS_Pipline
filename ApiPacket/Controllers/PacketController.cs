@@ -26,7 +26,7 @@ public class PacketController : ControllerBase
 		DTOPacket result;
 		try
 		{
-			result = await _packetService.BuildPacket(dtoAlarmList);
+			result = await _packetService.BuildPacket(dtoAlarmList.ToModel());
 		}
 		catch (Exception e)
 		{

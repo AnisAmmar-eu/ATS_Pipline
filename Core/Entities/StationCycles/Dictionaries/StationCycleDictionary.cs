@@ -7,3 +7,9 @@ public class CycleStatus
 	public static string Finished = "Finished";
 	public static string Closed = "Closed";
 }
+
+public class CycleAdsUtils
+{
+	public static int AdsPort = 851;
+	public static string MeasurementVariable = "MAIN.Measure";
+}

@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Services;
@@ -48,7 +49,7 @@ public class CameraAssignController : ControllerBase
 		DTOPacket packet;
 		try
 		{
-			packet = await _packetService.BuildPacket(new DTOShooting());
+			packet = await _packetService.BuildPacket(new Shooting());
 		}
 		catch (Exception e)
 		{

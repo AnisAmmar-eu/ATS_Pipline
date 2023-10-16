@@ -9,6 +9,7 @@ using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTRockwells;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Entities.KPI.KPICs.Models.DB;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
@@ -72,7 +73,8 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<ITApi> ItApi => Set<ITApi>();
 	public DbSet<OTRockwell> OTRockwell => Set<OTRockwell>();
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
-
+	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
+	
 	// KPI
 	public DbSet<KPIC> KPIC => Set<KPIC>();
 	public DbSet<KPILog> KPILog => Set<KPILog>();

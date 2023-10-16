@@ -6,5 +6,5 @@ namespace Core.Entities.Packets.Models.DTO.AlarmLists;
 
 public partial class DTOAlarmList : DTOPacket, IDTO<AlarmList, DTOAlarmList>
 {
-	public ICollection<DTOAlarmCycle> AlarmList { get; set; } = new List<DTOAlarmCycle>();
+	public ICollection<DTOAlarmCycle> AlarmCycles { get; set; } = new List<DTOAlarmCycle>();
 }

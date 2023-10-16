@@ -76,9 +76,9 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 	{
 		return new ResultValue<object>(tag.ValueType switch
 		{
-			_ when tag.ValueType == typeof(int) => await tcClient.ReadAnyAsync<int>(varHandle, cancel),
-			_ when tag.ValueType == typeof(string) => await tcClient.ReadAnyAsync<string>(varHandle, cancel),
-			_ when tag.ValueType == typeof(bool) => await tcClient.ReadAnyAsync<bool>(varHandle, cancel),
+			_ when tag.ValueType == IOTTagType.Int => await tcClient.ReadAnyAsync<int>(varHandle, cancel),
+			_ when tag.ValueType == IOTTagType.String => await tcClient.ReadAnyAsync<string>(varHandle, cancel),
+			_ when tag.ValueType == IOTTagType.Bool => await tcClient.ReadAnyAsync<bool>(varHandle, cancel),
 			_ => throw new InvalidParameterException(Name + " tag has an invalid type for TwinCat")
 		});
 	}
@@ -86,9 +86,9 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 	{
 		return tag.ValueType switch
 		{
-			_ when tag.ValueType == typeof(int) => await tcClient.WriteAnyAsync(varHandle, int.Parse(tag.NewValue), cancel),
-			_ when tag.ValueType == typeof(string) => await tcClient.WriteAnyAsync(varHandle, tag.NewValue, cancel),
-			_ when tag.ValueType == typeof(bool) => await tcClient.WriteAnyAsync(varHandle, bool.Parse(tag.NewValue), cancel),
+			_ when tag.ValueType == IOTTagType.Int => await tcClient.WriteAnyAsync(varHandle, int.Parse(tag.NewValue), cancel),
+			_ when tag.ValueType == IOTTagType.String => await tcClient.WriteAnyAsync(varHandle, tag.NewValue, cancel),
+			_ when tag.ValueType == IOTTagType.Bool => await tcClient.WriteAnyAsync(varHandle, bool.Parse(tag.NewValue), cancel),
 			_ => throw new InvalidParameterException(Name + " tag has an invalid tag.ValueType for TwinCat")
 		};
 	}

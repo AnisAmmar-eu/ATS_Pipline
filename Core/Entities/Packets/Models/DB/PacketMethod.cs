@@ -35,16 +35,16 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 		anodeUOW.Commit();
 	}
 
-	public async Task<DTOPacket> Build(IAnodeUOW anodeUOW, DTOPacket dtoPacket)
+	public async Task<Packet> Build(IAnodeUOW anodeUOW)
 	{
-		dtoPacket = await InheritedBuild(anodeUOW, dtoPacket);
+		await InheritedBuild(anodeUOW);
 		anodeUOW.Packet.Update(this);
 		anodeUOW.Commit();
-		return dtoPacket;
+		return this;
 	}
 
-	protected virtual Task<DTOPacket> InheritedBuild(IAnodeUOW anodeUOW, DTOPacket dtoPacket)
+	protected virtual Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
-		return Task.FromResult(dtoPacket);
+		return Task.CompletedTask;
 	}
 }

@@ -1,11 +1,9 @@
 using System.Globalization;
 using System.Linq.Expressions;
 using Core.Entities.Packets.Dictionaries;
-using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Shared.Data;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -45,7 +43,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		return new DTOShooting(this);
 	}
 
-	protected override async Task<DTOPacket> InheritedBuild(IAnodeUOW anodeUOW, DTOPacket dtoPacket)
+	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
 		DirectoryInfo directory1 = new(ShootingFolders.Camera1);
 		DirectoryInfo directory2 = new(ShootingFolders.Camera2);
@@ -58,10 +56,9 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		FileInfo? thirdHole = null;
 		DateTimeOffset? tsFirstImage = null;
 		string rid = string.Empty;
-		while (firstHole == null || thirdHole == null)
+		while ((firstHole == null || thirdHole == null)
+		       && (tsFirstImage == null || DateTimeOffset.Now - tsFirstImage <= TimeSpan.FromSeconds(30)))
 		{
-			if (tsFirstImage != null && DateTimeOffset.Now - tsFirstImage > TimeSpan.FromSeconds(30))
-				break;
 			if (firstHole == null)
 			{
 				firstHole = GetImageInDirectory(directory1, rid);
@@ -108,7 +105,6 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		StationCycle.ShootingStatus = Status;
 		anodeUOW.StationCycle.Update(StationCycle);
 		StationCycle = StationCycle;
-		return ToDTO();
 	}
 
 	private FileInfo? GetImageInDirectory(DirectoryInfo directory, string rid)
