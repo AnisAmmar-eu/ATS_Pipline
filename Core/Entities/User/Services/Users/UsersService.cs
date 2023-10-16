@@ -178,7 +178,6 @@ public class UsersService : IUsersService
 		user.UserName = dtoUser.Username;
 		user.Firstname = dtoUser.Firstname;
 		user.Lastname = dtoUser.Lastname;
-		user.Email = dtoUser.Email;
 		//user.PhoneNumber = dtoUser.Phonenumber;
 
 		await _userManager.UpdateAsync(user);

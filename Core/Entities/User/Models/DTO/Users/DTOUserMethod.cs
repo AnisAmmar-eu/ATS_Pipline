@@ -12,7 +12,6 @@ public partial class DTOUser
 	public DTOUser(ApplicationUser user)
 	{
 		Username = user.UserName;
-		Email = user.Email;
 		Firstname = user.Firstname;
 		Lastname = user.Lastname;
 	}
