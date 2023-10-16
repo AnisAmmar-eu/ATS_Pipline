@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Packets.Services;
+using Core.Entities.StationCycles.Services;
 using Core.Shared.Data;
 using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
@@ -22,6 +23,7 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 builder.Services.AddScoped<ILogsService, LogsService>();
 
 builder.Services.AddScoped<IPacketService, PacketService>();
+builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 

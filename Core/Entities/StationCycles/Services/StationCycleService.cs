@@ -10,7 +10,8 @@ using TwinCAT.Ads;
 
 namespace Core.Entities.StationCycles.Services;
 
-public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, StationCycle, DTOStationCycle>
+public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, StationCycle, DTOStationCycle>,
+	IStationCycleService
 {
 	public StationCycleService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
@@ -18,14 +19,16 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)
 	{
-		if (stationCycle.DetectionPacket == null)
+		if (stationCycle.DetectionID == null)
 			throw new InvalidOperationException("Staion cycle with RID: " + stationCycle.RID +
 			                                    " does not have a detection packet for measurement");
-		Detection detection = stationCycle.DetectionPacket;
+		Detection detection = (await AnodeUOW.Packet.GetById((int)stationCycle.DetectionID) as Detection)!;
+		// TODO Read variable
+		/*
 		AdsClient tcClient = new();
 		while (!tcClient.IsConnected)
 			tcClient.Connect(CycleAdsUtils.AdsPort);
-		// TODO Read variable
+			*/
 		// temp
 		detection.MeasuredType = AnodeTypeDict.D20;
 		stationCycle.AnodeType = detection.MeasuredType;
