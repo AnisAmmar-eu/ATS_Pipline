@@ -1,3 +1,4 @@
+using ApiCamera.Utils;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.Parameters.CameraParams.Services;
 using Core.Shared.Data;
@@ -21,7 +22,6 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ILogsService, LogsService>();
-builder.Services.AddScoped<ICameraParamService, CameraParamService>();
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 

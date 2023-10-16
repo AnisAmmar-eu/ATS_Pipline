@@ -5,11 +5,8 @@ using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.KPI.KPICs.Services;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
-using Core.Entities.KPI.KPITests.Services;
 using Core.Entities.Packets.Services;
-using Core.Entities.ServicesMonitors.Services;
 using Core.Shared.Data;
-using Core.Shared.Services.Background.KPI.KPIRTs;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
@@ -84,8 +81,6 @@ builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 
-builder.Services.AddScoped<IServicesMonitorService, ServicesMonitorService>();
-
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 // builder.Services.AddSingleton<CollectService>();
@@ -95,10 +90,15 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 //builder.Services.AddScoped<IKPITestService, KPITestService>();
 //builder.Services.AddSingleton<HourlyKPITestService>();
 //builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyKPITestService>());
-// builder.Services.AddSingleton<MonitorService>();
-// builder.Services.AddHostedService(provider => provider.GetRequiredService<MonitorService>());
 
 WebApplication app = builder.Build();
+
+// Initialize
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<AnodeCTX>();
+if (bool.Parse(builder.Configuration["DbInitialize"]) == true)
+	DBInitializer.Initialize(context);
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

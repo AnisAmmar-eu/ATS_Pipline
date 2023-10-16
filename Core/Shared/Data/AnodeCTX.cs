@@ -3,7 +3,6 @@ using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
-using Core.Entities.ExtTags.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
@@ -24,9 +23,7 @@ using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.Parameters.CameraParams.Models.DB;
-using Core.Entities.ServicesMonitors.Models.DB;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
@@ -64,9 +61,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
 	public DbSet<Shooting> Shooting => Set<Shooting>();
 	public DbSet<S3S4Shooting> S3S4Shooting => Set<S3S4Shooting>();
-
-	public DbSet<ExtTag> ExtTag => Set<ExtTag>();
-	public DbSet<ServicesMonitor> ServicesMonitor => Set<ServicesMonitor>();
 
 	// StationCycle
 	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
@@ -112,12 +106,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasMany(alarmListPacket => alarmListPacket.AlarmCycles)
 			.WithOne(alarmCycle => alarmCycle.AlarmList)
 			.HasForeignKey(alarmCycle => alarmCycle.AlarmListPacketID)
-			.IsRequired();
-
-		modelBuilder.Entity<ServicesMonitor>()
-			.HasMany(servicesMonitor => servicesMonitor.ExtTags)
-			.WithOne(extTag => extTag.Service)
-			.HasForeignKey(extTag => extTag.ServiceID)
 			.IsRequired();
 
 		modelBuilder.Entity<KPILog>()

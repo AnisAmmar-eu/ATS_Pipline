@@ -35,9 +35,7 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 
 	public override async Task ApplyTags(IAnodeUOW anodeUOW)
 	{
-		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\\GenICam.vin";
-		Device device = DeviceFactory.Open(driverString);
-		NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
+		NodeMap nodeMap = _device.NodeMaps[NodeMapNames.Device];
 		foreach (IOTTag iotTag in IOTTags)
 		{
 			if (!iotTag.HasNewValue)

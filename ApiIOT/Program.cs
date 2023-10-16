@@ -2,6 +2,7 @@ using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Data;
+using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -27,6 +28,9 @@ builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ILogsService, LogsService>();
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
 builder.Services.AddScoped<IIOTTagService, IOTTagService>();
+
+builder.Services.AddSingleton<IOTService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 

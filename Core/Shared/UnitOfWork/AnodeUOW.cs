@@ -3,7 +3,6 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
-using Core.Entities.ExtTags.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
@@ -12,7 +11,6 @@ using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 using Core.Entities.KPI.KPITests.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.Parameters.CameraParams.Repositories;
-using Core.Entities.ServicesMonitors.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
@@ -53,9 +51,6 @@ public class AnodeUOW : IAnodeUOW
 
 		CameraParam = new CameraParamRepository(_anodeCTX);
 
-		ExtTag = new ExtTagRepository(_anodeCTX);
-		ServicesMonitor = new ServicesMonitorRepository(_anodeCTX);
-
 		IOTDevice = new IOTDeviceRepository(_anodeCTX);
 		IOTTag = new IOTTagRepository(_anodeCTX);
 
@@ -85,8 +80,6 @@ public class AnodeUOW : IAnodeUOW
 
 	// Params
 	public ICameraParamRepository CameraParam { get; }
-	public IExtTagRepository ExtTag { get; }
-	public IServicesMonitorRepository ServicesMonitor { get; }
 	
 	// IOT
 	public IIOTDeviceRepository IOTDevice { get; }
@@ -112,9 +105,6 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IKPITestRepository) => KPITest,
 
 			_ when repo == typeof(ICameraParamRepository) => CameraParam,
-
-			_ when repo == typeof(IExtTagRepository) => ExtTag,
-			_ when repo == typeof(IServicesMonitorRepository) => ServicesMonitor,
 			
 			_ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
 			_ when repo == typeof(IIOTTagRepository) => IOTTag,
