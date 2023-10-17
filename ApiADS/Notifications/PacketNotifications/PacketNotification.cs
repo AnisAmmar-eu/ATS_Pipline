@@ -15,6 +15,10 @@ public class PacketNotification<TStruct> : BaseNotification<IPacketService, Pack
 	{
 	}
 
+	public PacketNotification() : base()
+	{
+	}
+
 	protected override async Task AddElement(IServiceProvider services, Packet entity)
 	{
 		IPacketService packetService = services.GetRequiredService<IPacketService>();

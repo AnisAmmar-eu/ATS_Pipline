@@ -13,9 +13,9 @@ public class Utils
 	public const string AnnouncementToRead = "VA_PXX.P01_SQL_FIFO.OldEntry.Out";
 
 	// DetectionNotification
-	public const string DetectionAcquitMsg = "VA_PXX.P01_SQL_FIFO.msgAcquit";
-	public const string DetectionNewMsg = "VA_PXX.P01_SQL_FIFO.msgNew";
-	public const string DetectionToRead = "VA_PXX.P01_SQL_FIFO.OldEntry.Out";
+	public const string DetectionAcquitMsg = "VA_PXX.P02_SQL_FIFO.msgAcquit";
+	public const string DetectionNewMsg = "VA_PXX.P02_SQL_FIFO.msgNew";
+	public const string DetectionToRead = "VA_PXX.P02_SQL_FIFO.OldEntry.Out";
 
 	// InFurnaceNotification
 	public const string InFurnaceAcquitMsg = "";

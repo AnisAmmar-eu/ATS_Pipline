@@ -16,10 +16,10 @@ public class
 	where TService : class, IServiceBaseEntity<T, TDTO>
 	where TStruct : struct, IBaseADS<T, TStruct>
 {
-	private readonly uint _acquitMsg;
-	private readonly uint _newMsg;
-	private readonly uint _oldEntry;
-	private readonly ResultHandle _resultHandle;
+	private uint _acquitMsg;
+	private uint _newMsg;
+	private uint _oldEntry;
+	private ResultHandle _resultHandle = null!;
 
 	public BaseNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
 	{
@@ -29,8 +29,13 @@ public class
 		_oldEntry = oldEntry;
 	}
 
-	protected static async Task<BaseNotification<TService, T, TDTO, TStruct>> CreateSub(dynamic ads,
+	protected BaseNotification()
+	{
+	}
+
+	protected static async Task<BaseNotification<TService, T, TDTO, TStruct>> CreateSub<TNotification>(dynamic ads,
 		string acquitSymbol, string newMsgSymbol, string oldEntrySymbol)
+		where TNotification : BaseNotification<TService, T, TDTO, TStruct>, new()
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
 
@@ -41,8 +46,15 @@ public class
 		int size = sizeof(bool);
 		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(newMsgSymbol, size,
 			new NotificationSettings(AdsTransMode.OnChange, 0, 0), ads, ads.cancel);
-		BaseNotification<TService, T, TDTO, TStruct> notification =
-			new(resultHandle, 0, newMsg, oldEntry);
+		TNotification notification =
+			new()
+			{
+				_acquitMsg = 0,
+				_newMsg = newMsg,
+				_oldEntry = oldEntry,
+				_resultHandle = resultHandle,
+			};
+		//new(resultHandle, 0, newMsg, oldEntry);
 		tcClient.AdsNotification += notification.GetElement;
 
 		// Verifies if there isn't already something in the queue
@@ -90,14 +102,7 @@ public class
 
 	protected virtual async Task AddElement(IServiceProvider services, T entity)
 	{
-		TService serviceAds = (TService)services.GetService(typeof(TService));
-		if (typeof(TService) == typeof(IPacketService) && typeof(T) == typeof(Packet))
-		{
-			IPacketService serv = serviceAds as IPacketService;
-			Packet p = entity as Packet;
-			await serv.BuildPacket(p);
-		}
-		else
-			await serviceAds.Add(entity);
+		TService serviceAds = services.GetRequiredService<TService>();
+		await serviceAds.Add(entity);
 	}
 }

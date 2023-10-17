@@ -65,10 +65,10 @@ public static class CameraMethod
 					// Read 20 - 30 ms runtime
 					ResultAnyValue resultRead = await tcClient.ReadAnyStringAsync(varHandle, 80,
 						StringMarshaler.DefaultEncoding, cancel);
-					string RID = resultRead.Value.ToString();
-					string Ts = DateTimeOffset.Now.ToString("yyyyMMddHHmmssfff");
+					string rid = resultRead.Value.ToString();
+					string ts = DateTimeOffset.Now.ToString("yyyyMMddHHmmssfff");
 
-					string filename = RID + "-" + Ts + "." + extension;
+					string filename = rid + "-" + ts + "." + extension;
 					// Save the photo
 					image.Save("Camera1\\" + filename, 1);
 				}

@@ -29,7 +29,7 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 	{
 		Type = PacketType.Detection;
 		StationCycleRID = detectionStruct.StationCycleRID.ToRID();
-		AnodeSize = (int)detectionStruct.AnodeHigh;
+		AnodeSize = detectionStruct.AnodeHigh;
 		// Other fields are completed later.
 	}
 
