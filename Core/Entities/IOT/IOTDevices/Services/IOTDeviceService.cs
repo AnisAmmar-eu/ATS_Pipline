@@ -4,6 +4,7 @@ using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Entities.Parameters.CameraParams.Repositories;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Stemmer.Cvb;
@@ -48,7 +49,6 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	private async Task<List<IOTDevice>> CheckAllConnections()
 	{
 		string cameraDeviceString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
-		Device cameraDevice = DeviceFactory.Open(cameraDeviceString);
 		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: "IOTTags");
 		List<IOTDevice> connectedDevices = new();
 		await AnodeUOW.StartTransaction();
@@ -56,12 +56,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		{
 			device.IsConnected = await device.CheckConnection();
 			if (device.IsConnected)
-			{
 				connectedDevices.Add(device);
-				if (device is OTCamera otCamera)
-					otCamera._device = cameraDevice;
-			}
-
 			AnodeUOW.IOTDevice.Update(device);
 			AnodeUOW.Commit();
 		});

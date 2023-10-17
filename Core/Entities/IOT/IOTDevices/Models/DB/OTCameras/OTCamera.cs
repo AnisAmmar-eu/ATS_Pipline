@@ -7,5 +7,4 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
 public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 {
-	[NotMapped] public Device _device { get; set; }
 }

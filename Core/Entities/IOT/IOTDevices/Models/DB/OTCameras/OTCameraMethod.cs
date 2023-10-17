@@ -1,13 +1,12 @@
 using System.Net;
+using System.Net.Http.Json;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
-using Stemmer.Cvb;
-using Stemmer.Cvb.Driver;
-using Stemmer.Cvb.GenApi;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
@@ -17,11 +16,12 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 	{
 		return new DTOOTCamera(this);
 	}
+
 	public override async Task<bool> CheckConnection()
 	{
 		using HttpClient httpClient = new();
 		IOTTag tag = IOTTags.Find(tag => tag.Name == IOTTagNames.CheckConnectionName)
-				?? throw new InvalidOperationException("Cannot find Connection tag for " + Name + " device.");
+		             ?? throw new InvalidOperationException("Cannot find Connection tag for " + Name + " device.");
 		try
 		{
 			HttpResponseMessage response = await httpClient.GetAsync(Address + tag.Path);
@@ -35,31 +35,35 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 
 	public override async Task ApplyTags(IAnodeUOW anodeUOW)
 	{
-		NodeMap nodeMap = _device.NodeMaps[NodeMapNames.Device];
+		Dictionary<string, string> parameters = new();
 		foreach (IOTTag iotTag in IOTTags)
 		{
 			if (!iotTag.HasNewValue)
 				continue;
-			switch (nodeMap[iotTag.Path])
-			{
-				case IntegerNode {IsWritable: true} integerNode:
-					integerNode.Value = int.Parse(iotTag.NewValue);
-					break;
-				case FloatNode {IsWritable: true} floatNode:
-					floatNode.Value = double.Parse(iotTag.NewValue);
-					break;
-				case EnumerationNode {IsWritable: true} enumerationNode:
-					enumerationNode.Value = iotTag.NewValue;
-					break;
-				default:
-					throw new InvalidOperationException("Camera tag " + iotTag.Name +
-					                                    " has a path towards unsupported or unwritable data type.");
-			}
 
+			parameters.Add(iotTag.Path, iotTag.NewValue);
 			iotTag.CurrentValue = iotTag.NewValue;
 			iotTag.HasNewValue = false;
 			anodeUOW.IOTTag.Update(iotTag);
-			anodeUOW.Commit();
 		}
+
+		if (parameters.Count != 0)
+		{
+			using HttpClient httpClient = new();
+			try
+			{
+				HttpResponseMessage response =
+					await httpClient.PostAsync(Address + "/set-parameters", JsonContent.Create(parameters));
+				if (response.StatusCode != HttpStatusCode.OK)
+					throw new Exception("Error while setting parameters: " + response.StatusCode);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Could not update camera parameters: " + e.Message);
+				return;
+			}
+		}
+
+		anodeUOW.Commit();
 	}
 }

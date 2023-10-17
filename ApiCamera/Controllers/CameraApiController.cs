@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiCamera.Utils;
 using Core.Entities.Parameters.CameraParams.Models.DTO;
 using Core.Shared.Models.HttpResponse;
@@ -40,7 +41,27 @@ public class CameraApiController : ControllerBase
 
 	#endregion
 
+	#region Parameters
 
+	[HttpPost("/set-parameters")]
+	public async Task<ActionResult> SetParameters([FromBody] [Required] Dictionary<string, string> parameters)
+	{
+		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
+		try
+		{
+			Device device = DeviceFactory.Open(driverString);
+			CameraMethod.SetParameters(device, parameters);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	#endregion
+	
 	#region Acquisition
 
 	[HttpGet("/acquisition")]
