@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 

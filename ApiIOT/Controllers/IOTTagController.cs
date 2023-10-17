@@ -6,7 +6,7 @@ using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiAlarms.Controllers;
+namespace ApiIOT.Controllers;
 
 [ApiController]
 [Route("api/iot-tag")]

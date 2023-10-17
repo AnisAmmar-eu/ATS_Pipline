@@ -10,6 +10,6 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 	public string StationCycleRID { get; set; }
 	public string Status { get; set; }
 	public string Type { get; set; }
-	public bool HasError { get; set; } = false;
+	public bool HasError { get; set; }
 	public StationCycle? StationCycle { get; set; }
 }

@@ -1,4 +1,6 @@
 using System.Buffers.Binary;
+using Core.Entities.Packets.Models.DB;
+using Core.Entities.Packets.Services;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel.Interfaces;
@@ -32,7 +34,7 @@ public class
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
 
-		uint acquitMsg = tcClient.CreateVariableHandle(acquitSymbol);
+		//uint acquitMsg = tcClient.CreateVariableHandle(acquitSymbol);
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
@@ -40,22 +42,22 @@ public class
 		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(newMsgSymbol, size,
 			new NotificationSettings(AdsTransMode.OnChange, 0, 0), ads, ads.cancel);
 		BaseNotification<TService, T, TDTO, TStruct> notification =
-			new(resultHandle, acquitMsg, newMsg, oldEntry);
+			new(resultHandle, 0, newMsg, oldEntry);
 		tcClient.AdsNotification += notification.GetElement;
 
 		// Verifies if there isn't already something in the queue
-		ResultValue<uint> newMsgValue = await tcClient.ReadAnyAsync<uint>(ads.msgNewHandle, ads.cancel);
+		ResultValue<bool> newMsgValue = await tcClient.ReadAnyAsync<bool>(ads.msgNewHandle, ads.cancel);
 		if (newMsgValue.ErrorCode != AdsErrorCode.NoError)
 			throw new Exception(newMsgValue.ErrorCode.ToString());
-		if (newMsgValue.Value == Utils.HasNewMsg)
+		if (newMsgValue.Value)
 			notification.GetElementSub(ads);
 		return notification;
 	}
 
 	public void GetElement(object? sender, AdsNotificationEventArgs e)
 	{
-		uint newMsg = BinaryPrimitives.ReadUInt32LittleEndian(e.Data.Span);
-		if (e.Handle == _resultHandle.Handle && newMsg == Utils.HasNewMsg)
+		bool newMsg = BitConverter.ToBoolean(e.Data.Span);
+		if (e.Handle == _resultHandle.Handle && newMsg)
 		{
 			Console.WriteLine("Notif msgNew");
 			// UserData is our data passed in parameter
@@ -66,10 +68,10 @@ public class
 	public async void GetElementSub(dynamic dynamicObject)
 	{
 		AdsClient? tcClient = dynamicObject.tcClient as AdsClient;
-		tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
-		tcClient.WriteAny(_newMsg, Utils.NoMessage);
+		//tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
+		tcClient!.WriteAny(_newMsg, false);
 		// Get element of FIFO
-		TStruct adsStruct = (TStruct)tcClient.ReadAny(_oldEntry, typeof(TStruct));
+		TStruct adsStruct = tcClient.ReadAny<TStruct>(_oldEntry);
 		T entity = adsStruct.ToModel();
 		await using AsyncServiceScope scope = ((IServiceProvider)dynamicObject.appServices).CreateAsyncScope();
 		IServiceProvider services = scope.ServiceProvider;
@@ -77,18 +79,25 @@ public class
 		try
 		{
 			await AddElement(services, entity);
-			tcClient.WriteAny(_acquitMsg, Utils.FinishedReading);
+			//tcClient.WriteAny(_acquitMsg, Utils.FinishedReading);
 		}
 		catch
 		{
 			// Retry
-			tcClient.WriteAny(_acquitMsg, Utils.ErrorWhileReading);
+			//tcClient.WriteAny(_acquitMsg, Utils.ErrorWhileReading);
 		}
 	}
-	
+
 	protected virtual async Task AddElement(IServiceProvider services, T entity)
 	{
-			TService serviceAds = services.GetRequiredService<TService>();
+		TService serviceAds = (TService)services.GetService(typeof(TService));
+		if (typeof(TService) == typeof(IPacketService) && typeof(T) == typeof(Packet))
+		{
+			IPacketService serv = serviceAds as IPacketService;
+			Packet p = entity as Packet;
+			await serv.BuildPacket(p);
+		}
+		else
 			await serviceAds.Add(entity);
 	}
 }

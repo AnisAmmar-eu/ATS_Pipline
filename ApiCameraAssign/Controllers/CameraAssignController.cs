@@ -8,14 +8,13 @@ using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Shootings;
-using Core.Entities.Packets.Models.Structs;
 using Core.Entities.Packets.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiAlarms.Controllers;
+namespace ApiCameraAssign.Controllers;
 
 [ApiController]
 [Route("[controller]")]

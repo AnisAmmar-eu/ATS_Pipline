@@ -1,19 +1,20 @@
+using System.Runtime.InteropServices;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.Structs;
 
+[StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct AnnouncementStruct : IBaseADS<Packet, AnnouncementStruct>
 {
-	public RIDStruct StationCycleRID;
-	public uint AnnounceID;
-	public uint AnodeType;
+	[MarshalAs(UnmanagedType.Struct)] public RIDStruct RID;
+	public ushort AnnounceID;
+	public ushort AnodeType;
 
-	// TODO Determine how to handle those, null in non valid stations?
-	// TODO Or maybe check in which station we are, account for these in consequence.
+	// TODO Might not be present if not in S1/S2
+	public ushort TrolleyNumber;
 	public string SerialNumber;
-	public uint TrolleyNumber;
 
 	public Packet ToModel()
 	{

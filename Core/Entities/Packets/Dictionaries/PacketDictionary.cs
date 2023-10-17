@@ -11,7 +11,7 @@ public class PacketStatus
 public class PacketType
 {
 	public const string Alarm = "ALARM";
-	public const string Announcement = "ANNOUNCMENT";
+	public const string Announcement = "ANNOUNCEMENT";
 	public const string Detection = "DETECTION";
 	public const string Shooting = "SHOOTING";
 	public const string Furnace = "FURNACE";
