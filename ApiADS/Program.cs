@@ -1,4 +1,5 @@
 using Core.Entities.Alarms.AlarmsPLC.Services;
+using Core.Entities.Packets.Services;
 using Core.Shared.Data;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IAlarmPLCService, AlarmPLCService>();
+builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 

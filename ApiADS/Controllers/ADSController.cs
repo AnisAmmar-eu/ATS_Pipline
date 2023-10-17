@@ -45,7 +45,8 @@ public class ADSController : ControllerBase
 			// AlarmNotification.Create(ads);
 			try
 			{
-				while ((await tcClient.ReadAnyAsync<uint>(ads.alarmNew, cancel)).ErrorCode ==
+				uint handle = tcClient.CreateVariableHandle(Utils.AnnouncementNewMsg);
+				while ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode ==
 				       AdsErrorCode.NoError)
 					// To avoid spamming the TwinCat
 					Thread.Sleep(1000);

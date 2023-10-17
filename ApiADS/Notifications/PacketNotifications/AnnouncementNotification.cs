@@ -12,6 +12,6 @@ public class AnnouncementNotification : PacketNotification<AnnouncementStruct>
 
 	public static async Task<AnnouncementNotification> Create(dynamic ads)
 	{
-		return await CreateSub(ads, Utils.AnnouncementAcquitMsg, Utils.AnnouncementNewMsg, Utils.AnnouncementToRead);
+		return (await CreateSub(ads, Utils.AnnouncementAcquitMsg, Utils.AnnouncementNewMsg, Utils.AnnouncementToRead) as AnnouncementNotification)!;
 	}
 }

@@ -38,7 +38,7 @@ public class
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
-		int size = sizeof(uint);
+		int size = sizeof(bool);
 		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(newMsgSymbol, size,
 			new NotificationSettings(AdsTransMode.OnChange, 0, 0), ads, ads.cancel);
 		BaseNotification<TService, T, TDTO, TStruct> notification =
@@ -46,7 +46,7 @@ public class
 		tcClient.AdsNotification += notification.GetElement;
 
 		// Verifies if there isn't already something in the queue
-		ResultValue<bool> newMsgValue = await tcClient.ReadAnyAsync<bool>(ads.msgNewHandle, ads.cancel);
+		ResultValue<bool> newMsgValue = await tcClient.ReadAnyAsync<bool>(newMsg, ads.cancel);
 		if (newMsgValue.ErrorCode != AdsErrorCode.NoError)
 			throw new Exception(newMsgValue.ErrorCode.ToString());
 		if (newMsgValue.Value)
