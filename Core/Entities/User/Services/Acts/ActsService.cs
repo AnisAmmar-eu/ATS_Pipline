@@ -266,7 +266,7 @@ public class ActsService : IActsService
 	{
 		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(actRID, entityType, parentType);
 
-		// [TODO] -> Confirm if the list is necessary 
+		// [T0DO] -> Confirm if the list is necessary 
 		List<ActEntity> actEntities = await _unitOfWork.ActEntities.GetAllByActWithIncludes(act, entityID, parentID);
 
 		if (actEntities.Count > 0)
@@ -373,7 +373,7 @@ public class ActsService : IActsService
 				throw;
 
 			// Return a token if there is no actEntity - because authorized to all users
-			// [TODO] -> Maybe also verif if entityID / parentID exist so that we don't generate a token for an entity that does not exist
+			// [T0DO] -> Maybe also verif if entityID / parentID exist so that we don't generate a token for an entity that does not exist
 
 			return GenerateActionToken(httpContext, new ActEntity
 			{
@@ -514,7 +514,7 @@ public class ActsService : IActsService
 		return _jwtService.GenerateToken(claims, 2);
 	}
 
-	// [TODO] [FOR SIGNAL_R]
+	// [T0DO] [FOR SIGNAL_R]
 	// => Check all users and roles that can do the actEntities
 	// => If a user has one of the roles, then remove him
 	// => Return a strings table of all groups name to send notif with signalR

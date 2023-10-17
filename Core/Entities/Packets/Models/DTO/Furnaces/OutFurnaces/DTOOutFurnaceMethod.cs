@@ -7,8 +7,10 @@ public partial class DTOOutFurnace : DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 {
 	public DTOOutFurnace(OutFurnace outFurnace) : base(outFurnace)
 	{
-		TSUnpackPIT = outFurnace.TSUnpackPIT;
-		TSCentralConveyor = outFurnace.TSCentralConveyor;
+		AnnounceID = outFurnace.AnnounceID;
 		FTAPickUp = outFurnace.FTAPickUp;
+		PickUpTS = outFurnace.PickUpTS;
+		DepositTS = outFurnace.DepositTS;
+		InvalidPacket = outFurnace.InvalidPacket;
 	}
 }

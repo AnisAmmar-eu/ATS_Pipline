@@ -11,7 +11,7 @@ public struct InFurnaceStruct : IBaseADS<Packet, InFurnaceStruct>
 	public RIDStruct StationCycleRID;
 	public ushort AnnounceID;
 
-	public ushort IdOrigin; // TODO OriginID?
+	public ushort OriginID;
 	public ushort PackPosition; // AnodePositionInThePackOf7
 	public ushort PalletSide;
 	public ushort PitNumber;

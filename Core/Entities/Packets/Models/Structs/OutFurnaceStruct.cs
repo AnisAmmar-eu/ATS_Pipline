@@ -12,8 +12,8 @@ public struct OutFurnaceStruct : IBaseADS<Packet, OutFurnaceStruct>
 	public ushort AnnounceID;
 
 	public ushort FTAPickUp;
-	public TimestampStruct TSPickUp;
-	public TimestampStruct TSDeposit;
+	public TimestampStruct PickUpTS;
+	public TimestampStruct DepositTS;
 	public ushort InvalidPacket;
 
 	public Packet ToModel()

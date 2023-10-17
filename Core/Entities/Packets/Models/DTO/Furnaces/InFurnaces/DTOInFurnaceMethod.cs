@@ -7,16 +7,17 @@ public partial class DTOInFurnace : DTOFurnace, IDTO<InFurnace, DTOInFurnace>
 {
 	public DTOInFurnace(InFurnace inFurnace) : base(inFurnace)
 	{
+		AnnounceID = inFurnace.AnnounceID;
 		OriginID = inFurnace.OriginID;
-		AnodePosition = inFurnace.AnodePosition;
+		PackPosition = inFurnace.PackPosition;
 		PalletSide = inFurnace.PalletSide;
-		PITNumber = inFurnace.PITNumber;
-		PITSectionNumber = inFurnace.PITSectionNumber;
-		PITHeight = inFurnace.PITHeight;
-		FTAinPIT = inFurnace.FTAinPIT;
-		GreenPosition = inFurnace.GreenPosition;
-		BakedPosition = inFurnace.BakedPosition;
-		FTASuckPit = inFurnace.FTASuckPit;
-		TSLoad = inFurnace.TSLoad;
+		PitNumber = inFurnace.PitNumber;
+		PitSectionNumber = inFurnace.PitSectionNumber;
+		PitHeight = inFurnace.PitHeight;
+		FTAPlace = inFurnace.FTAPlace;
+		FTASuck = inFurnace.FTASuck;
+		GreenConvPos = inFurnace.GreenConvPos;
+		BakedConvPos = inFurnace.BakedConvPos;
+		PitLoadTS = inFurnace.PitLoadTS;
 	}
 }

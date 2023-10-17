@@ -12,11 +12,12 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 
 	public OutFurnace(OutFurnaceStruct adsStruct)
 	{
-		// TODO
 		StationCycleRID = adsStruct.StationCycleRID.ToRID();
-		// TSUnpackPIT = adsStruct.TSUnpackPIT;
-		// TSCentralConveyor = adsStruct.TSCentralConveyor;
-		FTAPickUp = (int)adsStruct.FTAPickUp;
+		AnnounceID = adsStruct.AnnounceID;
+		FTAPickUp = adsStruct.FTAPickUp;
+		PickUpTS = adsStruct.PickUpTS.GetTimestamp();
+		DepositTS = adsStruct.DepositTS.GetTimestamp();
+		InvalidPacket = adsStruct.InvalidPacket;
 	}
 
 	public override DTOOutFurnace ToDTO()

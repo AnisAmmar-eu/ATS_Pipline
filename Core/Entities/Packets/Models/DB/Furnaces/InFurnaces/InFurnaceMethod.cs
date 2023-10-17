@@ -12,20 +12,19 @@ public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 
 	public InFurnace(InFurnaceStruct adsStruct)
 	{
-		// TODO
 		StationCycleRID = adsStruct.StationCycleRID.ToRID();
-		// OriginID = (int)adsStruct.OriginID;
-		// AnodePosition = (int)adsStruct.AnodePosition;
-		// PalletSide = (int)adsStruct.PalletSide;
-		// PITNumber = (int)adsStruct.PITNumber;
-		// PITSectionNumber = (int)adsStruct.PITSectionNumber;
-		// PITHeight = (int)adsStruct.PITHeight;
-		// FTAinPIT = (int)adsStruct.FTAinPIT;
-		// GreenPosition = (int)adsStruct.GreenPosition;
-		// BakedPosition = (int)adsStruct.BakedPosition;
-		// FTASuckPit = (int)adsStruct.FTASuckPit;
-		// TODO
-		// TSLoad = adsStruct.TSLoad;
+		AnnounceID = adsStruct.AnnounceID;
+		OriginID = adsStruct.OriginID;
+		PackPosition = adsStruct.PackPosition;
+		PalletSide = adsStruct.PalletSide;
+		PitNumber = adsStruct.PitNumber;
+		PitSectionNumber = adsStruct.PitSectionNumber;
+		PitHeight = adsStruct.PitHeight;
+		FTAPlace = adsStruct.FTAPlace;
+		FTASuck = adsStruct.FTASuck;
+		GreenConvPos = adsStruct.GreenConvPos;
+		BakedConvPos = adsStruct.BakedConvPos;
+		PitLoadTS = adsStruct.PitLoadTS.GetTimestamp();
 	}
 
 	public override DTOInFurnace ToDTO()

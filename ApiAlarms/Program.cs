@@ -3,7 +3,6 @@ using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
-using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.Packets.Services;
 using Core.Shared.Data;
 using Core.Shared.Services.Background;
