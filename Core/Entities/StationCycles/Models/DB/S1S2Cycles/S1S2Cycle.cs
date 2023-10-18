@@ -1,4 +1,3 @@
-using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.StationCycles.Models.DTO.S1S2Cycles;
 using Core.Shared.Models.DB.Kernel.Interfaces;

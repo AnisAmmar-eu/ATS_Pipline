@@ -5,7 +5,9 @@ namespace Core.Entities.IOT.IOTTags.Models.DTO.OTTagsTwinCat;
 
 public partial class DTOOTTagTwinCat : DTOIOTTag, IDTO<OTTagTwinCat, DTOOTTagTwinCat>
 {
-	public DTOOTTagTwinCat(){}
+	public DTOOTTagTwinCat()
+	{
+	}
 
 	public DTOOTTagTwinCat(OTTagTwinCat otTagTwinCat)
 	{

@@ -14,7 +14,6 @@ using Core.Shared.Services.Jwt;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Entities.User.Services.Acts;
 

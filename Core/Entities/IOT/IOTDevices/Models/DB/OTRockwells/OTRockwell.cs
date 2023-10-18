@@ -5,5 +5,4 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.OTRockwells;
 
 public partial class OTRockwell : IOTDevice, IBaseEntity<OTRockwell, DTOOTRockwell>
 {
-	
 }

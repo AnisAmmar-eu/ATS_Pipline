@@ -31,8 +31,8 @@
 
 
     <ItemGroup>
-      <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
-      <None Remove="Properties\PublishProfiles\FolderProfile1.pubxml" />
+        <None Remove="Properties\PublishProfiles\FolderProfile.pubxml"/>
+        <None Remove="Properties\PublishProfiles\FolderProfile1.pubxml"/>
     </ItemGroup>
 
 

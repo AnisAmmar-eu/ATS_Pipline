@@ -7,7 +7,7 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB;
 
 public partial class IOTDevice : BaseEntity, IBaseEntity<IOTDevice, DTOIOTDevice>
 {
-	public string RID { get; set; }	
+	public string RID { get; set; }
 	public string Name { get; set; }
 	public string Description { get; set; }
 	public string Address { get; set; }

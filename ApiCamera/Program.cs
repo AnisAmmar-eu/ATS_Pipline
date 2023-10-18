@@ -1,6 +1,4 @@
-using ApiCamera.Utils;
 using Core.Entities.IOT.IOTDevices.Services;
-using Core.Entities.Parameters.CameraParams.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;

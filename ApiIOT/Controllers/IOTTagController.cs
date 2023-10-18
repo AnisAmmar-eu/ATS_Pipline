@@ -12,8 +12,8 @@ namespace ApiIOT.Controllers;
 [Route("api/iot-tag")]
 public class IOTTagController : ControllerBase
 {
-	private IIOTTagService _iotTagService;
-	private ILogsService _logsService;
+	private readonly IIOTTagService _iotTagService;
+	private readonly ILogsService _logsService;
 
 	public IOTTagController(IIOTTagService iotTagService, ILogsService logsService)
 	{

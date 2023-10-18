@@ -91,7 +91,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	)
 	{
 		T? t = await Query(filters, null, withTracking,
-				includes: new Dictionary<string, string[]> { { "", includes } }).FirstOrDefaultAsync();
+			includes: new Dictionary<string, string[]> { { "", includes } }).FirstOrDefaultAsync();
 		if (t == null)
 			throw new EntityNotFoundException(typeof(T).Name + " not found");
 

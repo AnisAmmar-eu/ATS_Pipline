@@ -67,7 +67,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	// StationCycle
 	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
 	public DbSet<S1S2Cycle> S1S2Cycle => Set<S1S2Cycle>();
-	
+
 	// IOT Monitoring
 	public DbSet<IOTDevice> IOTDevice => Set<IOTDevice>();
 	public DbSet<OTCamera> OTCamera => Set<OTCamera>();
@@ -76,7 +76,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<OTRockwell> OTRockwell => Set<OTRockwell>();
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
-	
+
 	// KPI
 	public DbSet<KPIC> KPIC => Set<KPIC>();
 	public DbSet<KPILog> KPILog => Set<KPILog>();

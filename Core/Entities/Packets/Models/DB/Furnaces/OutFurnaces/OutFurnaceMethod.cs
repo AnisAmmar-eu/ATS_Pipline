@@ -30,7 +30,7 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 	{
 		return new DTOOutFurnace(this);
 	}
-	
+
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
 		S3S4Cycle? cycle = await anodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]

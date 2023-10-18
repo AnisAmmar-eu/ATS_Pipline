@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
 using Core.Entities.Parameters.CameraParams.Models.DTO;
-using Org.BouncyCastle.Asn1.CryptoPro;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using Stemmer.Cvb.GenApi;
@@ -91,7 +90,6 @@ public static class CameraMethod
 	{
 		NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
 		foreach ((string? path, string? newValue) in parameters)
-		{
 			if (nodeMap[path].IsWritable)
 				switch (nodeMap[path])
 				{
@@ -108,52 +106,51 @@ public static class CameraMethod
 						throw new InvalidOperationException("Camera tag with path " + path +
 						                                    " has a path towards unsupported data type.");
 				}
-		}
 	}
 
 	#region Generics functions
 
-		private static void Disconnect(object? sender, NotifyEventArgs e)
-		{
-			Console.WriteLine("disconnected");
+	private static void Disconnect(object? sender, NotifyEventArgs e)
+	{
+		Console.WriteLine("disconnected");
 
 
-			if (sender == null)
-				return;
+		if (sender == null)
+			return;
 
-			Device? device = (Device?)sender.GetType().GetProperty("Parent")?.GetValue(sender);
+		Device? device = (Device?)sender.GetType().GetProperty("Parent")?.GetValue(sender);
 
-			if (device != null)
-				try
-				{
-					bool isOk = device.Stream.TryStop();
-					if (!isOk) Debug.WriteLine("Could not stop the stream!");
-				}
-				catch (Exception ex)
-				{
-					Debug.WriteLine("Error: " + ex.Message);
-				}
-		}
-
-		private static void Reconnect(object? sender, NotifyEventArgs e)
-		{
-			Console.WriteLine("reconnected");
-
-			if (sender == null)
-				return;
-
-			Device? device = (Device?)sender.GetType().GetProperty("Parent")?.GetValue(sender);
-
-			if (device != null)
-				try
-				{
-					device.Stream.Start();
-				}
-				catch (Exception ex)
-				{
-					Debug.WriteLine("Error: " + ex.Message);
-				}
-		}
-
-		#endregion
+		if (device != null)
+			try
+			{
+				bool isOk = device.Stream.TryStop();
+				if (!isOk) Debug.WriteLine("Could not stop the stream!");
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine("Error: " + ex.Message);
+			}
 	}
+
+	private static void Reconnect(object? sender, NotifyEventArgs e)
+	{
+		Console.WriteLine("reconnected");
+
+		if (sender == null)
+			return;
+
+		Device? device = (Device?)sender.GetType().GetProperty("Parent")?.GetValue(sender);
+
+		if (device != null)
+			try
+			{
+				device.Stream.Start();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine("Error: " + ex.Message);
+			}
+	}
+
+	#endregion
+}

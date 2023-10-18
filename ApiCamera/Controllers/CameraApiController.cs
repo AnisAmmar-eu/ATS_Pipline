@@ -61,7 +61,7 @@ public class CameraApiController : ControllerBase
 	}
 
 	#endregion
-	
+
 	#region Acquisition
 
 	[HttpGet("/acquisition")]

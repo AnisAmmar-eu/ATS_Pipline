@@ -97,10 +97,10 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 WebApplication app = builder.Build();
 
 // Initialize
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-var context = services.GetRequiredService<AnodeCTX>();
-if (bool.Parse(builder.Configuration["DbInitialize"]) == true)
+using IServiceScope scope = app.Services.CreateScope();
+IServiceProvider services = scope.ServiceProvider;
+AnodeCTX context = services.GetRequiredService<AnodeCTX>();
+if (bool.Parse(builder.Configuration["DbInitialize"]))
 	DBInitializer.Initialize(context);
 
 // Configure the HTTP request pipeline.

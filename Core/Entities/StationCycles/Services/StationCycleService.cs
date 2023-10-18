@@ -21,7 +21,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)
 	{
 		if (stationCycle.DetectionID == null)
-			throw new InvalidOperationException("Staion cycle with RID: " + stationCycle.RID +
+			throw new InvalidOperationException("Station cycle with RID: " + stationCycle.RID +
 			                                    " does not have a detection packet for measurement");
 		Detection detection = (await AnodeUOW.Packet.GetById((int)stationCycle.DetectionID) as Detection)!;
 		AdsClient tcClient = new();

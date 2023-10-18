@@ -1,6 +1,5 @@
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Services;
-using Core.Entities.IOT.IOTDevices.Services;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;

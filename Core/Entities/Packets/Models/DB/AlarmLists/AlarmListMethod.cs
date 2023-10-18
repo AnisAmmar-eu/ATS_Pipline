@@ -2,7 +2,6 @@ using System.Linq.Expressions;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Packets.Dictionaries;
-using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -46,13 +45,14 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 			anodeUOW.Commit();
 			AlarmCycles.Add(alarmCycle);
 		}
+
 		// StationCycleRID should already be present
 		if (StationCycle == null)
-			StationCycle = await anodeUOW.StationCycle.GetBy(filters: new Expression<Func<StationCycle, bool>>[]
+			StationCycle = await anodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]
 			{
 				stationCycle => stationCycle.RID == StationCycleRID
 			}, withTracking: false);
-		
+
 		StationCycle.AlarmListPacket = this;
 		StationCycle.AlarmListID = ID;
 		Status = PacketStatus.Completed;

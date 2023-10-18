@@ -39,7 +39,7 @@ public class CameraAssignController : ControllerBase
 			{
 				Type = PacketType.Announcement,
 				StationCycleRID = rid,
-				AnodeType = AnodeTypeDict.DX,
+				AnodeType = AnodeTypeDict.DX
 			};
 			announcement = await _packetService.BuildPacket(ann) as DTOAnnouncement;
 			if (announcement == null)
@@ -52,7 +52,7 @@ public class CameraAssignController : ControllerBase
 
 		return await new ApiResponseObject(announcement).SuccessResult(_logsService, ControllerContext);
 	}
-	
+
 	[HttpPost("detection")]
 	public async Task<IActionResult> BuildDetection([FromQuery] string rid)
 	{
@@ -83,7 +83,7 @@ public class CameraAssignController : ControllerBase
 		List<DTOShooting> packets;
 		try
 		{
-			packets = (await _packetService.GetAll(filters: new Expression<Func<Packet, bool>>[]
+			packets = (await _packetService.GetAll(new Expression<Func<Packet, bool>>[]
 			{
 				packet => packet.Type == PacketType.Shooting
 			})).ConvertAll(packet => packet as DTOShooting)!;

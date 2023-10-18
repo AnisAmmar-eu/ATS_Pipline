@@ -44,7 +44,7 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 		try
 		{
 			stationCycle = await anodeUOW.StationCycle.GetBy(
-				filters: new Expression<Func<StationCycle, bool>>[]
+				new Expression<Func<StationCycle, bool>>[]
 				{
 					cycle => cycle.RID == StationCycleRID
 				}, withTracking: false);

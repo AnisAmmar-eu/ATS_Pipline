@@ -4,7 +4,6 @@ using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Shared.Dictionaries;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 

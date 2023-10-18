@@ -5,5 +5,4 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 
 public partial class ITApi : IOTDevice, IBaseEntity<ITApi, DTOITApi>
 {
-	
 }

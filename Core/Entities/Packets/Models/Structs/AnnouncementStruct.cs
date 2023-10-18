@@ -16,6 +16,7 @@ public struct AnnouncementStruct : IBaseADS<Packet, AnnouncementStruct>
 
 	// TODO Might not be present if not in S1/S2
 	public ushort TrolleyNumber;
+
 	[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
 	public string SerialNumber;
 

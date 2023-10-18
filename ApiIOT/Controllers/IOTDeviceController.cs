@@ -11,8 +11,8 @@ namespace ApiIOT.Controllers;
 [Route("api/iot-device")]
 public class IOTDeviceController : ControllerBase
 {
-	private IIOTDeviceService _iotDeviceService;
-	private ILogsService _logsService;
+	private readonly IIOTDeviceService _iotDeviceService;
+	private readonly ILogsService _logsService;
 
 	public IOTDeviceController(IIOTDeviceService iotDeviceService, ILogsService logsService)
 	{

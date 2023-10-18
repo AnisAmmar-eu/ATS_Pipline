@@ -1,5 +1,4 @@
 using Core.Entities.IOT.IOTDevices.Services;
-using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;

@@ -30,9 +30,9 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	{
 		Type = PacketType.Shooting;
 		StationCycleRID = adsStruct.StationCycleRID.ToRID();
-		AnodeIDKey = (int)adsStruct.AnodeIDKey;
+		AnodeIDKey = adsStruct.AnodeIDKey;
 		GlobalStationStatus = adsStruct.GlobalStationStatus;
-		ProcedurePerformance = (int)adsStruct.ProcedurePerformance;
+		ProcedurePerformance = adsStruct.ProcedurePerformance;
 		LedStatus = adsStruct.LedStatus;
 		// TODO
 		// ShootingTS = adsStruct.ShootingTS;
@@ -95,7 +95,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		StationCycle.ShootingPacket = this;
 		StationCycle.ShootingID = ID;
 		// ?. => If firstHole not null then...
-		while (IsFileLocked(firstHole) || IsFileLocked(thirdHole));
+		while (IsFileLocked(firstHole) || IsFileLocked(thirdHole)) ;
 		firstHole?.MoveTo(ShootingFolders.Archive1 + firstHole.Name);
 		thirdHole?.MoveTo(ShootingFolders.Archive2 + thirdHole.Name);
 		Status = PacketStatus.Completed;

@@ -80,10 +80,10 @@ public class AnodeUOW : IAnodeUOW
 
 	// Params
 	public ICameraParamRepository CameraParam { get; }
-	
+
 	// IOT
 	public IIOTDeviceRepository IOTDevice { get; }
-	public IIOTTagRepository IOTTag { get;  }
+	public IIOTTagRepository IOTTag { get; }
 
 	public object? GetRepoByType(Type repo)
 	{
@@ -105,7 +105,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IKPITestRepository) => KPITest,
 
 			_ when repo == typeof(ICameraParamRepository) => CameraParam,
-			
+
 			_ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
 			_ when repo == typeof(IIOTTagRepository) => IOTTag,
 

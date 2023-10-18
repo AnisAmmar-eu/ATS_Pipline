@@ -2,7 +2,6 @@ using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Services;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;
 
 namespace ApiADS.Notifications.PacketNotifications;
@@ -15,7 +14,7 @@ public class PacketNotification<TStruct> : BaseNotification<IPacketService, Pack
 	{
 	}
 
-	public PacketNotification() : base()
+	public PacketNotification()
 	{
 	}
 

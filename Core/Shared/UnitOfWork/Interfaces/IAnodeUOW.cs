@@ -41,10 +41,10 @@ public interface IAnodeUOW : IDisposable
 
 	// Params
 	ICameraParamRepository CameraParam { get; }
-	
+
 	// IOT
 	IIOTDeviceRepository IOTDevice { get; }
-	IIOTTagRepository IOTTag { get;  }
+	IIOTTagRepository IOTTag { get; }
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }

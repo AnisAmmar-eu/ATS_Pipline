@@ -34,27 +34,29 @@ public class AssignService : BackgroundService
 				IPacketService packetService = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
 				IStationCycleService stationCycleService =
 					asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
-					
+
 				_logger.LogInformation("AssignService running at: {time}", DateTimeOffset.Now);
-				
+
 				_logger.LogInformation("AssignService calling Assign");
 				Packet shooting = new Shooting();
 				await packetService.BuildPacket(shooting);
-				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}", shooting.StationCycleRID);
-				
+				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}",
+					shooting.StationCycleRID);
+
 				// TODO If StationCycleRID in MeasureStruct, call this BEFORE shooting.
 				_logger.LogInformation("AssignService calling UpdateDetection");
 				if (shooting.StationCycle == null)
 					throw new Exception("Shooting packet did not find a stationCycle for RID: " +
 					                    shooting.StationCycleRID);
 				await stationCycleService.UpdateDetectionWithMeasure(shooting.StationCycle);
-				
+
 				_logger.LogInformation("AssignService calling AlarmList");
 				Packet alarmList = new AlarmList();
 				alarmList.StationCycleRID = shooting.StationCycleRID;
 				alarmList.StationCycle = shooting.StationCycle;
 				await packetService.BuildPacket(alarmList);
-				_logger.LogInformation("AssignService assigned alarmList packet to AnodeRID: {anodeRID}", alarmList.StationCycleRID);
+				_logger.LogInformation("AssignService assigned alarmList packet to AnodeRID: {anodeRID}",
+					alarmList.StationCycleRID);
 
 				_executionCount++;
 				_logger.LogInformation(

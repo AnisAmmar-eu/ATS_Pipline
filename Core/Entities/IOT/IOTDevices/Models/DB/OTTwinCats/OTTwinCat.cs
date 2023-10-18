@@ -5,5 +5,4 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 
 public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 {
-	
 }

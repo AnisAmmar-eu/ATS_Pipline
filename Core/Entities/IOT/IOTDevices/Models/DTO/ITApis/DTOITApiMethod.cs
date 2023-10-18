@@ -5,7 +5,7 @@ namespace Core.Entities.IOT.IOTDevices.Models.DTO.ITApis;
 
 public partial class DTOITApi : DTOIOTDevice, IDTO<ITApi, DTOITApi>
 {
-	public DTOITApi() : base()
+	public DTOITApi()
 	{
 	}
 

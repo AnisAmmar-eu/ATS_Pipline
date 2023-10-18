@@ -1,10 +1,6 @@
-using System.Buffers.Binary;
-using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Services;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;
 
 namespace ApiADS.Notifications;
@@ -52,7 +48,7 @@ public class
 				_acquitMsg = 0,
 				_newMsg = newMsg,
 				_oldEntry = oldEntry,
-				_resultHandle = resultHandle,
+				_resultHandle = resultHandle
 			};
 		//new(resultHandle, 0, newMsg, oldEntry);
 		tcClient.AdsNotification += notification.GetElement;

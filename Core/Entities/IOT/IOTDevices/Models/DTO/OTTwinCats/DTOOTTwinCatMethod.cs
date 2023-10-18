@@ -5,7 +5,7 @@ namespace Core.Entities.IOT.IOTDevices.Models.DTO.OTTwinCats;
 
 public partial class DTOOTTwinCat : DTOIOTDevice, IDTO<OTTwinCat, DTOOTTwinCat>
 {
-	public DTOOTTwinCat() : base()
+	public DTOOTTwinCat()
 	{
 	}
 

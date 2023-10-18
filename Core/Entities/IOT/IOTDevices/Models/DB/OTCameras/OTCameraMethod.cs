@@ -5,8 +5,6 @@ using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 

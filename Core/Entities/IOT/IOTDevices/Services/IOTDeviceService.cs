@@ -1,13 +1,9 @@
 using System.Linq.Expressions;
 using Core.Entities.IOT.IOTDevices.Models.DB;
-using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Repositories;
-using Core.Entities.IOT.IOTTags.Models.DB;
-using Core.Entities.Parameters.CameraParams.Repositories;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
-using Stemmer.Cvb;
 
 namespace Core.Entities.IOT.IOTDevices.Services;
 
@@ -23,12 +19,13 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		return (await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: "IOTTags")).ConvertAll(device =>
 			device.ToDTO());
 	}
+
 	public async Task<DTOIOTDevice> GetByRIDWithIncludes(string rid)
 	{
-		return (await AnodeUOW.IOTDevice.GetBy(filters: new Expression<Func<IOTDevice, bool>>[]
+		return (await AnodeUOW.IOTDevice.GetBy(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => device.RID == rid
-		}, withTracking: false, includes: new []{"IOTTags"})).ToDTO();
+		}, withTracking: false, includes: new[] { "IOTTags" })).ToDTO();
 	}
 
 	public async Task CheckAllConnectionsAndApplyTags()
@@ -41,10 +38,10 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	}
 
 	/// <summary>
-	///		Will verify the connection on each device and will return the ones which are connected.
+	///     Will verify the connection on each device and will return the ones which are connected.
 	/// </summary>
 	/// <returns>
-	///		IOTDevice with IsConnected set as True.
+	///     IOTDevice with IsConnected set as True.
 	/// </returns>
 	private async Task<List<IOTDevice>> CheckAllConnections()
 	{
@@ -60,7 +57,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 			AnodeUOW.IOTDevice.Update(device);
 			AnodeUOW.Commit();
 		});
-		
+
 		await Task.WhenAll(tasks);
 		await AnodeUOW.CommitTransaction();
 		return connectedDevices;

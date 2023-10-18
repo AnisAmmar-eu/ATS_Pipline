@@ -6,7 +6,7 @@ namespace Core.Entities.IOT.IOTTags.Models.DTO;
 
 public partial class DTOIOTTag : DTOBaseEntity, IDTO<IOTTag, DTOIOTTag>
 {
-	public string RID { get; set; }	
+	public string RID { get; set; }
 	public string Name { get; set; }
 	public string Description { get; set; }
 	public string CurrentValue { get; set; }

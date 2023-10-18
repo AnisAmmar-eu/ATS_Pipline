@@ -6,7 +6,7 @@ public class Utils
 	public const string AlarmAcquitMsg = "VA_ALM.msgAcquit";
 	public const string AlarmNewMsg = "VA_ALM.msgNew";
 	public const string AlarmToRead = "VA_ALM.oldEntry.Out";
-	
+
 	// AnnouncementNotification
 	public const string AnnouncementAcquitMsg = "VA_PXX.P01_SQL_FIFO.msgAcquit";
 	public const string AnnouncementNewMsg = "VA_PXX.P01_SQL_FIFO.msgNew";

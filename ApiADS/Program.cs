@@ -4,10 +4,7 @@ using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

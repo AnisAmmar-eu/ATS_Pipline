@@ -6,5 +6,4 @@ namespace Core.Entities.IOT.IOTDevices.Repositories;
 
 public interface IIOTDeviceRepository : IRepositoryBaseEntity<IOTDevice, DTOIOTDevice>
 {
-	
 }

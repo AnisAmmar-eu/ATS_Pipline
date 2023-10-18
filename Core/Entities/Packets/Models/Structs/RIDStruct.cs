@@ -10,6 +10,6 @@ public struct RIDStruct
 
 	public string ToRID()
 	{
-		return StationID.ToString() + TS.GetTimestamp().ToUnixTimeMilliseconds().ToString();
+		return StationID + TS.GetTimestamp().ToUnixTimeMilliseconds().ToString();
 	}
 }

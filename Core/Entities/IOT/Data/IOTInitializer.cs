@@ -1,4 +1,3 @@
-using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.Parameters.CameraParams.Dictionaries;
@@ -38,7 +37,7 @@ public class IOTInitializer
 			HasNewValue = false,
 			Path = "/device-info",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -50,7 +49,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "TriggerMode",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -62,7 +61,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "TriggerSource",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -74,7 +73,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "TriggerActivation",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -86,7 +85,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "ExposureTime",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -98,7 +97,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "PixelFormat",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -110,7 +109,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "Width",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -122,7 +121,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "Height",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -134,7 +133,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "AcquisitionFrameRateEnable",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -146,7 +145,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "Gain",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -158,7 +157,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "BlackLevel",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -170,7 +169,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "Gamma",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -182,7 +181,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "BalanceRatio",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -194,7 +193,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "ConvolutionMode",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -206,7 +205,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "AdaptiveNoiseSuppressionFactor",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -218,7 +217,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "Sharpness",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
@@ -230,7 +229,7 @@ public class IOTInitializer
 			HasNewValue = true,
 			Path = "AcquisitionFrameRate",
 			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
+			IOTDevice = cam
 		});
 		anodeCTX.SaveChanges();
 	}

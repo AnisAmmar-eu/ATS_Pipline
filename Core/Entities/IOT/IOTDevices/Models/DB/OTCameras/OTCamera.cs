@@ -1,7 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Stemmer.Cvb;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
