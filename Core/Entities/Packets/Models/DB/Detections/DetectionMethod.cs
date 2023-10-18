@@ -55,13 +55,11 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 		}
 		catch (EntityNotFoundException)
 		{
-			stationCycle = new StationCycle
-			{
-				RID = StationCycleRID,
-				DetectionStatus = PacketStatus.Initialized,
-				DetectionID = ID,
-				DetectionPacket = this,
-			};
+			stationCycle = StationCycle.Create();
+			stationCycle.RID = StationCycleRID;
+			stationCycle.DetectionStatus = PacketStatus.Initialized;
+			stationCycle.DetectionID = ID;
+			stationCycle.DetectionPacket = this;
 			await anodeUOW.StationCycle.Add(stationCycle);
 		}
 

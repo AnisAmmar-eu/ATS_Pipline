@@ -5,7 +5,7 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 
 public partial class DTOOutFurnace : DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 {
-	public int AnnounceID { get; set; }
+	public string AnnounceID { get; set; }
 	public int FTAPickUp { get; set; }
 	public DateTimeOffset? PickUpTS { get; set; }
 	public DateTimeOffset? DepositTS { get; set; }

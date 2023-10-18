@@ -9,7 +9,7 @@ namespace Core.Entities.Packets.Models.Structs;
 public struct OutFurnaceStruct : IBaseADS<Packet, OutFurnaceStruct>
 {
 	public RIDStruct StationCycleRID;
-	public ushort AnnounceID;
+	public RIDStruct AnnounceID;
 
 	public ushort FTAPickUp;
 	public TimestampStruct PickUpTS;

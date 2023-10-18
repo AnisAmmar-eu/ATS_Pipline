@@ -12,6 +12,7 @@ public class OutFurnaceNotification : PacketNotification<OutFurnaceStruct>
 
 	public static async Task<OutFurnaceNotification> Create(dynamic ads)
 	{
-		return await CreateSub(ads, Utils.OutFurnaceAcquitMsg, Utils.OutFurnaceNewMsg, Utils.OutFurnaceToRead);
+		return (await CreateSub<PacketNotification<OutFurnaceStruct>>(ads, Utils.OutFurnaceAcquitMsg,
+			Utils.OutFurnaceNewMsg, Utils.OutFurnaceToRead) as OutFurnaceNotification)!;
 	}
 }

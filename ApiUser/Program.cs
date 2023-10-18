@@ -8,6 +8,7 @@ using Core.Entities.User.Services.Auth;
 using Core.Entities.User.Services.Roles;
 using Core.Entities.User.Services.Users;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.Jwt;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.Services.System.Mails;
@@ -24,6 +25,9 @@ using Microsoft.OpenApi.Models;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

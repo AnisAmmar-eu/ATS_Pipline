@@ -18,14 +18,14 @@ public class Utils
 	public const string DetectionToRead = "VA_PXX.P02_SQL_FIFO.OldEntry.Out";
 
 	// InFurnaceNotification
-	public const string InFurnaceAcquitMsg = "";
-	public const string InFurnaceNewMsg = "";
-	public const string InFurnaceToRead = "";
+	public const string InFurnaceAcquitMsg = "VA_PXX.P21_SQL_FIFO.msgAcquit";
+	public const string InFurnaceNewMsg = "VA_PXX.P21_SQL_FIFO.msgNew";
+	public const string InFurnaceToRead = "VA_PXX.P21_SQL_FIFO.OldEntry.Out";
 
 	// OutFurnaceNotification
-	public const string OutFurnaceAcquitMsg = "";
-	public const string OutFurnaceNewMsg = "";
-	public const string OutFurnaceToRead = "";
+	public const string OutFurnaceAcquitMsg = "VA_PXX.P22_SQL_FIFO.msgAcquit";
+	public const string OutFurnaceNewMsg = "VA_PXX.P22_SQL_FIFO.msgNew";
+	public const string OutFurnaceToRead = "VA_PXX.P22_SQL_FIFO.OldEntry.Out";
 
 	// ShootingNotification
 	public const string ShootingAcquitMsg = "";

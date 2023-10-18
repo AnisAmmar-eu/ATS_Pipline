@@ -25,6 +25,7 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.Parameters.CameraParams.Models.DB;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
@@ -56,7 +57,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<Packet> Packet => Set<Packet>();
 	public DbSet<AlarmList> AlarmList => Set<AlarmList>();
 	public DbSet<Announcement> Announcement => Set<Announcement>();
-	public DbSet<S1S2Announcement> S1S2Announcements => Set<S1S2Announcement>();
+	public DbSet<S1S2Announcement> S1S2Announcement => Set<S1S2Announcement>();
 	public DbSet<Detection> Detection => Set<Detection>();
 	public DbSet<InFurnace> InFurnace => Set<InFurnace>();
 	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
@@ -65,6 +66,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	// StationCycle
 	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
+	public DbSet<S1S2Cycle> S1S2Cycle => Set<S1S2Cycle>();
 	
 	// IOT Monitoring
 	public DbSet<IOTDevice> IOTDevice => Set<IOTDevice>();
@@ -147,6 +149,13 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasOne(stationCycle => stationCycle.AlarmListPacket)
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AlarmListID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<S1S2Cycle>()
+			.HasOne(s1S2Cycle => s1S2Cycle.AnnouncementPacket)
+			.WithOne(packet => packet.StationCycle as S1S2Cycle)
+			.HasForeignKey<S1S2Cycle>(s1S2Cycle => s1S2Cycle.AnnouncementID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 

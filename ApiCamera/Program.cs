@@ -2,6 +2,7 @@ using ApiCamera.Utils;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.Parameters.CameraParams.Services;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -15,6 +16,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+Station.Name = stationName;
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

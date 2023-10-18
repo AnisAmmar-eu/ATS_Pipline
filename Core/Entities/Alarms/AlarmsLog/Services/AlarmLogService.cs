@@ -38,7 +38,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 
 	public async Task<IEnumerable<DTOAlarmPLC>> Collect()
 	{
-		IConfigurationSection? appSettingsSection = _configuration.GetSection("stationConfig");
+		IConfigurationSection? appSettingsSection = _configuration.GetSection("StationConfig");
 
 		List<AlarmPLC> allAlarmsPLC = await AnodeUOW.AlarmPLC.GetAll(withTracking: false);
 		if (allAlarmsPLC.Count == 0) return Array.Empty<DTOAlarmPLC>();
@@ -57,7 +57,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 					},
 					query => query.OrderByDescending(alarmLog => alarmLog.ID));
 				if (allAlarmsPLC[i].IsActive) continue; // alarmLog is already active.
-				alarmWithStatus1.Station = appSettingsSection["nameStation"];
+				alarmWithStatus1.Station = appSettingsSection["StationName"];
 				alarmWithStatus1.IsActive = false;
 				alarmWithStatus1.TSClear = allAlarmsPLC[index].TS;
 				alarmWithStatus1.TS = DateTime.Now;
@@ -72,7 +72,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 
 				// If an alarmLog doesn't exist, this alarm just raised.
 				AlarmLog newAlarmLog = new(await AnodeUOW.AlarmC.GetById(allAlarmsPLC[index].AlarmID));
-				newAlarmLog.Station = appSettingsSection["nameStation"];
+				newAlarmLog.Station = appSettingsSection["StationName"];
 				newAlarmLog.AlarmID = allAlarmsPLC[index].AlarmID;
 				newAlarmLog.TS = DateTime.Now;
 				newAlarmLog.HasBeenSent = false;

@@ -5,6 +5,7 @@ using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
@@ -25,6 +26,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

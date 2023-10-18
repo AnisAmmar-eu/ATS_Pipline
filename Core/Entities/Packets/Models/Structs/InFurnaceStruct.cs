@@ -9,7 +9,7 @@ namespace Core.Entities.Packets.Models.Structs;
 public struct InFurnaceStruct : IBaseADS<Packet, InFurnaceStruct>
 {
 	public RIDStruct StationCycleRID;
-	public ushort AnnounceID;
+	public RIDStruct AnnounceID;
 
 	public ushort OriginID;
 	public ushort PackPosition; // AnodePositionInThePackOf7

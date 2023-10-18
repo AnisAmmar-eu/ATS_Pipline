@@ -13,7 +13,7 @@ public partial class S1S2Announcement : Announcement, IBaseEntity<S1S2Announceme
 	public S1S2Announcement(AnnouncementStruct adsStruct) : base(adsStruct)
 	{
 		SerialNumber = adsStruct.SerialNumber;
-		TrolleyNumber = (int)adsStruct.TrolleyNumber;
+		TrolleyNumber = adsStruct.TrolleyNumber;
 	}
 
 	public override DTOS1S2Announcement ToDTO()

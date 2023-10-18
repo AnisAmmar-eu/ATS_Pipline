@@ -2,6 +2,7 @@ using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
@@ -18,6 +19,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

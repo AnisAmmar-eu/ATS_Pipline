@@ -1,4 +1,5 @@
 using Core.Entities.Packets.Models.DB.Detections;
+using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
@@ -23,14 +24,14 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			throw new InvalidOperationException("Staion cycle with RID: " + stationCycle.RID +
 			                                    " does not have a detection packet for measurement");
 		Detection detection = (await AnodeUOW.Packet.GetById((int)stationCycle.DetectionID) as Detection)!;
-		// TODO Read variable
-		/*
 		AdsClient tcClient = new();
 		while (!tcClient.IsConnected)
 			tcClient.Connect(CycleAdsUtils.AdsPort);
-			*/
-		// temp
-		detection.MeasuredType = AnodeTypeDict.D20;
+		uint handle = tcClient.CreateVariableHandle(CycleAdsUtils.MeasurementVariable);
+		MeasureStruct measure = tcClient.ReadAny<MeasureStruct>(handle);
+		detection.AnodeSize = measure.AnodeLength; // TODO Weird naming.
+		detection.MeasuredType = measure.AnodeType == 1 ? AnodeTypeDict.DX : AnodeTypeDict.D20;
+		detection.IsMismatched = !measure.IsSameType; // TODO Weird
 		stationCycle.AnodeType = detection.MeasuredType;
 		detection.IsMismatched = true;
 		await AnodeUOW.StartTransaction();

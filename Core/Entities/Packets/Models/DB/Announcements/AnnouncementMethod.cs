@@ -30,14 +30,12 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
 		// StationCycle does not exist yet. It needs to be created. We have a RID from ADS.
-		StationCycle stationCycle = new()
-		{
-			RID = StationCycleRID,
-			AnodeType = AnodeType,
-			AnnouncementStatus = PacketStatus.Completed,
-			AnnouncementID = ID,
-			AnnouncementPacket = this,
-		};
+		StationCycle stationCycle = StationCycle.Create();
+		stationCycle.RID = StationCycleRID;
+		stationCycle.AnodeType = AnodeType;
+		stationCycle.AnnouncementStatus = PacketStatus.Completed;
+		stationCycle.AnnouncementID = ID;
+		stationCycle.AnnouncementPacket = this;
 		await anodeUOW.StationCycle.Add(stationCycle);
 		Status = PacketStatus.Completed;
 		StationCycle = stationCycle;

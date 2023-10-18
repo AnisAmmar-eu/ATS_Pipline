@@ -11,5 +11,5 @@ public class CycleStatus
 public class CycleAdsUtils
 {
 	public static int AdsPort = 851;
-	public static string MeasurementVariable = "MAIN.Measure";
+	public static string MeasurementVariable = "VA_PXX.P04_In";
 }

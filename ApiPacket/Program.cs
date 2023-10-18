@@ -7,6 +7,7 @@ using Core.Entities.KPI.KPIEntries.Services.KPILogs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Entities.Packets.Services;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
@@ -26,6 +27,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
