@@ -23,7 +23,6 @@ using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
-using Core.Entities.Parameters.CameraParams.Models.DB;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
@@ -82,9 +81,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<KPILog> KPILog => Set<KPILog>();
 	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
 	public DbSet<KPITest> KPITest => Set<KPITest>();
-
-	// Parameters
-	public DbSet<CameraParam> CameraParam => Set<CameraParam>();
 
 	// Action
 	public DbSet<Act> Acts => Set<Act>();

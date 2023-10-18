@@ -54,7 +54,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("AlarmC", (string)null);
+                    b.ToTable("AlarmC");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsCycle.Models.DB.AlarmCycle", b =>
@@ -85,7 +85,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmListPacketID");
 
-                    b.ToTable("AlarmCycle", (string)null);
+                    b.ToTable("AlarmCycle");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsLog.Models.DB.AlarmLog", b =>
@@ -133,7 +133,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmID");
 
-                    b.ToTable("AlarmLog", (string)null);
+                    b.ToTable("AlarmLog");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsPLC.Models.DB.AlarmPLC", b =>
@@ -158,7 +158,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("AlarmPLC", (string)null);
+                    b.ToTable("AlarmPLC");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsRT.Models.DB.AlarmRT", b =>
@@ -199,7 +199,7 @@ namespace Core.Migrations
                     b.HasIndex("AlarmID")
                         .IsUnique();
 
-                    b.ToTable("AlarmRT", (string)null);
+                    b.ToTable("AlarmRT");
                 });
 
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>
@@ -238,7 +238,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("IOTDevice", (string)null);
+                    b.ToTable("IOTDevice");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("IOTDevice");
                 });
@@ -292,7 +292,7 @@ namespace Core.Migrations
 
                     b.HasIndex("IOTDeviceID");
 
-                    b.ToTable("IOTTag", (string)null);
+                    b.ToTable("IOTTag");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("IOTTag");
                 });
@@ -322,7 +322,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("KPIC", (string)null);
+                    b.ToTable("KPIC");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPILogs.KPILog", b =>
@@ -354,7 +354,7 @@ namespace Core.Migrations
 
                     b.HasIndex("KPICID");
 
-                    b.ToTable("KPILog", (string)null);
+                    b.ToTable("KPILog");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs.KPIRT", b =>
@@ -386,7 +386,7 @@ namespace Core.Migrations
 
                     b.HasIndex("KPICID");
 
-                    b.ToTable("KPIRT", (string)null);
+                    b.ToTable("KPIRT");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPITests.Models.DB.KPITest", b =>
@@ -405,7 +405,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("KPITest", (string)null);
+                    b.ToTable("KPITest");
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Packet", b =>
@@ -440,76 +440,9 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Packet", (string)null);
+                    b.ToTable("Packet");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Packet");
-                });
-
-            modelBuilder.Entity("Core.Entities.Parameters.CameraParams.Models.DB.CameraParam", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<double>("AcquisitionFrameRate")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("AcquisitionFrameRateEnable")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("AdaptiveNoiseSuppressionFactor")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BalanceRatio")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BlackLevel")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("ConvolutionMode")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("ExposureTime")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Gain")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Gamma")
-                        .HasColumnType("float");
-
-                    b.Property<long>("Height")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("PixelFormat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Sharpness")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("TriggerActivation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TriggerMode")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("TriggerSource")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Width")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("CameraParam", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.StationCycle", b =>
@@ -584,7 +517,7 @@ namespace Core.Migrations
                         .IsUnique()
                         .HasFilter("[ShootingID] IS NOT NULL");
 
-                    b.ToTable("StationCycle", (string)null);
+                    b.ToTable("StationCycle");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("StationCycle");
                 });
@@ -612,7 +545,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Acts", (string)null);
+                    b.ToTable("Acts");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>
@@ -646,7 +579,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActID");
 
-                    b.ToTable("ActEntities", (string)null);
+                    b.ToTable("ActEntities");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles.ActEntityRole", b =>
@@ -682,7 +615,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActEntityID");
 
-                    b.ToTable("ActEntityRoles", (string)null);
+                    b.ToTable("ActEntityRoles");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Roles.ApplicationRole", b =>
@@ -828,7 +761,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Log", (string)null);
+                    b.ToTable("Log");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

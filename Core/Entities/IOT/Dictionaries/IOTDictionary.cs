@@ -11,3 +11,17 @@ public class IOTTagType
 	public static string Int = "int";
 	public static string Bool = "bool";
 }
+public static class TriggerSources
+{
+	public const string Line3 = "Line3";
+}
+
+public static class TriggerActivations
+{
+	public const string AnyEdge = "AnyEdge";
+}
+
+public static class PixelFormats
+{
+	public const string BayerRG8 = "BayerRG8";
+}

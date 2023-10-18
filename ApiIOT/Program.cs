@@ -4,9 +4,11 @@ using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
+using Core.Shared.SignalR;
 using Core.Shared.SignalR.IOTTagHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -29,6 +31,10 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddScoped<ILogsService, LogsService>();
+
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ISignalRService, SignalRService>();
+
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
 builder.Services.AddScoped<IIOTTagService, IOTTagService>();
 

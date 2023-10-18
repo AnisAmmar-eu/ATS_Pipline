@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using ApiCamera.Utils;
-using Core.Entities.Parameters.CameraParams.Models.DTO;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
@@ -13,44 +12,67 @@ namespace ApiCamera.Controllers;
 public class CameraApiController : ControllerBase
 {
 	private readonly ILogsService _logsService;
+	private readonly IConfiguration _configuration;
 
-	public CameraApiController(ILogsService logsService)
+	public CameraApiController(ILogsService logsService, IConfiguration configuration)
 	{
 		_logsService = logsService;
+		_configuration = configuration;
 	}
 
-	#region Get/Set Device Info
+	#region Get/Set Device
 
-	[HttpGet("/device-info")]
-	public IActionResult GetDeviceInfo()
+	[HttpGet("/device1")]
+	public async Task<IActionResult> GetDevice1Info()
 	{
-		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
-		string result;
-		try
-		{
-			Device device = DeviceFactory.Open(driverString);
-			result = device == null ? "Driver Open Problem" : "Driver Opened ";
-		}
-		catch (Exception e)
-		{
-			return BadRequest(e.Message);
-		}
+		int port = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
+		return await GetDeviceInfo(port);
+	}
 
-		return Ok(result);
+	[HttpGet("/device2")]
+	public async Task<IActionResult> GetDevice2Info()
+	{
+		int port = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
+		return await GetDeviceInfo(port);
+	}
+
+	[HttpPost("/device1")]
+	public async Task<ActionResult> SetDevice1Parameters([FromBody] [Required] Dictionary<string, string> parameters)
+	{
+		int port = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
+		return await SetDeviceParameters(port, parameters);
+	}
+
+	[HttpPost("/device2")]
+	public async Task<ActionResult> SetDevice2Parameters([FromBody] [Required] Dictionary<string, string> parameters)
+	{
+		int port = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
+		return await SetDeviceParameters(port, parameters);
 	}
 
 	#endregion
 
-	#region Parameters
+	#region Acquisition
 
-	[HttpPost("/set-parameters")]
-	public async Task<ActionResult> SetParameters([FromBody] [Required] Dictionary<string, string> parameters)
+	[HttpGet("/acquisition")]
+	public async Task<IActionResult> AcquisitionAsync()
 	{
 		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
+		int port1 = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
+		string folder1 = _configuration.GetValue<string>("CameraConfig:Camera1:Folder");
+		int port2 = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
+		string folder2 = _configuration.GetValue<string>("CameraConfig:Camera2:Folder");
 		try
 		{
-			Device device = DeviceFactory.Open(driverString);
-			CameraMethod.SetParameters(device, parameters);
+			// Create an instance of the camera
+			Device? device1 = DeviceFactory.OpenPort(driverString, port1);
+			Device? device2 = DeviceFactory.OpenPort(driverString, port2);
+			List<Task> acquisitions = new(2)
+			{
+				CameraMethod.RunAcquisitionAsync(device1, "jpg", folder1),
+				CameraMethod.RunAcquisitionAsync(device2, "jpg", folder2),
+			};
+			await Task.WhenAll(acquisitions);
 		}
 		catch (Exception e)
 		{
@@ -62,17 +84,32 @@ public class CameraApiController : ControllerBase
 
 	#endregion
 
-	#region Acquisition
+	#region Generic functions
 
-	[HttpGet("/acquisition")]
-	public async Task<IActionResult> AcquisitionAsync()
+	private async Task<IActionResult> GetDeviceInfo(int port)
+	{
+		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
+		string result;
+		try
+		{
+			Device device = DeviceFactory.OpenPort(driverString, port);
+			result = device == null ? "Driver Open Problem" : "Driver Opened ";
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
+	}
+
+	private async Task<ActionResult> SetDeviceParameters(int port, Dictionary<string, string> parameters)
 	{
 		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
 		try
 		{
-			// Create an instance of the camera
-			Device? device = DeviceFactory.Open(driverString);
-			await CameraMethod.RunAcquisitionAsync(device, new DTOCameraParam(), "jpg");
+			Device device = DeviceFactory.OpenPort(driverString, port);
+			CameraMethod.SetParameters(device, parameters);
 		}
 		catch (Exception e)
 		{

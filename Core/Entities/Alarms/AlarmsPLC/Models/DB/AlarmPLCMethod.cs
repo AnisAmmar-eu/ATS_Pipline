@@ -18,7 +18,7 @@ public partial class AlarmPLC : BaseEntity, IBaseEntity<AlarmPLC, DTOAlarmPLC>
 		IsOneShot = alarm.OneShot;
 	}
 
-	public DTOAlarmPLC ToDTO()
+	public override DTOAlarmPLC ToDTO()
 	{
 		return new DTOAlarmPLC(this);
 	}

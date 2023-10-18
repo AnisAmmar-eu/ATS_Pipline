@@ -35,8 +35,11 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 	{
 		Dictionary<string, string> parameters = new();
 		bool hasAnyTagChanged = false;
+		string httpPath = string.Empty;
 		foreach (IOTTag iotTag in IOTTags)
 		{
+			if (httpPath == string.Empty && iotTag.Name == IOTTagNames.CheckConnectionName)
+				httpPath = iotTag.Path;
 			if (!iotTag.HasNewValue)
 				continue;
 
@@ -52,7 +55,7 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 			try
 			{
 				HttpResponseMessage response =
-					await httpClient.PostAsync(Address + "/set-parameters", JsonContent.Create(parameters));
+					await httpClient.PostAsync(Address + httpPath, JsonContent.Create(parameters));
 				if (response.StatusCode != HttpStatusCode.OK)
 					throw new Exception("Error while setting parameters: " + response.StatusCode);
 				hasAnyTagChanged = true;

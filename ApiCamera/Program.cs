@@ -24,7 +24,6 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ILogsService, LogsService>();
-builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 WebApplication app = builder.Build();

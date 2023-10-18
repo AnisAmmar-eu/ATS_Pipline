@@ -1,6 +1,6 @@
+using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
-using Core.Entities.Parameters.CameraParams.Dictionaries;
 using Core.Shared.Data;
 
 namespace Core.Entities.IOT.Data;
@@ -11,11 +11,11 @@ public class IOTInitializer
 	{
 		if (anodeCTX.IOTDevice.Any())
 			return;
-		InitializeCamera(anodeCTX, "First", "1");
+		InitializeCamera(anodeCTX, "First", 1);
 		// InitializeCamera(anodeCTX, "2", "Second");
 	}
 
-	private static void InitializeCamera(AnodeCTX anodeCTX, string prefix, string suffix)
+	private static void InitializeCamera(AnodeCTX anodeCTX, string prefix, int suffix)
 	{
 		OTCamera cam = new()
 		{
@@ -30,12 +30,12 @@ public class IOTInitializer
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
 			RID = "Connection" + suffix,
-			Name = "__Connection",
+			Name = IOTTagNames.CheckConnectionName,
 			Description = "Connection tag for Camera" + suffix,
 			CurrentValue = "On",
 			NewValue = "",
 			HasNewValue = false,
-			Path = "/device-info",
+			Path = "/device" + suffix,
 			IOTDeviceID = cam.ID,
 			IOTDevice = cam
 		});

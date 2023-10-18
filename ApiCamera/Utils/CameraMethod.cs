@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Globalization;
-using Core.Entities.Parameters.CameraParams.Models.DTO;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using Stemmer.Cvb.GenApi;
@@ -12,7 +11,7 @@ namespace ApiCamera.Utils;
 
 public static class CameraMethod
 {
-	public static async Task RunAcquisitionAsync(Device device, DTOCameraParam dtoCameraParam, string extension)
+	public static async Task RunAcquisitionAsync(Device device, string extension, string folder)
 	{
 		// Device params are managed by ApiIOT.
 
@@ -45,8 +44,6 @@ public static class CameraMethod
 					continue;
 				}
 
-				DateTimeOffset now = DateTimeOffset.Now;
-
 				// Wait for a new photo to be taken
 				using (StreamImage image = stream.Wait())
 				{
@@ -69,7 +66,7 @@ public static class CameraMethod
 
 					string filename = rid + "-" + ts + "." + extension;
 					// Save the photo
-					image.Save("Camera1\\" + filename, 1);
+					image.Save(folder + filename, 1);
 				}
 
 				Debug.WriteLine("isRunning = " + device.Stream.IsRunning);
