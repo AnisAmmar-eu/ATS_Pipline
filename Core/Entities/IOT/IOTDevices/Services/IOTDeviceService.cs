@@ -3,14 +3,19 @@ using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Shared.Services.Kernel;
+using Core.Shared.SignalR.IOTTagHub;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Core.Entities.IOT.IOTDevices.Services;
 
 public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevice, DTOIOTDevice>, IIOTDeviceService
 {
-	public IOTDeviceService(IAnodeUOW anodeUOW) : base(anodeUOW)
+	private readonly IHubContext<IOTTagHub, IIOTTagHub> _hubContext;
+
+	public IOTDeviceService(IAnodeUOW anodeUOW, IHubContext<IOTTagHub, IIOTTagHub> hubContext) : base(anodeUOW)
 	{
+		_hubContext = hubContext;
 	}
 
 
@@ -32,9 +37,13 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	{
 		List<IOTDevice> devices = await CheckAllConnections();
 		await AnodeUOW.StartTransaction();
-		IEnumerable<Task> tasks = devices.Select(async device => await device.ApplyTags(AnodeUOW));
+		bool hasAnyTagChanged = false;
+		IEnumerable<Task> tasks = devices.Select(async device =>
+			hasAnyTagChanged = hasAnyTagChanged || await device.ApplyTags(AnodeUOW));
 		await Task.WhenAll(tasks);
 		await AnodeUOW.CommitTransaction();
+		if (hasAnyTagChanged)
+			await _hubContext.Clients.All.RefreshIOTTag();
 	}
 
 	/// <summary>

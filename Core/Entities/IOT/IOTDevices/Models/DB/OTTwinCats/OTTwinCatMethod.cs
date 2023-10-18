@@ -40,13 +40,14 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 		return await Task.FromResult(true);
 	}
 
-	public override async Task ApplyTags(IAnodeUOW anodeUOW)
+	public override async Task<bool> ApplyTags(IAnodeUOW anodeUOW)
 	{
 		CancellationToken cancel = CancellationToken.None;
 		AdsClient tcClient = new();
 		tcClient.Connect(int.Parse(Address));
 		if (!tcClient.IsConnected)
-			return; // The TwinCat will be marked as disconnected at next monitoring.
+			return false; // The TwinCat will be marked as disconnected at next monitoring.
+		bool hasAnyTagChanged = false;
 		foreach (IOTTag tag in IOTTags)
 		{
 			if (!(tag is OTTagTwinCat otTagTwinCat))
@@ -54,20 +55,24 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 			uint varHandle = tcClient.CreateVariableHandle(tag.Path);
 			ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, cancel, otTagTwinCat);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
-				return; // Same as above
+				return false; // Same as above
+			hasAnyTagChanged = hasAnyTagChanged || tag.CurrentValue != resultRead.Value?.ToString();
 			tag.CurrentValue = resultRead.Value?.ToString()!;
 			if (tag.HasNewValue)
 			{
 				ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, cancel, otTagTwinCat);
 				if (resultWrite.ErrorCode != AdsErrorCode.NoError)
-					return; // Same as above
+					return false; // Same as above
 				tag.HasNewValue = false;
 				tag.CurrentValue = tag.NewValue;
+				hasAnyTagChanged = true;
 			}
 
 			anodeUOW.IOTTag.Update(tag);
 			anodeUOW.Commit();
 		}
+
+		return hasAnyTagChanged;
 	}
 
 	private async Task<ResultValue<object>> ReadFromType(AdsClient tcClient, uint varHandle, CancellationToken cancel,
