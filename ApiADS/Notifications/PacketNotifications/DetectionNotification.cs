@@ -12,7 +12,7 @@ public class DetectionNotification : PacketNotification<DetectionStruct>
 
 	public static async Task<DetectionNotification> Create(dynamic ads)
 	{
-		return (await CreateSub<PacketNotification<DetectionStruct>>(ads, Utils.DetectionAcquitMsg,
+		return (await CreateSub<PacketNotification<DetectionStruct>>(ads, Utils.DetectionRemove,
 			Utils.DetectionNewMsg, Utils.DetectionToRead) as DetectionNotification)!;
 	}
 }

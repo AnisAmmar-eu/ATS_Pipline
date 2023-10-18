@@ -7,6 +7,7 @@ using Core.Entities.KPI.KPIEntries.Models.DTO.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DTO.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel;
@@ -112,7 +113,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 					kpiRT = new KPIRT
 					{
 						KPICID = kpiC.ID,
-						StationID = 0, // TODO
+						StationID = Station.ID,
 						Value = "",
 						Period = periods[i],
 						KPIC = kpiC

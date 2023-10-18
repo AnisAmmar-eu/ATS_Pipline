@@ -12,7 +12,7 @@ public class InFurnaceNotification : PacketNotification<InFurnaceStruct>
 
 	public static async Task<InFurnaceNotification> Create(dynamic ads)
 	{
-		return (await CreateSub<PacketNotification<InFurnaceStruct>>(ads, Utils.InFurnaceAcquitMsg,
+		return (await CreateSub<PacketNotification<InFurnaceStruct>>(ads, Utils.InFurnaceRemove,
 			Utils.InFurnaceNewMsg, Utils.InFurnaceToRead) as InFurnaceNotification)!;
 	}
 }

@@ -11,15 +11,15 @@ public class IOTInitializer
 	{
 		if (anodeCTX.IOTDevice.Any())
 			return;
-		InitializeCamera(anodeCTX, "First", 1);
-		// InitializeCamera(anodeCTX, "2", "Second");
+		InitializeCamera(anodeCTX, DeviceRID.Camera1, "First", 1);
+		// InitializeCamera(anodeCTX, "Second", 2);
 	}
 
-	private static void InitializeCamera(AnodeCTX anodeCTX, string prefix, int suffix)
+	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int suffix)
 	{
 		OTCamera cam = new()
 		{
-			RID = "Camera" + suffix,
+			RID = rid,
 			Name = prefix + " Camera",
 			Description = prefix + " Camera IOTDevice",
 			Address = "https://localhost:7253",
@@ -29,7 +29,7 @@ public class IOTInitializer
 		anodeCTX.SaveChanges();
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = "Connection" + suffix,
+			RID = "CameraConnection" + suffix,
 			Name = IOTTagNames.CheckConnectionName,
 			Description = "Connection tag for Camera" + suffix,
 			CurrentValue = "On",

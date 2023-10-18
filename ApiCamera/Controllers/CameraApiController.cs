@@ -69,8 +69,8 @@ public class CameraApiController : ControllerBase
 			Device? device2 = DeviceFactory.OpenPort(driverString, port2);
 			List<Task> acquisitions = new(2)
 			{
-				CameraMethod.RunAcquisitionAsync(device1, "jpg", folder1),
-				CameraMethod.RunAcquisitionAsync(device2, "jpg", folder2),
+				CameraUtils.RunAcquisitionAsync(device1, "jpg", folder1),
+				CameraUtils.RunAcquisitionAsync(device2, "jpg", folder2),
 			};
 			await Task.WhenAll(acquisitions);
 		}
@@ -109,7 +109,7 @@ public class CameraApiController : ControllerBase
 		try
 		{
 			Device device = DeviceFactory.OpenPort(driverString, port);
-			CameraMethod.SetParameters(device, parameters);
+			CameraUtils.SetParameters(device, parameters);
 		}
 		catch (Exception e)
 		{

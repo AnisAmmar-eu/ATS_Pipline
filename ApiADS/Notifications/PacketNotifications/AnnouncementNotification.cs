@@ -5,14 +5,14 @@ namespace ApiADS.Notifications.PacketNotifications;
 
 public class AnnouncementNotification : PacketNotification<AnnouncementStruct>
 {
-	public AnnouncementNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
-		: base(resultHandle, acquitMsg, newMsg, oldEntry)
+	public AnnouncementNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry)
+		: base(resultHandle, remove, newMsg, oldEntry)
 	{
 	}
 
 	public static async Task<AnnouncementNotification> Create(dynamic ads)
 	{
-		return (await CreateSub<PacketNotification<AnnouncementStruct>>(ads, Utils.AnnouncementAcquitMsg,
+		return (await CreateSub<PacketNotification<AnnouncementStruct>>(ads, Utils.AnnouncementRemove,
 			Utils.AnnouncementNewMsg, Utils.AnnouncementToRead) as AnnouncementNotification)!;
 	}
 }

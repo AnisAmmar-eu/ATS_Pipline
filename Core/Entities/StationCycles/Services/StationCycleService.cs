@@ -7,6 +7,7 @@ using Core.Entities.StationCycles.Repositories;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
+using TwinCAT;
 using TwinCAT.Ads;
 
 namespace Core.Entities.StationCycles.Services;
@@ -23,10 +24,11 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (stationCycle.DetectionID == null)
 			throw new InvalidOperationException("Station cycle with RID: " + stationCycle.RID +
 			                                    " does not have a detection packet for measurement");
-		Detection detection = (await AnodeUOW.Packet.GetById((int)stationCycle.DetectionID) as Detection)!;
+		Detection detection = (await AnodeUOW.Packet.GetById(stationCycle.DetectionID.Value) as Detection)!;
 		AdsClient tcClient = new();
-		while (!tcClient.IsConnected)
-			tcClient.Connect(CycleAdsUtils.AdsPort);
+		tcClient.Connect(CycleAdsUtils.AdsPort);
+		if (!tcClient.IsConnected)
+			throw new AdsException("Could not connect to TwinCat");
 		uint handle = tcClient.CreateVariableHandle(CycleAdsUtils.MeasurementVariable);
 		MeasureStruct measure = tcClient.ReadAny<MeasureStruct>(handle);
 		detection.AnodeSize = measure.AnodeLength; // TODO Weird naming.

@@ -9,8 +9,8 @@ namespace ApiADS.Notifications.PacketNotifications;
 public class PacketNotification<TStruct> : BaseNotification<IPacketService, Packet, DTOPacket, TStruct>
 	where TStruct : struct, IBaseADS<Packet, TStruct>
 {
-	public PacketNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
-		: base(resultHandle, acquitMsg, newMsg, oldEntry)
+	public PacketNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry)
+		: base(resultHandle, remove, newMsg, oldEntry)
 	{
 	}
 

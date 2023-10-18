@@ -9,7 +9,7 @@ using Stream = Stemmer.Cvb.Driver.Stream;
 
 namespace ApiCamera.Utils;
 
-public static class CameraMethod
+public static class CameraUtils
 {
 	public static async Task RunAcquisitionAsync(Device device, string extension, string folder)
 	{

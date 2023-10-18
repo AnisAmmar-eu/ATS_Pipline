@@ -12,15 +12,15 @@ public class
 	where TService : class, IServiceBaseEntity<T, TDTO>
 	where TStruct : struct, IBaseADS<T, TStruct>
 {
-	private uint _acquitMsg;
+	private uint _remove;
 	private uint _newMsg;
 	private uint _oldEntry;
 	private ResultHandle _resultHandle = null!;
 
-	public BaseNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
+	public BaseNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry)
 	{
 		_resultHandle = resultHandle;
-		_acquitMsg = acquitMsg;
+		_remove = remove;
 		_newMsg = newMsg;
 		_oldEntry = oldEntry;
 	}
@@ -30,12 +30,12 @@ public class
 	}
 
 	protected static async Task<BaseNotification<TService, T, TDTO, TStruct>> CreateSub<TNotification>(dynamic ads,
-		string acquitSymbol, string newMsgSymbol, string oldEntrySymbol)
+		string removeSymbol, string newMsgSymbol, string oldEntrySymbol)
 		where TNotification : BaseNotification<TService, T, TDTO, TStruct>, new()
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
 
-		//uint acquitMsg = tcClient.CreateVariableHandle(acquitSymbol);
+		uint remove = tcClient.CreateVariableHandle(removeSymbol);
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
@@ -45,12 +45,11 @@ public class
 		TNotification notification =
 			new()
 			{
-				_acquitMsg = 0,
+				_remove = remove,
 				_newMsg = newMsg,
 				_oldEntry = oldEntry,
 				_resultHandle = resultHandle
 			};
-		//new(resultHandle, 0, newMsg, oldEntry);
 		tcClient.AdsNotification += notification.GetElement;
 
 		// Verifies if there isn't already something in the queue
@@ -87,7 +86,7 @@ public class
 		try
 		{
 			await AddElement(services, entity);
-			//tcClient.WriteAny(_acquitMsg, Utils.FinishedReading);
+			tcClient.WriteAny(_remove, true);
 		}
 		catch
 		{
