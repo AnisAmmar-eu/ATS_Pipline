@@ -51,13 +51,7 @@ public class
 				_resultHandle = resultHandle
 			};
 		tcClient.AdsNotification += notification.GetElement;
-
-		// Verifies if there isn't already something in the queue
-		ResultValue<bool> newMsgValue = await tcClient.ReadAnyAsync<bool>(newMsg, ads.cancel);
-		if (newMsgValue.ErrorCode != AdsErrorCode.NoError)
-			throw new Exception(newMsgValue.ErrorCode.ToString());
-		if (newMsgValue.Value)
-			notification.GetElementSub(ads);
+		// No neeed to verify if the queue has already an element, a notification is automatically sent when pairing.
 		return notification;
 	}
 
