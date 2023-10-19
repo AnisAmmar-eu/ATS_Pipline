@@ -4,6 +4,7 @@ using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Repositories;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Core.Entities.Packets.Services;

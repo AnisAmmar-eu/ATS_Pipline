@@ -4,8 +4,10 @@ using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
+using Stemmer.Cvb;
 
 namespace Core.Entities.Packets.Models.DB.Shootings;
 
@@ -14,6 +16,12 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	public Shooting()
 	{
 		Type = PacketType.Shooting;
+	}
+
+	public Shooting(string imagePath, string thumbnailsPath)
+	{
+		ImagePath = imagePath;
+		ThumbnailPath = thumbnailsPath;
 	}
 
 	public Shooting(DTOShooting dtoShooting) : base(dtoShooting)
@@ -87,6 +95,9 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 			}
 		}
 
+		if (tsFirstImage == null)
+			throw new Exception("tsFirstImage should NOT be null");
+
 		StationCycle = await anodeUOW.StationCycle.GetBy(
 			new Expression<Func<StationCycle, bool>>[]
 			{
@@ -95,16 +106,36 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		StationCycle.ShootingPacket = this;
 		StationCycle.ShootingID = ID;
 		// ?. => If firstHole not null then...
-		while (IsFileLocked(firstHole) || IsFileLocked(thirdHole)) ;
-		firstHole?.MoveTo(ShootingFolders.Archive1 + firstHole.Name);
-		thirdHole?.MoveTo(ShootingFolders.Archive2 + thirdHole.Name);
+		while (IsFileLocked(firstHole) || IsFileLocked(thirdHole))
+		{
+		}
+
+		if (firstHole != null)
+			SaveImageAndThumbnail(firstHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage.Value, 1);
+		if (thirdHole != null)
+			SaveImageAndThumbnail(thirdHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage.Value, 2);
+
 		Status = PacketStatus.Completed;
 		TSShooting = (DateTimeOffset)tsFirstImage!;
 		HasError = firstHole == null || thirdHole == null;
 		StationCycleRID = rid!;
 		StationCycle.ShootingStatus = Status;
 		anodeUOW.StationCycle.Update(StationCycle);
-		StationCycle = StationCycle;
+	}
+
+	private static void SaveImageAndThumbnail(FileInfo file, string imageRoot, string thumbnailRoot, string anodeType,
+		DateTimeOffset date, int camera)
+	{
+		string filename = $"S{Station.ID:00}T{anodeType}C{camera:00}T{date.ToString("yyyymmdd-HHmmss-fff")}.jpg";
+		string path =
+			$@"S{Station.ID:00}\T{anodeType}\Y{date.Year}\M{date.Month:00}\D{date.Day:00}\C{camera:00}\";
+		string imagePath = $@"{imageRoot}\{path}";
+		string thumbnailPath = $@"{thumbnailRoot}\{path}";
+		Directory.CreateDirectory(imagePath);
+		Directory.CreateDirectory(thumbnailPath);
+		file.MoveTo($@"{imagePath}\{filename}");
+		Image image = Image.FromFile(file.FullName);
+		image.Save($@"{thumbnailPath}\{filename}", 0.2);
 	}
 
 	private FileInfo? GetImageInDirectory(DirectoryInfo directory, string rid)
@@ -122,10 +153,8 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		if (file == null) return false;
 		try
 		{
-			using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-			{
-				stream.Close();
-			}
+			using FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+			stream.Close();
 		}
 		catch (IOException)
 		{

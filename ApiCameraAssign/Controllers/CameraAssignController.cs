@@ -29,54 +29,6 @@ public class CameraAssignController : ControllerBase
 		_packetService = packetService;
 	}
 
-	[HttpPost("announce")]
-	public async Task<IActionResult> BuildAnnounce([FromQuery] string rid)
-	{
-		DTOAnnouncement? announcement;
-		try
-		{
-			Announcement ann = new()
-			{
-				Type = PacketType.Announcement,
-				StationCycleRID = rid,
-				AnodeType = AnodeTypeDict.DX
-			};
-			announcement = await _packetService.BuildPacket(ann) as DTOAnnouncement;
-			if (announcement == null)
-				throw new Exception("Cast error");
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
-		}
-
-		return await new ApiResponseObject(announcement).SuccessResult(_logsService, ControllerContext);
-	}
-
-	[HttpPost("detection")]
-	public async Task<IActionResult> BuildDetection([FromQuery] string rid)
-	{
-		DTODetection? announcement;
-		try
-		{
-			Detection ann = new()
-			{
-				Type = PacketType.Detection,
-				StationCycleRID = rid,
-				AnodeSize = 42
-			};
-			announcement = await _packetService.BuildPacket(ann) as DTODetection;
-			if (announcement == null)
-				throw new Exception("Cast error");
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
-		}
-
-		return await new ApiResponseObject(announcement).SuccessResult(_logsService, ControllerContext);
-	}
-
 	[HttpGet]
 	public async Task<IActionResult> GetAllShootings()
 	{

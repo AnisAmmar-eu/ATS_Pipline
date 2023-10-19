@@ -3,6 +3,8 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Migrations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,21 +26,22 @@ public class AssignService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
+		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		IPacketService packetService = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
+		IStationCycleService stationCycleService =
+			asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
+		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		using PeriodicTimer timer = new(_period);
-
+		string imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
+		string thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try
 			{
-				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-				IPacketService packetService = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
-				IStationCycleService stationCycleService =
-					asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
-
 				_logger.LogInformation("AssignService running at: {time}", DateTimeOffset.Now);
 
 				_logger.LogInformation("AssignService calling Assign");
-				Packet shooting = new Shooting();
+				Packet shooting = new Shooting(imagesPath, thumbnailsPath);
 				await packetService.BuildPacket(shooting);
 				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}",
 					shooting.StationCycleRID);

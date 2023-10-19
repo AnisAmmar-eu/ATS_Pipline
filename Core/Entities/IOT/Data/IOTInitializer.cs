@@ -12,7 +12,7 @@ public class IOTInitializer
 		if (anodeCTX.IOTDevice.Any())
 			return;
 		InitializeCamera(anodeCTX, DeviceRID.Camera1, "First", 1);
-		// InitializeCamera(anodeCTX, "Second", 2);
+		// InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int suffix)
