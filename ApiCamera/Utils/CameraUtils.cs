@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using Core.Shared.Dictionaries;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using Stemmer.Cvb.GenApi;
@@ -11,10 +12,19 @@ namespace ApiCamera.Utils;
 
 public static class CameraUtils
 {
-	public static async Task RunAcquisitionAsync(Device device, string extension, string folder)
+	public static async Task RunAcquisitionAsync(Device device, string extension, string imagesDir,
+		string thumbnailsDir)
 	{
 		// Device params are managed by ApiIOT.
 
+		// Create folders for images saving.
+		string stationDir = Station.Name.ToLower() + "\\";
+		imagesDir = stationDir + imagesDir;
+		thumbnailsDir = stationDir + thumbnailsDir;
+		Directory.CreateDirectory(stationDir);
+		Directory.CreateDirectory(imagesDir);
+		Directory.CreateDirectory(thumbnailsDir);
+		
 		// Set events (disconnect + reconnect)
 		device.Notify[NotifyDictionary.DeviceDisconnected].Event += Disconnect;
 		device.Notify[NotifyDictionary.DeviceReconnect].Event += Reconnect;
@@ -65,8 +75,11 @@ public static class CameraUtils
 					string ts = DateTimeOffset.Now.ToString("yyyyMMddHHmmssfff");
 
 					string filename = rid + "-" + ts + "." + extension;
+					string imagesPath = CreateAndGetPathFromDate(DateTimeOffset.Now, imagesDir);
+					string thumbnailsPath = CreateAndGetPathFromDate(DateTimeOffset.Now, thumbnailsDir);
 					// Save the photo
-					image.Save(folder + filename, 1);
+					image.Save(imagesPath + filename, 1);
+					image.Save(thumbnailsPath + filename, 0.2);
 				}
 
 				Debug.WriteLine("isRunning = " + device.Stream.IsRunning);
@@ -106,6 +119,17 @@ public static class CameraUtils
 	}
 
 	#region Generics functions
+
+	private static string CreateAndGetPathFromDate(DateTimeOffset date, string root)
+	{
+		string path = root + date.Year + "\\";
+		Directory.CreateDirectory(path);
+		path += date.Month + "\\";
+		Directory.CreateDirectory(path);
+		path += date.Day + "\\";
+		Directory.CreateDirectory(path);
+		return path;
+	}
 
 	private static void Disconnect(object? sender, NotifyEventArgs e)
 	{

@@ -59,9 +59,11 @@ public class CameraApiController : ControllerBase
 	{
 		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
 		int port1 = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
-		string folder1 = _configuration.GetValue<string>("CameraConfig:Camera1:Folder");
+		string imagesDir1 = _configuration.GetValue<string>("CameraConfig:Camera1:ImagesDirectory");
+		string thumbnailsDir1 = _configuration.GetValue<string>("CameraConfig:Camera1:ThumbnailsDirectory");
 		int port2 = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
-		string folder2 = _configuration.GetValue<string>("CameraConfig:Camera2:Folder");
+		string imagesDir2 = _configuration.GetValue<string>("CameraConfig:Camera2:ImagesDirectory");
+		string thumbnailsDir2 = _configuration.GetValue<string>("CameraConfig:Camera2:ThumbnailsDirectory");
 		try
 		{
 			// Create an instance of the camera
@@ -69,8 +71,8 @@ public class CameraApiController : ControllerBase
 			Device? device2 = DeviceFactory.OpenPort(driverString, port2);
 			List<Task> acquisitions = new(2)
 			{
-				CameraUtils.RunAcquisitionAsync(device1, "jpg", folder1),
-				CameraUtils.RunAcquisitionAsync(device2, "jpg", folder2),
+				CameraUtils.RunAcquisitionAsync(device1, "jpg", imagesDir1, thumbnailsDir1),
+				CameraUtils.RunAcquisitionAsync(device2, "jpg", imagesDir2, thumbnailsDir2),
 			};
 			await Task.WhenAll(acquisitions);
 		}
