@@ -8,6 +8,7 @@ using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 using Stemmer.Cvb;
+using TwinCAT.Ads;
 
 namespace Core.Entities.Packets.Models.DB.Shootings;
 
@@ -98,6 +99,15 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		if (tsFirstImage == null)
 			throw new Exception("tsFirstImage should NOT be null");
 
+		Task task1 = UpdatePacketAndStationCycle(anodeUOW, firstHole, thirdHole, rid, tsFirstImage.Value);
+		Task task2 = DequeueDetectionPacket();
+		await task1;
+		await task2;
+	}
+
+	private async Task UpdatePacketAndStationCycle(IAnodeUOW anodeUOW, FileInfo? firstHole, FileInfo? thirdHole,
+		string rid, DateTimeOffset tsFirstImage)
+	{
 		StationCycle = await anodeUOW.StationCycle.GetBy(
 			new Expression<Func<StationCycle, bool>>[]
 			{
@@ -111,16 +121,26 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		}
 
 		if (firstHole != null)
-			SaveImageAndThumbnail(firstHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage.Value, 1);
+			SaveImageAndThumbnail(firstHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage, 1);
 		if (thirdHole != null)
-			SaveImageAndThumbnail(thirdHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage.Value, 2);
+			SaveImageAndThumbnail(thirdHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage, 2);
 
 		Status = PacketStatus.Completed;
-		TSShooting = (DateTimeOffset)tsFirstImage!;
+		TSShooting = tsFirstImage;
 		HasError = firstHole == null || thirdHole == null;
-		StationCycleRID = rid!;
+		StationCycleRID = rid;
 		StationCycle.ShootingStatus = Status;
 		anodeUOW.StationCycle.Update(StationCycle);
+	}
+
+	private async Task DequeueDetectionPacket()
+	{
+		CancellationToken cancel = new();
+		AdsClient tcClient = new AdsClient();
+		tcClient.Connect(851);
+		if (!tcClient.IsConnected) throw new Exception("Could not connect to tcClient");
+		uint removeHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionRemove);
+		await tcClient.WriteAnyAsync(removeHandle, true, cancel);
 	}
 
 	private static void SaveImageAndThumbnail(FileInfo file, string imageRoot, string thumbnailRoot, string anodeType,

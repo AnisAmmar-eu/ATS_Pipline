@@ -12,10 +12,11 @@ public class
 	where TService : class, IServiceBaseEntity<T, TDTO>
 	where TStruct : struct, IBaseADS<T, TStruct>
 {
+	private ResultHandle _resultHandle = null!;
 	private uint _remove;
 	private uint _newMsg;
 	private uint _oldEntry;
-	private ResultHandle _resultHandle = null!;
+	protected bool _toDequeue = true;
 
 	public BaseNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry)
 	{
@@ -80,7 +81,7 @@ public class
 		try
 		{
 			await AddElement(services, entity);
-			tcClient.WriteAny(_remove, true);
+			if (_toDequeue) tcClient.WriteAny(_remove, true);
 		}
 		catch
 		{

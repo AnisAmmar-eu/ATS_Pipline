@@ -1,6 +1,6 @@
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.Structs;
-using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Repositories;
@@ -26,16 +26,16 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			                                    " does not have a detection packet for measurement");
 		Detection detection = (await AnodeUOW.Packet.GetById(stationCycle.DetectionID.Value) as Detection)!;
 		AdsClient tcClient = new();
-		tcClient.Connect(CycleAdsUtils.AdsPort);
+		tcClient.Connect(ADSUtils.AdsPort);
 		if (!tcClient.IsConnected)
 			throw new AdsException("Could not connect to TwinCat");
-		uint handle = tcClient.CreateVariableHandle(CycleAdsUtils.MeasurementVariable);
+		uint handle = tcClient.CreateVariableHandle(ADSUtils.MeasurementVariable);
 		MeasureStruct measure = tcClient.ReadAny<MeasureStruct>(handle);
 		detection.AnodeSize = measure.AnodeLength; // TODO Weird naming.
 		detection.MeasuredType = measure.AnodeType == 1 ? AnodeTypeDict.DX : AnodeTypeDict.D20;
 		detection.IsMismatched = !measure.IsSameType; // TODO Weird
 		stationCycle.AnodeType = detection.MeasuredType;
-		detection.IsMismatched = true;
+		detection.Status = PacketStatus.Completed;
 		await AnodeUOW.StartTransaction();
 		AnodeUOW.Packet.Update(detection);
 		AnodeUOW.StationCycle.Update(stationCycle);

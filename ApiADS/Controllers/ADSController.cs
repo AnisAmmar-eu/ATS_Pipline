@@ -1,5 +1,6 @@
 using System.Dynamic;
 using ApiADS.Notifications.PacketNotifications;
+using Core.Shared.Dictionaries;
 using Microsoft.AspNetCore.Mvc;
 using TwinCAT.Ads;
 
@@ -38,13 +39,12 @@ public class ADSController : ControllerBase
 			ads.tcClient = tcClient;
 			ads.appServices = _serviceProvider;
 			ads.cancel = cancel;
-			AnnouncementNotification announcementNotification = await AnnouncementNotification.Create(ads);
-			// DetectionNotification detectionNotification = DetectionNotification.Create(ads);
-			// ShootingNotification shootingNotification = ShootingNotification.Create(ads);
+			await AnnouncementNotification.Create(ads);
+			await DetectionNotification.Create(ads);
 			// AlarmNotification.Create(ads);
 			try
 			{
-				uint handle = tcClient.CreateVariableHandle(Utils.AnnouncementNewMsg);
+				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
 				while ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode ==
 				       AdsErrorCode.NoError)
 					// To avoid spamming the TwinCat

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ApiCamera.Utils;
 using Core.Entities.Packets.Dictionaries;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
@@ -63,15 +64,15 @@ public class CameraApiController : ControllerBase
 		int port2 = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
 		try
 		{
-			// Create an instance of the camera
 			Device? device1 = DeviceFactory.OpenPort(driverString, port1);
-			Device? device2 = DeviceFactory.OpenPort(driverString, port2);
-			List<Task> acquisitions = new(2)
+			if (Station.Type != StationType.S5)
 			{
-				CameraUtils.RunAcquisitionAsync(device1, "jpg", ShootingFolders.Camera1),
-				CameraUtils.RunAcquisitionAsync(device2, "jpg", ShootingFolders.Camera2),
-			};
-			await Task.WhenAll(acquisitions);
+				// Create an instance of the camera
+				Device? device2 = DeviceFactory.OpenPort(driverString, port2);
+				CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1);
+				CameraUtils.RunAcquisition(device2, "jpg", ShootingFolders.Camera2);
+			}
+			else CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1, ShootingFolders.Camera2);
 		}
 		catch (Exception e)
 		{

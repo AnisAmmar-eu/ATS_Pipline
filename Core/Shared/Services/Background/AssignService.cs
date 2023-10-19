@@ -46,7 +46,6 @@ public class AssignService : BackgroundService
 				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}",
 					shooting.StationCycleRID);
 
-				// TODO If StationCycleRID in MeasureStruct, call this BEFORE shooting.
 				_logger.LogInformation("AssignService calling UpdateDetection");
 				if (shooting.StationCycle == null)
 					throw new Exception("Shooting packet did not find a stationCycle for RID: " +

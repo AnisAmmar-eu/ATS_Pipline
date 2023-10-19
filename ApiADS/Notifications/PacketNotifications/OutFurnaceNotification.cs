@@ -1,18 +1,13 @@
 using Core.Entities.Packets.Models.Structs;
-using TwinCAT.Ads;
+using Core.Shared.Dictionaries;
 
 namespace ApiADS.Notifications.PacketNotifications;
 
 public class OutFurnaceNotification : PacketNotification<OutFurnaceStruct>
 {
-	public OutFurnaceNotification(ResultHandle resultHandle, uint acquitMsg, uint newMsg, uint oldEntry)
-		: base(resultHandle, acquitMsg, newMsg, oldEntry)
-	{
-	}
-
 	public static async Task<OutFurnaceNotification> Create(dynamic ads)
 	{
-		return (await CreateSub<PacketNotification<OutFurnaceStruct>>(ads, Utils.OutFurnaceRemove,
-			Utils.OutFurnaceNewMsg, Utils.OutFurnaceToRead) as OutFurnaceNotification)!;
+		return (await CreateSub<OutFurnaceNotification>(ads, ADSUtils.OutFurnaceRemove,
+			ADSUtils.OutFurnaceNewMsg, ADSUtils.OutFurnaceToRead) as OutFurnaceNotification)!;
 	}
 }

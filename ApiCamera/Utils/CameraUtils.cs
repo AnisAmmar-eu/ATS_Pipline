@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
@@ -12,14 +13,23 @@ namespace ApiCamera.Utils;
 
 public static class CameraUtils
 {
-	public static async Task RunAcquisitionAsync(Device device, string extension, string imagesDir)
+	public static void RunAcquisition(Device device, string extension, string imagesDir,
+		string? imagesDir2 = null)
 	{
 		Directory.CreateDirectory(imagesDir);
 		device.Notify[NotifyDictionary.DeviceDisconnected].Event += Disconnect;
 		device.Notify[NotifyDictionary.DeviceReconnect].Event += Reconnect;
+		
+		CancellationToken cancel = CancellationToken.None;
+		AdsClient tcClient = new();
+		tcClient.Connect(851);
+		if (!tcClient.IsConnected) throw new Exception("Not connected");
+		uint oldEntryHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionToRead);
+		
 		Stream stream = device.Stream;
 		if (!stream.IsRunning)
 			stream.Start();
+		int nbPictures = 0;
 		while (true)
 			try
 			{
@@ -40,18 +50,15 @@ public static class CameraUtils
 
 				using (StreamImage image = stream.Wait())
 				{
-					CancellationToken cancel = CancellationToken.None;
-					AdsClient tcClient = new();
-					tcClient.Connect(851);
-					if (!tcClient.IsConnected) throw new Exception("Not connected");
-					// TODO Get Detection packet and dequeue it.
-					uint varHandle = tcClient.CreateVariableHandle("MAIN.RID");
-					ResultAnyValue resultRead = await tcClient.ReadAnyStringAsync(varHandle, 80,
-						StringMarshaler.DefaultEncoding, cancel);
-					string rid = resultRead.Value.ToString();
+					DetectionStruct detection = tcClient.ReadAny<DetectionStruct>(oldEntryHandle);
+					string rid = detection.StationCycleRID.ToRID();
 					string ts = DateTimeOffset.Now.ToString("yyyyMMddHHmmssfff");
 					string filename = rid + "-" + ts + "." + extension;
-					image.Save(imagesDir + filename, 0.2);
+					// imagesDir2 != null means that we are in a S5 Cycle.
+					if (imagesDir2 != null && nbPictures % 2 == 1)
+						image.Save(imagesDir2 + filename, 1);
+					else image.Save(imagesDir + filename, 1);
+					++nbPictures;
 				}
 			}
 			catch (Exception ex)
