@@ -7,4 +7,7 @@ namespace Core.Entities.StationCycles.Services;
 public interface IStationCycleService : IServiceBaseEntity<StationCycle, DTOStationCycle>
 {
 	public Task UpdateDetectionWithMeasure(StationCycle stationCycle);
+	public Task<List<StationCycle>> GetAllReadyToSent();
+	public Task SendStationCycles(List<StationCycle> stationCycles, string address);
+	public Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles);
 }

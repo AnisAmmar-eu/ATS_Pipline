@@ -13,4 +13,9 @@ public partial class DTODetection : DTOPacket, IDTO<Detection, DTODetection>
 		IsSameType = detection.IsSameType;
 		AnodeSize = detection.AnodeSize;
 	}
+
+	public override Detection ToModel()
+	{
+		return new Detection(this);
+	}
 }

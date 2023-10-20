@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -19,5 +20,10 @@ public partial class DTOInFurnace : DTOFurnace, IDTO<InFurnace, DTOInFurnace>
 		GreenConvPos = inFurnace.GreenConvPos;
 		BakedConvPos = inFurnace.BakedConvPos;
 		PitLoadTS = inFurnace.PitLoadTS;
+	}
+
+	public override InFurnace ToModel()
+	{
+		return new InFurnace(this);
 	}
 }

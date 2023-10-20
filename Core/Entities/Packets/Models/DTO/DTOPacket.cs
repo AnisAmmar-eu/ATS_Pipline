@@ -14,6 +14,4 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 	public string Status { get; set; }
 	public string Type { get; set; }
 	public bool HasError { get; set; } = false;
-
-	public StationCycle? StationCycle { get; set; }
 }

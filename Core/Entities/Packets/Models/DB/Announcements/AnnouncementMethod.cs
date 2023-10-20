@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.Structs;
@@ -14,6 +15,14 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 	public Announcement()
 	{
 		Type = PacketType.Announcement;
+	}
+
+	public Announcement(DTOAnnouncement dtoAnnouncement) : base(dtoAnnouncement)
+	{
+		Type = PacketType.Announcement;
+		StationCycleRID = dtoAnnouncement.StationCycleRID;
+		AnnounceID = dtoAnnouncement.StationCycleRID;
+		AnodeType = dtoAnnouncement.AnodeType;
 	}
 
 	public Announcement(AnnouncementStruct adsStruct)

@@ -1,4 +1,5 @@
 using Core.Entities.Packets.Dictionaries;
+using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -11,5 +12,10 @@ public partial class DTOAnnouncement : DTOPacket, IDTO<Announcement, DTOAnnounce
 		Type = PacketType.Announcement;
 		AnodeType = announcement.AnodeType;
 		AnnounceID = announcement.AnnounceID;
+	}
+
+	public override Announcement ToModel()
+	{
+		return new Announcement(this);
 	}
 }

@@ -1,4 +1,5 @@
 using Core.Entities.StationCycles.Models.DB;
+using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -35,5 +36,10 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 		AlarmListStatus = stationCycle.AlarmListStatus;
 		AlarmListID = stationCycle.AlarmListID;
 		AlarmListPacket = stationCycle.AlarmListPacket?.ToDTO();
+	}
+
+	public override StationCycle ToModel()
+	{
+		return new StationCycle(this);
 	}
 }

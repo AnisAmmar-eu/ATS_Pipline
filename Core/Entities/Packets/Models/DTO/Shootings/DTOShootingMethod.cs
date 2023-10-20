@@ -19,7 +19,6 @@ public partial class DTOShooting : DTOPacket, IDTO<Shooting, DTOShooting>
 		ProcedurePerformance = shootings.ProcedurePerformance;
 		LedStatus = shootings.LedStatus;
 		ShootingTS = shootings.ShootingTS;
-		StationCycle = shootings.StationCycle;
 	}
 
 	public override Shooting ToModel()

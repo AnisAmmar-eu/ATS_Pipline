@@ -16,6 +16,22 @@ public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 	{
 	}
 
+	public InFurnace(DTOInFurnace dtoInFurnace) : base(dtoInFurnace)
+	{
+		AnnounceID = dtoInFurnace.AnnounceID;
+		OriginID = dtoInFurnace.OriginID;
+		PackPosition = dtoInFurnace.PackPosition;
+		PalletSide = dtoInFurnace.PalletSide;
+		PitNumber = dtoInFurnace.PitNumber;
+		PitSectionNumber = dtoInFurnace.PitSectionNumber;
+		PitHeight = dtoInFurnace.PitHeight;
+		FTAPlace = dtoInFurnace.FTAPlace;
+		FTASuck = dtoInFurnace.FTASuck;
+		GreenConvPos = dtoInFurnace.GreenConvPos;
+		BakedConvPos = dtoInFurnace.BakedConvPos;
+		PitLoadTS = dtoInFurnace.PitLoadTS;
+	}
+
 	public InFurnace(InFurnaceStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.StationCycleRID.ToRID();

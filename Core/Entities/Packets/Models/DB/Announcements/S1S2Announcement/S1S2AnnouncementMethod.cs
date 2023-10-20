@@ -1,5 +1,6 @@
 using Core.Entities.Packets.Models.DTO.Announcements.S1S2Announcements;
 using Core.Entities.Packets.Models.Structs;
+using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
@@ -8,6 +9,12 @@ public partial class S1S2Announcement : Announcement, IBaseEntity<S1S2Announceme
 {
 	public S1S2Announcement()
 	{
+	}
+
+	public S1S2Announcement(DTOS1S2Announcement dtos1S2Announcement) : base(dtos1S2Announcement)
+	{
+		TrolleyNumber = dtos1S2Announcement.TrolleyNumber;
+		SerialNumber = dtos1S2Announcement.SerialNumber;
 	}
 
 	public S1S2Announcement(AnnouncementStruct adsStruct) : base(adsStruct)

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
@@ -7,6 +8,10 @@ using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Services;
+using Core.Entities.StationCycles.Models.DTO;
+using Core.Entities.StationCycles.Services;
+using Core.Shared.Models.HttpResponse;
+using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiServerReceive.Controllers.Transfer;
@@ -15,38 +20,30 @@ namespace ApiServerReceive.Controllers.Transfer;
 [ApiController]
 public class ReceiveController : ControllerBase
 {
+	private readonly ILogsService _logsService;
+
 	private readonly IAlarmCService _alarmCService;
 	private readonly IAlarmLogService _alarmLogService;
-
-
 	private readonly IPacketService _packetService;
+	private readonly IStationCycleService _stationCycleService;
 
 	public ReceiveController(IAlarmLogService alarmLogService, IAlarmCService alarmCService,
-		IPacketService packetService)
+		IPacketService packetService, IStationCycleService stationCycleService, ILogsService logsService)
 	{
 		_alarmLogService = alarmLogService;
 		_alarmCService = alarmCService;
 		_packetService = packetService;
+		_stationCycleService = stationCycleService;
+		_logsService = logsService;
 	}
 
 
 	[HttpPost]
 	[Route("alarm-log")]
-	public async Task<IActionResult> ReceiveAlarmLog([FromBody] List<DTOSAlarmLog> dtoAlarmLogs)
+	public async Task<IActionResult> ReceiveAlarmLog([FromBody] [Required] List<DTOSAlarmLog> dtoAlarmLogs)
 	{
 		try
 		{
-			Debug.Print("Reçu depuis l'api 1");
-
-			if (!dtoAlarmLogs.Any()) return BadRequest("Aucun alarmLog à traiter.");
-			/*
-			var truncateSql = "TRUNCATE TABLE AlarmLog ";
-			var truncateSqlRT = "TRUNCATE TABLE AlarmRT ";
-			_anodeCTX.Database.ExecuteSqlRaw(truncateSql);
-			_anodeCTX.Database.ExecuteSqlRaw(truncateSqlRT);
-			*/
-
-
 			foreach (DTOSAlarmLog alarmLog in dtoAlarmLogs)
 			{
 				DTOAlarmC newAlarmC = await _alarmCService.GetByRID(alarmLog.AlarmRID);
@@ -58,14 +55,13 @@ public class ReceiveController : ControllerBase
 				alarmLogToAdd.AlarmID = newAlarmC.ID;
 				await _alarmLogService.Add(alarmLogToAdd);
 			}
-
-			return Ok(true);
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine(e);
-			return StatusCode(500, "Erreur interne du serveur");
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
+		
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
 	[HttpPost("packet")]
@@ -73,13 +69,27 @@ public class ReceiveController : ControllerBase
 	{
 		try
 		{
-			await _packetService.ReceivePacket(packet);
-			return Ok();
+			await _packetService.ReceivePackets(packet);
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine(e);
-			return StatusCode(500, e.Message);
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
+
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	[HttpPost("station-cycle")]
+	public async Task<IActionResult> ReceiveStationCycle([FromBody] [Required] List<DTOStationCycle> dtoStationCycles)
+	{
+		try
+		{
+			await _stationCycleService.ReceiveStationCycles(dtoStationCycles);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 }

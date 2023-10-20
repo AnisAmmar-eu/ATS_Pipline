@@ -26,6 +26,7 @@ using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DB.S5Cycles;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
@@ -66,6 +67,8 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	// StationCycle
 	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
 	public DbSet<S1S2Cycle> S1S2Cycle => Set<S1S2Cycle>();
+	public DbSet<S3S4Cycle> S3S4Cycle => Set<S3S4Cycle>();
+	public DbSet<S5Cycle> S5Cycle => Set<S5Cycle>();
 
 	// IOT Monitoring
 	public DbSet<IOTDevice> IOTDevice => Set<IOTDevice>();

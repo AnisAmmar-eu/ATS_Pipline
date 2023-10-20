@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -9,5 +10,10 @@ public partial class DTOS1S2Announcement : DTOAnnouncement, IDTO<S1S2Announcemen
 	{
 		SerialNumber = s1S2Announcement.SerialNumber;
 		TrolleyNumber = s1S2Announcement.TrolleyNumber;
+	}
+
+	public override S1S2Announcement ToModel()
+	{
+		return new S1S2Announcement(this);
 	}
 }

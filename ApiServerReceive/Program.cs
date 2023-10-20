@@ -2,7 +2,9 @@ using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
+using Core.Entities.StationCycles.Services;
 using Core.Shared.Data;
+using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -25,11 +27,13 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddScoped<ILogsService, LogsService>();
+
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 builder.Services.AddScoped<IAlarmRTService, AlarmRTService>();
-
 builder.Services.AddScoped<IPacketService, PacketService>();
+builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();

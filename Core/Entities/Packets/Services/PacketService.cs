@@ -1,4 +1,5 @@
 using System.Text;
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Repositories;
@@ -48,16 +49,37 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 		}
 	}
 
-	public async Task ReceivePacket(IEnumerable<DTOPacket> packets)
+	public async Task<List<Packet>> ReceivePackets(IEnumerable<DTOPacket> dtoPackets)
 	{
 		await AnodeUOW.StartTransaction();
-		foreach (DTOPacket packet in packets)
+		List<Task> tasks = new();
+		List<Packet> packets = new();
+		foreach (DTOPacket dtoPacket in dtoPackets)
 		{
+			Packet packet = dtoPacket.ToModel();
 			packet.ID = 0;
-			await AnodeUOW.Packet.Add(packet.ToModel());
+			tasks.Add(AnodeUOW.Packet.Add(packet));
+			packets.Add(packet);
 		}
-
+		await Task.WhenAll(tasks);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
+		return packets;
+	}
+
+	public async Task<int> AddPacketFromStationCycle(Packet? packet)
+	{
+		if (packet == null)
+			return 0;
+		await AnodeUOW.Packet.Add(packet);
+		return packet.ID;
+	}
+
+	public void MarkPacketAsSentFromStationCycle(Packet? packet)
+	{
+		if (packet == null)
+			return;
+		packet.Status = PacketStatus.Sent;
+		AnodeUOW.Packet.Update(packet);
 	}
 }

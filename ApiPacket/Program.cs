@@ -6,8 +6,10 @@ using Core.Entities.KPI.KPICs.Services;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Entities.Packets.Services;
+using Core.Entities.StationCycles.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
+using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
@@ -80,11 +82,15 @@ builder.Services.AddScoped<IKPILogService, KPILogService>();
 builder.Services.AddScoped<IKPIRTService, KPIRTService>();
 
 builder.Services.AddScoped<IPacketService, PacketService>();
+builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
+
+builder.Services.AddSingleton<SendService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<SendService>());
 
 // builder.Services.AddSingleton<CollectService>();
 // builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());

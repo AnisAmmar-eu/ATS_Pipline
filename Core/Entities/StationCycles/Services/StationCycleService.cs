@@ -1,7 +1,12 @@
+using System.Linq.Expressions;
+using System.Net.Http.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.Structs;
+using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Repositories;
 using Core.Shared.Dictionaries;
@@ -15,8 +20,11 @@ namespace Core.Entities.StationCycles.Services;
 public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, StationCycle, DTOStationCycle>,
 	IStationCycleService
 {
-	public StationCycleService(IAnodeUOW anodeUOW) : base(anodeUOW)
+	private readonly IPacketService _packetService;
+
+	public StationCycleService(IAnodeUOW anodeUOW, IPacketService packetService) : base(anodeUOW)
 	{
+		_packetService = packetService;
 	}
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)
@@ -39,6 +47,72 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		await AnodeUOW.StartTransaction();
 		AnodeUOW.Packet.Update(detection);
 		AnodeUOW.StationCycle.Update(stationCycle);
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+	}
+
+	public async Task<List<StationCycle>> GetAllReadyToSent()
+	{
+		return await AnodeUOW.StationCycle.GetAll(filters: new Expression<Func<StationCycle, bool>>[]
+		{
+			cycle => cycle.Status == PacketStatus.Completed
+		}, withTracking: false);
+	}
+	public async Task SendStationCycles(List<StationCycle> stationCycles, string address)
+	{
+		if (!stationCycles.Any())
+			return;
+		using HttpClient httpClient = new();
+		if ((await httpClient.PostAsync($"{address}/api/receive/station-cycle", JsonContent.Create(stationCycles)))
+		    .IsSuccessStatusCode)
+		{
+			await AnodeUOW.StartTransaction();
+			stationCycles.ForEach(cycle =>
+			{
+				cycle.Status = PacketStatus.Sent;
+				if (cycle is S1S2Cycle s1S2Cycle)
+					_packetService.MarkPacketAsSentFromStationCycle(s1S2Cycle.AnnouncementPacket);
+				else
+					_packetService.MarkPacketAsSentFromStationCycle(cycle.AnnouncementPacket);
+				_packetService.MarkPacketAsSentFromStationCycle(cycle.DetectionPacket);
+				_packetService.MarkPacketAsSentFromStationCycle(cycle.ShootingPacket);
+				_packetService.MarkPacketAsSentFromStationCycle(cycle.AlarmListPacket);
+				if (cycle is S3S4Cycle s3S4Cycle)
+				{
+					_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.InFurnacePacket);
+					_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.OutFurnacePacket);
+				}
+
+				AnodeUOW.StationCycle.Update(cycle);
+			});
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
+		}
+	}
+
+	public async Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles)
+	{
+		await AnodeUOW.StartTransaction();
+		IEnumerable<Task> tasks = dtoStationCycles.Select(async dto =>
+		{
+			StationCycle cycle = dto.ToModel();
+			cycle.ID = 0;
+			if (cycle is S1S2Cycle s1S2Cycle)
+				s1S2Cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(s1S2Cycle.AnnouncementPacket);
+			else
+				cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(cycle.AnnouncementPacket);
+			cycle.DetectionID = await _packetService.AddPacketFromStationCycle(cycle.DetectionPacket);
+			cycle.ShootingID = await _packetService.AddPacketFromStationCycle(cycle.ShootingPacket);
+			cycle.AlarmListID = await _packetService.AddPacketFromStationCycle(cycle.AlarmListPacket);
+			if (cycle is S3S4Cycle s3S4Cycle)
+			{
+				s3S4Cycle.InFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.InFurnacePacket);
+				s3S4Cycle.OutFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.OutFurnacePacket);
+			}
+
+			await AnodeUOW.StationCycle.Add(cycle);
+		});
+		await Task.WhenAll(tasks);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 	}

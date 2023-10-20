@@ -14,6 +14,30 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	{
 	}
 
+	public StationCycle(DTOStationCycle dtoStationCycle)
+	{
+		AnodeType = dtoStationCycle.AnodeType;
+		RID = dtoStationCycle.RID;
+		Status = dtoStationCycle.Status;
+		TSClosed = dtoStationCycle.TSClosed;
+
+		AnnouncementStatus = dtoStationCycle.AnnouncementStatus;
+		AnnouncementID = dtoStationCycle.AnnouncementID;
+		AnnouncementPacket = dtoStationCycle.AnnouncementPacket?.ToModel();
+
+		DetectionStatus = dtoStationCycle.DetectionStatus;
+		DetectionID = dtoStationCycle.DetectionID;
+		DetectionPacket = dtoStationCycle.DetectionPacket?.ToModel();
+
+		ShootingStatus = dtoStationCycle.ShootingStatus;
+		ShootingID = dtoStationCycle.ShootingID;
+		ShootingPacket = dtoStationCycle.ShootingPacket?.ToModel();
+
+		AlarmListStatus = dtoStationCycle.AlarmListStatus;
+		AlarmListID = dtoStationCycle.AlarmListID;
+		AlarmListPacket = dtoStationCycle.AlarmListPacket?.ToModel();
+	}
+
 	public override DTOStationCycle ToDTO()
 	{
 		return new DTOStationCycle(this);
