@@ -5,5 +5,4 @@ namespace Core.Entities.StationCycles.Models.DTO.S5Cycles;
 
 public partial class DTOS5Cycle : DTOStationCycle, IDTO<S5Cycle, DTOS5Cycle>
 {
-	
 }
