@@ -21,6 +21,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 
 	public Shooting(string imagePath, string thumbnailsPath)
 	{
+		Type = PacketType.Shooting;
 		ImagePath = imagePath;
 		ThumbnailPath = thumbnailsPath;
 	}

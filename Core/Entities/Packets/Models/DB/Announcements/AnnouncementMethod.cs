@@ -2,6 +2,7 @@ using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -20,6 +21,7 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 		Type = PacketType.Announcement;
 		StationCycleRID = adsStruct.RID.ToRID();
 		AnodeType = adsStruct.AnodeType == 1 ? AnodeTypeDict.DX : AnodeTypeDict.D20;
+		AnnounceID = adsStruct.AnnounceID.ToRID();
 	}
 
 	public override DTOAnnouncement ToDTO()
@@ -36,6 +38,8 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 		stationCycle.AnnouncementStatus = PacketStatus.Completed;
 		stationCycle.AnnouncementID = ID;
 		stationCycle.AnnouncementPacket = this;
+		if (stationCycle is S3S4Cycle s3S4Cycle)
+			s3S4Cycle.AnnounceID = AnnounceID;
 		await anodeUOW.StationCycle.Add(stationCycle);
 		Status = PacketStatus.Completed;
 		StationCycle = stationCycle;

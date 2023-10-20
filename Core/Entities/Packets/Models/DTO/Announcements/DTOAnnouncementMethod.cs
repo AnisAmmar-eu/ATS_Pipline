@@ -10,5 +10,6 @@ public partial class DTOAnnouncement : DTOPacket, IDTO<Announcement, DTOAnnounce
 	{
 		Type = PacketType.Announcement;
 		AnodeType = announcement.AnodeType;
+		AnnounceID = announcement.AnnounceID;
 	}
 }

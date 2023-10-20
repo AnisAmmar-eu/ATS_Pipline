@@ -14,7 +14,7 @@ public partial class S3S4Shooting : Shooting, IBaseEntity<S3S4Shooting, DTOS3S4S
 	{
 	}
 
-	public DTOS3S4Shooting ToDTO()
+	public override DTOS3S4Shooting ToDTO()
 	{
 		return new DTOS3S4Shooting(this);
 	}
