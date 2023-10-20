@@ -17,6 +17,7 @@ public static class DeviceRID
 	public static string Camera1 = "Camera1";
 	public static string Camera2 = "Camera2";
 }
+
 public static class TriggerSources
 {
 	public const string Line3 = "Line3";

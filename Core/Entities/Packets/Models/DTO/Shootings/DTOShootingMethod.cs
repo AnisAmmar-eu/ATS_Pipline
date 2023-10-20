@@ -18,7 +18,7 @@ public partial class DTOShooting : DTOPacket, IDTO<Shooting, DTOShooting>
 		GlobalStationStatus = shootings.GlobalStationStatus;
 		ProcedurePerformance = shootings.ProcedurePerformance;
 		LedStatus = shootings.LedStatus;
-		ShootingTS = shootings.TSShooting;
+		ShootingTS = shootings.ShootingTS;
 		StationCycle = shootings.StationCycle;
 	}
 

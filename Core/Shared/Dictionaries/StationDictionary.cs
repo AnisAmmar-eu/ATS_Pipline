@@ -22,12 +22,13 @@ public static class Station
 		}
 		get => _name ?? throw new InvalidOperationException("Station name has not been defined.");
 	}
+
 	private static string? _name { get; set; }
 
 	public static StationType Type { get; private set; }
 	public static int ID { get; private set; }
 
-	
+
 	private static StationType StationNameToType()
 	{
 		return Name switch

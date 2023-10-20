@@ -10,7 +10,7 @@ public partial class DTODetection : DTOPacket, IDTO<Detection, DTODetection>
 	{
 		Type = PacketType.Detection;
 		MeasuredType = detection.MeasuredType;
-		IsMismatched = detection.IsMismatched;
+		IsSameType = detection.IsSameType;
 		AnodeSize = detection.AnodeSize;
 	}
 }

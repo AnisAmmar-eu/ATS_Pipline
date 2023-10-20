@@ -18,7 +18,7 @@ public partial class IOTDevice : BaseEntity, IBaseEntity<IOTDevice, DTOIOTDevice
 	}
 
 	/// <summary>
-	/// Will apply all the tags of the device which need to be updated.
+	///     Will apply all the tags of the device which need to be updated.
 	/// </summary>
 	/// <param name="anodeUOW"></param>
 	/// <returns>True if at least one tag is applied. False otherwise.</returns>

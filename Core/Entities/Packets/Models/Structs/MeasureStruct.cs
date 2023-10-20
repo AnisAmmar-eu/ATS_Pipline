@@ -9,5 +9,5 @@ public struct MeasureStruct
 
 	public ushort AnodeType;
 	public bool IsSameType;
-	public ushort AnodeLength;
+	public ushort AnodeSize;
 }

@@ -1,6 +1,5 @@
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
-using TwinCAT.Ads;
 
 namespace ApiADS.Notifications.PacketNotifications;
 

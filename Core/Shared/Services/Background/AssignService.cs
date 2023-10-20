@@ -3,7 +3,6 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
-using Core.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

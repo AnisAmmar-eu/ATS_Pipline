@@ -31,9 +31,9 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			throw new AdsException("Could not connect to TwinCat");
 		uint handle = tcClient.CreateVariableHandle(ADSUtils.MeasurementVariable);
 		MeasureStruct measure = tcClient.ReadAny<MeasureStruct>(handle);
-		detection.AnodeSize = measure.AnodeLength; // TODO Weird naming.
+		detection.AnodeSize = measure.AnodeSize;
 		detection.MeasuredType = measure.AnodeType == 1 ? AnodeTypeDict.DX : AnodeTypeDict.D20;
-		detection.IsMismatched = !measure.IsSameType; // TODO Weird
+		detection.IsSameType = measure.IsSameType;
 		stationCycle.AnodeType = detection.MeasuredType;
 		detection.Status = PacketStatus.Completed;
 		await AnodeUOW.StartTransaction();

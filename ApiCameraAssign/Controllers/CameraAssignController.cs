@@ -1,15 +1,10 @@
 using System.Linq.Expressions;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.Announcements;
-using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.Announcements;
-using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Services;
-using Core.Shared.Dictionaries;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;

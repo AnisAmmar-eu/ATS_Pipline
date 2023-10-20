@@ -2,8 +2,6 @@ namespace Core.Shared.Dictionaries;
 
 public class ADSUtils
 {
-	public static int AdsPort = 851;
-	
 	// AlarmNotification
 	public const string AlarmAcquitMsg = "VA_ALM.msgAcquit";
 	public const string AlarmNewMsg = "VA_ALM.msgNew";
@@ -18,9 +16,6 @@ public class ADSUtils
 	public const string DetectionRemove = "VA_PXX.P02_SQL_FIFO.remove";
 	public const string DetectionNewMsg = "VA_PXX.P02_SQL_FIFO.msgNew";
 	public const string DetectionToRead = "VA_PXX.P02_SQL_FIFO.OldEntry.Out";
-	
-	// MeasureNotification	
-	public static string MeasurementVariable = "VA_PXX.P04_In";
 
 	// InFurnaceNotification
 	public const string InFurnaceRemove = "VA_PXX.P21_SQL_FIFO.remove";
@@ -36,4 +31,8 @@ public class ADSUtils
 	public const string ShootingAcquitMsg = "";
 	public const string ShootingNewMsg = "";
 	public const string ShootingToRead = "";
+	public static int AdsPort = 851;
+
+	// MeasureNotification	
+	public static string MeasurementVariable = "VA_PXX.P04_In";
 }

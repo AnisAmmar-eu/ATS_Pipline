@@ -6,14 +6,14 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 namespace Core.Entities.Packets.Models.Structs;
 
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
-public struct ShootingStruct : IBaseADS<Packet, ShootingStruct> // TODO Not in list variables
+public struct ShootingStruct : IBaseADS<Packet, ShootingStruct>
 {
 	public RIDStruct StationCycleRID;
 	public ushort AnodeIDKey;
 	public string GlobalStationStatus; // TODO Dictionary?
 	public ushort ProcedurePerformance; // TODO int?
 	public string LedStatus; // TODO Dictionary?
-	public ushort ShootingTS;
+	public TimestampStruct ShootingTS;
 
 	public Packet ToModel()
 	{

@@ -8,7 +8,6 @@ using Core.Shared.SignalR;
 using Core.Shared.SignalR.IOTTagHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

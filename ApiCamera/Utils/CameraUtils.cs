@@ -6,7 +6,6 @@ using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using Stemmer.Cvb.GenApi;
 using TwinCAT.Ads;
-using TwinCAT.TypeSystem;
 using Stream = Stemmer.Cvb.Driver.Stream;
 
 namespace ApiCamera.Utils;
@@ -19,13 +18,13 @@ public static class CameraUtils
 		Directory.CreateDirectory(imagesDir);
 		device.Notify[NotifyDictionary.DeviceDisconnected].Event += Disconnect;
 		device.Notify[NotifyDictionary.DeviceReconnect].Event += Reconnect;
-		
+
 		CancellationToken cancel = CancellationToken.None;
 		AdsClient tcClient = new();
 		tcClient.Connect(851);
 		if (!tcClient.IsConnected) throw new Exception("Not connected");
 		uint oldEntryHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionToRead);
-		
+
 		Stream stream = device.Stream;
 		if (!stream.IsRunning)
 			stream.Start();

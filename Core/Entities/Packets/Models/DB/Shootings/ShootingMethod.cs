@@ -32,7 +32,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		GlobalStationStatus = dtoShooting.GlobalStationStatus;
 		LedStatus = dtoShooting.LedStatus;
 		ProcedurePerformance = dtoShooting.ProcedurePerformance;
-		TSShooting = dtoShooting.ShootingTS;
+		ShootingTS = dtoShooting.ShootingTS;
 	}
 
 	public Shooting(ShootingStruct adsStruct)
@@ -43,8 +43,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		GlobalStationStatus = adsStruct.GlobalStationStatus;
 		ProcedurePerformance = adsStruct.ProcedurePerformance;
 		LedStatus = adsStruct.LedStatus;
-		// TODO
-		// ShootingTS = adsStruct.ShootingTS;
+		ShootingTS = adsStruct.ShootingTS.GetTimestamp();
 	}
 
 	public override DTOShooting ToDTO()
@@ -126,7 +125,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 			SaveImageAndThumbnail(thirdHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage, 2);
 
 		Status = PacketStatus.Completed;
-		TSShooting = tsFirstImage;
+		ShootingTS = tsFirstImage;
 		HasError = firstHole == null || thirdHole == null;
 		StationCycleRID = rid;
 		StationCycle.ShootingStatus = Status;
@@ -136,7 +135,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	private async Task DequeueDetectionPacket()
 	{
 		CancellationToken cancel = new();
-		AdsClient tcClient = new AdsClient();
+		AdsClient tcClient = new();
 		tcClient.Connect(851);
 		if (!tcClient.IsConnected) throw new Exception("Could not connect to tcClient");
 		uint removeHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionRemove);

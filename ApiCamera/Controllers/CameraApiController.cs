@@ -13,14 +13,47 @@ namespace ApiCamera.Controllers;
 [Route("[controller]")]
 public class CameraApiController : ControllerBase
 {
-	private readonly ILogsService _logsService;
 	private readonly IConfiguration _configuration;
+	private readonly ILogsService _logsService;
 
 	public CameraApiController(ILogsService logsService, IConfiguration configuration)
 	{
 		_logsService = logsService;
 		_configuration = configuration;
 	}
+
+	#region Acquisition
+
+	[HttpGet("/acquisition")]
+	public async Task<IActionResult> AcquisitionAsync()
+	{
+		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
+		int port1 = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
+		int port2 = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
+		try
+		{
+			Device? device1 = DeviceFactory.OpenPort(driverString, port1);
+			if (Station.Type != StationType.S5)
+			{
+				// Create an instance of the camera
+				Device? device2 = DeviceFactory.OpenPort(driverString, port2);
+				CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1);
+				CameraUtils.RunAcquisition(device2, "jpg", ShootingFolders.Camera2);
+			}
+			else
+			{
+				CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1, ShootingFolders.Camera2);
+			}
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	#endregion
 
 	#region Get/Set Device
 
@@ -50,36 +83,6 @@ public class CameraApiController : ControllerBase
 	{
 		int port = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
 		return await SetDeviceParameters(port, parameters);
-	}
-
-	#endregion
-
-	#region Acquisition
-
-	[HttpGet("/acquisition")]
-	public async Task<IActionResult> AcquisitionAsync()
-	{
-		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
-		int port1 = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
-		int port2 = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
-		try
-		{
-			Device? device1 = DeviceFactory.OpenPort(driverString, port1);
-			if (Station.Type != StationType.S5)
-			{
-				// Create an instance of the camera
-				Device? device2 = DeviceFactory.OpenPort(driverString, port2);
-				CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1);
-				CameraUtils.RunAcquisition(device2, "jpg", ShootingFolders.Camera2);
-			}
-			else CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1, ShootingFolders.Camera2);
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
-		}
-
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
 	#endregion

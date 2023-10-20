@@ -20,7 +20,7 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 	{
 		Type = PacketType.Detection;
 		AnodeSize = dtoDetection.AnodeSize;
-		IsMismatched = dtoDetection.IsMismatched;
+		IsSameType = dtoDetection.IsSameType;
 		MeasuredType = dtoDetection.MeasuredType;
 	}
 

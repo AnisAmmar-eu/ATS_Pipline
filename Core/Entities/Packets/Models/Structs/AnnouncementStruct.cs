@@ -14,7 +14,6 @@ public struct AnnouncementStruct : IBaseADS<Packet, AnnouncementStruct>
 	public RIDStruct AnnounceID;
 	public ushort AnodeType;
 
-	// TODO Might not be present if not in S1/S2
 	public ushort TrolleyNumber;
 
 	[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
