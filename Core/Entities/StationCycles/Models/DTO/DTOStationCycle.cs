@@ -4,16 +4,20 @@ using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Core.Entities.StationCycles.Models.DTO;
 
+[ModelBinder(typeof(DTOStationCycleBinder))]
 public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>
 {
 	public string AnodeType { get; set; }
 	public string RID { get; set; }
 	public string Status { get; set; } = CycleStatus.Initialized;
+	public string CycleType { get; set; } = "";
 	public DateTimeOffset? TSClosed { get; set; }
 
 	public string? AnnouncementStatus { get; set; }

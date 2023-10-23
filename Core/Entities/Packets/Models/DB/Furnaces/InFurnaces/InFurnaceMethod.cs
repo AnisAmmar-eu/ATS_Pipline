@@ -18,7 +18,7 @@ public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 
 	public InFurnace(DTOInFurnace dtoInFurnace) : base(dtoInFurnace)
 	{
-		AnnounceID = dtoInFurnace.AnnounceID;
+		InAnnounceID = dtoInFurnace.InAnnounceID;
 		OriginID = dtoInFurnace.OriginID;
 		PackPosition = dtoInFurnace.PackPosition;
 		PalletSide = dtoInFurnace.PalletSide;
@@ -35,7 +35,7 @@ public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 	public InFurnace(InFurnaceStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.StationCycleRID.ToRID();
-		AnnounceID = adsStruct.AnnounceID.ToRID();
+		InAnnounceID = adsStruct.AnnounceID.ToRID();
 		OriginID = adsStruct.OriginID;
 		PackPosition = adsStruct.PackPosition;
 		PalletSide = adsStruct.PalletSide;

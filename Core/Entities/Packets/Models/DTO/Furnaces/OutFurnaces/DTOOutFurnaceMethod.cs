@@ -6,9 +6,13 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 
 public partial class DTOOutFurnace : DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 {
+	public DTOOutFurnace() : base()
+	{
+		
+	}
 	public DTOOutFurnace(OutFurnace outFurnace) : base(outFurnace)
 	{
-		AnnounceID = outFurnace.AnnounceID;
+		OutAnnounceID = outFurnace.OutAnnounceID;
 		FTAPickUp = outFurnace.FTAPickUp;
 		PickUpTS = outFurnace.PickUpTS;
 		DepositTS = outFurnace.DepositTS;

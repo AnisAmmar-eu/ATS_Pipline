@@ -5,7 +5,7 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 
 public partial class DTOInFurnace : DTOFurnace, IDTO<InFurnace, DTOInFurnace>
 {
-	public string AnnounceID { get; set; }
+	public string InAnnounceID { get; set; }
 	public int OriginID { get; set; }
 	public int PackPosition { get; set; }
 	public int PalletSide { get; set; }

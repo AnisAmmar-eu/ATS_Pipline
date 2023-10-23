@@ -7,7 +7,7 @@ namespace Core.Entities.Packets.Models.DTO.AlarmLists;
 
 public partial class DTOAlarmList : DTOPacket, IDTO<AlarmList, DTOAlarmList>
 {
-	public DTOAlarmList()
+	public DTOAlarmList() : base()
 	{
 		Type = PacketType.Alarm;
 		AlarmCycles = new List<DTOAlarmCycle>();

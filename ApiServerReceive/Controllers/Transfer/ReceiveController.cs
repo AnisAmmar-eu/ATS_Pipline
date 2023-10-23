@@ -80,11 +80,11 @@ public class ReceiveController : ControllerBase
 	}
 
 	[HttpPost("station-cycle")]
-	public async Task<IActionResult> ReceiveStationCycle([FromBody] [Required] List<DTOStationCycle> dtoStationCycles)
+	public async Task<IActionResult> ReceiveStationCycle([FromBody] IEnumerable<DTOStationCycle> dtoStationCycles)
 	{
 		try
 		{
-			await _stationCycleService.ReceiveStationCycles(dtoStationCycles);
+			await _stationCycleService.ReceiveStationCycles(dtoStationCycles.ToList());
 		}
 		catch (Exception e)
 		{

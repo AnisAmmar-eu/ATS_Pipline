@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231023085106_AnnounceID_To_AnnounceRID")]
+    partial class AnnounceID_To_AnnounceRID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -920,7 +922,7 @@ namespace Core.Migrations
                 {
                     b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
 
-                    b.Property<string>("AnnounceID")
+                    b.Property<string>("AnnounceRID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -952,6 +954,11 @@ namespace Core.Migrations
                 {
                     b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
 
+                    b.Property<string>("AnnounceID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("InFurnace_AnnounceID");
+
                     b.Property<int>("BakedConvPos")
                         .HasColumnType("int");
 
@@ -963,10 +970,6 @@ namespace Core.Migrations
 
                     b.Property<int>("GreenConvPos")
                         .HasColumnType("int");
-
-                    b.Property<string>("InAnnounceID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OriginID")
                         .HasColumnType("int");
@@ -996,6 +999,10 @@ namespace Core.Migrations
                 {
                     b.HasBaseType("Core.Entities.Packets.Models.DB.Packet");
 
+                    b.Property<string>("AnnounceID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset?>("DepositTS")
                         .HasColumnType("datetimeoffset");
 
@@ -1004,10 +1011,6 @@ namespace Core.Migrations
 
                     b.Property<int>("InvalidPacket")
                         .HasColumnType("int");
-
-                    b.Property<string>("OutAnnounceID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("PickUpTS")
                         .HasColumnType("datetimeoffset");

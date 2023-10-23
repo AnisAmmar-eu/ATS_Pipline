@@ -7,6 +7,11 @@ namespace Core.Entities.Packets.Models.DTO.Announcements;
 
 public partial class DTOAnnouncement : DTOPacket, IDTO<Announcement, DTOAnnouncement>
 {
+	public DTOAnnouncement() : base()
+	{
+		Type = PacketType.Announcement;
+	}
+
 	public DTOAnnouncement(Announcement announcement) : base(announcement)
 	{
 		Type = PacketType.Announcement;

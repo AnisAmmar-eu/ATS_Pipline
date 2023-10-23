@@ -18,7 +18,7 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 
 	public OutFurnace(DTOOutFurnace dtoOutFurnace) : base(dtoOutFurnace)
 	{
-		AnnounceID = dtoOutFurnace.AnnounceID;
+		OutAnnounceID = dtoOutFurnace.OutAnnounceID;
 		FTAPickUp = dtoOutFurnace.FTAPickUp;
 		PickUpTS = dtoOutFurnace.PickUpTS;
 		DepositTS = dtoOutFurnace.DepositTS;
@@ -28,7 +28,7 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 	public OutFurnace(OutFurnaceStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.StationCycleRID.ToRID();
-		AnnounceID = adsStruct.AnnounceID.ToRID();
+		OutAnnounceID = adsStruct.AnnounceID.ToRID();
 		FTAPickUp = adsStruct.FTAPickUp;
 		PickUpTS = adsStruct.PickUpTS.GetTimestamp();
 		DepositTS = adsStruct.DepositTS.GetTimestamp();

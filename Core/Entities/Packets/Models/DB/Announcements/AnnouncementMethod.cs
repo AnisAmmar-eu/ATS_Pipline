@@ -12,7 +12,7 @@ namespace Core.Entities.Packets.Models.DB.Announcements;
 
 public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnouncement>
 {
-	public Announcement()
+	public Announcement() : base()
 	{
 		Type = PacketType.Announcement;
 	}
@@ -21,7 +21,7 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 	{
 		Type = PacketType.Announcement;
 		StationCycleRID = dtoAnnouncement.StationCycleRID;
-		AnnounceID = dtoAnnouncement.StationCycleRID;
+		AnnounceID = dtoAnnouncement.AnnounceID;
 		AnodeType = dtoAnnouncement.AnodeType;
 	}
 

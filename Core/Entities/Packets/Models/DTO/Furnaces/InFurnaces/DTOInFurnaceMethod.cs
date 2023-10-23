@@ -6,9 +6,13 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 
 public partial class DTOInFurnace : DTOFurnace, IDTO<InFurnace, DTOInFurnace>
 {
+	public DTOInFurnace() : base()
+	{
+		
+	}
 	public DTOInFurnace(InFurnace inFurnace) : base(inFurnace)
 	{
-		AnnounceID = inFurnace.AnnounceID;
+		InAnnounceID = inFurnace.InAnnounceID;
 		OriginID = inFurnace.OriginID;
 		PackPosition = inFurnace.PackPosition;
 		PalletSide = inFurnace.PalletSide;

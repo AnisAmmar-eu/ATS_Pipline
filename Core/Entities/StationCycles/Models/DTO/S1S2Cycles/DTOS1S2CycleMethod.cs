@@ -1,3 +1,4 @@
+using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -7,10 +8,12 @@ public partial class DTOS1S2Cycle : DTOStationCycle, IDTO<S1S2Cycle, DTOS1S2Cycl
 {
 	public DTOS1S2Cycle()
 	{
+		CycleType = CycleTypes.S1S2;
 	}
 
 	public DTOS1S2Cycle(S1S2Cycle s1S2Cycle) : base(s1S2Cycle)
 	{
+		CycleType = CycleTypes.S1S2;
 		AnnouncementPacket = s1S2Cycle.AnnouncementPacket?.ToDTO();
 	}
 }

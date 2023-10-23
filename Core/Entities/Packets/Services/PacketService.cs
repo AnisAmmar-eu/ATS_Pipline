@@ -71,7 +71,9 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 	{
 		if (packet == null)
 			return 0;
+		packet.ID = 0;
 		await AnodeUOW.Packet.Add(packet);
+		AnodeUOW.Commit();
 		return packet.ID;
 	}
 
