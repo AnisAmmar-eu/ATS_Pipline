@@ -27,7 +27,6 @@ public class SendService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IStationCycleService stationCycleService =
 			asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
-		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))

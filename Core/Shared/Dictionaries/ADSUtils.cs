@@ -5,7 +5,7 @@ public class ADSUtils
 	// AlarmNotification
 	public const string AlarmAcquitMsg = "VA_ALM.msgAcquit";
 	public const string AlarmNewMsg = "VA_ALM.msgNew";
-	public const string AlarmToRead = "VA_ALM.oldEntry.Out";
+	public const string AlarmToRead = "VA_ALM.oldEntry";
 
 	// AnnouncementNotification
 	public const string AnnouncementRemove = "VA_PXX.P01_SQL_FIFO.remove";

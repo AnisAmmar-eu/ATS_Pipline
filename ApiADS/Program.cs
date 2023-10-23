@@ -2,6 +2,7 @@ using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.Packets.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
+using Core.Shared.Services.Background;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,9 @@ builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddSingleton<IServiceProvider>(sp => sp);
+
+builder.Services.AddSingleton<ADSService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<ADSService>());
 
 WebApplication app = builder.Build();
 

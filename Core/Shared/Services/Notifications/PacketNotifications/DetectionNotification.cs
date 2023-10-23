@@ -1,7 +1,7 @@
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
 
-namespace ApiADS.Notifications.PacketNotifications;
+namespace Core.Shared.Services.Notifications.PacketNotifications;
 
 public class DetectionNotification : PacketNotification<DetectionStruct>
 {

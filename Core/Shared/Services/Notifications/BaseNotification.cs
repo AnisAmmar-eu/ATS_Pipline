@@ -1,9 +1,10 @@
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;
 
-namespace ApiADS.Notifications;
+namespace Core.Shared.Services.Notifications;
 
 public class
 	BaseNotification<TService, T, TDTO, TStruct>

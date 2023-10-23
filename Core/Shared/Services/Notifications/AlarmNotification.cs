@@ -4,7 +4,7 @@ using Core.Entities.Alarms.AlarmsPLC.Models.DTO;
 using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Shared.Dictionaries;
 
-namespace ApiADS.Notifications;
+namespace Core.Shared.Services.Notifications;
 
 public class AlarmNotification : BaseNotification<IAlarmPLCService, AlarmPLC, DTOAlarmPLC, Alarm>
 {

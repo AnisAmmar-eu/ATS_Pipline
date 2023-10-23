@@ -2,8 +2,9 @@ using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Services;
 using Core.Shared.Models.DB.Kernel.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace ApiADS.Notifications.PacketNotifications;
+namespace Core.Shared.Services.Notifications.PacketNotifications;
 
 public class PacketNotification<TStruct> : BaseNotification<IPacketService, Packet, DTOPacket, TStruct>
 	where TStruct : struct, IBaseADS<Packet, TStruct>
