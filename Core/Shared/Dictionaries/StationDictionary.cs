@@ -28,6 +28,19 @@ public static class Station
 	public static StationType Type { get; private set; }
 	public static int ID { get; private set; }
 
+	public static string ServerAddress
+	{
+		set
+		{
+			if (_serverAddress != null)
+				throw new InvalidOperationException("Station serverAddress has already been defined.");
+			_serverAddress = value;
+		}
+		get => _serverAddress ?? throw new InvalidOperationException("Station name has not been defined.");
+	}
+
+	private static string? _serverAddress { get; set; }
+
 
 	private static StationType StationNameToType()
 	{

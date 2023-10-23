@@ -67,10 +67,10 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 		return packets;
 	}
 
-	public async Task<int> AddPacketFromStationCycle(Packet? packet)
+	public async Task<int?> AddPacketFromStationCycle(Packet? packet)
 	{
 		if (packet == null)
-			return 0;
+			return null;
 		packet.ID = 0;
 		await AnodeUOW.Packet.Add(packet);
 		AnodeUOW.Commit();

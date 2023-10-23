@@ -16,4 +16,9 @@ public partial class DTOS1S2Cycle : DTOStationCycle, IDTO<S1S2Cycle, DTOS1S2Cycl
 		CycleType = CycleTypes.S1S2;
 		AnnouncementPacket = s1S2Cycle.AnnouncementPacket?.ToDTO();
 	}
+
+	public override S1S2Cycle ToModel()
+	{
+		return new S1S2Cycle(this);
+	}
 }

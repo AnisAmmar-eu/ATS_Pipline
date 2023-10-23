@@ -74,7 +74,6 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (!stationCycles.Any())
 			return;
 		using HttpClient httpClient = new();
-		httpClient.DefaultRequestHeaders.Add("accept", "*/*");
 		StringContent content =
 			new(JsonConvert.SerializeObject(stationCycles.ConvertAll(cycle => cycle.ToDTO())), Encoding.UTF8,
 				"application/json");

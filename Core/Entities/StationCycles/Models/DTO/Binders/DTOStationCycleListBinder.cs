@@ -1,4 +1,5 @@
 using Core.Entities.StationCycles.Dictionaries;
+using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO.S3S4Cycles;
@@ -9,9 +10,8 @@ using Newtonsoft.Json;
 
 namespace Core.Entities.StationCycles.Models.DTO.Binders;
 
-public class DTOStationCycleBinder : IModelBinder
+public class DTOStationCycleListBinder : IModelBinder
 {
-	
 	public async Task BindModelAsync(ModelBindingContext bindingContext)
 	{
 		try
@@ -20,11 +20,18 @@ public class DTOStationCycleBinder : IModelBinder
 
 			string json = await new StreamReader(stream).ReadToEndAsync();
 
-			DTOStationCycle stationCycle = JsonConvert.DeserializeObject<DTOStationCycle>(json)!;
-			Type dtoType = GetDTOType(stationCycle.CycleType);
-			object? formatedModel = JsonConvert.DeserializeObject(json, dtoType);
+			List<string> stationCycles = JsonConvert.DeserializeObject<List<object>>(json)
+				.Select(JsonConvert.SerializeObject).ToList();
+			List<DTOStationCycle> result = new();
+			foreach (string s in stationCycles)
+			{
+				DTOStationCycle stationCycle = JsonConvert.DeserializeObject<DTOStationCycle>(s);
+				Type dtoType = GetDTOType(stationCycle.CycleType);
+				result.Add(JsonConvert.DeserializeObject(s, dtoType) as DTOStationCycle ??
+				           throw new InvalidOperationException("Invalid DTOStationCycle"));
+			}
 
-			bindingContext.Result = ModelBindingResult.Success(formatedModel);
+			bindingContext.Result = ModelBindingResult.Success(result);
 		}
 		catch
 		{

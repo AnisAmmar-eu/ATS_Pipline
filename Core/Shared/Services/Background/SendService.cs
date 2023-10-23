@@ -1,5 +1,6 @@
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Dictionaries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +28,6 @@ public class SendService : BackgroundService
 		IStationCycleService stationCycleService =
 			asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string address = configuration.GetValue<string>("ServerConfig:Address");
 
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
@@ -35,7 +35,7 @@ public class SendService : BackgroundService
 			{
 				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling SendStationCycle");
-				await stationCycleService.SendStationCycles(await stationCycleService.GetAllReadyToSent(), address);
+				await stationCycleService.SendStationCycles(await stationCycleService.GetAllReadyToSent(), Station.ServerAddress);
 
 				_executionCount++;
 				_logger.LogInformation(

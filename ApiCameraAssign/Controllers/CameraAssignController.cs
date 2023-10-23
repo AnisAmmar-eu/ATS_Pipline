@@ -32,7 +32,7 @@ public class CameraAssignController : ControllerBase
 		{
 			packets = (await _packetService.GetAll(new Expression<Func<Packet, bool>>[]
 			{
-				packet => packet.Type == PacketType.Shooting
+				packet => packet is Shooting
 			})).ConvertAll(packet => packet as DTOShooting)!;
 		}
 		catch (Exception e)

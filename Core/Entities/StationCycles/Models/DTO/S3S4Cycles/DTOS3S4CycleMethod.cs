@@ -24,4 +24,9 @@ public partial class DTOS3S4Cycle : DTOStationCycle, IDTO<S3S4Cycle, DTOS3S4Cycl
 		OutFurnaceID = s3S4Cycle.OutFurnaceID;
 		OutFurnacePacket = s3S4Cycle.OutFurnacePacket?.ToDTO();
 	}
+
+	public override S3S4Cycle ToModel()
+	{
+		return new S3S4Cycle(this);
+	}
 }

@@ -15,4 +15,9 @@ public partial class DTOS5Cycle : DTOStationCycle, IDTO<S5Cycle, DTOS5Cycle>
 	{
 		CycleType = CycleTypes.S5;
 	}
+
+	public override S5Cycle ToModel()
+	{
+		return new S5Cycle(this);
+	}
 }

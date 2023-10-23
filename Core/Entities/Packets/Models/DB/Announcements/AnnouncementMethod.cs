@@ -14,12 +14,10 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 {
 	public Announcement() : base()
 	{
-		Type = PacketType.Announcement;
 	}
 
 	public Announcement(DTOAnnouncement dtoAnnouncement) : base(dtoAnnouncement)
 	{
-		Type = PacketType.Announcement;
 		StationCycleRID = dtoAnnouncement.StationCycleRID;
 		AnnounceID = dtoAnnouncement.AnnounceID;
 		AnodeType = dtoAnnouncement.AnodeType;
@@ -27,7 +25,6 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 
 	public Announcement(AnnouncementStruct adsStruct)
 	{
-		Type = PacketType.Announcement;
 		StationCycleRID = adsStruct.RID.ToRID();
 		AnodeType = adsStruct.AnodeType == 1 ? AnodeTypeDict.DX : AnodeTypeDict.D20;
 		AnnounceID = adsStruct.AnnounceID.ToRID();

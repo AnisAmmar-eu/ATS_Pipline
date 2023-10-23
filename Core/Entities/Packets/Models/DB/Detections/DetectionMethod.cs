@@ -13,12 +13,10 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 {
 	public Detection()
 	{
-		Type = PacketType.Detection;
 	}
 
 	public Detection(DTODetection dtoDetection) : base(dtoDetection)
 	{
-		Type = PacketType.Detection;
 		AnodeSize = dtoDetection.AnodeSize;
 		IsSameType = dtoDetection.IsSameType;
 		MeasuredType = dtoDetection.MeasuredType;
@@ -27,7 +25,6 @@ public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
 
 	public Detection(DetectionStruct detectionStruct)
 	{
-		Type = PacketType.Detection;
 		StationCycleRID = detectionStruct.StationCycleRID.ToRID();
 		AnodeSize = detectionStruct.AnodeHigh;
 		// Other fields are completed later.

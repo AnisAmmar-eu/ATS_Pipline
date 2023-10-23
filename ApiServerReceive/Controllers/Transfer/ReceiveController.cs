@@ -6,9 +6,12 @@ using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
 using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Models.DTO.Furnaces;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DTO;
+using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
@@ -60,7 +63,7 @@ public class ReceiveController : ControllerBase
 		{
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
-		
+
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
@@ -79,17 +82,40 @@ public class ReceiveController : ControllerBase
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
-	[HttpPost("station-cycle")]
-	public async Task<IActionResult> ReceiveStationCycle([FromBody] IEnumerable<DTOStationCycle> dtoStationCycles)
+	/// <summary>
+	///		This function will take a furnace packet as argument and will build it. Building it will make it associate
+	///		to its stationCycle. StationCycle MUST NOT be marked as sent in the server.
+	/// </summary>
+	/// <param name="dtoPacket"></param>
+	/// <returns></returns>
+	[HttpPost("furnace-packet")]
+	public async Task<IActionResult> ReceiveFurnacePacketForStationCycle([FromBody] [Required] DTOPacket dtoPacket)
 	{
 		try
 		{
-			await _stationCycleService.ReceiveStationCycles(dtoStationCycles.ToList());
+			dtoPacket.ID = 0;
+			await _packetService.BuildPacket(dtoPacket.ToModel());
 		}
 		catch (Exception e)
 		{
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
+
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	[HttpPost("station-cycle")]
+	public async Task<IActionResult> ReceiveStationCycle([FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))] List<DTOStationCycle> dtoStationCycles)
+	{
+		try
+		{
+			await _stationCycleService.ReceiveStationCycles(dtoStationCycles);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 }

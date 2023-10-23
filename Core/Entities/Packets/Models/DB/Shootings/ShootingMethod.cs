@@ -16,19 +16,16 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 {
 	public Shooting()
 	{
-		Type = PacketType.Shooting;
 	}
 
 	public Shooting(string imagePath, string thumbnailsPath)
 	{
-		Type = PacketType.Shooting;
 		ImagePath = imagePath;
 		ThumbnailPath = thumbnailsPath;
 	}
 
 	public Shooting(DTOShooting dtoShooting) : base(dtoShooting)
 	{
-		Type = PacketType.Shooting;
 		AnodeIDKey = dtoShooting.AnodeIDKey;
 		GlobalStationStatus = dtoShooting.GlobalStationStatus;
 		LedStatus = dtoShooting.LedStatus;
@@ -38,7 +35,6 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 
 	public Shooting(ShootingStruct adsStruct)
 	{
-		Type = PacketType.Shooting;
 		StationCycleRID = adsStruct.StationCycleRID.ToRID();
 		AnodeIDKey = adsStruct.AnodeIDKey;
 		GlobalStationStatus = adsStruct.GlobalStationStatus;

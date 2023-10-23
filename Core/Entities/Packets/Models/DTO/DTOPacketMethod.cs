@@ -8,11 +8,11 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 {
 	public DTOPacket(Packet detection)
 	{
+		Type = "";
 		ID = detection.ID;
 		TS = detection.TS;
 		StationCycleRID = detection.StationCycleRID;
 		Status = detection.Status;
-		Type = detection.Type;
 		HasError = detection.HasError;
 	}
 

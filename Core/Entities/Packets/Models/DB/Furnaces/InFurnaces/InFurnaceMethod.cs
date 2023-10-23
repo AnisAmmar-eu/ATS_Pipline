@@ -54,19 +54,10 @@ public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 		return new DTOInFurnace(this);
 	}
 
-	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
+	protected override void FurnaceAssign(S3S4Cycle cycle)
 	{
-		S3S4Cycle? cycle = await anodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]
-		{
-			cycle => cycle.RID == StationCycleRID
-		}, withTracking: false) as S3S4Cycle;
-		if (cycle == null)
-			throw new InvalidConstraintException(StationCycleRID + " cycle is not a S3S4Cycle as expected");
-		cycle.InFurnacePacket = this;
 		cycle.InFurnaceID = ID;
-		Status = PacketStatus.Completed;
 		cycle.InFurnaceStatus = Status;
-		StationCycle = cycle;
-		anodeUOW.StationCycle.Update(cycle);
+		cycle.InFurnacePacket = this;
 	}
 }

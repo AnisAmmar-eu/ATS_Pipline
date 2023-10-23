@@ -1,3 +1,5 @@
+using Core.Entities.Packets.Dictionaries;
+using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Services;
@@ -18,6 +20,23 @@ public class PacketController : ControllerBase
 	{
 		_packetService = packetService;
 		_logsService = logsService;
+	}
+
+	[HttpGet("AAAAAAA")]
+	public async Task<IActionResult> BuildFurnace()
+	{
+		OutFurnace furnace = new()
+		{
+			OutAnnounceID = "salut",
+			FTAPickUp = 42,
+			PickUpTS = DateTimeOffset.Now,
+			DepositTS = DateTimeOffset.Now,
+			InvalidPacket = 42,
+			StationCycleRID = "Feur",
+			Status = PacketStatus.Completed,
+		};
+		await _packetService.BuildPacket(furnace);
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
 	[HttpPost("alarms")]

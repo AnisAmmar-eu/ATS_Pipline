@@ -13,13 +13,11 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 {
 	public AlarmList()
 	{
-		Type = PacketType.Alarm;
 		AlarmCycles = new List<AlarmCycle>();
 	}
 
 	public AlarmList(DTOAlarmList dto) : base(dto)
 	{
-		Type = PacketType.Alarm;
 		AlarmCycles = dto.AlarmCycles.ToList().ConvertAll(dtoAlarmCycle =>
 		{
 			AlarmCycle alarmCycle = dtoAlarmCycle.ToModel();

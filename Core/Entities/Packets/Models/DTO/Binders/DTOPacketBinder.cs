@@ -2,7 +2,8 @@ using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.DTO.Detections;
-using Core.Entities.Packets.Models.DTO.Furnaces;
+using Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
+using Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -43,7 +44,8 @@ public class DTOPacketBinder : IModelBinder
 			PacketType.Announcement => typeof(DTOAnnouncement),
 			PacketType.Detection => typeof(DTODetection),
 			PacketType.Shooting => typeof(DTOShooting),
-			PacketType.Furnace => typeof(DTOFurnace),
+			PacketType.InFurnace => typeof(DTOInFurnace),
+			PacketType.OutFurnace => typeof(DTOOutFurnace),
 			_ => typeof(DTOPacket)
 		};
 	}

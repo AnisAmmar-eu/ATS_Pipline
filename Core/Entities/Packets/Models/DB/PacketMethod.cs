@@ -10,7 +10,6 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 {
 	public Packet()
 	{
-		Type = "";
 		StationCycleRID = "";
 		Status = PacketStatus.Initialized;
 	}
@@ -19,7 +18,6 @@ public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
 	{
 		StationCycleRID = dto.StationCycleRID;
 		Status = dto.Status;
-		Type = dto.Type;
 		HasError = dto.HasError;
 	}
 

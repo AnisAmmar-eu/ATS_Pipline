@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.DTO.Detections;
@@ -16,7 +17,7 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 {
 	public string AnodeType { get; set; }
 	public string RID { get; set; }
-	public string Status { get; set; } = CycleStatus.Initialized;
+	public string Status { get; set; } = PacketStatus.Initialized;
 	public string CycleType { get; set; } = "";
 	public DateTimeOffset? TSClosed { get; set; }
 
