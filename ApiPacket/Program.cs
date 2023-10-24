@@ -7,6 +7,8 @@ using Core.Entities.KPI.KPIEntries.Services.KPILogs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Entities.User.Models.DB.Roles;
+using Core.Entities.User.Models.DB.Users;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
@@ -15,6 +17,7 @@ using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
@@ -36,6 +39,10 @@ Station.ServerAddress = address;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<AnodeCTX>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
 	{
@@ -94,29 +101,24 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 builder.Services.AddSingleton<SendService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<SendService>());
 
-// builder.Services.AddSingleton<CollectService>();
-// builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
-// builder.Services.AddSingleton<DailyKPILogService>();
-// builder.Services.AddHostedService(provider => provider.GetRequiredService<DailyKPILogService>());
-//builder.Services.AddScoped<IKPITestService, KPITestService>();
-//builder.Services.AddSingleton<HourlyKPITestService>();
-//builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyKPITestService>());
-
 WebApplication app = builder.Build();
 
 // Initialize
-using IServiceScope scope = app.Services.CreateScope();
-IServiceProvider services = scope.ServiceProvider;
-AnodeCTX context = services.GetRequiredService<AnodeCTX>();
 if (bool.Parse(builder.Configuration["DbInitialize"]))
-	DBInitializer.Initialize(context);
+{
+	using IServiceScope scope = app.Services.CreateScope();
+	IServiceProvider services = scope.ServiceProvider;
+	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
+	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+	await DBInitializer.Initialize(context, userManager);
+}
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-app.UseSwagger();
-app.UseSwaggerUI();
-//}
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
 
 string? clientHost = builder.Configuration["ClientHost"];
 
@@ -129,11 +131,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-// app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-//app.MapHub<AlarmHub>("/alarmsHub");
 
 app.Run();

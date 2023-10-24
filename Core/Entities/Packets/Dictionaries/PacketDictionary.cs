@@ -18,8 +18,12 @@ public class PacketType
 	public const string OutFurnace = "OUTFURNACE";
 }
 
-public class ShootingFolders
+public class ShootingUtils
 {
+	// Format
+	public const string FilenameFormat = "yyyyMMdd-HHmmss-fff";
+	
+	// Directories
 	public const string Camera1 = @"..\ApiCamera\Camera1\";
 	public const string Camera2 = @"..\ApiCamera\Camera2\";
 	public const string Archive1 = @"Archives1\";

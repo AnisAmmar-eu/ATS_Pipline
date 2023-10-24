@@ -51,7 +51,7 @@ public static class CameraUtils
 				{
 					DetectionStruct detection = tcClient.ReadAny<DetectionStruct>(oldEntryHandle);
 					string rid = detection.StationCycleRID.ToRID();
-					string ts = DateTimeOffset.Now.ToString("yyyyMMddHHmmssfff");
+					string ts = DateTimeOffset.Now.ToString(ADSUtils.TSFormat);
 					string filename = rid + "-" + ts + "." + extension;
 					// imagesDir2 != null means that we are in a S5 Cycle.
 					if (imagesDir2 != null && nbPictures % 2 == 1)

@@ -2,6 +2,7 @@ using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DB.S5Cycles;
 using Core.Entities.StationCycles.Models.DTO;
+using Core.Entities.StationCycles.Models.Structs;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -50,5 +51,14 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 		if (Station.Type == StationType.S3S4)
 			return new S3S4Cycle();
 		return new S5Cycle();
+	}
+
+	public ReducedStationCycle Reduce()
+	{
+		return new ReducedStationCycle
+		{
+			ID = ID,
+			RID = RID
+		};
 	}
 }

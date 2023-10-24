@@ -1,4 +1,5 @@
 using Core.Entities.IOT.Dictionaries;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Data;
@@ -11,8 +12,30 @@ public class IOTInitializer
 	{
 		if (anodeCTX.IOTDevice.Any())
 			return;
+		// Cameras
 		InitializeCamera(anodeCTX, DeviceRID.Camera1, "First", 1);
 		// InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
+
+		// APIs
+		string[] rids =
+		{
+			ITApis.ADSRID, ITApis.AlarmRID, ITApis.CameraRID, ITApis.CameraAssignRID, ITApis.IOTRID, ITApis.PacketRID,
+			ITApis.StationCycleRID, ITApis.UserRID
+		};
+		string[] addresses =
+		{
+			ITApis.ADSAddress, ITApis.AlarmAddress, ITApis.CameraAddress, ITApis.CameraAssignAddress, ITApis.IOTAddress,
+			ITApis.PacketAddress,
+			ITApis.StationCycleAddress, ITApis.UserAddress
+		};
+		string[] paths =
+		{
+			ITApis.ADSPath, ITApis.AlarmPath, ITApis.CameraPath, ITApis.CameraAssignPath, ITApis.IOTPath,
+			ITApis.PacketPath,
+			ITApis.StationCyclePath, ITApis.UserPath
+		};
+		for (int i = 0; i < rids.Length; ++i)
+			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int suffix)
@@ -230,6 +253,33 @@ public class IOTInitializer
 			Path = "AcquisitionFrameRate",
 			IOTDeviceID = cam.ID,
 			IOTDevice = cam
+		});
+		anodeCTX.SaveChanges();
+	}
+
+	private static void InitializeApi(AnodeCTX anodeCTX, string rid, string address, string path)
+	{
+		ITApi api = new()
+		{
+			RID = rid,
+			Name = rid,
+			Description = rid,
+			Address = address,
+			IsConnected = false
+		};
+		anodeCTX.IOTDevice.Add(api);
+		anodeCTX.SaveChanges();
+		anodeCTX.IOTTag.Add(new IOTTag
+		{
+			RID = $"{rid}Connection",
+			Name = IOTTagNames.CheckConnectionName,
+			Description = $"Connection tag for {rid}",
+			CurrentValue = "On",
+			NewValue = "",
+			HasNewValue = false,
+			Path = path,
+			IOTDeviceID = api.ID,
+			IOTDevice = api
 		});
 		anodeCTX.SaveChanges();
 	}

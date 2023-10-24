@@ -43,12 +43,12 @@ public class CameraApiController : ControllerBase
 			{
 				// Create an instance of the camera
 				Device? device2 = DeviceFactory.OpenPort(driverString, port2);
-				CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1);
-				CameraUtils.RunAcquisition(device2, "jpg", ShootingFolders.Camera2);
+				CameraUtils.RunAcquisition(device1, "jpg", ShootingUtils.Camera1);
+				CameraUtils.RunAcquisition(device2, "jpg", ShootingUtils.Camera2);
 			}
 			else
 			{
-				CameraUtils.RunAcquisition(device1, "jpg", ShootingFolders.Camera1, ShootingFolders.Camera2);
+				CameraUtils.RunAcquisition(device1, "jpg", ShootingUtils.Camera1, ShootingUtils.Camera2);
 			}
 		}
 		catch (Exception e)

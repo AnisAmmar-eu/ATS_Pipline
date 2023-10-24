@@ -8,7 +8,7 @@ public interface IServiceBaseEntity<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {
-	public Task<TDTO> GetById(int id,
+	public Task<TDTO> GetByID(int id,
 		Expression<Func<T, bool>>[]? filters = null,
 		bool withTracking = true,
 		params string[] includes);

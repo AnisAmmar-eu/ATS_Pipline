@@ -22,7 +22,7 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 		              throw new InvalidOperationException("Repo is null");
 	}
 
-	public async Task<TDTO> GetById(int id,
+	public async Task<TDTO> GetByID(int id,
 		Expression<Func<T, bool>>[]? filters = null,
 		bool withTracking = true,
 		params string[] includes)

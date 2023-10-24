@@ -48,12 +48,21 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		return new DTOShooting(this);
 	}
 
+	public string GetImagePathFromRoot(string root, string anodeType, int camera)
+	{
+		string filename =
+			$"S{Station.ID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(ShootingUtils.FilenameFormat)}.jpg";
+		string path =
+			$@"S{Station.ID:00}\T{anodeType}\Y{ShootingTS.Year}\M{ShootingTS.Month:00}\D{ShootingTS.Day:00}\C{camera:00}\";
+		return $@"{root}\{path}\{filename}";
+	}
+
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
-		DirectoryInfo directory1 = new(ShootingFolders.Camera1);
-		DirectoryInfo directory2 = new(ShootingFolders.Camera2);
-		DirectoryInfo archive1 = new(ShootingFolders.Archive1);
-		DirectoryInfo archive2 = new(ShootingFolders.Archive2);
+		DirectoryInfo directory1 = new(ShootingUtils.Camera1);
+		DirectoryInfo directory2 = new(ShootingUtils.Camera2);
+		DirectoryInfo archive1 = new(ShootingUtils.Archive1);
+		DirectoryInfo archive2 = new(ShootingUtils.Archive2);
 		if (!directory1.Exists || !directory2.Exists || !archive1.Exists || !archive2.Exists)
 			throw new IOException("One or more ShootingFolders do not exist");
 		// First and Third hole because second hole isn't taken into account.
@@ -72,7 +81,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 					if (thirdHole == null)
 						rid = ExtractRIDFromName(firstHole.Name);
 					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, rid), "yyyyMMddHHmmssfff",
+						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, rid), ADSUtils.TSFormat,
 							CultureInfo.InvariantCulture.DateTimeFormat);
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
@@ -86,7 +95,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 					if (firstHole == null)
 						rid = ExtractRIDFromName(thirdHole.Name);
 					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(thirdHole.Name, rid), "yyyyMMddHHmmssfff", null);
+						DateTimeOffset.ParseExact(ExtractTSFromName(thirdHole.Name, rid), ADSUtils.TSFormat, null);
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
 			}
@@ -142,7 +151,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	private static void SaveImageAndThumbnail(FileInfo file, string imageRoot, string thumbnailRoot, string anodeType,
 		DateTimeOffset date, int camera)
 	{
-		string filename = $"S{Station.ID:00}T{anodeType}C{camera:00}T{date.ToString("yyyymmdd-HHmmss-fff")}.jpg";
+		string filename = $"S{Station.ID:00}T{anodeType}C{camera:00}T{date.ToString(ShootingUtils.FilenameFormat)}.jpg";
 		string path =
 			$@"S{Station.ID:00}\T{anodeType}\Y{date.Year}\M{date.Month:00}\D{date.Day:00}\C{camera:00}\";
 		string imagePath = $@"{imageRoot}\{path}";

@@ -1,4 +1,7 @@
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using Core.Shared.Dictionaries;
+using Microsoft.VisualBasic;
 
 namespace Core.Entities.Packets.Models.Structs;
 
@@ -10,6 +13,6 @@ public struct RIDStruct
 
 	public string ToRID()
 	{
-		return StationID + TS.GetTimestamp().ToUnixTimeMilliseconds().ToString();
+		return $"{StationID}_{TS.GetTimestamp().ToString(ADSUtils.TSFormat)}";
 	}
 }

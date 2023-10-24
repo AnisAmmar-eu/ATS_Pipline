@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCameraAssign", "ApiCamer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiIOT", "ApiIOT\ApiIOT.csproj", "{38CB2E38-E242-4D1D-BD81-671AE542BE29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiStationCycle", "ApiStationCycle\ApiStationCycle.csproj", "{5899B35D-A6E8-4D3E-BAEC-DB0C87C0A48F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{38CB2E38-E242-4D1D-BD81-671AE542BE29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38CB2E38-E242-4D1D-BD81-671AE542BE29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38CB2E38-E242-4D1D-BD81-671AE542BE29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5899B35D-A6E8-4D3E-BAEC-DB0C87C0A48F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5899B35D-A6E8-4D3E-BAEC-DB0C87C0A48F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5899B35D-A6E8-4D3E-BAEC-DB0C87C0A48F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5899B35D-A6E8-4D3E-BAEC-DB0C87C0A48F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
