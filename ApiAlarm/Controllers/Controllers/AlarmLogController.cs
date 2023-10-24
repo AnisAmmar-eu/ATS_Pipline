@@ -5,10 +5,10 @@ using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiAlarms.Controllers.Controllers;
+namespace ApiAlarm.Controllers.Controllers;
 
 [ApiController]
-[Route("api/alarm-log")]
+[Route("apiAlarm/alarmsLog")]
 public class AlarmLogController : ControllerBase
 {
 	private readonly IAlarmLogService _alarmLogService;
@@ -18,38 +18,6 @@ public class AlarmLogController : ControllerBase
 	{
 		_alarmLogService = alarmLogService;
 		_logsService = logsService;
-	}
-
-	// AlarmPLC controller
-	[HttpPost("Collect")]
-	public async Task<IActionResult> Collect()
-	{
-		try
-		{
-			await _alarmLogService.Collect();
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
-		}
-
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
-	}
-
-	// AlarmPLC controller
-	[HttpGet("CollectCyc")]
-	public async Task<IActionResult> CollectCyc(int nbSecond)
-	{
-		try
-		{
-			await _alarmLogService.CollectCyc(nbSecond);
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
-		}
-
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
 	/// <summary>

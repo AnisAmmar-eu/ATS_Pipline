@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiIOT.Controllers;
 
 [ApiController]
-[Route("api/iot-tag")]
+[Route("apiIOT/iotTags")]
 public class IOTTagController : ControllerBase
 {
 	private readonly IIOTTagService _iotTagService;

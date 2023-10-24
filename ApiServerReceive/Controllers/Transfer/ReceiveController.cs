@@ -5,6 +5,7 @@ using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Models.DTO.Furnaces;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.DTO.Binders;
@@ -15,8 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiServerReceive.Controllers.Transfer;
 
-[Route("api/receive")]
 [ApiController]
+[Route("apiServerReceive")]
 public class ReceiveController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;
@@ -35,9 +36,14 @@ public class ReceiveController : ControllerBase
 		_logsService = logsService;
 	}
 
+	[HttpGet("status")]
+	public IActionResult GetStatus()
+	{
+		return new ApiResponseObject().SuccessResult();
+	}
 
 	[HttpPost]
-	[Route("alarm-log")]
+	[Route("alarmsLog")]
 	public async Task<IActionResult> ReceiveAlarmLog([FromBody] [Required] List<DTOSAlarmLog> dtoAlarmLogs)
 	{
 		try
@@ -62,7 +68,7 @@ public class ReceiveController : ControllerBase
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
-	[HttpPost("packet")]
+	[HttpPost("packets")]
 	public async Task<IActionResult> ReceivePacket([FromBody] [Required] IEnumerable<DTOPacket> packet)
 	{
 		try
@@ -83,11 +89,13 @@ public class ReceiveController : ControllerBase
 	/// </summary>
 	/// <param name="dtoPacket"></param>
 	/// <returns></returns>
-	[HttpPost("furnace-packet")]
+	[HttpPost("furnacePackets")]
 	public async Task<IActionResult> ReceiveFurnacePacketForStationCycle([FromBody] [Required] DTOPacket dtoPacket)
 	{
 		try
 		{
+			if (dtoPacket is not DTOFurnace)
+				throw new InvalidOperationException("Given packet MUST be a Furnace packet.");
 			dtoPacket.ID = 0;
 			await _packetService.BuildPacket(dtoPacket.ToModel());
 		}
@@ -99,7 +107,7 @@ public class ReceiveController : ControllerBase
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 
-	[HttpPost("station-cycle")]
+	[HttpPost("stationCycles")]
 	public async Task<IActionResult> ReceiveStationCycle(
 		[FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))] List<DTOStationCycle> dtoStationCycles)
 	{

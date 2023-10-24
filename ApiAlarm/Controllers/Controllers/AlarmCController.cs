@@ -4,10 +4,10 @@ using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiAlarms.Controllers.Controllers;
+namespace ApiAlarm.Controllers.Controllers;
 
 [ApiController]
-[Route("api/alarms-class")]
+[Route("apiAlarm/alarmsClass")]
 public class AlarmCController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;

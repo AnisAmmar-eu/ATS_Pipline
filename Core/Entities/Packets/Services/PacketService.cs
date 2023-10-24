@@ -30,7 +30,7 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 	public async Task<HttpResponseMessage> SendPacketsToServer()
 	{
 		List<Packet> packets = await AnodeUOW.Packet.GetAll();
-		const string api2Url = "https://localhost:7207/api/receive/packet";
+		const string api2Url = "https://localhost:7207/apiServerReceive/packets";
 		string jsonData = JsonConvert.SerializeObject(packets.ConvertAll(packet => packet.ToDTO()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 

@@ -1,11 +1,11 @@
 using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiADS.Controllers;
+namespace ApiAlarm.Controllers.Controllers;
 
 [ApiController]
-[Route("apiADS")]
-public class ADSController : ControllerBase
+[Route("apiAlarm")]
+public class AlarmController : ControllerBase
 {
 	[HttpGet("status")]
 	public IActionResult GetStatus()

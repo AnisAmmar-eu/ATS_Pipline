@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAlarms", "ApiAlarms\ApiAlarms.csproj", "{F476616D-C645-4E1B-82E9-3A3B820C2932}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAlarm", "ApiAlarm\ApiAlarm.csproj", "{F476616D-C645-4E1B-82E9-3A3B820C2932}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{0B493D42-003A-41AB-92F5-88A99860F306}"
 EndProject

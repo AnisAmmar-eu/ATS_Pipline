@@ -1,11 +1,11 @@
 using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiADS.Controllers;
+namespace ApiIOT.Controllers;
 
 [ApiController]
-[Route("apiADS")]
-public class ADSController : ControllerBase
+[Route("apiIOT")]
+public class IOTController : ControllerBase
 {
 	[HttpGet("status")]
 	public IActionResult GetStatus()

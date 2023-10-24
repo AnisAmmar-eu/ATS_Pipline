@@ -10,7 +10,7 @@ using Stemmer.Cvb;
 namespace ApiCamera.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("apiCamera")]
 public class CameraApiController : ControllerBase
 {
 	private readonly IConfiguration _configuration;
@@ -21,10 +21,16 @@ public class CameraApiController : ControllerBase
 		_logsService = logsService;
 		_configuration = configuration;
 	}
+	
+	[HttpGet("status")]
+	public IActionResult GetStatus()
+	{
+		return new ApiResponseObject().SuccessResult();
+	}
 
 	#region Acquisition
 
-	[HttpGet("/acquisition")]
+	[HttpGet("acquisition")]
 	public async Task<IActionResult> AcquisitionAsync()
 	{
 		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
@@ -57,28 +63,28 @@ public class CameraApiController : ControllerBase
 
 	#region Get/Set Device
 
-	[HttpGet("/device1")]
+	[HttpGet("device1")]
 	public async Task<IActionResult> GetDevice1Info()
 	{
 		int port = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
 		return await GetDeviceInfo(port);
 	}
 
-	[HttpGet("/device2")]
+	[HttpGet("device2")]
 	public async Task<IActionResult> GetDevice2Info()
 	{
 		int port = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
 		return await GetDeviceInfo(port);
 	}
 
-	[HttpPost("/device1")]
+	[HttpPost("device1")]
 	public async Task<ActionResult> SetDevice1Parameters([FromBody] [Required] Dictionary<string, string> parameters)
 	{
 		int port = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
 		return await SetDeviceParameters(port, parameters);
 	}
 
-	[HttpPost("/device2")]
+	[HttpPost("device2")]
 	public async Task<ActionResult> SetDevice2Parameters([FromBody] [Required] Dictionary<string, string> parameters)
 	{
 		int port = _configuration.GetValue<int>("CameraConfig:Camera2:Port");

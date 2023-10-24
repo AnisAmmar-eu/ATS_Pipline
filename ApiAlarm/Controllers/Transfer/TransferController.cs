@@ -2,10 +2,10 @@
 using Core.Entities.Packets.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiAlarms.Controllers.Transfer;
+namespace ApiAlarm.Controllers.Transfer;
 
 [ApiController]
-[Route("api/transfer")]
+[Route("apiAlarm/transfer")]
 public class TransferController : ControllerBase
 {
 	private readonly IAlarmLogService _alarmLogService;
@@ -18,7 +18,7 @@ public class TransferController : ControllerBase
 	}
 
 
-	[HttpPost("alarm-log")]
+	[HttpPost("alarmsLog")]
 	public async Task<IActionResult> TransferAlarmsLog()
 	{
 		try
@@ -32,24 +32,6 @@ public class TransferController : ControllerBase
 		catch (Exception ex)
 		{
 			// Handle any exception
-			Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
-			return StatusCode(500, "Erreur interne du serveur");
-		}
-	}
-
-	[HttpPost("packet")]
-	public async Task<IActionResult> TransferPackets()
-	{
-		try
-		{
-			HttpResponseMessage response = await _packetService.SendPacketsToServer();
-			if (response.IsSuccessStatusCode)
-				return Ok(true);
-			string errorMessage = await response.Content.ReadAsStringAsync();
-			return StatusCode((int)response.StatusCode, errorMessage);
-		}
-		catch (Exception ex)
-		{
 			Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
 			return StatusCode(500, "Erreur interne du serveur");
 		}

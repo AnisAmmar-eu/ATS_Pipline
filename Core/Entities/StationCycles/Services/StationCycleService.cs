@@ -73,7 +73,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		StringContent content =
 			new(JsonConvert.SerializeObject(stationCycles.ConvertAll(cycle => cycle.ToDTO())), Encoding.UTF8,
 				"application/json");
-		HttpResponseMessage response = await httpClient.PostAsync($"{address}/api/receive/station-cycle", content);
+		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/stationCycles", content);
 		if (response.IsSuccessStatusCode)
 		{
 			await AnodeUOW.StartTransaction();

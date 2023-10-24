@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiCameraAssign.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("apiCameraAssign")]
 public class CameraAssignController : ControllerBase
 {
 	private readonly ILogsService _logsService;
@@ -21,6 +21,12 @@ public class CameraAssignController : ControllerBase
 	{
 		_logsService = logsService;
 		_packetService = packetService;
+	}
+	
+	[HttpGet("status")]
+	public IActionResult GetStatus()
+	{
+		return new ApiResponseObject().SuccessResult();
 	}
 
 	[HttpGet]

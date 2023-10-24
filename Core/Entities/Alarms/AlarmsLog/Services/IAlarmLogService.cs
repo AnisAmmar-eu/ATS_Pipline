@@ -9,7 +9,6 @@ namespace Core.Entities.Alarms.AlarmsLog.Services;
 public interface IAlarmLogService : IServiceBaseEntity<AlarmLog, DTOAlarmLog>
 {
 	Task<IEnumerable<DTOAlarmPLC>> Collect();
-	Task<int> CollectCyc(int nbSeconds);
 	Task<List<DTOFAlarmLog>> GetAllForFront();
 	public Task<List<DTOFAlarmLog>> GetByClassID(int alarmID);
 	Task<List<DTOFAlarmLog>> AckAlarmLogs(int[] idAlarmLogs);

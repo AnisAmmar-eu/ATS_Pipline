@@ -102,22 +102,6 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 		return allAlarmsPLC.ConvertAll(alarmPLC => alarmPLC.ToDTO());
 	}
 
-	public async Task<int> CollectCyc(int nbSeconds)
-	{
-		int nbCyc = 0;
-		DateTime startTime = DateTime.Now;
-		TimeSpan duration = TimeSpan.FromSeconds(nbSeconds);
-
-		while (DateTime.Now - startTime < duration)
-		{
-			nbCyc++;
-			await Collect();
-		}
-
-		return nbCyc;
-	}
-
-
 	public async Task<List<DTOFAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
 	{
 		List<DTOFAlarmLog> ackAlarmLogs = new();
@@ -158,7 +142,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
-		const string api2Url = "https://localhost:7207/api/receive/alarm-log";
+		const string api2Url = "https://localhost:7207/apiServerReceive/alarmsLog";
 		List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes(
 			new Expression<Func<AlarmLog, bool>>[]
 			{

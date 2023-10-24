@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiPacket.Controllers;
 
 [ApiController]
-[Route("api/packets")]
+[Route("apiPacket")]
 public class PacketController : ControllerBase
 {
 	private readonly ILogsService _logsService;
@@ -21,22 +21,11 @@ public class PacketController : ControllerBase
 		_packetService = packetService;
 		_logsService = logsService;
 	}
-
-	[HttpGet("AAAAAAA")]
-	public async Task<IActionResult> BuildFurnace()
+	
+	[HttpGet("status")]
+	public IActionResult GetStatus()
 	{
-		OutFurnace furnace = new()
-		{
-			OutAnnounceID = "salut",
-			FTAPickUp = 42,
-			PickUpTS = DateTimeOffset.Now,
-			DepositTS = DateTimeOffset.Now,
-			InvalidPacket = 42,
-			StationCycleRID = "Feur",
-			Status = PacketStatus.Completed
-		};
-		await _packetService.BuildPacket(furnace);
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return new ApiResponseObject().SuccessResult();
 	}
 
 	[HttpPost("alarms")]

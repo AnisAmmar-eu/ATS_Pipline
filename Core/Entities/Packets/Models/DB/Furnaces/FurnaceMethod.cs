@@ -39,7 +39,7 @@ public abstract partial class Furnace : Packet, IBaseEntity<Furnace, DTOFurnace>
 			using HttpClient httpClient = new();
 			StringContent content = new(JsonConvert.SerializeObject(ToDTO()), Encoding.UTF8, "application/json");
 			HttpResponseMessage response =
-				await httpClient.PostAsync($"{Station.ServerAddress}/api/receive/furnace-packet", content);
+				await httpClient.PostAsync($"{Station.ServerAddress}/apiServerReceive/furnacePackets", content);
 			if (response.IsSuccessStatusCode)
 				Status = PacketStatus.Sent;
 		}

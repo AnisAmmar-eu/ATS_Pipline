@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiIOT.Controllers;
 
 [ApiController]
-[Route("api/iot-device")]
+[Route("apiIOT/iotDevices")]
 public class IOTDeviceController : ControllerBase
 {
 	private readonly IIOTDeviceService _iotDeviceService;
