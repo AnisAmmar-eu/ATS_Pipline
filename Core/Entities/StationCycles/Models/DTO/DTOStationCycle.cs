@@ -14,10 +14,10 @@ namespace Core.Entities.StationCycles.Models.DTO;
 [ModelBinder(typeof(DTOStationCycleBinder))]
 public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>
 {
-	public string AnodeType { get; set; }
-	public string RID { get; set; }
+	public string AnodeType { get; set; } = string.Empty;
+	public string RID { get; set; } = string.Empty;
 	public string Status { get; set; } = PacketStatus.Initialized;
-	public string CycleType { get; set; } = "";
+	public string CycleType { get; set; } = string.Empty;
 	public DateTimeOffset? TSClosed { get; set; }
 
 	public string? AnnouncementStatus { get; set; }

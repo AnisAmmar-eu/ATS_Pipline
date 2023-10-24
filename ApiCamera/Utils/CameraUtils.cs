@@ -60,7 +60,7 @@ public static class CameraUtils
 					++nbPictures;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				// Warning -> In prod, this condition is called before the disconnect function
 				// If the program crash, put this inside a try/catch or create a global var

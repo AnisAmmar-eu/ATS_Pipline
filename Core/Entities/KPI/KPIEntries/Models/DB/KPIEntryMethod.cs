@@ -9,7 +9,6 @@ public partial class KPIEntry : BaseEntity, IBaseEntity<KPIEntry, DTOKPIEntry>
 {
 	public KPIEntry()
 	{
-		Period = "";
 	}
 
 	protected KPIEntry(KPIEntry kpiEntry, KPIC kpiC)

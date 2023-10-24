@@ -1,4 +1,5 @@
 ﻿using System.DirectoryServices.AccountManagement;
+using System.Runtime.Versioning;
 using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DTO.Auth.Register;
 using Core.Entities.User.Models.DTO.Users;
@@ -22,6 +23,7 @@ public partial class ApplicationUser : IdentityUser
 		Source = SourceAuth.EKIDI;
 	}
 
+	[SupportedOSPlatform("windows")]
 	public ApplicationUser(UserPrincipal userData)
 	{
 		UserName = userData.SamAccountName;

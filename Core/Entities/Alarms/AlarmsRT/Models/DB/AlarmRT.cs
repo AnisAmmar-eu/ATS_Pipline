@@ -7,7 +7,7 @@ namespace Core.Entities.Alarms.AlarmsRT.Models.DB;
 
 public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 {
-	public string IRID { get; set; }
+	public string IRID { get; set; } = string.Empty;
 	public int AlarmID { get; set; }
 	public string? Station { get; set; }
 	public int? NbNonAck { get; set; }

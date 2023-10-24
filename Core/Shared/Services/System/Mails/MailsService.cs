@@ -43,7 +43,7 @@ public class MailsService : IMailsService
 		{
 			await smtp.SendAsync(email);
 		}
-		catch (Exception e)
+		catch (Exception)
 		{
 			throw new Exception("Error while sending email check if the email is valid");
 		}

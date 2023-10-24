@@ -1,5 +1,6 @@
 ﻿using System.DirectoryServices.AccountManagement;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.Versioning;
 using System.Security.Claims;
 using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DB.Roles;
@@ -81,6 +82,7 @@ public class AuthService : IAuthService
 		return user;
 	}
 
+	[SupportedOSPlatform("windows")]
 	public UserPrincipal? CheckCredentialsAD(DTOLogin dtoLogin)
 	{
 		PrincipalContext adContext = new(ContextType.Domain, _configuration["AdHost"]);
@@ -100,6 +102,7 @@ public class AuthService : IAuthService
 	/// <param name="model"></param>
 	/// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>
 	/// <exception cref="UnauthorizedAccessException"></exception>
+	[SupportedOSPlatform("windows")]
 	public async Task<DTOLoginResponse> RegisterSource(DTOLogin model)
 	{
 		if (model == null) throw new UnauthorizedAccessException("Invalid credentials");
@@ -132,6 +135,7 @@ public class AuthService : IAuthService
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedAccessException"></exception>
 	/// <exception cref="EntityNotFoundException"></exception>
+	[SupportedOSPlatform("windows")]
 	public async Task<DTOLoginResponse> Login(DTOLogin model)
 	{
 		ApplicationUser? user = await _userManager.FindByNameAsync(model.Username);
@@ -250,6 +254,7 @@ public class AuthService : IAuthService
 		return new DTOLoginResponse(token);
 	}
 
+	[SupportedOSPlatform("windows")]
 	private async Task<ApplicationUser?> RegisterAD(DTOLogin model)
 	{
 		UserPrincipal? userData = CheckCredentialsAD(model);

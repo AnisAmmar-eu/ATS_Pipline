@@ -5,7 +5,7 @@ namespace Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 
 public partial class InFurnace : Furnace, IBaseEntity<InFurnace, DTOInFurnace>
 {
-	public string InAnnounceID { get; set; }
+	public string InAnnounceID { get; set; } = string.Empty;
 	public int OriginID { get; set; }
 	public int PackPosition { get; set; }
 	public int PalletSide { get; set; }

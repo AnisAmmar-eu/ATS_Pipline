@@ -40,7 +40,7 @@ public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAla
 			DTOAlarmC alarmC = await GetByRID(received.RID);
 			return alarmC;
 		}
-		catch (EntityNotFoundException e)
+		catch (EntityNotFoundException)
 		{
 			await AnodeUOW.StartTransaction();
 			AlarmC model = received.ToModel();

@@ -1,4 +1,5 @@
 ﻿using System.DirectoryServices.AccountManagement;
+using System.Runtime.Versioning;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.User.Models.DTO.Roles;
@@ -291,6 +292,7 @@ public class UsersService : IUsersService
 	///     Get all user from the Active Directory
 	/// </summary>
 	/// <returns>A <see cref="List{DTOUser}" /></returns>
+	[SupportedOSPlatform("windows")]
 	public List<DTOUser> GetAllFromAD()
 	{
 		List<DTOUser> dtoUsers = new();
