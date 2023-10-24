@@ -3,6 +3,8 @@ using Core.Entities.Packets.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
+using Core.Shared.SignalR;
+using Core.Shared.SignalR.StationCycleHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +30,9 @@ builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ISignalRService, SignalRService>();
+
 builder.Services.AddSingleton<IServiceProvider>(sp => sp);
 
 builder.Services.AddSingleton<ADSService>();
@@ -46,5 +51,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<StationCycleHub>("/stationCycleHub");
 
 app.Run();
