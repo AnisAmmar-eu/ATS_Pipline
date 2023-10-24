@@ -61,6 +61,7 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 			tasks.Add(AnodeUOW.Packet.Add(packet));
 			packets.Add(packet);
 		}
+
 		await Task.WhenAll(tasks);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();

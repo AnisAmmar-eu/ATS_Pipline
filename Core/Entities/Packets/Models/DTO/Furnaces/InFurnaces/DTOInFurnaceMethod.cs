@@ -1,5 +1,4 @@
 using Core.Entities.Packets.Dictionaries;
-using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -7,10 +6,11 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 
 public partial class DTOInFurnace : DTOFurnace, IDTO<InFurnace, DTOInFurnace>
 {
-	public DTOInFurnace() : base()
+	public DTOInFurnace()
 	{
 		Type = PacketType.InFurnace;
 	}
+
 	public DTOInFurnace(InFurnace inFurnace) : base(inFurnace)
 	{
 		Type = PacketType.InFurnace;

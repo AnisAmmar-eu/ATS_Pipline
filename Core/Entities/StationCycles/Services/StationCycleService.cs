@@ -1,6 +1,4 @@
-using System.Collections.Specialized;
 using System.Linq.Expressions;
-using System.Net.Http.Json;
 using System.Text;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Detections;
@@ -10,8 +8,6 @@ using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO;
-using Core.Entities.StationCycles.Models.DTO.S1S2Cycles;
-using Core.Entities.StationCycles.Models.DTO.S3S4Cycles;
 using Core.Entities.StationCycles.Repositories;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Kernel;
@@ -58,7 +54,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task<List<StationCycle>> GetAllReadyToSent()
 	{
-		return await AnodeUOW.StationCycle.GetAll(filters: new Expression<Func<StationCycle, bool>>[]
+		return await AnodeUOW.StationCycle.GetAll(new Expression<Func<StationCycle, bool>>[]
 			{
 				cycle => cycle.Status == PacketStatus.Completed
 			}, withTracking: false,
@@ -77,7 +73,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		StringContent content =
 			new(JsonConvert.SerializeObject(stationCycles.ConvertAll(cycle => cycle.ToDTO())), Encoding.UTF8,
 				"application/json");
-		var response = await httpClient.PostAsync($"{address}/api/receive/station-cycle", content);
+		HttpResponseMessage response = await httpClient.PostAsync($"{address}/api/receive/station-cycle", content);
 		if (response.IsSuccessStatusCode)
 		{
 			await AnodeUOW.StartTransaction();

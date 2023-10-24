@@ -5,7 +5,7 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces;
 
 public partial class DTOFurnace : DTOPacket, IDTO<Furnace, DTOFurnace>
 {
-	public DTOFurnace() : base()
+	public DTOFurnace()
 	{
 	}
 

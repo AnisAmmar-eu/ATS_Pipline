@@ -6,10 +6,11 @@ namespace Core.Entities.Packets.Models.DTO.Detections;
 
 public partial class DTODetection : DTOPacket, IDTO<Detection, DTODetection>
 {
-	public DTODetection() : base()
+	public DTODetection()
 	{
 		Type = PacketType.Detection;
 	}
+
 	public DTODetection(Detection detection) : base(detection)
 	{
 		Type = PacketType.Detection;

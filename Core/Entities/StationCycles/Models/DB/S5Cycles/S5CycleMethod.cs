@@ -5,7 +5,7 @@ namespace Core.Entities.StationCycles.Models.DB.S5Cycles;
 
 public partial class S5Cycle : StationCycle, IBaseEntity<S5Cycle, DTOS5Cycle>
 {
-	public S5Cycle() : base()
+	public S5Cycle()
 	{
 	}
 

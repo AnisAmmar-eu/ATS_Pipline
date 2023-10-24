@@ -3,7 +3,6 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;

@@ -1,12 +1,7 @@
-using System.Data;
-using System.Linq.Expressions;
-using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.Structs;
-using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 

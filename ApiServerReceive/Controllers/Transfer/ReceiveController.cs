@@ -1,14 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
 using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.Furnaces;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.DTO.Binders;
@@ -23,10 +19,9 @@ namespace ApiServerReceive.Controllers.Transfer;
 [ApiController]
 public class ReceiveController : ControllerBase
 {
-	private readonly ILogsService _logsService;
-
 	private readonly IAlarmCService _alarmCService;
 	private readonly IAlarmLogService _alarmLogService;
+	private readonly ILogsService _logsService;
 	private readonly IPacketService _packetService;
 	private readonly IStationCycleService _stationCycleService;
 
@@ -83,8 +78,8 @@ public class ReceiveController : ControllerBase
 	}
 
 	/// <summary>
-	///		This function will take a furnace packet as argument and will build it. Building it will make it associate
-	///		to its stationCycle. StationCycle MUST NOT be marked as sent in the server.
+	///     This function will take a furnace packet as argument and will build it. Building it will make it associate
+	///     to its stationCycle. StationCycle MUST NOT be marked as sent in the server.
 	/// </summary>
 	/// <param name="dtoPacket"></param>
 	/// <returns></returns>
@@ -105,7 +100,8 @@ public class ReceiveController : ControllerBase
 	}
 
 	[HttpPost("station-cycle")]
-	public async Task<IActionResult> ReceiveStationCycle([FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))] List<DTOStationCycle> dtoStationCycles)
+	public async Task<IActionResult> ReceiveStationCycle(
+		[FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))] List<DTOStationCycle> dtoStationCycles)
 	{
 		try
 		{

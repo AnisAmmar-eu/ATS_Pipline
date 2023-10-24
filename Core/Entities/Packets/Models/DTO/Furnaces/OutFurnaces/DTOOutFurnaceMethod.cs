@@ -6,10 +6,11 @@ namespace Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 
 public partial class DTOOutFurnace : DTOFurnace, IDTO<OutFurnace, DTOOutFurnace>
 {
-	public DTOOutFurnace() : base()
+	public DTOOutFurnace()
 	{
 		Type = PacketType.OutFurnace;
 	}
+
 	public DTOOutFurnace(OutFurnace outFurnace) : base(outFurnace)
 	{
 		Type = PacketType.OutFurnace;

@@ -7,8 +7,8 @@ public partial class S3S4Cycle : StationCycle, IBaseEntity<S3S4Cycle, DTOS3S4Cyc
 {
 	public S3S4Cycle()
 	{
-		
 	}
+
 	public S3S4Cycle(DTOS3S4Cycle dtoS3S4Cycle) : base(dtoS3S4Cycle)
 	{
 		AnnounceID = dtoS3S4Cycle.AnnounceID;

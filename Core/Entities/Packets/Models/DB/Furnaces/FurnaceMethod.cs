@@ -28,7 +28,7 @@ public abstract partial class Furnace : Packet, IBaseEntity<Furnace, DTOFurnace>
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
-		StationCycle = await anodeUOW.StationCycle.GetBy(filters: new Expression<Func<StationCycle, bool>>[]
+		StationCycle = await anodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]
 		{
 			cycle => cycle.RID == StationCycleRID
 		}, withTracking: false);

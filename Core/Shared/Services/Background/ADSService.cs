@@ -1,10 +1,7 @@
 using System.Dynamic;
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.StationCycles.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Notifications;
 using Core.Shared.Services.Notifications.PacketNotifications;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -54,6 +51,7 @@ public class ADSService : BackgroundService
 					await InFurnaceNotification.Create(ads);
 					await OutFurnaceNotification.Create(ads);
 				}
+
 				_logger.LogInformation("ADSService successfully created Notifications");
 
 				// If the TC disconnects, it will loop back to the top.
@@ -62,9 +60,9 @@ public class ADSService : BackgroundService
 				       AdsErrorCode.NoError)
 					// To avoid spamming the TwinCat
 					Thread.Sleep(1000);
-				
+
 				_logger.LogInformation("PeriodicADSService lost connection to the TwinCat");
-				
+
 				_executionCount++;
 				_logger.LogInformation(
 					"Executed PeriodicADSService - Count: {count}", _executionCount);

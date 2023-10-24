@@ -33,7 +33,7 @@ public class PacketController : ControllerBase
 			DepositTS = DateTimeOffset.Now,
 			InvalidPacket = 42,
 			StationCycleRID = "Feur",
-			Status = PacketStatus.Completed,
+			Status = PacketStatus.Completed
 		};
 		await _packetService.BuildPacket(furnace);
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
