@@ -58,7 +58,9 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 		return new ReducedStationCycle
 		{
 			ID = ID,
-			RID = RID
+			RID = RID,
+			AnodeSize = DetectionPacket?.AnodeSize,
+			AnodeType = AnodeType
 		};
 	}
 }

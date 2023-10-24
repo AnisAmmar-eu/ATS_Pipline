@@ -7,7 +7,7 @@ namespace Core.Entities.StationCycles.Services;
 
 public interface IStationCycleService : IServiceBaseEntity<StationCycle, DTOStationCycle>
 {
-	public Task<DTOStationCycle?> GetMostRecentWithIncludes();
+	public Task<ReducedStationCycle?> GetMostRecentWithIncludes();
 	public Task<List<ReducedStationCycle>> GetAllRIDs();
 	public Task<List<StationCycle>> GetAllReadyToSent();
 	public Task<Byte[]> GetImagesFromIDAndCamera(int id, int camera);

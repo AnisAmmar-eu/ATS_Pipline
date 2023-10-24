@@ -47,7 +47,7 @@ public class IOTController : ControllerBase
 	[HttpGet("mostRecent")]
 	public async Task<IActionResult> GetMostRecent()
 	{
-		DTOStationCycle? result;
+		ReducedStationCycle? result;
 		try
 		{
 			result = await _stationCycleService.GetMostRecentWithIncludes();

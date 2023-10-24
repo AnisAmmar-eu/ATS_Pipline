@@ -27,10 +27,10 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 	private readonly IConfiguration _configuration;
 	private readonly IPacketService _packetService;
 
-	public async Task<DTOStationCycle?> GetMostRecentWithIncludes()
+	public async Task<ReducedStationCycle?> GetMostRecentWithIncludes()
 	{
 		return (await AnodeUOW.StationCycle.GetAllWithIncludes(orderBy: query =>
-			query.OrderByDescending(cycle => cycle.TS))).FirstOrDefault()?.ToDTO();
+			query.OrderByDescending(cycle => cycle.TS))).FirstOrDefault()?.Reduce();
 	}
 
 	public StationCycleService(IAnodeUOW anodeUOW, IPacketService packetService, IConfiguration configuration) :
