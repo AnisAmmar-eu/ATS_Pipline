@@ -218,7 +218,7 @@ public class AuthService : IAuthService
 		foreach (string roleName in await GetRoles(user))
 		{
 			ApplicationRole role = await _roleManager.FindByNameAsync(roleName);
-			if (role.Type == ApplicationRoleType.SYSTEM_EKIUM || role.Type == ApplicationRoleType.SYSTEM_EKIDI)
+			if (role.Type == ApplicationRoleType.SYSTEM_FIVES || role.Type == ApplicationRoleType.SYSTEM_ATS)
 				httpContext.Items["HasAdminRole"] = true;
 			userRolesID.Add(role.Id);
 		}

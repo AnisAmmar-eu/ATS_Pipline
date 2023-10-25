@@ -27,9 +27,20 @@ public class SignatureTypeRID
 
 public class ApplicationRoleType
 {
-	public const string SYSTEM_EKIUM = "SYSTEM_EKIUM";
-	public const string SYSTEM_EKIDI = "SYSTEM_EKIDI";
+	public const string SYSTEM_FIVES = "SYSTEM_FIVES";
+	public const string SYSTEM_ATS = "SYSTEM_ATS";
 	public const string USER = "USER";
+}
+
+public class RoleNames
+{
+	public const string FIVES = "Fives-Administrator";
+	public const string ATS = "ATS-Administrator";
+	public const string VISITOR = "Visitor";
+	public const string OPERATOR = "Operator";
+	public const string FORCING = "Forcing";
+	public const string SETTINGS = "Settings";
+	public const string ADMIN = "Admin";
 }
 
 public class SourceAuth

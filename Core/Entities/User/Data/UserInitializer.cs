@@ -19,15 +19,45 @@ public class UserInitializer
 		{
 			anodeCTX.Roles.Add(new ApplicationRole
 			{
-				Name = "Ekidi-Administrator",
-				NormalizedName = "EKIDI-ADMINISTRATOR",
-				Type = ApplicationRoleType.SYSTEM_EKIDI
+				Name = RoleNames.ATS,
+				NormalizedName = RoleNames.ATS.ToUpper(),
+				Type = ApplicationRoleType.SYSTEM_ATS
 			});
 			anodeCTX.Roles.Add(new ApplicationRole
 			{
-				Name = "Ekium-Administrator",
-				NormalizedName = "EKIUM-ADMINISTRATOR",
-				Type = ApplicationRoleType.SYSTEM_EKIUM
+				Name = RoleNames.FIVES,
+				NormalizedName = RoleNames.FIVES.ToUpper(),
+				Type = ApplicationRoleType.SYSTEM_FIVES
+			});
+			anodeCTX.Roles.Add(new ApplicationRole
+			{
+				Name = RoleNames.VISITOR,
+				NormalizedName = RoleNames.VISITOR.ToUpper(),
+				Type = ApplicationRoleType.USER
+			});
+			anodeCTX.Roles.Add(new ApplicationRole
+			{
+				Name = RoleNames.OPERATOR,
+				NormalizedName = RoleNames.OPERATOR.ToUpper(),
+				Type = ApplicationRoleType.USER,
+			});
+			anodeCTX.Roles.Add(new ApplicationRole
+			{
+				Name = RoleNames.FORCING,
+				NormalizedName = RoleNames.FORCING.ToUpper(),
+				Type = ApplicationRoleType.USER,
+			});
+			anodeCTX.Roles.Add(new ApplicationRole
+			{
+				Name = RoleNames.SETTINGS,
+				NormalizedName = RoleNames.SETTINGS.ToUpper(),
+				Type = ApplicationRoleType.USER,
+			});
+			anodeCTX.Roles.Add(new ApplicationRole
+			{
+				Name = RoleNames.ADMIN,
+				NormalizedName = RoleNames.ADMIN.ToUpper(),
+				Type = ApplicationRoleType.USER,
 			});
 			anodeCTX.SaveChanges();
 		}
@@ -49,7 +79,7 @@ public class UserInitializer
 			};
 
 			await userManager.CreateAsync(newUser, "ekiumAdmin2022$");
-			await userManager.AddToRoleAsync(newUser, "Ekium-Administrator");
+			await userManager.AddToRoleAsync(newUser, RoleNames.FIVES);
 		}
 
 		#endregion
@@ -84,17 +114,17 @@ public class UserInitializer
 		{
 			anodeCTX.ActEntityRoles.Add(new ActEntityRole
 			{
-				RID = ActionRID.ADMIN_GENERAL_RIGHTS + "." + ApplicationRoleType.SYSTEM_EKIUM,
+				RID = ActionRID.ADMIN_GENERAL_RIGHTS + "." + ApplicationRoleType.SYSTEM_FIVES,
 				ApplicationType = ApplicationTypeRID.ROLE,
-				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_EKIUM).Id,
+				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_FIVES).Id,
 				ActEntityID = anodeCTX.ActEntities.First(ae => ae.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
 			});
 
 			anodeCTX.ActEntityRoles.Add(new ActEntityRole
 			{
-				RID = ActionRID.ADMIN_GENERAL_RIGHTS + "." + ApplicationRoleType.SYSTEM_EKIDI,
+				RID = ActionRID.ADMIN_GENERAL_RIGHTS + "." + ApplicationRoleType.SYSTEM_ATS,
 				ApplicationType = ApplicationTypeRID.ROLE,
-				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_EKIDI).Id,
+				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SYSTEM_ATS).Id,
 				ActEntityID = anodeCTX.ActEntities.First(ae => ae.RID == ActionRID.ADMIN_GENERAL_RIGHTS).ID
 			});
 			anodeCTX.SaveChanges();

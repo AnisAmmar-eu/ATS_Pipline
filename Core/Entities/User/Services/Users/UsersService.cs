@@ -1,5 +1,6 @@
 ﻿using System.DirectoryServices.AccountManagement;
 using System.Runtime.Versioning;
+using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.User.Models.DTO.Roles;
@@ -167,8 +168,8 @@ public class UsersService : IUsersService
 		IList<string>? rolesName = await _userManager.GetRolesAsync(user);
 
 		// Remove admin role in rolesName
-		rolesName.Remove("Ekidi-Administrator");
-		rolesName.Remove("Ekium-Administrator");
+		rolesName.Remove(RoleNames.ATS);
+		rolesName.Remove(RoleNames.FIVES);
 
 		// Remove all roles
 		await _userManager.RemoveFromRolesAsync(user, rolesName);
@@ -197,9 +198,9 @@ public class UsersService : IUsersService
 
 		bool result = false;
 		if (toAdmin)
-			result = (await _userManager.AddToRoleAsync(user, "Ekidi-Administrator")).Succeeded;
+			result = (await _userManager.AddToRoleAsync(user, RoleNames.FIVES)).Succeeded;
 		else
-			result = (await _userManager.RemoveFromRoleAsync(user, "Ekidi-Administrator")).Succeeded;
+			result = (await _userManager.RemoveFromRoleAsync(user, RoleNames.FIVES)).Succeeded;
 
 		return result;
 	}
