@@ -1,4 +1,5 @@
 using Core.Entities.IOT.IOTDevices.Models.DTO;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -22,8 +23,8 @@ public partial class IOTDevice : BaseEntity, IBaseEntity<IOTDevice, DTOIOTDevice
 	/// </summary>
 	/// <param name="anodeUOW"></param>
 	/// <returns>True if at least one tag is applied. False otherwise.</returns>
-	public virtual async Task<bool> ApplyTags(IAnodeUOW anodeUOW)
+	public virtual async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
-		return await Task.FromResult(false);
+		return await Task.FromResult(new List<IOTTag>());
 	}
 }

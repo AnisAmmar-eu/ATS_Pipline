@@ -6,4 +6,5 @@ public struct ReducedStationCycle
 	public string RID { get; set; }
 	public int? AnodeSize { get; set; }
 	public string AnodeType { get; set; }
+	public DateTimeOffset? ShootingTS { get; set; }
 }

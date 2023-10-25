@@ -42,7 +42,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task<List<ReducedStationCycle>> GetAllRIDs()
 	{
-		return (await AnodeUOW.StationCycle.GetAll(withTracking: false)).ConvertAll(cycle => cycle.Reduce());
+		return (await AnodeUOW.StationCycle.GetAll(withTracking: false, includes: "DetectionPacket")).ConvertAll(cycle => cycle.Reduce());
 	}
 
 	public async Task<List<StationCycle>> GetAllReadyToSent()
@@ -125,7 +125,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles)
 	{
-		IEnumerable<Task> tasks = dtoStationCycles.Select(async dto =>
+		// DbContext operations should NOT be done concurrently. Hence why await in loop.
+		foreach (DTOStationCycle dto in dtoStationCycles)
 		{
 			await AnodeUOW.StartTransaction();
 			StationCycle cycle = dto.ToModel();
@@ -146,8 +147,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			// Packets need to be commit before adding StationCycle
 			AnodeUOW.Commit();
 			await AnodeUOW.StationCycle.Add(cycle);
-		});
-		await Task.WhenAll(tasks);
+		}
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 	}

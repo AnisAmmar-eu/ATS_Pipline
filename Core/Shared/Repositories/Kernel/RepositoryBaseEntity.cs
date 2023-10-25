@@ -220,7 +220,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	}
 
 	/// <summary>
-	///     Update an entity in the table of <typeref name="T" /> and return the updated entity
+	///     Update an entity in the table of <typeref name="T" /> and returns the updated entity
 	/// </summary>
 	/// <param name="entity">Entity to updated, null attribute will not change</param>
 	/// <returns>The updated entity <see cref="T" /></returns>
@@ -228,6 +228,18 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	{
 		_context.Set<T>().Update(entity);
 		return entity;
+	}
+
+	/// <summary>
+	///		Updates a list of entities in the table of <typeref name="T" /> and returns the updated entities
+	/// </summary>
+	/// <param name="entities">Entities to be updated, null attributes will NOT change</param>
+	/// <returns>The updated entities <see cref="T" /></returns>
+	public T[] UpdateArray(T[] entities)
+	{
+		foreach (T entity in entities)
+			_context.Set<T>().Update(entity);
+		return entities;
 	}
 
 	/// <summary>

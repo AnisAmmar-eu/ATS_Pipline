@@ -13,6 +13,7 @@ public class ADSService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<ADSService> _logger;
+	private readonly TimeSpan _period = TimeSpan.FromMilliseconds(100);
 	private int _executionCount;
 
 	public ADSService(ILogger<ADSService> logger, IServiceScopeFactory factory)
@@ -23,55 +24,69 @@ public class ADSService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
+		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		CancellationToken cancel = CancellationToken.None;
 		AdsClient tcClient = new();
-		while (!stoppingToken.IsCancellationRequested)
+		await InitializeConnection(tcClient, asyncScope, cancel);
+		while (!stoppingToken.IsCancellationRequested
+		       && await timer.WaitForNextTickAsync(stoppingToken))
+		{
 			try
 			{
-				_logger.LogInformation("ADSService running at: {time}", DateTimeOffset.Now);
-				while (true)
-				{
-					tcClient.Connect(851);
-					if (tcClient.IsConnected) break;
-					Console.WriteLine("Unable to connect to the automaton. Retrying in 1 second");
-					Thread.Sleep(1000);
-				}
-
-				dynamic ads = new ExpandoObject();
-				ads.tcClient = tcClient;
-				ads.appServices = asyncScope.ServiceProvider;
-				ads.cancel = cancel;
-				_logger.LogInformation("Calling Notifications");
-				await AnnouncementNotification.Create(ads);
-				await DetectionNotification.Create(ads);
-				await AlarmNotification.Create(ads);
-				if (Station.Type == StationType.S3S4)
-				{
-					await InFurnaceNotification.Create(ads);
-					await OutFurnaceNotification.Create(ads);
-				}
-
-				_logger.LogInformation("ADSService successfully created Notifications");
-
-				// If the TC disconnects, it will loop back to the top.
+				// If the TC disconnects, it will loop back to the top
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
 				while ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode ==
 				       AdsErrorCode.NoError)
 					// To avoid spamming the TwinCat
-					Thread.Sleep(1000);
-
-				_logger.LogInformation("PeriodicADSService lost connection to the TwinCat");
+					await Task.Delay(1000, cancel);
+			}
+			catch (Exception e)
+			{
+				_logger.LogInformation("PeriodicADSService lost connection to the TwinCat with error message: {error}",
+					e);
 
 				_executionCount++;
 				_logger.LogInformation(
 					"Executed PeriodicADSService - Count: {count}", _executionCount);
 			}
-			catch (Exception ex)
+		}
+	}
+
+	private async Task InitializeConnection(AdsClient tcClient, AsyncServiceScope asyncScope, CancellationToken cancel)
+	{
+		try
+		{
+			_logger.LogInformation("ADSService running at: {time}", DateTimeOffset.Now);
+			while (true)
 			{
-				_logger.LogInformation(
-					"Failed to execute PeriodicADSService with exception message {message}. Good luck next round!",
-					ex.Message);
+				tcClient.Connect(851);
+				if (tcClient.IsConnected) break;
+				Console.WriteLine("Unable to connect to the automaton. Retrying in 1 second");
+				Thread.Sleep(1000);
 			}
+
+			dynamic ads = new ExpandoObject();
+			ads.tcClient = tcClient;
+			ads.appServices = asyncScope.ServiceProvider;
+			ads.cancel = cancel;
+			_logger.LogInformation("Calling Notifications");
+			await AnnouncementNotification.Create(ads);
+			await DetectionNotification.Create(ads);
+			await AlarmNotification.Create(ads);
+			if (Station.Type == StationType.S3S4)
+			{
+				await InFurnaceNotification.Create(ads);
+				await OutFurnaceNotification.Create(ads);
+			}
+
+			_logger.LogInformation("ADSService successfully created Notifications");
+		}
+		catch (Exception ex)
+		{
+			_logger.LogInformation(
+				"Failed to execute PeriodicADSService with exception message {message}. Good luck next round!",
+				ex.Message);
+		}
 	}
 }

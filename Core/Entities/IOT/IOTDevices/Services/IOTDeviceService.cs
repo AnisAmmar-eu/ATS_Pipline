@@ -2,8 +2,10 @@ using System.Linq.Expressions;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Repositories;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Services.Kernel;
 using Core.Shared.SignalR.IOTTagHub;
+using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
@@ -38,9 +40,17 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		List<IOTDevice> devices = await CheckAllConnections();
 		await AnodeUOW.StartTransaction();
 		bool hasAnyTagChanged = false;
-		IEnumerable<Task> tasks = devices.Select(async device =>
-			hasAnyTagChanged = hasAnyTagChanged || await device.ApplyTags(AnodeUOW));
-		await Task.WhenAll(tasks);
+		IEnumerable<Task<List<IOTTag>>> tasks = devices.Select(async device =>
+		{
+			List<IOTTag> updatedTags = await device.ApplyTags(AnodeUOW);
+			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Any();
+			return updatedTags;
+		});
+		List<IOTTag>[] updatedTags = await Task.WhenAll(tasks);
+		foreach (List<IOTTag> updatedTagList in updatedTags)
+			AnodeUOW.IOTTag.UpdateArray(updatedTagList.ToArray());
+		
+		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		if (hasAnyTagChanged)
 			await _hubContext.Clients.All.RefreshIOTTag();
@@ -54,20 +64,20 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	/// </returns>
 	private async Task<List<IOTDevice>> CheckAllConnections()
 	{
-		string cameraDeviceString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
 		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: "IOTTags");
 		List<IOTDevice> connectedDevices = new();
 		await AnodeUOW.StartTransaction();
-		IEnumerable<Task> tasks = devices.Select(async device =>
+		IEnumerable<Task<IOTDevice>> task = devices.Select(async device =>
 		{
 			device.IsConnected = await device.CheckConnection();
 			if (device.IsConnected)
 				connectedDevices.Add(device);
-			AnodeUOW.IOTDevice.Update(device);
-			AnodeUOW.Commit();
+			return device;
 		});
 
-		await Task.WhenAll(tasks);
+		IOTDevice[] updatedDevices = await Task.WhenAll(task);
+		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);
+		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		return connectedDevices;
 	}

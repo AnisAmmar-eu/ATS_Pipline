@@ -31,10 +31,10 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 		}
 	}
 
-	public override async Task<bool> ApplyTags(IAnodeUOW anodeUOW)
+	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
 		Dictionary<string, string> parameters = new();
-		bool hasAnyTagChanged = false;
+		List<IOTTag> updatedTags = new();
 		string httpPath = string.Empty;
 		foreach (IOTTag iotTag in IOTTags)
 		{
@@ -46,7 +46,7 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 			parameters.Add(iotTag.Path, iotTag.NewValue);
 			iotTag.CurrentValue = iotTag.NewValue;
 			iotTag.HasNewValue = false;
-			anodeUOW.IOTTag.Update(iotTag);
+			updatedTags.Add(iotTag);
 		}
 
 		if (parameters.Count != 0)
@@ -58,16 +58,15 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 					await httpClient.PostAsync(Address + httpPath, JsonContent.Create(parameters));
 				if (response.StatusCode != HttpStatusCode.OK)
 					throw new Exception("Error while setting parameters: " + response.StatusCode);
-				hasAnyTagChanged = true;
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine("Could not update camera parameters: " + e.Message);
-				return false;
+				return new List<IOTTag>();
 			}
 		}
 
 		anodeUOW.Commit();
-		return hasAnyTagChanged;
+		return updatedTags;
 	}
 }

@@ -13,6 +13,7 @@ public partial class IOTTag : BaseEntity, IBaseEntity<IOTTag, DTOIOTTag>
 	public string CurrentValue { get; set; } = string.Empty;
 	public string NewValue { get; set; } = string.Empty;
 	public bool HasNewValue { get; set; }
+	public bool IsReadOnly { get; set; }
 	public string Path { get; set; } = string.Empty;
 	public int IOTDeviceID { get; set; }
 

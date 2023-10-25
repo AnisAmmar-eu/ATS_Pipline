@@ -60,7 +60,8 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 			ID = ID,
 			RID = RID,
 			AnodeSize = DetectionPacket?.AnodeSize,
-			AnodeType = AnodeType
+			AnodeType = AnodeType,
+			ShootingTS = ShootingPacket?.ShootingTS
 		};
 	}
 }

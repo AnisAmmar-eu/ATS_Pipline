@@ -10,7 +10,7 @@ public class SendService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(10);
+	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
 	private int _executionCount;
 
 	public SendService(ILogger<SendService> logger, IServiceScopeFactory factory)

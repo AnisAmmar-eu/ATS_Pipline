@@ -16,18 +16,20 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 	public async Task<List<DTOIOTTag>> UpdateTags(List<PatchIOTTag> updateList)
 	{
 		await AnodeUOW.StartTransaction();
-		List<DTOIOTTag> dtoTags = new();
-		IEnumerable<Task> tasks = updateList.Select(async tuple =>
+		IEnumerable<Task<IOTTag>> tasks = updateList.Select(async tuple =>
 		{
 			IOTTag tag = await AnodeUOW.IOTTag.GetById(tuple.ID, withTracking: false, includes: "IOTDevice");
+			if (tag.IsReadOnly)
+				throw new InvalidOperationException(
+					"Trying to write a ReadOnly tag. Other changes have been discarded.");
 			tag.NewValue = tuple.NewValue;
 			tag.HasNewValue = tag.NewValue != tag.CurrentValue;
-			AnodeUOW.IOTTag.Update(tag);
-			AnodeUOW.Commit();
-			dtoTags.Add(tag.ToDTO());
+			return tag;
 		});
-		await Task.WhenAll(tasks);
+		IOTTag[] updatedTags = await Task.WhenAll(tasks);
+		AnodeUOW.IOTTag.UpdateArray(updatedTags);
+		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
-		return dtoTags;
+		return updatedTags.ToList().ConvertAll(tag => tag.ToDTO());
 	}
 }

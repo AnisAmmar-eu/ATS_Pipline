@@ -153,6 +153,13 @@ public interface IRepositoryBaseEntity<T, TDTO>
 	T Update(T entity);
 
 	/// <summary>
+	///		Updates a list of entities in the table of <typeref name="T" /> and returns the updated entities
+	/// </summary>
+	/// <param name="entities">Entities to be updated, null attributes will NOT change</param>
+	/// <returns>The updated entities <see cref="T" /></returns>
+	T[] UpdateArray(T[] entities);
+	
+	/// <summary>
 	///     Check if an element exist with the predication
 	/// </summary>
 	/// <param name="predicate"></param>

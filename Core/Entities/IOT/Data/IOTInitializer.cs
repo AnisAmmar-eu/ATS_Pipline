@@ -58,6 +58,7 @@ public class IOTInitializer
 			CurrentValue = "On",
 			NewValue = "",
 			HasNewValue = false,
+			IsReadOnly = true,
 			Path = "/apiCamera/device" + suffix,
 			IOTDeviceID = cam.ID,
 			IOTDevice = cam
@@ -277,6 +278,7 @@ public class IOTInitializer
 			CurrentValue = "On",
 			NewValue = "",
 			HasNewValue = false,
+			IsReadOnly = true,
 			Path = path,
 			IOTDeviceID = api.ID,
 			IOTDevice = api

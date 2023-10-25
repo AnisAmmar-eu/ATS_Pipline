@@ -52,17 +52,16 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 	public async Task<List<Packet>> ReceivePackets(IEnumerable<DTOPacket> dtoPackets)
 	{
 		await AnodeUOW.StartTransaction();
-		List<Task> tasks = new();
 		List<Packet> packets = new();
 		foreach (DTOPacket dtoPacket in dtoPackets)
 		{
 			Packet packet = dtoPacket.ToModel();
 			packet.ID = 0;
-			tasks.Add(AnodeUOW.Packet.Add(packet));
+			// DBContext operations should NOT be done concurrently hence why await in loop.
+			await AnodeUOW.Packet.Add(packet);
 			packets.Add(packet);
 		}
 
-		await Task.WhenAll(tasks);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		return packets;

@@ -40,39 +40,41 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 		return await Task.FromResult(true);
 	}
 
-	public override async Task<bool> ApplyTags(IAnodeUOW anodeUOW)
+	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
 		CancellationToken cancel = CancellationToken.None;
 		AdsClient tcClient = new();
 		tcClient.Connect(int.Parse(Address));
 		if (!tcClient.IsConnected)
-			return false; // The TwinCat will be marked as disconnected at next monitoring.
-		bool hasAnyTagChanged = false;
-		foreach (IOTTag tag in IOTTags)
+			return new List<IOTTag>(); // The TwinCat will be marked as disconnected at next monitoring.
+		List<IOTTag> updatedTags = new();
+		foreach (IOTTag iotTag in IOTTags)
 		{
-			if (!(tag is OTTagTwinCat otTagTwinCat))
+			if (!(iotTag is OTTagTwinCat otTagTwinCat))
 				continue;
-			uint varHandle = tcClient.CreateVariableHandle(tag.Path);
-			ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, cancel, otTagTwinCat);
-			if (resultRead.ErrorCode != AdsErrorCode.NoError)
-				return false; // Same as above
-			hasAnyTagChanged = hasAnyTagChanged || tag.CurrentValue != resultRead.Value?.ToString();
-			tag.CurrentValue = resultRead.Value?.ToString()!;
-			if (tag.HasNewValue)
+			uint varHandle = tcClient.CreateVariableHandle(iotTag.Path);
+			if (iotTag is { IsReadOnly: false, HasNewValue: true })
 			{
 				ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, cancel, otTagTwinCat);
 				if (resultWrite.ErrorCode != AdsErrorCode.NoError)
-					return false; // Same as above
-				tag.HasNewValue = false;
-				tag.CurrentValue = tag.NewValue;
-				hasAnyTagChanged = true;
+					return new List<IOTTag>(); // Same as above
+				iotTag.HasNewValue = false;
+				iotTag.CurrentValue = iotTag.NewValue;
+				updatedTags.Add(iotTag);
 			}
-
-			anodeUOW.IOTTag.Update(tag);
-			anodeUOW.Commit();
+			else
+			{
+				// Else updates the current value bc it might have changed since.
+				ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, cancel, otTagTwinCat);
+				if (resultRead.ErrorCode != AdsErrorCode.NoError)
+					return new List<IOTTag>(); // Same as above
+				if (iotTag.CurrentValue != resultRead.Value?.ToString())
+					updatedTags.Add(iotTag);
+				iotTag.CurrentValue = resultRead.Value?.ToString()!;
+			}
 		}
 
-		return hasAnyTagChanged;
+		return updatedTags;
 	}
 
 	private async Task<ResultValue<object>> ReadFromType(AdsClient tcClient, uint varHandle, CancellationToken cancel,
