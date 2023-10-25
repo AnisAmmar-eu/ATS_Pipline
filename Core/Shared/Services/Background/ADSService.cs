@@ -13,7 +13,7 @@ public class ADSService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<ADSService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromMilliseconds(100);
+	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
 	private int _executionCount;
 
 	public ADSService(ILogger<ADSService> logger, IServiceScopeFactory factory)
@@ -36,10 +36,8 @@ public class ADSService : BackgroundService
 			{
 				// If the TC disconnects, it will loop back to the top
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
-				while ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode ==
-				       AdsErrorCode.NoError)
-					// To avoid spamming the TwinCat
-					await Task.Delay(1000, cancel);
+				if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.None)
+					throw new Exception("Error while reading variable");
 			}
 			catch (Exception e)
 			{
@@ -49,6 +47,7 @@ public class ADSService : BackgroundService
 				_executionCount++;
 				_logger.LogInformation(
 					"Executed PeriodicADSService - Count: {count}", _executionCount);
+				await InitializeConnection(tcClient, asyncScope, cancel);
 			}
 		}
 	}
@@ -63,7 +62,7 @@ public class ADSService : BackgroundService
 				tcClient.Connect(851);
 				if (tcClient.IsConnected) break;
 				Console.WriteLine("Unable to connect to the automaton. Retrying in 1 second");
-				Thread.Sleep(1000);
+				await Task.Delay(1000, cancel);
 			}
 
 			dynamic ads = new ExpandoObject();

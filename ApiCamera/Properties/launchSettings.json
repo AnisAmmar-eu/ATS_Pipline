@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "TestingCamera": {
+    "ApiCamera": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

@@ -11,6 +11,7 @@ public partial class IOTDevice : BaseEntity, IBaseEntity<IOTDevice, DTOIOTDevice
 	public string Name { get; set; } = string.Empty;
 	public string Description { get; set; } = string.Empty;
 	public string Address { get; set; } = string.Empty;
+	public string ConnectionPath { get; set; } = string.Empty;
 	public bool IsConnected { get; set; }
 
 	#region Nav Properties

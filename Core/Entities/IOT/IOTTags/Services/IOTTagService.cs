@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.Structs;
@@ -9,11 +11,36 @@ namespace Core.Entities.IOT.IOTTags.Services;
 
 public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOTTag>, IIOTTagService
 {
+	private static int? _testModeID;
 	public IOTTagService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
-	public async Task<List<DTOIOTTag>> UpdateTags(List<PatchIOTTag> updateList)
+	public async Task<DTOIOTTag> GetByRID(string rid)
+	{
+		return (await AnodeUOW.IOTTag.GetBy(filters: new Expression<Func<IOTTag, bool>>[]
+		{
+			tag => tag.RID == rid
+		}, withTracking: false)).ToDTO();
+	}
+
+	public async Task<bool> IsTestModeOn()
+	{
+		IOTTag testModeTag;
+		if (_testModeID == null)
+		{
+			testModeTag = await AnodeUOW.IOTTag.GetBy(filters: new Expression<Func<IOTTag, bool>>[]
+			{
+				tag => tag.RID == IOTTagNames.TestModeName
+			}, withTracking: false);
+			_testModeID = testModeTag.ID;
+		}
+		else testModeTag = await AnodeUOW.IOTTag.GetById(_testModeID.Value, withTracking: false);
+
+		return bool.Parse(testModeTag.CurrentValue);
+	}
+
+	public async Task<List<DTOIOTTag>> UpdateTags(IEnumerable<PatchIOTTag> updateList)
 	{
 		await AnodeUOW.StartTransaction();
 		IEnumerable<Task<IOTTag>> tasks = updateList.Select(async tuple =>

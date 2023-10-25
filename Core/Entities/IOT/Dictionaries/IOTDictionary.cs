@@ -2,7 +2,7 @@ namespace Core.Entities.IOT.Dictionaries;
 
 public class IOTTagNames
 {
-	public static string CheckConnectionName = "__Connection";
+	public static string TestModeName = "__TestMode";
 }
 
 public class IOTTagType

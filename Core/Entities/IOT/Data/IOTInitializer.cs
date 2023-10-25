@@ -17,21 +17,20 @@ public class IOTInitializer
 		// InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
 
 		// APIs
+		InitializeApi(anodeCTX, ITApis.IOTRID, ITApis.IOTAddress, ITApis.IOTPath, true);
 		string[] rids =
 		{
-			ITApis.ADSRID, ITApis.AlarmRID, ITApis.CameraRID, ITApis.CameraAssignRID, ITApis.IOTRID, ITApis.PacketRID,
+			ITApis.ADSRID, ITApis.AlarmRID, ITApis.CameraRID, ITApis.CameraAssignRID, ITApis.PacketRID,
 			ITApis.StationCycleRID, ITApis.UserRID
 		};
 		string[] addresses =
 		{
-			ITApis.ADSAddress, ITApis.AlarmAddress, ITApis.CameraAddress, ITApis.CameraAssignAddress, ITApis.IOTAddress,
-			ITApis.PacketAddress,
-			ITApis.StationCycleAddress, ITApis.UserAddress
+			ITApis.ADSAddress, ITApis.AlarmAddress, ITApis.CameraAddress, ITApis.CameraAssignAddress,
+			ITApis.PacketAddress, ITApis.StationCycleAddress, ITApis.UserAddress
 		};
 		string[] paths =
 		{
-			ITApis.ADSPath, ITApis.AlarmPath, ITApis.CameraPath, ITApis.CameraAssignPath, ITApis.IOTPath,
-			ITApis.PacketPath,
+			ITApis.ADSPath, ITApis.AlarmPath, ITApis.CameraPath, ITApis.CameraAssignPath, ITApis.PacketPath,
 			ITApis.StationCyclePath, ITApis.UserPath
 		};
 		for (int i = 0; i < rids.Length; ++i)
@@ -45,24 +44,12 @@ public class IOTInitializer
 			RID = rid,
 			Name = prefix + " Camera",
 			Description = prefix + " Camera IOTDevice",
-			Address = "https://localhost:7253",
+			Address = "https://localhost:7277",
+			ConnectionPath = "/apiCamera/device" + suffix,
 			IsConnected = false
 		};
 		anodeCTX.IOTDevice.Add(cam);
 		anodeCTX.SaveChanges();
-		anodeCTX.IOTTag.Add(new IOTTag
-		{
-			RID = "CameraConnection" + suffix,
-			Name = IOTTagNames.CheckConnectionName,
-			Description = "Connection tag for Camera" + suffix,
-			CurrentValue = "On",
-			NewValue = "",
-			HasNewValue = false,
-			IsReadOnly = true,
-			Path = "/apiCamera/device" + suffix,
-			IOTDeviceID = cam.ID,
-			IOTDevice = cam
-		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
 			RID = "TriggerMode" + suffix,
@@ -258,7 +245,8 @@ public class IOTInitializer
 		anodeCTX.SaveChanges();
 	}
 
-	private static void InitializeApi(AnodeCTX anodeCTX, string rid, string address, string path)
+	private static void InitializeApi(AnodeCTX anodeCTX, string rid, string address, string path,
+		bool addTestMode = false)
 	{
 		ITApi api = new()
 		{
@@ -266,23 +254,26 @@ public class IOTInitializer
 			Name = rid,
 			Description = rid,
 			Address = address,
+			ConnectionPath = path,
 			IsConnected = false
 		};
 		anodeCTX.IOTDevice.Add(api);
 		anodeCTX.SaveChanges();
-		anodeCTX.IOTTag.Add(new IOTTag
+		if (addTestMode)
 		{
-			RID = $"{rid}Connection",
-			Name = IOTTagNames.CheckConnectionName,
-			Description = $"Connection tag for {rid}",
-			CurrentValue = "On",
-			NewValue = "",
-			HasNewValue = false,
-			IsReadOnly = true,
-			Path = path,
-			IOTDeviceID = api.ID,
-			IOTDevice = api
-		});
-		anodeCTX.SaveChanges();
+			anodeCTX.IOTTag.Add(new IOTTag
+			{
+				RID = IOTTagNames.TestModeName,
+				Name = IOTTagNames.TestModeName,
+				Description = "Test mode tag. Should be the sole one.",
+				CurrentValue = "false",
+				NewValue = "",
+				HasNewValue = false,
+				Path = "",
+				IOTDeviceID = api.ID,
+				IOTDevice = api
+			});
+			anodeCTX.SaveChanges();
+		}
 	}
 }

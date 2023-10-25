@@ -19,15 +19,13 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 	public override async Task<bool> CheckConnection()
 	{
 		CancellationToken cancel = CancellationToken.None;
-		IOTTag tag = IOTTags.Find(tag => tag.Name == IOTTagNames.CheckConnectionName)
-		             ?? throw new InvalidOperationException("Cannot find Connection tag for " + Name + " device.");
 		AdsClient tcClient = new();
 		try
 		{
 			tcClient.Connect(int.Parse(Address));
 			if (!tcClient.IsConnected)
 				throw new Exception();
-			uint varHandle = tcClient.CreateVariableHandle(tag.Path);
+			uint varHandle = tcClient.CreateVariableHandle(ConnectionPath);
 			ResultValue<int> resultRead = await tcClient.ReadAnyAsync<int>(varHandle, cancel);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
 				throw new Exception();

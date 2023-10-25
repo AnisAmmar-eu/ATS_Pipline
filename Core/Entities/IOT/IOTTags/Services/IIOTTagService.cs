@@ -7,5 +7,7 @@ namespace Core.Entities.IOT.IOTTags.Services;
 
 public interface IIOTTagService : IServiceBaseEntity<IOTTag, DTOIOTTag>
 {
-	public Task<List<DTOIOTTag>> UpdateTags(List<PatchIOTTag> updateList);
+	public Task<DTOIOTTag> GetByRID(string rid);
+	public Task<bool> IsTestModeOn();
+	public Task<List<DTOIOTTag>> UpdateTags(IEnumerable<PatchIOTTag> updateList);
 }

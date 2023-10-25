@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
+using Core.Entities.IOT.IOTTags.Services;
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
 using Stemmer.Cvb;
@@ -12,10 +14,13 @@ namespace ApiCamera.Utils;
 
 public static class CameraUtils
 {
-	public static void RunAcquisition(Device device, string extension, string imagesDir,
-		string? imagesDir2 = null)
+	public static async Task RunAcquisition(IIOTTagService iotTagService, Device device, string extension,
+		string imagesDir, string testDir, string? imagesDir2 = null, string? testDir2 = null)
 	{
 		Directory.CreateDirectory(imagesDir);
+		if (imagesDir2 != null) Directory.CreateDirectory(imagesDir2);
+		Directory.CreateDirectory(testDir);
+		if (testDir2 != null) Directory.CreateDirectory(testDir2);
 		device.Notify[NotifyDictionary.DeviceDisconnected].Event += Disconnect;
 		device.Notify[NotifyDictionary.DeviceReconnect].Event += Reconnect;
 
@@ -29,17 +34,10 @@ public static class CameraUtils
 		if (!stream.IsRunning)
 			stream.Start();
 		int nbPictures = 0;
+		int nbPicturesTest = 0;
 		while (true)
 			try
 			{
-				// TODO Remove when testing IOTTags
-				// If the stream is stopped because parameters are being modified, waits for it to come back.
-				if (!stream.IsRunning)
-				{
-					Thread.Sleep(100);
-					continue;
-				}
-
 				if (device.ConnectionState.HasFlag(ConnectionState.Connected) != true)
 				{
 					Debug.WriteLine("connection lost");
@@ -49,15 +47,27 @@ public static class CameraUtils
 
 				using (StreamImage image = stream.Wait())
 				{
-					DetectionStruct detection = tcClient.ReadAny<DetectionStruct>(oldEntryHandle);
-					string rid = detection.StationCycleRID.ToRID();
-					string ts = DateTimeOffset.Now.ToString(ADSUtils.TSFormat);
-					string filename = rid + "-" + ts + "." + extension;
-					// imagesDir2 != null means that we are in a S5 Cycle.
-					if (imagesDir2 != null && nbPictures % 2 == 1)
-						image.Save(imagesDir2 + filename, 1);
-					else image.Save(imagesDir + filename, 1);
-					++nbPictures;
+					if (await iotTagService.IsTestModeOn())
+					{
+						// testDir2 != null means that we are in a S5 Cycle.
+						string dir = testDir2 != null && nbPicturesTest % 2 == 1 ? testDir2 : testDir;
+						FileInfo previousImage = new(dir + ShootingUtils.TestFilename);
+						if (previousImage.Exists) previousImage.Delete();
+						image.Save(dir + ShootingUtils.TestFilename, 1);
+						++nbPicturesTest;
+					}
+					else
+					{
+						DetectionStruct detection = tcClient.ReadAny<DetectionStruct>(oldEntryHandle);
+						string rid = detection.StationCycleRID.ToRID();
+						string ts = DateTimeOffset.Now.ToString(ADSUtils.TSFormat);
+						string filename = rid + "-" + ts + "." + extension;
+						// imagesDir2 != null means that we are in a S5 Cycle.
+						if (imagesDir2 != null && nbPictures % 2 == 1)
+							image.Save(imagesDir2 + filename, 1);
+						else image.Save(imagesDir + filename, 1);
+						++nbPictures;
+					}
 				}
 			}
 			catch (Exception)

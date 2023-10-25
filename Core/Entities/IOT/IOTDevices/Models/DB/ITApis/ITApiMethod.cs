@@ -16,11 +16,9 @@ public partial class ITApi : IOTDevice, IBaseEntity<ITApi, DTOITApi>
 	public override async Task<bool> CheckConnection()
 	{
 		using HttpClient httpClient = new();
-		IOTTag tag = IOTTags.Find(tag => tag.Name == IOTTagNames.CheckConnectionName)
-		             ?? throw new InvalidOperationException("Cannot find Connection tag for " + Name + " device.");
 		try
 		{
-			HttpResponseMessage response = await httpClient.GetAsync(Address + tag.Path);
+			HttpResponseMessage response = await httpClient.GetAsync(Address + ConnectionPath);
 			return response.StatusCode == HttpStatusCode.OK;
 		}
 		catch (Exception)

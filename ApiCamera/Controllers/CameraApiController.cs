@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ApiCamera.Utils;
+using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Dictionaries;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.HttpResponse;
@@ -15,13 +16,15 @@ public class CameraApiController : ControllerBase
 {
 	private readonly IConfiguration _configuration;
 	private readonly ILogsService _logsService;
+	private readonly IIOTTagService _iotTagService;
 
-	public CameraApiController(ILogsService logsService, IConfiguration configuration)
+	public CameraApiController(ILogsService logsService, IConfiguration configuration, IIOTTagService iotTagService)
 	{
 		_logsService = logsService;
 		_configuration = configuration;
+		_iotTagService = iotTagService;
 	}
-	
+
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{
@@ -43,12 +46,17 @@ public class CameraApiController : ControllerBase
 			{
 				// Create an instance of the camera
 				Device? device2 = DeviceFactory.OpenPort(driverString, port2);
-				CameraUtils.RunAcquisition(device1, "jpg", ShootingUtils.Camera1);
-				CameraUtils.RunAcquisition(device2, "jpg", ShootingUtils.Camera2);
+				Task task1 = CameraUtils.RunAcquisition(_iotTagService, device1, "jpg", ShootingUtils.Camera1,
+					ShootingUtils.CameraTest1);
+				Task task2 = CameraUtils.RunAcquisition(_iotTagService, device2, "jpg", ShootingUtils.Camera2,
+					ShootingUtils.CameraTest2);
+				await task1;
+				await task2;
 			}
 			else
 			{
-				CameraUtils.RunAcquisition(device1, "jpg", ShootingUtils.Camera1, ShootingUtils.Camera2);
+				await CameraUtils.RunAcquisition(_iotTagService, device1, "jpg", ShootingUtils.Camera1,
+					ShootingUtils.CameraTest1, ShootingUtils.Camera2, ShootingUtils.CameraTest2);
 			}
 		}
 		catch (Exception e)
@@ -57,6 +65,42 @@ public class CameraApiController : ControllerBase
 		}
 
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	#endregion
+
+	#region Get TestImages
+
+	[HttpGet("1/testImage")]
+	public async Task<IActionResult> GetCamera1TestImage()
+	{
+		Byte[] image;
+		try
+		{
+			image = await System.IO.File.ReadAllBytesAsync(ShootingUtils.CameraTest1 + ShootingUtils.TestFilename);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return File(image, "image/jpeg");
+	}
+
+	[HttpGet("2/testImage")]
+	public async Task<IActionResult> GetCamera2TestImage()
+	{
+		Byte[] image;
+		try
+		{
+			image = await System.IO.File.ReadAllBytesAsync(ShootingUtils.CameraTest2 + ShootingUtils.TestFilename);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return File(image, "image/jpeg");
 	}
 
 	#endregion

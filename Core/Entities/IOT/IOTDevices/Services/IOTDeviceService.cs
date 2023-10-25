@@ -8,6 +8,7 @@ using Core.Shared.SignalR.IOTTagHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using Stemmer.Cvb.Driver;
 
 namespace Core.Entities.IOT.IOTDevices.Services;
 
@@ -38,14 +39,20 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	public async Task CheckAllConnectionsAndApplyTags()
 	{
 		List<IOTDevice> devices = await CheckAllConnections();
-		await AnodeUOW.StartTransaction();
 		bool hasAnyTagChanged = false;
+		for (var i = 0; i < devices.Count; i++)
+		{
+			AnodeUOW.IOTDevice.StopTracking(devices[i]);
+			devices[i] = await AnodeUOW.IOTDevice.GetById(devices[i].ID, withTracking: false, includes: "IOTTags");
+		}
+
 		IEnumerable<Task<List<IOTTag>>> tasks = devices.Select(async device =>
 		{
 			List<IOTTag> updatedTags = await device.ApplyTags(AnodeUOW);
 			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Any();
 			return updatedTags;
 		});
+		await AnodeUOW.StartTransaction();
 		List<IOTTag>[] updatedTags = await Task.WhenAll(tasks);
 		foreach (List<IOTTag> updatedTagList in updatedTags)
 			AnodeUOW.IOTTag.UpdateArray(updatedTagList.ToArray());
@@ -64,9 +71,8 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	/// </returns>
 	private async Task<List<IOTDevice>> CheckAllConnections()
 	{
-		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: "IOTTags");
+		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(withTracking: false);
 		List<IOTDevice> connectedDevices = new();
-		await AnodeUOW.StartTransaction();
 		IEnumerable<Task<IOTDevice>> task = devices.Select(async device =>
 		{
 			device.IsConnected = await device.CheckConnection();
@@ -76,6 +82,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		});
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
+		await AnodeUOW.StartTransaction();
 		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();

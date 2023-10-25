@@ -22,6 +22,22 @@ public class IOTTagController : ControllerBase
 		_logsService = logsService;
 	}
 
+	[HttpGet("{id}")]
+	public async Task<IActionResult> GetTagValueByID([FromRoute] [Required] int id)
+	{
+		DTOIOTTag tag;
+		try
+		{
+			tag = await _iotTagService.GetByID(id);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(tag).SuccessResult(_logsService, ControllerContext);
+	}
+
 	[HttpPatch]
 	public async Task<IActionResult> SetTagsValues([FromBody] [Required] List<PatchIOTTag> toUpdate)
 	{

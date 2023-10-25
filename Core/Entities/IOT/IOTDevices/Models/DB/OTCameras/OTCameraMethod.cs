@@ -18,11 +18,9 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 	public override async Task<bool> CheckConnection()
 	{
 		using HttpClient httpClient = new();
-		IOTTag tag = IOTTags.Find(tag => tag.Name == IOTTagNames.CheckConnectionName)
-		             ?? throw new InvalidOperationException("Cannot find Connection tag for " + Name + " device.");
 		try
 		{
-			HttpResponseMessage response = await httpClient.GetAsync(Address + tag.Path);
+			HttpResponseMessage response = await httpClient.GetAsync(Address + ConnectionPath);
 			return response.StatusCode == HttpStatusCode.OK;
 		}
 		catch (Exception)
@@ -35,11 +33,8 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 	{
 		Dictionary<string, string> parameters = new();
 		List<IOTTag> updatedTags = new();
-		string httpPath = string.Empty;
 		foreach (IOTTag iotTag in IOTTags)
 		{
-			if (httpPath == string.Empty && iotTag.Name == IOTTagNames.CheckConnectionName)
-				httpPath = iotTag.Path;
 			if (!iotTag.HasNewValue)
 				continue;
 
@@ -55,7 +50,7 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 			try
 			{
 				HttpResponseMessage response =
-					await httpClient.PostAsync(Address + httpPath, JsonContent.Create(parameters));
+					await httpClient.PostAsync(Address + ConnectionPath, JsonContent.Create(parameters));
 				if (response.StatusCode != HttpStatusCode.OK)
 					throw new Exception("Error while setting parameters: " + response.StatusCode);
 			}
@@ -66,7 +61,6 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 			}
 		}
 
-		anodeUOW.Commit();
 		return updatedTags;
 	}
 }

@@ -1,3 +1,4 @@
+using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
@@ -23,6 +24,9 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ILogsService, LogsService>();
+
+builder.Services.AddScoped<IIOTTagService, IOTTagService>();
+
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 WebApplication app = builder.Build();

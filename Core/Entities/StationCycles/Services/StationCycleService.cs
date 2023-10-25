@@ -42,7 +42,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task<List<ReducedStationCycle>> GetAllRIDs()
 	{
-		return (await AnodeUOW.StationCycle.GetAll(withTracking: false, includes: "DetectionPacket")).ConvertAll(cycle => cycle.Reduce());
+		return (await AnodeUOW.StationCycle.GetAll(withTracking: false,
+			includes: new[] { "DetectionPacket", "ShootingPacket" })).ConvertAll(cycle => cycle.Reduce());
 	}
 
 	public async Task<List<StationCycle>> GetAllReadyToSent()
@@ -148,6 +149,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			AnodeUOW.Commit();
 			await AnodeUOW.StationCycle.Add(cycle);
 		}
+
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 	}
