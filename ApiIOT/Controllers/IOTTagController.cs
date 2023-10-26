@@ -69,7 +69,7 @@ public class IOTTagController : ControllerBase
 		return await new ApiResponseObject(tag).SuccessResult(_logsService, ControllerContext);
 	}
 
-	[HttpPatch]
+	[HttpPut]
 	public async Task<IActionResult> SetTagsValues([FromBody] [Required] List<PatchIOTTag> toUpdate)
 	{
 		List<DTOIOTTag> dtoTags;
