@@ -1,7 +1,5 @@
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 using Core.Shared.Dictionaries;
-using Microsoft.VisualBasic;
 
 namespace Core.Entities.Packets.Models.Structs;
 

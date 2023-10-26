@@ -1,7 +1,5 @@
 using System.Net;
-using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.ITApis;
-using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
