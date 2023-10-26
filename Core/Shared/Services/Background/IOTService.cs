@@ -9,7 +9,7 @@ public class IOTService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<IOTService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(100000);
+	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
 	private int _executionCount;
 
 	public IOTService(ILogger<IOTService> logger, IServiceScopeFactory factory)
