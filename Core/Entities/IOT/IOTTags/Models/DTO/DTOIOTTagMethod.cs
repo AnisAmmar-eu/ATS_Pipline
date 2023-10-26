@@ -16,12 +16,9 @@ public partial class DTOIOTTag : DTOBaseEntity, IDTO<IOTTag, DTOIOTTag>
 		TS = iotTag.TS;
 		RID = iotTag.RID;
 		Name = iotTag.Name;
-		Description = iotTag.Description;
 		CurrentValue = iotTag.CurrentValue;
 		NewValue = iotTag.NewValue;
 		HasNewValue = iotTag.HasNewValue;
 		IsReadOnly = iotTag.IsReadOnly;
-		Path = iotTag.Path;
-		IOTDeviceID = iotTag.IOTDeviceID;
 	}
 }

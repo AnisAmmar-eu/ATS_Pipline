@@ -8,11 +8,8 @@ public partial class DTOIOTTag : DTOBaseEntity, IDTO<IOTTag, DTOIOTTag>
 {
 	public string RID { get; set; } = string.Empty;
 	public string Name { get; set; } = string.Empty;
-	public string Description { get; set; } = string.Empty;
 	public string CurrentValue { get; set; } = string.Empty;
 	public string NewValue { get; set; } = string.Empty;
 	public bool HasNewValue { get; set; }
 	public bool IsReadOnly { get; set; }
-	public string Path { get; set; } = string.Empty;
-	public int IOTDeviceID { get; set; }
 }
