@@ -5,10 +5,8 @@ using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Services.Kernel;
 using Core.Shared.SignalR.IOTTagHub;
-using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.SignalR;
-using Stemmer.Cvb.Driver;
 
 namespace Core.Entities.IOT.IOTDevices.Services;
 
@@ -40,7 +38,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	{
 		List<IOTDevice> devices = await CheckAllConnections();
 		bool hasAnyTagChanged = false;
-		for (var i = 0; i < devices.Count; i++)
+		for (int i = 0; i < devices.Count; i++)
 		{
 			AnodeUOW.IOTDevice.StopTracking(devices[i]);
 			devices[i] = await AnodeUOW.IOTDevice.GetById(devices[i].ID, withTracking: false, includes: "IOTTags");
@@ -52,15 +50,16 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Any();
 			return updatedTags;
 		});
+		if (!hasAnyTagChanged)
+			return;
 		await AnodeUOW.StartTransaction();
 		List<IOTTag>[] updatedTags = await Task.WhenAll(tasks);
 		foreach (List<IOTTag> updatedTagList in updatedTags)
 			AnodeUOW.IOTTag.UpdateArray(updatedTagList.ToArray());
-		
+
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
-		if (hasAnyTagChanged)
-			await _hubContext.Clients.All.RefreshIOTTag();
+		await _hubContext.Clients.All.RefreshIOTTag();
 	}
 
 	/// <summary>
@@ -82,6 +81,8 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		});
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
+		if (!updatedDevices.Any()) return connectedDevices;
+
 		await AnodeUOW.StartTransaction();
 		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);
 		AnodeUOW.Commit();

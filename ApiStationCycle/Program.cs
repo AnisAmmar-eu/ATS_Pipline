@@ -1,13 +1,8 @@
-using Core.Entities.IOT.IOTDevices.Services;
-using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
-using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
-using Core.Shared.SignalR;
-using Core.Shared.SignalR.IOTTagHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;

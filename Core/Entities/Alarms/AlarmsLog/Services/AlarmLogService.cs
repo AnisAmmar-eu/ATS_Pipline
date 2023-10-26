@@ -64,7 +64,6 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 				alarmWithStatus1.IsAck = false;
 				alarmWithStatus1.HasBeenSent = false;
 				AnodeUOW.AlarmLog.Update(alarmWithStatus1);
-				AnodeUOW.Commit();
 			}
 			catch (EntityNotFoundException)
 			{
@@ -88,7 +87,6 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 
 				newAlarmLog.TSRaised = allAlarmsPLC[index].TS;
 				await AnodeUOW.AlarmLog.Add(newAlarmLog);
-				AnodeUOW.Commit();
 			}
 
 			AnodeUOW.AlarmPLC.Remove(allAlarmsPLC[index]);
@@ -116,9 +114,9 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 			alarmLogToAck.IsAck = true;
 			alarmLogToAck.TSRead = DateTime.Now;
 			ackAlarmLogs.Add(alarmLogToAck.ToDTOF());
-			AnodeUOW.Commit();
 		}
 
+		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
@@ -155,7 +153,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 		{
 			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
 
-			if (!response.IsSuccessStatusCode) return response;
+			if (!response.IsSuccessStatusCode || !alarmLogs.Any()) return response;
 
 			await AnodeUOW.StartTransaction();
 			alarmLogs.ForEach(alarmLog =>

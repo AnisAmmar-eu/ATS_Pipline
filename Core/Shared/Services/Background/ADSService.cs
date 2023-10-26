@@ -31,7 +31,6 @@ public class ADSService : BackgroundService
 		await InitializeConnection(tcClient, asyncScope, cancel);
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
-		{
 			try
 			{
 				// If the TC disconnects, it will loop back to the top
@@ -49,7 +48,6 @@ public class ADSService : BackgroundService
 					"Executed PeriodicADSService - Count: {count}", _executionCount);
 				await InitializeConnection(tcClient, asyncScope, cancel);
 			}
-		}
 	}
 
 	private async Task InitializeConnection(AdsClient tcClient, AsyncServiceScope asyncScope, CancellationToken cancel)

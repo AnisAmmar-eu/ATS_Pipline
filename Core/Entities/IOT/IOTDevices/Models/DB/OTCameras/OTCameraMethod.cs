@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.DB.Kernel.Interfaces;

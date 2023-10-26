@@ -46,7 +46,6 @@ public abstract partial class Furnace : Packet, IBaseEntity<Furnace, DTOFurnace>
 
 		FurnaceAssign(s3S4Cycle);
 		anodeUOW.StationCycle.Update(s3S4Cycle);
-		anodeUOW.Commit();
 	}
 
 	protected virtual void FurnaceAssign(S3S4Cycle cycle)

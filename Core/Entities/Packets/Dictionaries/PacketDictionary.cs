@@ -22,10 +22,10 @@ public class ShootingUtils
 {
 	// Format
 	public const string FilenameFormat = "yyyyMMdd-HHmmss-fff";
-	
+
 	// Filename
 	public const string TestFilename = "TestImage.jpg";
-	
+
 	// Directories
 	public const string Camera1 = @"..\ApiCamera\Camera1\";
 	public const string Camera2 = @"..\ApiCamera\Camera2\";

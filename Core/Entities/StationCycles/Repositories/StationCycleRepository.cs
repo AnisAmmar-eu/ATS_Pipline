@@ -19,10 +19,10 @@ public class StationCycleRepository : RepositoryBaseEntity<AnodeCTX, StationCycl
 		bool withTracking = true,
 		int? maxCount = null)
 	{
-		return await GetAll(filters, orderBy, withTracking, maxCount, includes: new[]
-			{
-				"AnnouncementPacket", "DetectionPacket", "ShootingPacket", "AlarmListPacket", "InFurnacePacket",
-				"OutFurnacePacket"
-			});
+		return await GetAll(filters, orderBy, withTracking, maxCount, new[]
+		{
+			"AnnouncementPacket", "DetectionPacket", "ShootingPacket", "AlarmListPacket", "InFurnacePacket",
+			"OutFurnacePacket"
+		});
 	}
 }

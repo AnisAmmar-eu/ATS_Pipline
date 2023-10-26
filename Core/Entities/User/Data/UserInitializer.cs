@@ -39,25 +39,25 @@ public class UserInitializer
 			{
 				Name = RoleNames.OPERATOR,
 				NormalizedName = RoleNames.OPERATOR.ToUpper(),
-				Type = ApplicationRoleType.USER,
+				Type = ApplicationRoleType.USER
 			});
 			anodeCTX.Roles.Add(new ApplicationRole
 			{
 				Name = RoleNames.FORCING,
 				NormalizedName = RoleNames.FORCING.ToUpper(),
-				Type = ApplicationRoleType.USER,
+				Type = ApplicationRoleType.USER
 			});
 			anodeCTX.Roles.Add(new ApplicationRole
 			{
 				Name = RoleNames.SETTINGS,
 				NormalizedName = RoleNames.SETTINGS.ToUpper(),
-				Type = ApplicationRoleType.USER,
+				Type = ApplicationRoleType.USER
 			});
 			anodeCTX.Roles.Add(new ApplicationRole
 			{
 				Name = RoleNames.ADMIN,
 				NormalizedName = RoleNames.ADMIN.ToUpper(),
-				Type = ApplicationRoleType.USER,
+				Type = ApplicationRoleType.USER
 			});
 			anodeCTX.SaveChanges();
 		}

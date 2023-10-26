@@ -109,7 +109,8 @@ public class ReceiveController : ControllerBase
 
 	[HttpPost("stationCycles")]
 	public async Task<IActionResult> ReceiveStationCycle(
-		[FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))] List<DTOStationCycle> dtoStationCycles)
+		[FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))]
+		List<DTOStationCycle> dtoStationCycles)
 	{
 		try
 		{

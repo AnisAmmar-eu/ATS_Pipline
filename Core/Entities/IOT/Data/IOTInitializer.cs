@@ -1,13 +1,11 @@
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
-using Core.Entities.IOT.IOTDevices.Models.DB.OTRockwells;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 using Core.Entities.IOT.IOTTags.Models.DB;
-using Core.Migrations;
+using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
-using OTTagTwinCat = Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat.OTTagTwinCat;
 
 namespace Core.Entities.IOT.Data;
 

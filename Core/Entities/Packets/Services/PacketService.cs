@@ -38,7 +38,7 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 		{
 			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
 
-			if (!response.IsSuccessStatusCode) return response;
+			if (!response.IsSuccessStatusCode || !packets.Any()) return response;
 
 			await AnodeUOW.StartTransaction();
 			packets.ForEach(packet => { AnodeUOW.Packet.Remove(packet); });
@@ -61,6 +61,8 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 			await AnodeUOW.Packet.Add(packet);
 			packets.Add(packet);
 		}
+
+		if (!packets.Any()) return packets;
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();

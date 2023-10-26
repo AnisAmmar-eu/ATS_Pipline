@@ -231,7 +231,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	}
 
 	/// <summary>
-	///		Updates a list of entities in the table of <typeref name="T" /> and returns the updated entities
+	///     Updates a list of entities in the table of <typeref name="T" /> and returns the updated entities
 	/// </summary>
 	/// <param name="entities">Entities to be updated, null attributes will NOT change</param>
 	/// <returns>The updated entities <see cref="T" /></returns>

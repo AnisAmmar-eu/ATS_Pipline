@@ -22,7 +22,7 @@ public class CameraAssignController : ControllerBase
 		_logsService = logsService;
 		_packetService = packetService;
 	}
-	
+
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{

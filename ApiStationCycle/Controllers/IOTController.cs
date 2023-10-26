@@ -82,7 +82,7 @@ public class IOTController : ControllerBase
 	public async Task<IActionResult> GetImageByIdAndCamera([Required] [FromRoute] int id,
 		[Required] [FromRoute] int cameraNb)
 	{
-		Byte[] result;
+		byte[] result;
 		try
 		{
 			result = await _stationCycleService.GetImagesFromIDAndCamera(id, cameraNb);

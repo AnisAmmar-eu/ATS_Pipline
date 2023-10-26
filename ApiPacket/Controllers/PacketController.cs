@@ -1,5 +1,3 @@
-using Core.Entities.Packets.Dictionaries;
-using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Services;
@@ -21,7 +19,7 @@ public class PacketController : ControllerBase
 		_packetService = packetService;
 		_logsService = logsService;
 	}
-	
+
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{

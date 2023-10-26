@@ -15,8 +15,8 @@ namespace ApiCamera.Controllers;
 public class CameraApiController : ControllerBase
 {
 	private readonly IConfiguration _configuration;
-	private readonly ILogsService _logsService;
 	private readonly IIOTTagService _iotTagService;
+	private readonly ILogsService _logsService;
 
 	public CameraApiController(ILogsService logsService, IConfiguration configuration, IIOTTagService iotTagService)
 	{
@@ -74,7 +74,7 @@ public class CameraApiController : ControllerBase
 	[HttpGet("1/testImage")]
 	public async Task<IActionResult> GetCamera1TestImage()
 	{
-		Byte[] image;
+		byte[] image;
 		try
 		{
 			image = await System.IO.File.ReadAllBytesAsync(ShootingUtils.CameraTest1 + ShootingUtils.TestFilename);
@@ -90,7 +90,7 @@ public class CameraApiController : ControllerBase
 	[HttpGet("2/testImage")]
 	public async Task<IActionResult> GetCamera2TestImage()
 	{
-		Byte[] image;
+		byte[] image;
 		try
 		{
 			image = await System.IO.File.ReadAllBytesAsync(ShootingUtils.CameraTest2 + ShootingUtils.TestFilename);

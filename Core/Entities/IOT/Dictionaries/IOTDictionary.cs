@@ -25,7 +25,7 @@ public static class ITApis
 	public static string ADSRID = "ApiADS";
 	public static string ADSAddress = "https://localhost:7275"; // 5242
 	public static string ADSPath = "/apiADS/status";
-	
+
 	public static string AlarmRID = "ApiAlarm";
 	public static string AlarmAddress = "https://localhost:7276"; // 5243
 	public static string AlarmPath = "/apiAlarm/status";
@@ -51,7 +51,7 @@ public static class ITApis
 	public static string StationCycleRID = "ApiStationCycle";
 	public static string StationCycleAddress = "https://localhost:7282"; // 5249
 	public static string StationCyclePath = "/apiStationCycle/status";
-	
+
 	public static string UserRID = "ApiUser";
 	public static string UserAddress = "https://localhost:7283"; // 5250
 	public static string UserPath = "/apiUser/status";

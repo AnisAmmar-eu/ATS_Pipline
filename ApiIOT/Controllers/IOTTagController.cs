@@ -5,7 +5,6 @@ using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
-using InvalidOperationException = System.InvalidOperationException;
 
 namespace ApiIOT.Controllers;
 

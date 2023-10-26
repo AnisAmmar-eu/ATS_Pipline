@@ -119,7 +119,6 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 						KPIC = kpiC
 					};
 					await AnodeUOW.KPIRT.Add(kpiRT);
-					AnodeUOW.Commit();
 				}
 				else
 				{
@@ -132,6 +131,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 			kpiRTs.Add(localKPIRTs);
 		}
 
+		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		return kpiRTs;
 	}

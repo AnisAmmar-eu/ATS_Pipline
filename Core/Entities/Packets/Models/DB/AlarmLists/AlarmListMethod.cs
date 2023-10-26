@@ -40,9 +40,11 @@ public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
 			alarmCycle.AlarmListPacketID = ID;
 			alarmCycle.AlarmList = this;
 			await anodeUOW.AlarmCycle.Add(alarmCycle);
-			anodeUOW.Commit();
 			AlarmCycles.Add(alarmCycle);
 		}
+
+		if (AlarmCycles.Any())
+			anodeUOW.Commit();
 
 		// StationCycleRID should already be present
 		if (StationCycle == null)

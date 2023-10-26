@@ -1,6 +1,3 @@
-using System.Globalization;
-using System.Runtime.Serialization;
-
 namespace Core.Shared.Dictionaries;
 
 public class ADSUtils
@@ -38,7 +35,7 @@ public class ADSUtils
 
 	// MeasureNotification	
 	public static string MeasurementVariable = "VA_PXX.P04_In";
-	
+
 	// RID Date Format
 	public static string TSFormat { get; private set; } = "yyyyMMddHHmmssfff";
 }

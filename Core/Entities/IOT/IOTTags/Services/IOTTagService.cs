@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Core.Entities.IOT.Dictionaries;
-using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.Structs;
@@ -13,13 +12,14 @@ namespace Core.Entities.IOT.IOTTags.Services;
 public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOTTag>, IIOTTagService
 {
 	private static int? _testModeID;
+
 	public IOTTagService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
 	public async Task<DTOIOTTag> GetByRID(string rid)
 	{
-		return (await AnodeUOW.IOTTag.GetBy(filters: new Expression<Func<IOTTag, bool>>[]
+		return (await AnodeUOW.IOTTag.GetBy(new Expression<Func<IOTTag, bool>>[]
 		{
 			tag => tag.RID == rid
 		}, withTracking: false)).ToDTO();
@@ -27,7 +27,7 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<List<DTOIOTTag>> GetByArrayRID(IEnumerable<string> rids)
 	{
-		return (await AnodeUOW.IOTTag.GetAll(filters: new Expression<Func<IOTTag, bool>>[]
+		return (await AnodeUOW.IOTTag.GetAll(new Expression<Func<IOTTag, bool>>[]
 		{
 			tag => rids.Contains(tag.RID)
 		}, withTracking: false)).ConvertAll(tag => tag.ToDTO());
@@ -38,13 +38,16 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 		IOTTag testModeTag;
 		if (_testModeID == null)
 		{
-			testModeTag = await AnodeUOW.IOTTag.GetBy(filters: new Expression<Func<IOTTag, bool>>[]
+			testModeTag = await AnodeUOW.IOTTag.GetBy(new Expression<Func<IOTTag, bool>>[]
 			{
 				tag => tag.RID == IOTTagNames.TestModeName
 			}, withTracking: false);
 			_testModeID = testModeTag.ID;
 		}
-		else testModeTag = await AnodeUOW.IOTTag.GetById(_testModeID.Value, withTracking: false);
+		else
+		{
+			testModeTag = await AnodeUOW.IOTTag.GetById(_testModeID.Value, withTracking: false);
+		}
 
 		return bool.Parse(testModeTag.CurrentValue);
 	}
@@ -66,6 +69,9 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 			AnodeUOW.IOTTag.Update(tag);
 			//AnodeUOW.IOTDevice.StopTracking(tag.IOTDevice);
 		}
+
+		if (!updatedTags.Any())
+			return new List<DTOIOTTag>();
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		return updatedTags.ToList().ConvertAll(tag => tag.ToDTO());

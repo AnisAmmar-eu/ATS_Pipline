@@ -27,17 +27,17 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 	private readonly IConfiguration _configuration;
 	private readonly IPacketService _packetService;
 
-	public async Task<ReducedStationCycle?> GetMostRecentWithIncludes()
-	{
-		return (await AnodeUOW.StationCycle.GetAllWithIncludes(orderBy: query =>
-			query.OrderByDescending(cycle => cycle.TS))).FirstOrDefault()?.Reduce();
-	}
-
 	public StationCycleService(IAnodeUOW anodeUOW, IPacketService packetService, IConfiguration configuration) :
 		base(anodeUOW)
 	{
 		_packetService = packetService;
 		_configuration = configuration;
+	}
+
+	public async Task<ReducedStationCycle?> GetMostRecentWithIncludes()
+	{
+		return (await AnodeUOW.StationCycle.GetAllWithIncludes(orderBy: query =>
+			query.OrderByDescending(cycle => cycle.TS))).FirstOrDefault()?.Reduce();
 	}
 
 	public async Task<List<ReducedStationCycle>> GetAllRIDs()
@@ -54,7 +54,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		}, withTracking: false);
 	}
 
-	public async Task<Byte[]> GetImagesFromIDAndCamera(int id, int camera)
+	public async Task<byte[]> GetImagesFromIDAndCamera(int id, int camera)
 	{
 		StationCycle stationCycle = await AnodeUOW.StationCycle.GetById(id, includes: "ShootingPacket");
 		if (stationCycle.ShootingPacket == null)
@@ -100,6 +100,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/stationCycles", content);
 		if (response.IsSuccessStatusCode)
 		{
+			if (!stationCycles.Any()) return;
 			await AnodeUOW.StartTransaction();
 			stationCycles.ForEach(cycle =>
 			{
