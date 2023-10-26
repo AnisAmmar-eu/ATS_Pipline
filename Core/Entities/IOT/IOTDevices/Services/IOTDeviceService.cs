@@ -19,6 +19,13 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		_hubContext = hubContext;
 	}
 
+	public async Task<bool> GetStatusByRID(string rid)
+	{
+		return (await AnodeUOW.IOTDevice.GetBy(filters: new Expression<Func<IOTDevice, bool>>[]
+		{
+			device => device.RID == rid
+		}, withTracking: false)).IsConnected;
+	}
 
 	public async Task<List<DTOIOTDevice>> GetAllWithIncludes()
 	{

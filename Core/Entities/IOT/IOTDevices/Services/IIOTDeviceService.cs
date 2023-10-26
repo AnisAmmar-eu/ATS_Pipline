@@ -6,6 +6,7 @@ namespace Core.Entities.IOT.IOTDevices.Services;
 
 public interface IIOTDeviceService : IServiceBaseEntity<IOTDevice, DTOIOTDevice>
 {
+	public Task<bool> GetStatusByRID(string rid);
 	public Task<List<DTOIOTDevice>> GetAllWithIncludes();
 	public Task<DTOIOTDevice> GetByRIDWithIncludes(string rid);
 	public Task CheckAllConnectionsAndApplyTags();

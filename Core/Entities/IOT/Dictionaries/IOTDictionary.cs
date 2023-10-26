@@ -38,7 +38,7 @@ public static class ITApis
 	public static string CameraAssignAddress = "https://localhost:7278"; // 5245
 	public static string CameraAssignPath = "/apiCameraAssign/status";
 
-	public static string IOTRID = "ApiStationCycle";
+	public static string IOTRID = "ApiIOT";
 	public static string IOTAddress = "https://localhost:7279"; // 5246
 	public static string IOTPath = "/apiIOT/status";
 

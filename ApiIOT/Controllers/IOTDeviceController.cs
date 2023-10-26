@@ -20,6 +20,22 @@ public class IOTDeviceController : ControllerBase
 		_logsService = logsService;
 	}
 
+	[HttpGet("status/{rid}")]
+	public async Task<IActionResult> GetStatusByRID([Required] [FromRoute] string rid)
+	{
+		bool status;
+		try
+		{
+			status = await _iotDeviceService.GetStatusByRID(rid);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(status).SuccessResult(_logsService, ControllerContext);
+	}
+
 	[HttpGet]
 	public async Task<IActionResult> GetAllIOTDevices()
 	{
