@@ -75,32 +75,40 @@ public class CameraApiController : ControllerBase
 	public async Task<IActionResult> GetCamera1TestImage()
 	{
 		byte[] image;
+		DateTimeOffset ts;
 		try
 		{
-			image = await System.IO.File.ReadAllBytesAsync(ShootingUtils.CameraTest1 + ShootingUtils.TestFilename);
+			FileInfo imageFile = new(ShootingUtils.CameraTest1 + ShootingUtils.TestFilename);
+			ts = imageFile.CreationTime;
+			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
 		}
 		catch (Exception e)
 		{
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
 
-		return File(image, "image/jpeg");
+		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		return File(image, "image/jpeg", ts.ToString(ADSUtils.TSFormat));
 	}
 
 	[HttpGet("2/testImage")]
 	public async Task<IActionResult> GetCamera2TestImage()
 	{
 		byte[] image;
+		DateTimeOffset ts;
 		try
 		{
-			image = await System.IO.File.ReadAllBytesAsync(ShootingUtils.CameraTest2 + ShootingUtils.TestFilename);
+			FileInfo imageFile = new(ShootingUtils.CameraTest2 + ShootingUtils.TestFilename);
+			ts = imageFile.CreationTime;
+			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
 		}
 		catch (Exception e)
 		{
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
 
-		return File(image, "image/jpeg");
+		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		return File(image, "image/jpeg", ts.ToString(ADSUtils.TSFormat));
 	}
 
 	#endregion
