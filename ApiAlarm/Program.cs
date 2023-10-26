@@ -100,7 +100,7 @@ app.UseSwaggerUI();
 string? clientHost = builder.Configuration["ClientHost"];
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
-	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+	.WithMethods("GET", "POST", "PATCH", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()
 	.AllowCredentials());
 

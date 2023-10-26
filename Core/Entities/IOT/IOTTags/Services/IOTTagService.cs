@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Core.Entities.IOT.Dictionaries;
+using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.Structs;
@@ -50,19 +51,21 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<List<DTOIOTTag>> UpdateTags(IEnumerable<PatchIOTTag> updateList)
 	{
+		List<IOTTag> updatedTags = new();
 		await AnodeUOW.StartTransaction();
-		IEnumerable<Task<IOTTag>> tasks = updateList.Select(async tuple =>
+		foreach (PatchIOTTag patchTag in updateList)
 		{
-			IOTTag tag = await AnodeUOW.IOTTag.GetById(tuple.ID, withTracking: false, includes: "IOTDevice");
+			// await in loop bc we cannot use context concurrently.
+			IOTTag tag = await AnodeUOW.IOTTag.GetById(patchTag.ID, withTracking: false);
 			if (tag.IsReadOnly)
 				throw new InvalidOperationException(
 					"Trying to write a ReadOnly tag. Other changes have been discarded.");
-			tag.NewValue = tuple.NewValue;
+			tag.NewValue = patchTag.NewValue;
 			tag.HasNewValue = tag.NewValue != tag.CurrentValue;
-			return tag;
-		});
-		IOTTag[] updatedTags = await Task.WhenAll(tasks);
-		AnodeUOW.IOTTag.UpdateArray(updatedTags);
+			updatedTags.Add(tag);
+			AnodeUOW.IOTTag.Update(tag);
+			//AnodeUOW.IOTDevice.StopTracking(tag.IOTDevice);
+		}
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		return updatedTags.ToList().ConvertAll(tag => tag.ToDTO());

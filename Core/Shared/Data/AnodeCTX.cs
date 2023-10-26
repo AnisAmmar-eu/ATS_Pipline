@@ -74,7 +74,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<IOTDevice> IOTDevice => Set<IOTDevice>();
 	public DbSet<OTCamera> OTCamera => Set<OTCamera>();
 	public DbSet<OTTwinCat> OTTwinCat => Set<OTTwinCat>();
-	public DbSet<ITApi> ItApi => Set<ITApi>();
+	public DbSet<ITApi> ITApi => Set<ITApi>();
 	public DbSet<OTRockwell> OTRockwell => Set<OTRockwell>();
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();

@@ -16,7 +16,10 @@ public partial class IOTTag : BaseEntity, IBaseEntity<IOTTag, DTOIOTTag>
 	public bool IsReadOnly { get; set; }
 	public string Path { get; set; } = string.Empty;
 	public int IOTDeviceID { get; set; }
+	
+	public IOTDevice? IOTDevice { get; set; }
 
+	/*
 	#region Nav Properties
 
 	private IOTDevice? _iotDevice;
@@ -29,4 +32,5 @@ public partial class IOTTag : BaseEntity, IBaseEntity<IOTTag, DTOIOTTag>
 	}
 
 	#endregion
+	*/
 }

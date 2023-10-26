@@ -9,7 +9,7 @@ public partial class DTOOTTagTwinCat : DTOIOTTag, IDTO<OTTagTwinCat, DTOOTTagTwi
 	{
 	}
 
-	public DTOOTTagTwinCat(OTTagTwinCat otTagTwinCat)
+	public DTOOTTagTwinCat(OTTagTwinCat otTagTwinCat) : base(otTagTwinCat)
 	{
 		ValueType = otTagTwinCat.ValueType;
 	}

@@ -16,6 +16,8 @@ public static class DeviceRID
 {
 	public static string Camera1 = "Camera1";
 	public static string Camera2 = "Camera2";
+
+	public static string TwinCat = "TwinCat";
 }
 
 public static class ITApis
