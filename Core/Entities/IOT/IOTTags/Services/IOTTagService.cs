@@ -24,6 +24,14 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 		}, withTracking: false)).ToDTO();
 	}
 
+	public async Task<List<DTOIOTTag>> GetByArrayRID(IEnumerable<string> rids)
+	{
+		return (await AnodeUOW.IOTTag.GetAll(filters: new Expression<Func<IOTTag, bool>>[]
+		{
+			tag => rids.Contains(tag.RID)
+		}, withTracking: false)).ConvertAll(tag => tag.ToDTO());
+	}
+
 	public async Task<bool> IsTestModeOn()
 	{
 		IOTTag testModeTag;

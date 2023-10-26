@@ -38,6 +38,22 @@ public class IOTTagController : ControllerBase
 		return await new ApiResponseObject(tag).SuccessResult(_logsService, ControllerContext);
 	}
 
+	[HttpPut("rids")]
+	public async Task<IActionResult> GetTagValueByArrayRID([FromBody] [Required] IEnumerable<string> rids)
+	{
+		List<DTOIOTTag> tags;
+		try
+		{
+			tags = await _iotTagService.GetByArrayRID(rids);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(tags).SuccessResult(_logsService, ControllerContext);
+	}
+
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetTagValueByID([FromRoute] [Required] int id)
 	{
