@@ -36,7 +36,7 @@ public static class Station
 				throw new InvalidOperationException("Station serverAddress has already been defined.");
 			_serverAddress = value;
 		}
-		get => _serverAddress ?? throw new InvalidOperationException("Station name has not been defined.");
+		get => _serverAddress ?? throw new InvalidOperationException("Station serverAddress has not been defined.");
 	}
 
 	private static string? _serverAddress { get; set; }

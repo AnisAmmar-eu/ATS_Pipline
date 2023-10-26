@@ -60,6 +60,8 @@ builder.Services.AddAuthentication(options =>
 
 string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
 Station.Name = stationName;
+string address = builder.Configuration.GetValue<string>("ServerConfig:Address");
+Station.ServerAddress = address;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
