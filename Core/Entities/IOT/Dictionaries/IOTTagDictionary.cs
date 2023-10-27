@@ -134,12 +134,21 @@ public static class IOTTagRID
 	public const string LuminosityCheckFrequency = "LuminosityCheckFrequency";
 
 	#endregion
+
+	#region Lasers
+
+	public const string ZT1 = "ZT01";
+	public const string ZT2 = "ZT02";
+	public const string ZT3 = "ZT03";
+	public const string ZT4 = "ZT04";
+
+	#endregion
 }
 
 public static class IOTTagPath
 {
 	#region Camera
-	
+
 	public const string TriggerMode = "TriggerMode";
 	public const string TriggerSource = "TriggerSource";
 	public const string TriggerActivation = "TriggerActivation";
@@ -257,6 +266,15 @@ public static class IOTTagPath
 	public const string ThresholdLuminosityNoLED = "";
 	public const string LuminosityWaitTimer = "";
 	public const string LuminosityCheckFrequency = "";
+
+	#endregion
+
+	#region Lasers
+
+	public const string ZT1 = "";
+	public const string ZT2 = "";
+	public const string ZT3 = "";
+	public const string ZT4 = "";
 
 	#endregion
 }

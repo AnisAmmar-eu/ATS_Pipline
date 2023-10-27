@@ -1134,6 +1134,63 @@ public class IOTInitializer
 
 		#endregion
 
+		#region Lasers
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.ZT1,
+			Name = "Laser ZT1",
+			Description = "Laser ZT1",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.ZT1,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.ZT2,
+			Name = "Laser ZT2",
+			Description = "Laser ZT2",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.ZT2,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.ZT3,
+			Name = "Laser ZT3",
+			Description = "Laser ZT3",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.ZT3,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.ZT4,
+			Name = "Laser ZT4",
+			Description = "Laser ZT4",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.ZT4,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+
+		#endregion
+
 		anodeCTX.SaveChanges();
 	}
 }
