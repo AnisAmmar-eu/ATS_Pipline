@@ -21,7 +21,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 
 	public async Task<bool> GetStatusByRID(string rid)
 	{
-		return (await AnodeUOW.IOTDevice.GetBy(filters: new Expression<Func<IOTDevice, bool>>[]
+		return (await AnodeUOW.IOTDevice.GetBy(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => device.RID == rid
 		}, withTracking: false)).IsConnected;

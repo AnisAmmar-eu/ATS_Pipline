@@ -50,7 +50,7 @@ public class AlarmRTController : ControllerBase
 	[HttpGet("stats")]
 	public async Task<IActionResult> GetAlarmRTStats()
 	{
-		int[] res = new int[3];
+		int[] res;
 		try
 		{
 			res = await _alarmRTService.GetAlarmRTStats();

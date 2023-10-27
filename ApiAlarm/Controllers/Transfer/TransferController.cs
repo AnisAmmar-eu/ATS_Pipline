@@ -1,5 +1,4 @@
 ﻿using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Packets.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiAlarm.Controllers.Transfer;
@@ -9,12 +8,10 @@ namespace ApiAlarm.Controllers.Transfer;
 public class TransferController : ControllerBase
 {
 	private readonly IAlarmLogService _alarmLogService;
-	private readonly IPacketService _packetService;
 
-	public TransferController(IAlarmLogService alarmLogService, IPacketService packetService)
+	public TransferController(IAlarmLogService alarmLogService)
 	{
 		_alarmLogService = alarmLogService;
-		_packetService = packetService;
 	}
 
 

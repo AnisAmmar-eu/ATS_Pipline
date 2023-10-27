@@ -24,7 +24,6 @@ public static class CameraUtils
 		device.Notify[NotifyDictionary.DeviceDisconnected].Event += Disconnect;
 		device.Notify[NotifyDictionary.DeviceReconnect].Event += Reconnect;
 
-		CancellationToken cancel = CancellationToken.None;
 		AdsClient tcClient = new();
 		tcClient.Connect(851);
 		if (!tcClient.IsConnected) throw new Exception("Not connected");
