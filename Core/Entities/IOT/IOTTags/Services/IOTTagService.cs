@@ -40,7 +40,7 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 		{
 			testModeTag = await AnodeUOW.IOTTag.GetBy(new Expression<Func<IOTTag, bool>>[]
 			{
-				tag => tag.RID == IOTTagNames.TestModeName
+				tag => tag.RID == IOTTagRID.TestMode
 			}, withTracking: false);
 			_testModeID = testModeTag.ID;
 		}

@@ -1,17 +1,5 @@
 namespace Core.Entities.IOT.Dictionaries;
 
-public class IOTTagNames
-{
-	public static string TestModeName = "__TestMode";
-}
-
-public class IOTTagType
-{
-	public static string String = "string";
-	public static string Int = "int";
-	public static string Bool = "bool";
-}
-
 public static class DeviceRID
 {
 	public static string Camera1 = "Camera1";
