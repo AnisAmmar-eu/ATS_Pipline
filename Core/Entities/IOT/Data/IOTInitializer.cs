@@ -327,7 +327,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.Led1,
+			RID = IOTTagRID.Led1,
 			Name = "LED LFN01",
 			Description = "LED LFN01",
 			CurrentValue = "false",
@@ -340,7 +340,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.Led2,
+			RID = IOTTagRID.Led2,
 			Name = "LED LFN02",
 			Description = "LED LFN02",
 			CurrentValue = "false",
@@ -353,7 +353,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.Led3,
+			RID = IOTTagRID.Led3,
 			Name = "LED LFN03",
 			Description = "LED LFN03",
 			CurrentValue = "false",
@@ -366,7 +366,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.Led4,
+			RID = IOTTagRID.Led4,
 			Name = "LED LFN04",
 			Description = "LED LFN04",
 			CurrentValue = "false",
@@ -379,7 +379,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.Blowing1,
+			RID = IOTTagRID.Blowing1,
 			Name = "Blowing FV01",
 			Description = "Blowing FV01",
 			CurrentValue = "false",
@@ -392,7 +392,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.Blowing2,
+			RID = IOTTagRID.Blowing2,
 			Name = "Blowing FV02",
 			Description = "Blowing FV02",
 			CurrentValue = "false",
@@ -405,7 +405,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.Blowing3,
+			RID = IOTTagRID.Blowing3,
 			Name = "Blowing FV03",
 			Description = "Blowing FV03",
 			CurrentValue = "false",
@@ -418,7 +418,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.SequencePicture1,
+			RID = IOTTagRID.SequencePicture1,
 			Name = "Sequence Picture 1",
 			Description = "Sequence Picture 1",
 			CurrentValue = "false",
@@ -431,7 +431,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.SequencePicture2,
+			RID = IOTTagRID.SequencePicture2,
 			Name = "Sequence Picture 2",
 			Description = "Sequence Picture 2",
 			CurrentValue = "false",
@@ -444,7 +444,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.SequenceCleaning,
+			RID = IOTTagRID.SequenceCleaning,
 			Name = "Sequence Cleaning",
 			Description = "Sequence Cleaning",
 			CurrentValue = "false",
@@ -457,7 +457,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.SequenceCooling,
+			RID = IOTTagRID.SequenceCooling,
 			Name = "Sequence Cooling",
 			Description = "Sequence Cooling",
 			CurrentValue = "false",
@@ -470,7 +470,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.SequencePressure,
+			RID = IOTTagRID.SequencePressure,
 			Name = "Sequence Pressure",
 			Description = "Sequence Pressure",
 			CurrentValue = "false",
@@ -483,7 +483,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.SequenceLEDOff,
+			RID = IOTTagRID.SequenceLEDOff,
 			Name = "Sequence LED Off",
 			Description = "Sequence LED Off",
 			CurrentValue = "false",
@@ -496,7 +496,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.SequenceLEDOn,
+			RID = IOTTagRID.SequenceLEDOn,
 			Name = "Sequence LED On",
 			Description = "Sequence LED On",
 			CurrentValue = "false",
@@ -514,7 +514,7 @@ public class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.RetentiveShootingWaitTimer,
+			RID = IOTTagRID.RetentiveShootingWaitTimer,
 			Name = "Retentive Shooting Wait Timer",
 			Description = "Retentive Shooting Wait Timer",
 			CurrentValue = "0",
@@ -527,7 +527,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayFlashD20,
+			RID = IOTTagRID.DelayFlashD20,
 			Name = "Delay Flash D20",
 			Description = "Delay Flash D20",
 			CurrentValue = "0",
@@ -540,7 +540,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayFlashDX,
+			RID = IOTTagRID.DelayFlashDX,
 			Name = "Delay Flash DX",
 			Description = "Delay Flash DX",
 			CurrentValue = "0",
@@ -553,7 +553,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayFlashInvalid,
+			RID = IOTTagRID.DelayFlashInvalid,
 			Name = "Delay Flash Invalid",
 			Description = "Delay Flash Invalid",
 			CurrentValue = "0",
@@ -566,7 +566,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DurationFlashD20,
+			RID = IOTTagRID.DurationFlashD20,
 			Name = "Duration Flash D20",
 			Description = "Duration Flash D20",
 			CurrentValue = "0",
@@ -579,7 +579,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayCamD20,
+			RID = IOTTagRID.DelayCamD20,
 			Name = "Delay Cam D20",
 			Description = "Delay Cam D20",
 			CurrentValue = "0",
@@ -592,7 +592,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayCamDX,
+			RID = IOTTagRID.DelayCamDX,
 			Name = "Delay Cam DX",
 			Description = "Delay Cam DX",
 			CurrentValue = "0",
@@ -605,7 +605,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayCamInvalid,
+			RID = IOTTagRID.DelayCamInvalid,
 			Name = "Delay Cam Invalid",
 			Description = "Delay Cam Invalid",
 			CurrentValue = "0",
@@ -618,7 +618,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.TriggerThreshold1DX,
+			RID = IOTTagRID.TriggerThreshold1DX,
 			Name = "Trigger Threshold1 DX",
 			Description = "Trigger Threshold1 DX",
 			CurrentValue = "0",
@@ -631,7 +631,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.TriggerThreshold1D20,
+			RID = IOTTagRID.TriggerThreshold1D20,
 			Name = "Trigger Threshold1 D20",
 			Description = "Trigger Threshold1 D20",
 			CurrentValue = "0",
@@ -644,7 +644,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.TriggerThreshold2DX,
+			RID = IOTTagRID.TriggerThreshold2DX,
 			Name = "Trigger Threshold2 DX",
 			Description = "Trigger Threshold2 DX",
 			CurrentValue = "0",
@@ -657,7 +657,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.TriggerThreshold2D20,
+			RID = IOTTagRID.TriggerThreshold2D20,
 			Name = "Trigger Threshold2 D20",
 			Description = "Trigger Threshold3 D20",
 			CurrentValue = "0",
@@ -670,7 +670,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.TriggerThreshold3DX,
+			RID = IOTTagRID.TriggerThreshold3DX,
 			Name = "Trigger Threshold3 DX",
 			Description = "Trigger Threshold3 DX",
 			CurrentValue = "0",
@@ -683,7 +683,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.TriggerThreshold3D20,
+			RID = IOTTagRID.TriggerThreshold3D20,
 			Name = "Trigger Threshold3 D20",
 			Description = "Trigger Threshold3 D20",
 			CurrentValue = "0",
@@ -696,7 +696,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayValidLaser,
+			RID = IOTTagRID.DelayValidLaser,
 			Name = "Delay Valid Laser",
 			Description = "Delay Valid Laser",
 			CurrentValue = "0",
@@ -709,7 +709,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.TransferTimer,
+			RID = IOTTagRID.TransferTimer,
 			Name = "Transfer Timer",
 			Description = "Transfer Timer",
 			CurrentValue = "0",
@@ -727,7 +727,7 @@ public class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LengthMinD20,
+			RID = IOTTagRID.LengthMinD20,
 			Name = "Length Min D20",
 			Description = "Length Min D20",
 			CurrentValue = "0",
@@ -740,7 +740,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LengthMaxD20,
+			RID = IOTTagRID.LengthMaxD20,
 			Name = "Length Max D20",
 			Description = "Length Max D20",
 			CurrentValue = "0",
@@ -753,7 +753,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LengthMinDX,
+			RID = IOTTagRID.LengthMinDX,
 			Name = "Length Min DX",
 			Description = "Length Min DX",
 			CurrentValue = "0",
@@ -766,7 +766,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LengthMaxDX,
+			RID = IOTTagRID.LengthMaxDX,
 			Name = "Length Max DX",
 			Description = "Length Max DX",
 			CurrentValue = "0",
@@ -779,7 +779,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.WidthMinD20,
+			RID = IOTTagRID.WidthMinD20,
 			Name = "Width Min D20",
 			Description = "Width Min D20",
 			CurrentValue = "0",
@@ -792,7 +792,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.WidthMaxD20,
+			RID = IOTTagRID.WidthMaxD20,
 			Name = "Width Max D20",
 			Description = "Width Max D20",
 			CurrentValue = "0",
@@ -805,7 +805,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.WidthMinDX,
+			RID = IOTTagRID.WidthMinDX,
 			Name = "Width Min DX",
 			Description = "Width Min DX",
 			CurrentValue = "0",
@@ -818,7 +818,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.WidthMaxDX,
+			RID = IOTTagRID.WidthMaxDX,
 			Name = "Width Max DX",
 			Description = "Width Max DX",
 			CurrentValue = "0",
@@ -831,7 +831,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.RetentiveAnodeTypeWaitTimer,
+			RID = IOTTagRID.RetentiveAnodeTypeWaitTimer,
 			Name = "Retentive Anode Type Wait Timer",
 			Description = "Retentive Anode Type Wait Timer",
 			CurrentValue = "0",
@@ -844,7 +844,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LengthPresenceAnodeLimit,
+			RID = IOTTagRID.LengthPresenceAnodeLimit,
 			Name = "Length Presence Anode Limit",
 			Description = "Length Presence Anode Limit",
 			CurrentValue = "0",
@@ -857,7 +857,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.WidthPresenceAnodeLimit,
+			RID = IOTTagRID.WidthPresenceAnodeLimit,
 			Name = "Width Presence Anode Limit",
 			Description = "Width Presence Anode Limit",
 			CurrentValue = "0",
@@ -875,7 +875,7 @@ public class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.EGAMetaDataWait,
+			RID = IOTTagRID.EGAMetaDataWait,
 			Name = "EGA Meta Data Wait",
 			Description = "EGA Meta Data Wait",
 			CurrentValue = "0",
@@ -888,7 +888,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.RetentiveAnodeDetectionTimerZT04,
+			RID = IOTTagRID.RetentiveAnodeDetectionTimerZT04,
 			Name = "Retentive Anode Detection Timer ZT04",
 			Description = "Retentive Anode Detection Timer ZT04",
 			CurrentValue = "0",
@@ -906,7 +906,7 @@ public class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayFV01,
+			RID = IOTTagRID.DelayFV01,
 			Name = "Delay FV01",
 			Description = "Delay FV01",
 			CurrentValue = "0",
@@ -919,7 +919,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DurationFV01,
+			RID = IOTTagRID.DurationFV01,
 			Name = "Duration FV01",
 			Description = "Duration FV01",
 			CurrentValue = "0",
@@ -932,7 +932,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayFV02,
+			RID = IOTTagRID.DelayFV02,
 			Name = "Delay FV02",
 			Description = "Delay FV02",
 			CurrentValue = "0",
@@ -945,7 +945,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DurationFV02,
+			RID = IOTTagRID.DurationFV02,
 			Name = "Duration FV02",
 			Description = "Duration FV02",
 			CurrentValue = "0",
@@ -958,7 +958,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayFV03,
+			RID = IOTTagRID.DelayFV03,
 			Name = "Delay FV03",
 			Description = "Delay FV03",
 			CurrentValue = "0",
@@ -971,7 +971,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.RetentiveAnodeEntranceTimerZT04,
+			RID = IOTTagRID.RetentiveAnodeEntranceTimerZT04,
 			Name = "Retentive Anode Entrance Timer ZT04",
 			Description = "Retentive Anode Entrance Timer ZT04",
 			CurrentValue = "0",
@@ -984,7 +984,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.CameraCoolingFrequencyNormal,
+			RID = IOTTagRID.CameraCoolingFrequencyNormal,
 			Name = "Camera Cooling Frequency Normal",
 			Description = "Camera Cooling Frequency Normal",
 			CurrentValue = "0",
@@ -997,7 +997,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.CameraCoolingFrequencyHot,
+			RID = IOTTagRID.CameraCoolingFrequencyHot,
 			Name = "Camera Cooling Frequency Hot",
 			Description = "Camera Cooling Frequency Hot",
 			CurrentValue = "0",
@@ -1010,7 +1010,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LEDBarsCleaningFrequencyNormal,
+			RID = IOTTagRID.LEDBarsCleaningFrequencyNormal,
 			Name = "LED Bars Cleaning Frequency Normal",
 			Description = "LED Bars Cleaning Frequency Normal",
 			CurrentValue = "0",
@@ -1023,7 +1023,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LEDBarsCleaningFrequencyHot,
+			RID = IOTTagRID.LEDBarsCleaningFrequencyHot,
 			Name = "LED Bars Cleaning Frequency Hot",
 			Description = "LED Bars Cleaning Frequency Hot",
 			CurrentValue = "0",
@@ -1036,7 +1036,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.HotAnodeTT02,
+			RID = IOTTagRID.HotAnodeTT02,
 			Name = "Hot Anode TT02",
 			Description = "Hot Anode TT02",
 			CurrentValue = "0",
@@ -1054,7 +1054,7 @@ public class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DelayLuxCheck,
+			RID = IOTTagRID.DelayLuxCheck,
 			Name = "Delay Lux Check",
 			Description = "Delay Lux Check",
 			CurrentValue = "0",
@@ -1067,7 +1067,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.DurationLuxCheck,
+			RID = IOTTagRID.DurationLuxCheck,
 			Name = "Duration Lux Check",
 			Description = "Duration Lux Check",
 			CurrentValue = "0",
@@ -1080,7 +1080,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.ThresholdLuminosityLED,
+			RID = IOTTagRID.ThresholdLuminosityLED,
 			Name = "Threshold Luminosity LED",
 			Description = "Threshold Luminosity LED",
 			CurrentValue = "0",
@@ -1093,7 +1093,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.ThresholdLuminosityNoLED,
+			RID = IOTTagRID.ThresholdLuminosityNoLED,
 			Name = "Threshold Luminosity No LED",
 			Description = "Threshold Luminosity No LED",
 			CurrentValue = "0",
@@ -1106,7 +1106,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LuminosityWaitTimer,
+			RID = IOTTagRID.LuminosityWaitTimer,
 			Name = "Luminosity Wait Timer",
 			Description = "Luminosity Wait Timer",
 			CurrentValue = "0",
@@ -1119,7 +1119,7 @@ public class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagPath.LuminosityCheckFrequency,
+			RID = IOTTagRID.LuminosityCheckFrequency,
 			Name = "Luminosity Check Frequency",
 			Description = "Luminosity Check Frequency",
 			CurrentValue = "0",
