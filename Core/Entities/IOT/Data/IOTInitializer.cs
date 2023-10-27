@@ -17,7 +17,7 @@ public class IOTInitializer
 			return;
 		// Cameras
 		InitializeCamera(anodeCTX, DeviceRID.Camera1, "First", 1);
-		// InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
+		InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
 
 		// APIs
 		InitializeApi(anodeCTX, ITApis.IOTRID, ITApis.IOTAddress, ITApis.IOTPath, true);
