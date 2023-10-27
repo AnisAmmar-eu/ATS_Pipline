@@ -10,6 +10,7 @@ public class IOTTagType
 
 public static class IOTTagRID
 {
+	// Reserved & special cases
 	public const string TestMode = "__TestMode";
 
 	#region Camera
@@ -138,7 +139,7 @@ public static class IOTTagRID
 public static class IOTTagPath
 {
 	#region Camera
-
+	
 	public const string TriggerMode = "TriggerMode";
 	public const string TriggerSource = "TriggerSource";
 	public const string TriggerActivation = "TriggerActivation";

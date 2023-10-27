@@ -52,6 +52,7 @@ public class IOTInitializer
 			Description = prefix + " Camera IOTDevice",
 			Address = "https://localhost:7277",
 			ConnectionPath = "/apiCamera/device" + suffix,
+			Temperature = 19.84,
 			IsConnected = false
 		};
 		anodeCTX.OTCamera.Add(cam);

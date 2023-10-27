@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
+using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Services.Kernel;
@@ -19,12 +20,12 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		_hubContext = hubContext;
 	}
 
-	public async Task<bool> GetStatusByRID(string rid)
+	public async Task<IOTDeviceStatus> GetStatusByRID(string rid)
 	{
-		return (await AnodeUOW.IOTDevice.GetBy(new Expression<Func<IOTDevice, bool>>[]
+		return new IOTDeviceStatus(await AnodeUOW.IOTDevice.GetBy(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => device.RID == rid
-		}, withTracking: false)).IsConnected;
+		}, withTracking: false));
 	}
 
 	public async Task<List<DTOIOTDevice>> GetAllWithIncludes()

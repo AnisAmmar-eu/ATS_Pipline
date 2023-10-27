@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
+using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
@@ -23,7 +24,7 @@ public class IOTDeviceController : ControllerBase
 	[HttpGet("status/{rid}")]
 	public async Task<IActionResult> GetStatusByRID([Required] [FromRoute] string rid)
 	{
-		bool status;
+		IOTDeviceStatus status;
 		try
 		{
 			status = await _iotDeviceService.GetStatusByRID(rid);

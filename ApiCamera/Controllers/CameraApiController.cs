@@ -7,6 +7,8 @@ using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 using Stemmer.Cvb;
+using Stemmer.Cvb.Driver;
+using Stemmer.Cvb.GenApi;
 
 namespace ApiCamera.Controllers;
 
@@ -150,11 +152,11 @@ public class CameraApiController : ControllerBase
 	private async Task<IActionResult> GetDeviceInfo(int port)
 	{
 		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
-		string result;
+		double result;
 		try
 		{
 			Device device = DeviceFactory.OpenPort(driverString, port);
-			result = device == null ? "Driver Open Problem" : "Driver Opened ";
+			result = (device.NodeMaps[NodeMapNames.Device]["DeviceTemperature"] as FloatNode)!.Value;
 		}
 		catch (Exception e)
 		{

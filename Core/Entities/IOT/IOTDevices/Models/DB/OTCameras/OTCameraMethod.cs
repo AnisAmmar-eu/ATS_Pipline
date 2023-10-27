@@ -4,6 +4,7 @@ using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
+using Newtonsoft.Json;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
@@ -20,7 +21,11 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 		try
 		{
 			HttpResponseMessage response = await httpClient.GetAsync(Address + ConnectionPath);
-			return response.StatusCode == HttpStatusCode.OK;
+			if (response.StatusCode != HttpStatusCode.OK)
+				return false;
+			dynamic content = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+			Temperature = content.result;
+			return true;
 		}
 		catch (Exception)
 		{

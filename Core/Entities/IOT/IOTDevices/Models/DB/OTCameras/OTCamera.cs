@@ -5,4 +5,5 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
 public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 {
+	public double Temperature { get; set; }
 }

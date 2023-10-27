@@ -5,4 +5,5 @@ namespace Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 
 public partial class DTOOTCamera : DTOIOTDevice, IDTO<OTCamera, DTOOTCamera>
 {
+	public double Temperature { get; set; }
 }

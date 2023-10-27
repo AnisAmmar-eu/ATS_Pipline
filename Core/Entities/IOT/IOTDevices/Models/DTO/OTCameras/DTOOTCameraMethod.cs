@@ -11,5 +11,6 @@ public partial class DTOOTCamera : DTOIOTDevice, IDTO<OTCamera, DTOOTCamera>
 
 	public DTOOTCamera(OTCamera otCamera) : base(otCamera)
 	{
+		Temperature = otCamera.Temperature;
 	}
 }
