@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ApiCamera.Utils;
+using Core.Entities.BI.BITemperatures.Models.DTO;
+using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Dictionaries;
 using Core.Shared.Dictionaries;
@@ -17,14 +19,16 @@ namespace ApiCamera.Controllers;
 public class CameraApiController : ControllerBase
 {
 	private readonly IConfiguration _configuration;
-	private readonly IIOTTagService _iotTagService;
 	private readonly ILogsService _logsService;
+	private readonly IIOTTagService _iotTagService;
+	private readonly IBITemperatureService _biTemperatureService;
 
-	public CameraApiController(ILogsService logsService, IConfiguration configuration, IIOTTagService iotTagService)
+	public CameraApiController(ILogsService logsService, IConfiguration configuration, IIOTTagService iotTagService, IBITemperatureService biTemperatureService)
 	{
 		_logsService = logsService;
 		_configuration = configuration;
 		_iotTagService = iotTagService;
+		_biTemperatureService = biTemperatureService;
 	}
 
 	[HttpGet("status")]
@@ -67,6 +71,26 @@ public class CameraApiController : ControllerBase
 		}
 
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	#endregion
+
+	#region Get Temperature
+
+	[HttpGet("temperature")]
+	public async Task<IActionResult> GetTemperatures()
+	{
+		List<DTOBITemperature> temperatures;
+		try
+		{
+			temperatures = await _biTemperatureService.GetAll();
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(temperatures).SuccessResult(_logsService, ControllerContext);
 	}
 
 	#endregion

@@ -137,10 +137,10 @@ public static class IOTTagRID
 
 	#region Lasers
 
-	public const string ZT1 = "ZT01";
-	public const string ZT2 = "ZT02";
-	public const string ZT3 = "ZT03";
-	public const string ZT4 = "ZT04";
+	public const string ZT1 = "ZT1";
+	public const string ZT2 = "ZT2";
+	public const string ZT3 = "ZT3";
+	public const string ZT4 = "ZT4";
 
 	#endregion
 }

@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
@@ -37,6 +38,7 @@ public interface IAnodeUOW : IDisposable
 	IKPILogRepository KPILog { get; }
 	IKPIRTRepository KPIRT { get; }
 	IKPITestRepository KPITest { get; }
+	IBITemperatureRepository BITemperature { get; }
 
 	// IOT
 	IIOTDeviceRepository IOTDevice { get; }

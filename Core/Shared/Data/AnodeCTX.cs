@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
+using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
@@ -84,6 +85,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<KPILog> KPILog => Set<KPILog>();
 	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
 	public DbSet<KPITest> KPITest => Set<KPITest>();
+	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
 
 	// Action
 	public DbSet<Act> Acts => Set<Act>();

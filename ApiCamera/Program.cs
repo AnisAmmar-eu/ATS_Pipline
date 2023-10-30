@@ -1,6 +1,8 @@
+using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
+using Core.Shared.Services.Background.BI.BITemperature;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -26,8 +28,12 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 builder.Services.AddScoped<ILogsService, LogsService>();
 
 builder.Services.AddScoped<IIOTTagService, IOTTagService>();
+builder.Services.AddScoped<IBITemperatureService, BITemperatureService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
+
+builder.Services.AddSingleton<TemperatureService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<TemperatureService>());
 
 WebApplication app = builder.Build();
 

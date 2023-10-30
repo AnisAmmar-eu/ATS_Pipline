@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231030092213_KPITemperature")]
+    partial class KPITemperature
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,32 +202,6 @@ namespace Core.Migrations
                         .IsUnique();
 
                     b.ToTable("AlarmRT");
-                });
-
-            modelBuilder.Entity("Core.Entities.BI.BITemperatures.Models.DB.BITemperature", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("CameraRID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StationID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<double>("Temperature")
-                        .HasColumnType("float");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("BITemperature");
                 });
 
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>
@@ -420,6 +396,32 @@ namespace Core.Migrations
                     b.HasIndex("KPICID");
 
                     b.ToTable("KPIRT");
+                });
+
+            modelBuilder.Entity("Core.Entities.KPI.KPITemperatures.Models.DB.KPITemperature", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("CameraRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StationID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("float");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("KPITemperature");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPITests.Models.DB.KPITest", b =>

@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
@@ -47,6 +48,7 @@ public class AnodeUOW : IAnodeUOW
 		KPILog = new KPILogRepository(_anodeCTX);
 		KPIRT = new KPIRTRepository(_anodeCTX);
 		KPITest = new KPITestRepository(_anodeCTX);
+		BITemperature = new BITemperatureRepository(_anodeCTX);
 
 		IOTDevice = new IOTDeviceRepository(_anodeCTX);
 		IOTTag = new IOTTagRepository(_anodeCTX);
@@ -74,6 +76,7 @@ public class AnodeUOW : IAnodeUOW
 	public IKPILogRepository KPILog { get; }
 	public IKPIRTRepository KPIRT { get; }
 	public IKPITestRepository KPITest { get; }
+	public IBITemperatureRepository BITemperature { get; }
 
 	// IOT
 	public IIOTDeviceRepository IOTDevice { get; }
@@ -97,6 +100,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IKPILogRepository) => KPILog,
 			_ when repo == typeof(IKPIRTRepository) => KPIRT,
 			_ when repo == typeof(IKPITestRepository) => KPITest,
+			_ when repo == typeof(IBITemperatureRepository) => BITemperature,
 
 			_ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
 			_ when repo == typeof(IIOTTagRepository) => IOTTag,
