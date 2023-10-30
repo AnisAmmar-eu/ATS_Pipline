@@ -10,7 +10,7 @@ public interface IStationCycleService : IServiceBaseEntity<StationCycle, DTOStat
 	public Task<ReducedStationCycle?> GetMostRecentWithIncludes();
 	public Task<List<ReducedStationCycle>> GetAllRIDs();
 	public Task<List<StationCycle>> GetAllReadyToSent();
-	public Task<byte[]> GetImagesFromIDAndCamera(int id, int camera);
+	public Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera);
 	public Task UpdateDetectionWithMeasure(StationCycle stationCycle);
 	public Task SendStationCycles(List<StationCycle> stationCycles, string address);
 	public Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles);

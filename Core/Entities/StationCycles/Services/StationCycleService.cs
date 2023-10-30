@@ -54,7 +54,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		}, withTracking: false);
 	}
 
-	public async Task<byte[]> GetImagesFromIDAndCamera(int id, int camera)
+	public async Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera)
 	{
 		StationCycle stationCycle = await AnodeUOW.StationCycle.GetById(id, includes: "ShootingPacket");
 		if (stationCycle.ShootingPacket == null)
@@ -62,7 +62,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
 		string filePath =
 			stationCycle.ShootingPacket.GetImagePathFromRoot(thumbnailsPath, stationCycle.AnodeType, camera);
-		return await File.ReadAllBytesAsync(filePath);
+		return new FileInfo(filePath);
 	}
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)

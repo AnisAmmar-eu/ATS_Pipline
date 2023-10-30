@@ -11,12 +11,12 @@ namespace ApiStationCycle.Controllers;
 
 [ApiController]
 [Route("apiStationCycle")]
-public class IOTController : ControllerBase
+public class StationCycleController : ControllerBase
 {
 	private readonly ILogsService _logsService;
 	private readonly IStationCycleService _stationCycleService;
 
-	public IOTController(IStationCycleService stationCycleService, ILogsService logsService)
+	public StationCycleController(IStationCycleService stationCycleService, ILogsService logsService)
 	{
 		_stationCycleService = stationCycleService;
 		_logsService = logsService;
@@ -82,7 +82,7 @@ public class IOTController : ControllerBase
 	public async Task<IActionResult> GetImageByIdAndCamera([Required] [FromRoute] int id,
 		[Required] [FromRoute] int cameraNb)
 	{
-		byte[] result;
+		FileInfo result;
 		try
 		{
 			result = await _stationCycleService.GetImagesFromIDAndCamera(id, cameraNb);
@@ -92,6 +92,7 @@ public class IOTController : ControllerBase
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
 
-		return File(result, "image/jpeg");
+		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		return File(await System.IO.File.ReadAllBytesAsync(result.FullName), "image/jpeg", result.Name);
 	}
 }
