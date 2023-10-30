@@ -36,6 +36,22 @@ public class IOTDeviceController : ControllerBase
 
 		return await new ApiResponseObject(status).SuccessResult(_logsService, ControllerContext);
 	}
+	
+	[HttpPut("rids")]
+	public async Task<IActionResult> GetTagValueByArrayRID([FromBody] [Required] IEnumerable<string> rids)
+	{
+		List<IOTDeviceStatus> tags;
+		try
+		{
+			tags = await _iotDeviceService.GetStatusByArrayRID(rids);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(tags).SuccessResult(_logsService, ControllerContext);
+	}
 
 	[HttpGet]
 	public async Task<IActionResult> GetAllIOTDevices()

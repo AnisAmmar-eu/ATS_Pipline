@@ -28,6 +28,14 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		}, withTracking: false));
 	}
 
+	public async Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids)
+	{
+		return (await AnodeUOW.IOTDevice.GetAll(filters: new Expression<Func<IOTDevice, bool>>[]
+		{
+			device => rids.Contains(device.RID)
+		}, withTracking: false)).ConvertAll(device => new IOTDeviceStatus(device));
+	}
+
 	public async Task<List<DTOIOTDevice>> GetAllWithIncludes()
 	{
 		return (await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: "IOTTags")).ConvertAll(device =>
