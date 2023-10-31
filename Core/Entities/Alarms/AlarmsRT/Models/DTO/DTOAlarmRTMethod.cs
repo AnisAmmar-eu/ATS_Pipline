@@ -12,7 +12,7 @@ public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmRT, DTOAlarmRT>
 		TS = alarmRT.TS;
 		IRID = alarmRT.IRID;
 		AlarmID = alarmRT.AlarmID;
-		Station = alarmRT.Station;
+		StationID = alarmRT.StationID;
 		NbNonAck = alarmRT.NbNonAck;
 		IsActive = alarmRT.IsActive;
 		TSRaised = alarmRT.TSRaised;

@@ -5,6 +5,7 @@ using Core.Shared.Services.Notifications.PacketNotifications;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TwinCAT;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
@@ -28,11 +29,11 @@ public class ADSService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		CancellationToken cancel = CancellationToken.None;
 		AdsClient tcClient = new();
-		await InitializeConnection(tcClient, asyncScope, cancel);
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try
 			{
+				await InitializeConnection(tcClient, asyncScope, cancel);
 				// If the TC disconnects, it will loop back to the top
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
 				if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.None)
@@ -46,7 +47,6 @@ public class ADSService : BackgroundService
 				_executionCount++;
 				_logger.LogInformation(
 					"Executed PeriodicADSService - Count: {count}", _executionCount);
-				await InitializeConnection(tcClient, asyncScope, cancel);
 			}
 	}
 
@@ -60,7 +60,7 @@ public class ADSService : BackgroundService
 				tcClient.Connect(851);
 				if (tcClient.IsConnected) break;
 				Console.WriteLine("Unable to connect to the automaton. Retrying in 1 second");
-				await Task.Delay(1000, cancel);
+				throw new AdsException("Cannot connect to the automaton");
 			}
 
 			dynamic ads = new ExpandoObject();

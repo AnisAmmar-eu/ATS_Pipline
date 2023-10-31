@@ -26,7 +26,7 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	{
 		ID = dtoAlarmLog.ID;
 		TS = (DateTimeOffset)dtoAlarmLog.TS!;
-		Station = dtoAlarmLog.Station;
+		StationID = dtoAlarmLog.StationID;
 		IsAck = dtoAlarmLog.IsAck;
 		IsActive = dtoAlarmLog.IsActive;
 		TSRaised = dtoAlarmLog.TSRaised;

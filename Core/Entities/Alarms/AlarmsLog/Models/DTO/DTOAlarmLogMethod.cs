@@ -17,7 +17,7 @@ public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 	{
 		ID = alarmLog.ID;
 		TS = alarmLog.TS;
-		Station = alarmLog.Station;
+		StationID = alarmLog.StationID;
 		IsAck = alarmLog.IsAck;
 		IsActive = alarmLog.IsActive;
 		TSRaised = alarmLog.TSRaised;

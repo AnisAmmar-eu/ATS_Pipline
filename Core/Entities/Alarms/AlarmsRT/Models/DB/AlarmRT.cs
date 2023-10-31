@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -9,7 +10,7 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 {
 	public string IRID { get; set; } = string.Empty;
 	public int AlarmID { get; set; }
-	public string? Station { get; set; }
+	public int StationID { get; set; } = Station.ID;
 	public int? NbNonAck { get; set; }
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }

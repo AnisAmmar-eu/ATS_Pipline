@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Alarms.AlarmsLog.Models.DB;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -6,7 +7,7 @@ namespace Core.Entities.Alarms.AlarmsLog.Models.DTO;
 
 public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 {
-	public string? Station { get; set; }
+	public int StationID { get; set; } = Station.ID;
 	public bool IsAck { get; set; } // Ack = Acknowledge
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }

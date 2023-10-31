@@ -23,7 +23,7 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 		TS = (DateTimeOffset)dtoAlarmRT.TS!;
 		IRID = dtoAlarmRT.IRID;
 		AlarmID = dtoAlarmRT.AlarmID;
-		Station = dtoAlarmRT.Station;
+		StationID = dtoAlarmRT.StationID;
 		NbNonAck = dtoAlarmRT.NbNonAck;
 		IsActive = dtoAlarmRT.IsActive;
 		TSRaised = dtoAlarmRT.TSRaised;
