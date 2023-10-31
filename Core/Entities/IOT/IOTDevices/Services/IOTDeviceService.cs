@@ -5,7 +5,7 @@ using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Services.Kernel;
-using Core.Shared.SignalR.IOTTagHub;
+using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
@@ -13,9 +13,9 @@ namespace Core.Entities.IOT.IOTDevices.Services;
 
 public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevice, DTOIOTDevice>, IIOTDeviceService
 {
-	private readonly IHubContext<IOTTagHub, IIOTTagHub> _hubContext;
+	private readonly IHubContext<IOTHub, IIOTHub> _hubContext;
 
-	public IOTDeviceService(IAnodeUOW anodeUOW, IHubContext<IOTTagHub, IIOTTagHub> hubContext) : base(anodeUOW)
+	public IOTDeviceService(IAnodeUOW anodeUOW, IHubContext<IOTHub, IIOTHub> hubContext) : base(anodeUOW)
 	{
 		_hubContext = hubContext;
 	}
@@ -59,6 +59,8 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 			AnodeUOW.IOTDevice.StopTracking(devices[i]);
 			devices[i] = await AnodeUOW.IOTDevice.GetById(devices[i].ID, withTracking: false, includes: "IOTTags");
 		}
+
+		await _hubContext.Clients.All.RefreshDevices();
 
 		IEnumerable<Task<List<IOTTag>>> tasks = devices.Select(async device =>
 		{

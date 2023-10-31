@@ -1,10 +1,12 @@
-namespace Core.Shared.SignalR.IOTTagHub;
+namespace Core.Shared.SignalR.IOTHub;
 
-public interface IIOTTagHub : IBaseHub
+public interface IIOTHub : IBaseHub
 {
 	/// <summary>
 	///     Refreshes IOTTags.
 	/// </summary>
 	/// <returns></returns>
 	Task RefreshIOTTag();
+
+	Task RefreshDevices();
 }

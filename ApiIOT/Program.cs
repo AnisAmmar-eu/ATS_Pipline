@@ -6,7 +6,7 @@ using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
-using Core.Shared.SignalR.IOTTagHub;
+using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -100,6 +100,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<IOTTagHub>("/iotTagHub");
+app.MapHub<IOTHub>("/iotHub");
 
 app.Run();
