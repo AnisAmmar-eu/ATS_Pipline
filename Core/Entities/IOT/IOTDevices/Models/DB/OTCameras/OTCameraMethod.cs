@@ -1,10 +1,12 @@
-using System.Net;
-using System.Net.Http.Json;
+using System.Globalization;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Shared.Models.Camera;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
-using Newtonsoft.Json;
+using Stemmer.Cvb;
+using Stemmer.Cvb.Driver;
+using Stemmer.Cvb.GenApi;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
@@ -15,25 +17,24 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 		return new DTOOTCamera(this);
 	}
 
-	public override async Task<bool> CheckConnection()
+	public override Task<bool> CheckConnection()
 	{
-		using HttpClient httpClient = new();
 		try
 		{
-			HttpResponseMessage response = await httpClient.GetAsync(Address + ConnectionPath);
-			if (response.StatusCode != HttpStatusCode.OK)
-				return false;
-			dynamic content = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
-			Temperature = content.result;
-			return true;
+			Device device = CameraConnectionManager.Connect(int.Parse(Address));
+			if (device.ConnectionState != ConnectionState.Connected)
+				return Task.FromResult(false);
+			NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
+			Temperature = (nodeMap["DeviceTemperature"] as FloatNode)!.Value;
+			return Task.FromResult(true);
 		}
 		catch (Exception)
 		{
-			return false;
+			return Task.FromResult(false);
 		}
 	}
 
-	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
+	public override Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
 		Dictionary<string, string> parameters = new();
 		List<IOTTag> updatedTags = new();
@@ -50,21 +51,27 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 
 		if (parameters.Count != 0)
 		{
-			using HttpClient httpClient = new();
-			try
-			{
-				HttpResponseMessage response =
-					await httpClient.PostAsync(Address + ConnectionPath, JsonContent.Create(parameters));
-				if (response.StatusCode != HttpStatusCode.OK)
-					throw new Exception("Error while setting parameters: " + response.StatusCode);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Could not update camera parameters: " + e.Message);
-				return new List<IOTTag>();
-			}
+			Device device = CameraConnectionManager.Connect(int.Parse(Address));
+			NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
+			foreach ((string? path, string? newValue) in parameters)
+				if (nodeMap[path].IsWritable)
+					switch (nodeMap[path])
+					{
+						case IntegerNode { IsWritable: true } integerNode:
+							integerNode.Value = int.Parse(newValue);
+							break;
+						case FloatNode { IsWritable: true } floatNode:
+							floatNode.Value = double.Parse(newValue, CultureInfo.InvariantCulture);
+							break;
+						case EnumerationNode { IsWritable: true } enumerationNode:
+							enumerationNode.Value = newValue;
+							break;
+						default:
+							throw new InvalidOperationException("Camera tag with path " + path +
+							                                    " has a path towards unsupported data type.");
+					}
 		}
 
-		return updatedTags;
+		return Task.FromResult(updatedTags);
 	}
 }

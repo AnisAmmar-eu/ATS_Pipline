@@ -72,7 +72,7 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 
 		if (!updatedTags.Any())
 			return new List<DTOIOTTag>();
-		AnodeUOW.Commit();
+		AnodeUOW.Commit(true);
 		await AnodeUOW.CommitTransaction();
 		return updatedTags.ToList().ConvertAll(tag => tag.ToDTO());
 	}

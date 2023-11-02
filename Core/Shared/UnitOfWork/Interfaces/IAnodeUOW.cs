@@ -53,7 +53,7 @@ public interface IAnodeUOW : IDisposable
 	///     Saves changes made in this context to the underlying database.
 	/// </summary>
 	/// <returns></returns>
-	int Commit();
+	int Commit(bool isNewValue = false);
 
 	Task StartTransaction();
 

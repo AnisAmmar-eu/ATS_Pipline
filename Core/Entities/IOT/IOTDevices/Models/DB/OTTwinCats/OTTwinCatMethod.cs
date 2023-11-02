@@ -3,8 +3,10 @@ using Core.Entities.IOT.IOTDevices.Models.DTO.OTTwinCats;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Models.DB.Kernel.Interfaces;
+using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
 using Org.BouncyCastle.Security;
+using TwinCAT;
 using TwinCAT.Ads;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
@@ -19,12 +21,9 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 	public override async Task<bool> CheckConnection()
 	{
 		CancellationToken cancel = CancellationToken.None;
-		AdsClient tcClient = new();
 		try
 		{
-			tcClient.Connect(int.Parse(Address));
-			if (!tcClient.IsConnected)
-				throw new Exception();
+			AdsClient tcClient = TwinCatConnectionManager.Connect(int.Parse(Address));
 			uint varHandle = tcClient.CreateVariableHandle(ConnectionPath);
 			ResultValue<int> resultRead = await tcClient.ReadAnyAsync<int>(varHandle, cancel);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
@@ -41,10 +40,16 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
 		CancellationToken cancel = CancellationToken.None;
-		AdsClient tcClient = new();
-		tcClient.Connect(int.Parse(Address));
-		if (!tcClient.IsConnected)
+		AdsClient tcClient;
+		try
+		{
+			tcClient = TwinCatConnectionManager.Connect(int.Parse(Address));
+		}
+		catch (AdsException)
+		{
 			return new List<IOTTag>(); // The TwinCat will be marked as disconnected at next monitoring.
+		}
+
 		List<IOTTag> updatedTags = new();
 		foreach (IOTTag iotTag in IOTTags)
 		{

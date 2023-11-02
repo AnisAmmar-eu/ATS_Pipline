@@ -1,4 +1,5 @@
 using Core.Entities.IOT.IOTDevices.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,18 +22,19 @@ public class IOTService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		using PeriodicTimer timer = new(_period);
+		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		IIOTDeviceService iotDeviceService =
+			asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
+		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+		string[] rids = configuration.GetSection("Devices").Get<string[]>();
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try
 			{
-				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-				IIOTDeviceService iotDeviceService =
-					asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
-
 				_logger.LogInformation("IOTService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling CheckAllConnectionsAndApplyTags");
 
-				await iotDeviceService.CheckAllConnectionsAndApplyTags();
+				await iotDeviceService.CheckAllConnectionsAndApplyTags(rids);
 
 				_executionCount++;
 				_logger.LogInformation("Executed PeriodicIOTService - Count: {count}", _executionCount);

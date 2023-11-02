@@ -11,5 +11,5 @@ public interface IIOTDeviceService : IServiceBaseEntity<IOTDevice, DTOIOTDevice>
 	public Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids);
 	public Task<List<DTOIOTDevice>> GetAllWithIncludes();
 	public Task<DTOIOTDevice> GetByRIDWithIncludes(string rid);
-	public Task CheckAllConnectionsAndApplyTags();
+	public Task CheckAllConnectionsAndApplyTags(string[] rids);
 }

@@ -43,15 +43,14 @@ public class IOTInitializer
 		InitializeTwinCat(anodeCTX, DeviceRID.TwinCat, ADSUtils.AdsPort.ToString(), "");
 	}
 
-	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int suffix)
+	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
 	{
 		OTCamera cam = new()
 		{
 			RID = rid,
 			Name = prefix + " Camera",
 			Description = prefix + " Camera IOTDevice",
-			Address = "https://localhost:7277",
-			ConnectionPath = "/apiCamera/device" + suffix,
+			Address = (port - 1).ToString(),
 			Temperature = 19.84,
 			IsConnected = false
 		};
@@ -59,9 +58,9 @@ public class IOTInitializer
 		anodeCTX.SaveChanges();
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.TriggerMode + suffix,
+			RID = IOTTagRID.TriggerMode + port,
 			Name = "Trigger mode",
-			Description = "Trigger mode for Camera" + suffix,
+			Description = "Trigger mode for Camera" + port,
 			CurrentValue = "On",
 			NewValue = "On",
 			HasNewValue = true,
@@ -71,9 +70,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.TriggerSource + suffix,
+			RID = IOTTagRID.TriggerSource + port,
 			Name = "Trigger source",
-			Description = "Trigger source for Camera" + suffix,
+			Description = "Trigger source for Camera" + port,
 			CurrentValue = TriggerSources.Line3,
 			NewValue = TriggerSources.Line3,
 			HasNewValue = true,
@@ -83,9 +82,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.TriggerActivation + suffix,
+			RID = IOTTagRID.TriggerActivation + port,
 			Name = "Trigger activation",
-			Description = "Trigger activation for Camera" + suffix,
+			Description = "Trigger activation for Camera" + port,
 			CurrentValue = TriggerActivations.AnyEdge,
 			NewValue = TriggerActivations.AnyEdge,
 			HasNewValue = true,
@@ -95,9 +94,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.ExposureTime + suffix,
+			RID = IOTTagRID.ExposureTime + port,
 			Name = "Exposure time",
-			Description = "Exposure time for Camera" + suffix,
+			Description = "Exposure time for Camera" + port,
 			CurrentValue = "30000.0",
 			NewValue = "30000.0",
 			HasNewValue = true,
@@ -107,9 +106,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.PixelFormat + suffix,
+			RID = IOTTagRID.PixelFormat + port,
 			Name = "Pixel format",
-			Description = "Pixel format for Camera" + suffix,
+			Description = "Pixel format for Camera" + port,
 			CurrentValue = PixelFormats.BayerRG8,
 			NewValue = PixelFormats.BayerRG8,
 			HasNewValue = true,
@@ -119,9 +118,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.Width + suffix,
+			RID = IOTTagRID.Width + port,
 			Name = "Width",
-			Description = "Width for Camera" + suffix,
+			Description = "Width for Camera" + port,
 			CurrentValue = "2464",
 			NewValue = "2464",
 			HasNewValue = true,
@@ -131,9 +130,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.Height + suffix,
+			RID = IOTTagRID.Height + port,
 			Name = "Height",
-			Description = "Height for Camera" + suffix,
+			Description = "Height for Camera" + port,
 			CurrentValue = "2056",
 			NewValue = "2056",
 			HasNewValue = true,
@@ -143,9 +142,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.AcquisitionFrameRateEnable + suffix,
+			RID = IOTTagRID.AcquisitionFrameRateEnable + port,
 			Name = "Acquisition frame rate enable",
-			Description = "Acquisition frame rate enable for Camera" + suffix,
+			Description = "Acquisition frame rate enable for Camera" + port,
 			CurrentValue = "Off",
 			NewValue = "Off",
 			HasNewValue = true,
@@ -155,9 +154,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.Gain + suffix,
+			RID = IOTTagRID.Gain + port,
 			Name = "Gain",
-			Description = "Gain for Camera" + suffix,
+			Description = "Gain for Camera" + port,
 			CurrentValue = "10",
 			NewValue = "10",
 			HasNewValue = true,
@@ -167,9 +166,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.BlackLevel + suffix,
+			RID = IOTTagRID.BlackLevel + port,
 			Name = "Black level",
-			Description = "Black level for Camera" + suffix,
+			Description = "Black level for Camera" + port,
 			CurrentValue = "50",
 			NewValue = "50",
 			HasNewValue = true,
@@ -179,9 +178,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.Gamma + suffix,
+			RID = IOTTagRID.Gamma + port,
 			Name = "Gamma",
-			Description = "Gamma for Camera" + suffix,
+			Description = "Gamma for Camera" + port,
 			CurrentValue = "1",
 			NewValue = "1",
 			HasNewValue = true,
@@ -191,9 +190,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.BalanceRatio + suffix,
+			RID = IOTTagRID.BalanceRatio + port,
 			Name = "Balance ratio",
-			Description = "Balance ratio for Camera" + suffix,
+			Description = "Balance ratio for Camera" + port,
 			CurrentValue = "2.35498",
 			NewValue = "2.35498",
 			HasNewValue = true,
@@ -203,9 +202,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.ConvolutionMode + suffix,
+			RID = IOTTagRID.ConvolutionMode + port,
 			Name = "Convolution mode",
-			Description = "Convolution mode for Camera" + suffix,
+			Description = "Convolution mode for Camera" + port,
 			CurrentValue = "Off",
 			NewValue = "Off",
 			HasNewValue = true,
@@ -215,9 +214,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.AdaptiveNoiseSuppressionFactor + suffix,
+			RID = IOTTagRID.AdaptiveNoiseSuppressionFactor + port,
 			Name = "Adaptive noise suppression factor",
-			Description = "Adaptive noise suppression factor for Camera" + suffix,
+			Description = "Adaptive noise suppression factor for Camera" + port,
 			CurrentValue = "1",
 			NewValue = "1",
 			HasNewValue = true,
@@ -227,9 +226,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.Sharpness + suffix,
+			RID = IOTTagRID.Sharpness + port,
 			Name = "Sharpness",
-			Description = "Sharpness for Camera" + suffix,
+			Description = "Sharpness for Camera" + port,
 			CurrentValue = "0",
 			NewValue = "0",
 			HasNewValue = true,
@@ -239,9 +238,9 @@ public class IOTInitializer
 		});
 		anodeCTX.IOTTag.Add(new IOTTag
 		{
-			RID = IOTTagRID.AcquisitionFrameRate + suffix,
+			RID = IOTTagRID.AcquisitionFrameRate + port,
 			Name = "Acquisition frame rate",
-			Description = "Acquisition frame rate for Camera" + suffix,
+			Description = "Acquisition frame rate for Camera" + port,
 			CurrentValue = "23.9798",
 			NewValue = "23.9798",
 			HasNewValue = true,

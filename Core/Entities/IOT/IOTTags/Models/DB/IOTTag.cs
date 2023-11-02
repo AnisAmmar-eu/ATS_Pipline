@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
@@ -18,6 +19,9 @@ public partial class IOTTag : BaseEntity, IBaseEntity<IOTTag, DTOIOTTag>
 	public int IOTDeviceID { get; set; }
 
 	public IOTDevice? IOTDevice { get; set; }
+	
+	[Timestamp]
+	public byte[] Version { get; set; }
 
 	/*
 	#region Nav Properties

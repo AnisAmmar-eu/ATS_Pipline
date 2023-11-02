@@ -50,15 +50,10 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		}, withTracking: false, includes: new[] { "IOTTags" })).ToDTO();
 	}
 
-	public async Task CheckAllConnectionsAndApplyTags()
+	public async Task CheckAllConnectionsAndApplyTags(string[] rids)
 	{
-		List<IOTDevice> devices = await CheckAllConnections();
+		List<IOTDevice> devices = await CheckAllConnections(rids);
 		bool hasAnyTagChanged = false;
-		for (int i = 0; i < devices.Count; i++)
-		{
-			AnodeUOW.IOTDevice.StopTracking(devices[i]);
-			devices[i] = await AnodeUOW.IOTDevice.GetById(devices[i].ID, withTracking: false, includes: "IOTTags");
-		}
 
 		await _hubContext.Clients.All.RefreshDevices();
 
@@ -68,16 +63,18 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Any();
 			return updatedTags;
 		});
-		if (!hasAnyTagChanged)
-			return;
-		await AnodeUOW.StartTransaction();
 		List<IOTTag>[] updatedTags = await Task.WhenAll(tasks);
-		foreach (List<IOTTag> updatedTagList in updatedTags)
-			AnodeUOW.IOTTag.UpdateArray(updatedTagList.ToArray());
+		if (hasAnyTagChanged)
+		{
+			await AnodeUOW.StartTransaction();
+			foreach (List<IOTTag> updatedTagList in updatedTags)
+				AnodeUOW.IOTTag.UpdateArray(updatedTagList.ToArray());
 
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
-		await _hubContext.Clients.All.RefreshIOTTag();
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
+			await _hubContext.Clients.All.RefreshIOTTag();
+		}
+		devices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
 	}
 
 	/// <summary>
@@ -86,19 +83,25 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	/// <returns>
 	///     IOTDevice with IsConnected set as True.
 	/// </returns>
-	private async Task<List<IOTDevice>> CheckAllConnections()
+	private async Task<List<IOTDevice>> CheckAllConnections(string[] rids)
 	{
-		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(withTracking: false);
+		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(filters: new Expression<Func<IOTDevice, bool>>[]
+		{
+			device => rids.Contains(device.RID)
+		}, withTracking: true, includes: "IOTTags");
 		List<IOTDevice> connectedDevices = new();
+		List<IOTDevice> disconnectedDevices = new();
 		IEnumerable<Task<IOTDevice>> task = devices.Select(async device =>
 		{
 			device.IsConnected = await device.CheckConnection();
 			if (device.IsConnected)
 				connectedDevices.Add(device);
+			else disconnectedDevices.Add(device);
 			return device;
 		});
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
+		disconnectedDevices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
 		if (!updatedDevices.Any()) return connectedDevices;
 
 		await AnodeUOW.StartTransaction();

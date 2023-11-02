@@ -79,28 +79,6 @@ public static class CameraUtils
 			}
 	}
 
-	public static void SetParameters(Device device, Dictionary<string, string> parameters)
-	{
-		NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
-		foreach ((string? path, string? newValue) in parameters)
-			if (nodeMap[path].IsWritable)
-				switch (nodeMap[path])
-				{
-					case IntegerNode { IsWritable: true } integerNode:
-						integerNode.Value = int.Parse(newValue);
-						break;
-					case FloatNode { IsWritable: true } floatNode:
-						floatNode.Value = double.Parse(newValue, CultureInfo.InvariantCulture);
-						break;
-					case EnumerationNode { IsWritable: true } enumerationNode:
-						enumerationNode.Value = newValue;
-						break;
-					default:
-						throw new InvalidOperationException("Camera tag with path " + path +
-						                                    " has a path towards unsupported data type.");
-				}
-	}
-
 	#region Generics functions
 
 	private static void Disconnect(object? sender, NotifyEventArgs e)

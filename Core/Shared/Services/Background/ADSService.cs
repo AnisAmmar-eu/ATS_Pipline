@@ -1,5 +1,6 @@
 using System.Dynamic;
 using Core.Shared.Dictionaries;
+using Core.Shared.Models.TwinCat;
 using Core.Shared.Services.Notifications;
 using Core.Shared.Services.Notifications.PacketNotifications;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,12 +29,11 @@ public class ADSService : BackgroundService
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		CancellationToken cancel = CancellationToken.None;
-		AdsClient tcClient = new();
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try
 			{
-				await InitializeConnection(tcClient, asyncScope, cancel);
+				AdsClient tcClient = await InitializeConnection(asyncScope, cancel);
 				// If the TC disconnects, it will loop back to the top
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
 				if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.None)
@@ -50,19 +50,13 @@ public class ADSService : BackgroundService
 			}
 	}
 
-	private async Task InitializeConnection(AdsClient tcClient, AsyncServiceScope asyncScope, CancellationToken cancel)
+	private async Task<AdsClient> InitializeConnection(AsyncServiceScope asyncScope, CancellationToken cancel)
 	{
 		try
 		{
 			_logger.LogInformation("ADSService running at: {time}", DateTimeOffset.Now);
-			while (true)
-			{
-				tcClient.Connect(851);
-				if (tcClient.IsConnected) break;
-				Console.WriteLine("Unable to connect to the automaton. Retrying in 1 second");
-				throw new AdsException("Cannot connect to the automaton");
-			}
 
+			AdsClient tcClient = TwinCatConnectionManager.Connect(851);
 			dynamic ads = new ExpandoObject();
 			ads.tcClient = tcClient;
 			ads.appServices = asyncScope.ServiceProvider;
@@ -78,12 +72,14 @@ public class ADSService : BackgroundService
 			}
 
 			_logger.LogInformation("ADSService successfully created Notifications");
+			return tcClient;
 		}
 		catch (Exception ex)
 		{
 			_logger.LogInformation(
 				"Failed to execute PeriodicADSService with exception message {message}. Good luck next round!",
 				ex.Message);
+			throw;
 		}
 	}
 }

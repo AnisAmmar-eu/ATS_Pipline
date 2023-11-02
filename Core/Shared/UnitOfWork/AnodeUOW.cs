@@ -5,6 +5,7 @@ using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
 using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
@@ -18,6 +19,8 @@ using Core.Entities.User.Repositories.Roles;
 using Core.Shared.Data;
 using Core.Shared.Repositories.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Core.Shared.UnitOfWork;
@@ -112,21 +115,48 @@ public class AnodeUOW : IAnodeUOW
 		};
 	}
 
-	public int Commit()
+	public int Commit(bool isNewValue = false)
 	{
-		try
+		// There is a while true bc in case of concurrency exception, we have to retry SaveChangesAsync().
+		while (true)
 		{
-			return _anodeCTX.SaveChangesAsync().Result;
-		}
-		catch (Exception e)
-		{
-			if (_transaction != null)
+			try
 			{
-				_transaction.Rollback();
-				_transaction = null;
+				// return _anodeCTX.SaveChangesAsync().Result;
+				return _anodeCTX.SaveChanges();
 			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				foreach (EntityEntry entry in e.Entries)
+				{
+					if (entry.Entity is IOTTag)
+					{
+						PropertyValues proposedValues = entry.CurrentValues;
+						PropertyValues databaseValues = entry.GetDatabaseValues()!;
 
-			throw new Exception("An error happened during SaveChanges", e);
+						if (isNewValue)
+							proposedValues["CurrentValue"] = databaseValues["CurrentValue"];
+						else
+						{
+							proposedValues["NewValue"] = databaseValues["NewValue"];
+							proposedValues["HasNewValue"] = databaseValues["HasNewValue"];
+						}
+
+						entry.OriginalValues.SetValues(databaseValues!);
+					}
+					else throw;
+				}
+			}
+			catch (Exception e)
+			{
+				if (_transaction != null)
+				{
+					_transaction.Rollback();
+					_transaction = null;
+				}
+
+				throw new Exception("An error happened during SaveChanges", e);
+			}
 		}
 	}
 
