@@ -7,6 +7,7 @@ using Core.Shared.Services.Background;
 using Core.Shared.Services.Background.BI.BITemperature;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
+using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -62,5 +63,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<IOTHub>("/iotHub");
 
 app.Run();
