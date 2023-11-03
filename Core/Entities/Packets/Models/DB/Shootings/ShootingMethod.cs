@@ -1,5 +1,7 @@
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
@@ -48,13 +50,24 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		return new DTOShooting(this);
 	}
 
-	public string GetImagePathFromRoot(string root, string anodeType, int camera)
+	public FileInfo GetImagePathFromRoot(string root, string anodeType, int camera)
 	{
 		string filename =
 			$"S{Station.ID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(ShootingUtils.FilenameFormat)}.jpg";
 		string path =
 			$@"S{Station.ID:00}\T{anodeType}\Y{ShootingTS.Year}\M{ShootingTS.Month:00}\D{ShootingTS.Day:00}\C{camera:00}\";
-		return $@"{root}\{path}\{filename}";
+		return new FileInfo($@"{root}\{path}\{filename}");
+	}
+
+	public static FileInfo GetImagePathFromFilename(string root, string filename)
+	{
+		Regex regex = new("S(?<stationID>[0-9]{2})T(?<anodeType>.*)C(?<camera>[0-9]{2})T(?<TS>.*).jpg");
+		GroupCollection groups = regex.Match(filename).Groups;
+		DateTimeOffset date = DateTimeOffset.ParseExact(groups["TS"].Value, ShootingUtils.FilenameFormat,
+			CultureInfo.InvariantCulture.DateTimeFormat);
+		string path =
+			$@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year}\M{date.Month:00}\D{date.Day:00}\C{groups["camera"]}\";
+		return new FileInfo($@"{root}\{path}\{filename}");
 	}
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)

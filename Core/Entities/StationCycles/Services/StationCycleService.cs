@@ -1,7 +1,9 @@
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Text;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Detections;
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DB;
@@ -14,8 +16,10 @@ using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Stemmer.Cvb;
 using TwinCAT;
 using TwinCAT.Ads;
 
@@ -60,9 +64,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (stationCycle.ShootingPacket == null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		string filePath =
-			stationCycle.ShootingPacket.GetImagePathFromRoot(thumbnailsPath, stationCycle.AnodeType, camera);
-		return new FileInfo(filePath);
+		return stationCycle.ShootingPacket.GetImagePathFromRoot(thumbnailsPath, stationCycle.AnodeType, camera);
 	}
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)
@@ -101,6 +103,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (response.IsSuccessStatusCode)
 		{
 			if (!stationCycles.Any()) return;
+			Task imagesTask = SendStationImages(stationCycles);
 			await AnodeUOW.StartTransaction();
 			stationCycles.ForEach(cycle =>
 			{
@@ -122,7 +125,41 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			});
 			AnodeUOW.Commit();
 			await AnodeUOW.CommitTransaction();
+			await imagesTask;
 		}
+	}
+
+	public async Task SendStationImages(List<StationCycle> stationCycles)
+	{
+		string imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
+		MultipartFormDataContent formData = new();
+		formData.Headers.ContentType!.MediaType = "multipart/form-data";
+		foreach (StationCycle cycle in stationCycles)
+		{
+			FileInfo image1 = cycle.ShootingPacket?.GetImagePathFromRoot(imagesPath, cycle.AnodeType, 1)!;
+			if (image1.Exists)
+			{
+				StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
+				content1.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+				formData.Add(content1, image1.Name, image1.Name);
+			}
+
+			FileInfo image2 = cycle.ShootingPacket?.GetImagePathFromRoot(imagesPath, cycle.AnodeType, 2)!;
+			if (!image2.Exists) continue;
+			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
+			content2.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+			formData.Add(content2, image2.Name, image2.Name);
+		}
+
+		if (!formData.Any())
+			return;
+
+		using HttpClient httpClient = new();
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+
+		HttpResponseMessage response = await httpClient.PostAsync("https://localhost:7280/apiServerReceive/images", formData);
+		if (!response.IsSuccessStatusCode)
+			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}
 
 	public async Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles)
@@ -153,5 +190,23 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
+	}
+
+	public async Task ReceiveStationImage(IFormFileCollection formFiles)
+	{
+		string imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
+		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
+		{
+			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
+			FileInfo thumbnail = Shooting.GetImagePathFromFilename(thumbnailsPath, formFile.Name);
+			Directory.CreateDirectory(image.DirectoryName!);
+			Directory.CreateDirectory(thumbnail.DirectoryName!);
+			await using FileStream imageStream = new(image.FullName, FileMode.Create);
+			await formFile.CopyToAsync(imageStream);
+			Image savedImage = Image.FromFile(image.FullName);
+			savedImage.Save(thumbnail.FullName, 0.2);
+		});
+		await Task.WhenAll(tasks);
 	}
 }

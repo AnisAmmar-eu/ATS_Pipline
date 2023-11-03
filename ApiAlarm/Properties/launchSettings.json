@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "ApiAlarms": {
+    "ApiAlarm": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

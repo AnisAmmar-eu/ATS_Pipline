@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
+using System.Text;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
@@ -13,6 +15,7 @@ using Core.Entities.StationCycles.Services;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Ocsp;
 
 namespace ApiServerReceive.Controllers.Transfer;
 
@@ -121,6 +124,23 @@ public class ReceiveController : ControllerBase
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
 
+		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+	}
+
+	[HttpPost("images")]
+	public async Task<IActionResult> ReceiveImage()
+	{
+		try
+		{
+			FormFileCollection images = new();
+			images.AddRange(Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
+			await _stationCycleService.ReceiveStationImage(images);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+		}
+		
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 }
