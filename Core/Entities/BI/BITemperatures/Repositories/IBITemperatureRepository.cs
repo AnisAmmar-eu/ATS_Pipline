@@ -6,5 +6,4 @@ namespace Core.Entities.BI.BITemperatures.Repositories;
 
 public interface IBITemperatureRepository : IRepositoryBaseEntity<BITemperature, DTOBITemperature>
 {
-	
 }

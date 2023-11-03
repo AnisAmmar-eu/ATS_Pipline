@@ -38,11 +38,11 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
         if (@NbNonAck > 0)
             begin
                 UPDATE a
-                SET a.NbNonAck = @NbNonAck,
-                    a.IsActive = i.IsActive,
-                    a.TS       = GETDATE(),
-                    a.StationID  = i.StationID,
-                    a.TSClear  = GETDATE()
+                SET a.NbNonAck  = @NbNonAck,
+                    a.IsActive  = i.IsActive,
+                    a.TS        = GETDATE(),
+                    a.StationID = i.StationID,
+                    a.TSClear   = GETDATE()
                 FROM AlarmRT a
                          INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
             end;

@@ -5,7 +5,7 @@ namespace Core.Shared.Models.TwinCat;
 
 public static class TwinCatConnectionManager
 {
-	private static AdsClient _tcClient = new();
+	private static readonly AdsClient _tcClient = new();
 
 	public static AdsClient Connect(int port)
 	{

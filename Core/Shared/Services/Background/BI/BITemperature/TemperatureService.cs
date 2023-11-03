@@ -39,7 +39,7 @@ public class TemperatureService : BackgroundService
 
 				_logger.LogInformation("TemperatureService registering all temperatures.");
 				await biTemperatureService.LogNewValues();
-				
+
 				_logger.LogInformation("TemperatureService purging temperatures.");
 				await biTemperatureService.PurgeByTimestamp(TimeSpan.FromHours(2));
 

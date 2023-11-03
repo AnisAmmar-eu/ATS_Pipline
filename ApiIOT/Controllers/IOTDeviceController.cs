@@ -36,7 +36,7 @@ public class IOTDeviceController : ControllerBase
 
 		return await new ApiResponseObject(status).SuccessResult(_logsService, ControllerContext);
 	}
-	
+
 	[HttpPut("rids")]
 	public async Task<IActionResult> GetTagValueByArrayRID([FromBody] [Required] IEnumerable<string> rids)
 	{

@@ -119,7 +119,6 @@ public class AnodeUOW : IAnodeUOW
 	{
 		// There is a while true bc in case of concurrency exception, we have to retry SaveChangesAsync().
 		while (true)
-		{
 			try
 			{
 				// return _anodeCTX.SaveChangesAsync().Result;
@@ -128,24 +127,27 @@ public class AnodeUOW : IAnodeUOW
 			catch (DbUpdateConcurrencyException e)
 			{
 				foreach (EntityEntry entry in e.Entries)
-				{
 					if (entry.Entity is IOTTag)
 					{
 						PropertyValues proposedValues = entry.CurrentValues;
 						PropertyValues databaseValues = entry.GetDatabaseValues()!;
 
 						if (isNewValue)
+						{
 							proposedValues["CurrentValue"] = databaseValues["CurrentValue"];
+						}
 						else
 						{
 							proposedValues["NewValue"] = databaseValues["NewValue"];
 							proposedValues["HasNewValue"] = databaseValues["HasNewValue"];
 						}
 
-						entry.OriginalValues.SetValues(databaseValues!);
+						entry.OriginalValues.SetValues(databaseValues);
 					}
-					else throw;
-				}
+					else
+					{
+						throw;
+					}
 			}
 			catch (Exception e)
 			{
@@ -157,7 +159,6 @@ public class AnodeUOW : IAnodeUOW
 
 				throw new Exception("An error happened during SaveChanges", e);
 			}
-		}
 	}
 
 	/// <summary>

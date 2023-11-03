@@ -24,7 +24,7 @@ public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, 
 
 	public async Task LogNewValues()
 	{
-		List<OTCamera> cameras = (await AnodeUOW.IOTDevice.GetAll(filters: new Expression<Func<IOTDevice, bool>>[]
+		List<OTCamera> cameras = (await AnodeUOW.IOTDevice.GetAll(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => device is OTCamera
 		}, withTracking: false)).ConvertAll(device => device as OTCamera)!;
@@ -42,7 +42,7 @@ public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, 
 	{
 		DateTimeOffset threshold = DateTimeOffset.Now.Subtract(lifespan);
 		List<BITemperature> toPurge = await AnodeUOW.BITemperature.GetAll(
-			filters: new Expression<Func<BITemperature, bool>>[]
+			new Expression<Func<BITemperature, bool>>[]
 			{
 				kpiTemperature => kpiTemperature.TS < threshold
 			}, withTracking: false);

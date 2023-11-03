@@ -8,30 +8,20 @@ using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DTO;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
-using Core.Shared.SignalR;
 using Core.Shared.SignalR.AlarmHub;
 using Core.Shared.UnitOfWork.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Core.Entities.Alarms.AlarmsLog.Services;
 
 public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, DTOAlarmLog>, IAlarmLogService
 {
-	private readonly IConfiguration _configuration;
-	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IHubContext<AlarmHub, IAlarmHub> _hubContext;
-	private readonly ISignalRService _signalRService;
 
 
-	public AlarmLogService(IAnodeUOW anodeUOW, IConfiguration configuration, ISignalRService signalRService,
-		IHttpContextAccessor httpContextAccessor, IHubContext<AlarmHub, IAlarmHub> hubContext) : base(anodeUOW)
+	public AlarmLogService(IAnodeUOW anodeUOW, IHubContext<AlarmHub, IAlarmHub> hubContext) : base(anodeUOW)
 	{
-		_configuration = configuration;
-		_signalRService = signalRService;
-		_httpContextAccessor = httpContextAccessor;
 		_hubContext = hubContext;
 		//_myHub = myHub;
 	}
@@ -67,10 +57,12 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 				if (!allAlarmsPLC[index].IsActive) continue; // alarmLog is already inactive or cleared.
 
 				// If an alarmLog doesn't exist, this alarm just raised.
-				AlarmLog newAlarmLog = new(await AnodeUOW.AlarmC.GetById(allAlarmsPLC[index].AlarmID));
-				newAlarmLog.AlarmID = allAlarmsPLC[index].AlarmID;
-				newAlarmLog.TS = DateTime.Now;
-				newAlarmLog.HasBeenSent = false;
+				AlarmLog newAlarmLog = new(await AnodeUOW.AlarmC.GetById(allAlarmsPLC[index].AlarmID))
+				{
+					AlarmID = allAlarmsPLC[index].AlarmID,
+					TS = DateTime.Now,
+					HasBeenSent = false
+				};
 				if (allAlarmsPLC[index].IsOneShot)
 				{
 					newAlarmLog.IsActive = false;
@@ -145,22 +137,20 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 		string jsonData = JsonConvert.SerializeObject(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOS()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 
-		using (HttpClient httpClient = new())
+		using HttpClient httpClient = new();
+		HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
+
+		if (!response.IsSuccessStatusCode || !alarmLogs.Any()) return response;
+
+		await AnodeUOW.StartTransaction();
+		alarmLogs.ForEach(alarmLog =>
 		{
-			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
+			alarmLog.HasBeenSent = true;
+			AnodeUOW.AlarmLog.Update(alarmLog);
+		});
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 
-			if (!response.IsSuccessStatusCode || !alarmLogs.Any()) return response;
-
-			await AnodeUOW.StartTransaction();
-			alarmLogs.ForEach(alarmLog =>
-			{
-				alarmLog.HasBeenSent = true;
-				AnodeUOW.AlarmLog.Update(alarmLog);
-			});
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
-
-			return response;
-		}
+		return response;
 	}
 }

@@ -1,12 +1,10 @@
 using System.Diagnostics;
-using System.Globalization;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
-using Stemmer.Cvb.GenApi;
 using TwinCAT.Ads;
 using Stream = Stemmer.Cvb.Driver.Stream;
 

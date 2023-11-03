@@ -153,6 +153,7 @@ public class ApiResponseObject
 		}
 		catch
 		{
+			// ignored
 		}
 	}
 }

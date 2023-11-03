@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Entities\BI\" />
+        <Folder Include="Entities\BI\"/>
         <Folder Include="Migrations\"/>
         <Folder Include="Shared\Models\DB\System\"/>
         <Folder Include="Shared\Models\DTO\System\"/>
         <Folder Include="Shared\Repositories\System\"/>
-        <Folder Include="Shared\Services\Background\BI\" />
+        <Folder Include="Shared\Services\Background\BI\"/>
         <Folder Include="Shared\Services\System\"/>
     </ItemGroup>
 

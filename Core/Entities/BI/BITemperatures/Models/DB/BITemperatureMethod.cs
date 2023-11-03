@@ -8,9 +8,8 @@ namespace Core.Entities.BI.BITemperatures.Models.DB;
 
 public partial class BITemperature : BaseEntity, IBaseEntity<BITemperature, DTOBITemperature>
 {
-	public BITemperature() : base()
+	public BITemperature()
 	{
-		
 	}
 
 	public BITemperature(OTCamera camera)
@@ -20,6 +19,7 @@ public partial class BITemperature : BaseEntity, IBaseEntity<BITemperature, DTOB
 		StationID = Station.ID;
 		Temperature = camera.Temperature;
 	}
+
 	public override DTOBITemperature ToDTO()
 	{
 		return new DTOBITemperature(this);

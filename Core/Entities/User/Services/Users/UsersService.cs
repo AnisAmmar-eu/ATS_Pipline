@@ -6,7 +6,6 @@ using Core.Entities.User.Models.DB.Users;
 using Core.Entities.User.Models.DTO.Roles;
 using Core.Entities.User.Models.DTO.Users;
 using Core.Shared.Exceptions;
-using Core.Shared.Services.System.Mails;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,16 +15,14 @@ namespace Core.Entities.User.Services.Users;
 public class UsersService : IUsersService
 {
 	private readonly IConfiguration _configuration;
-	private readonly IMailsService _mailService;
 	private readonly RoleManager<ApplicationRole> _roleManager;
 	private readonly UserManager<ApplicationUser> _userManager;
 
 	public UsersService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,
-		IConfiguration configuration, IMailsService mailService)
+		IConfiguration configuration)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
-		_mailService = mailService;
 		_configuration = configuration;
 	}
 
@@ -196,11 +193,9 @@ public class UsersService : IUsersService
 		if (user == null)
 			throw new EntityNotFoundException("User [" + username + "] does not exist");
 
-		bool result = false;
-		if (toAdmin)
-			result = (await _userManager.AddToRoleAsync(user, RoleNames.FIVES)).Succeeded;
-		else
-			result = (await _userManager.RemoveFromRoleAsync(user, RoleNames.FIVES)).Succeeded;
+		bool result = toAdmin
+			? (await _userManager.AddToRoleAsync(user, RoleNames.FIVES)).Succeeded
+			: (await _userManager.RemoveFromRoleAsync(user, RoleNames.FIVES)).Succeeded;
 
 		return result;
 	}

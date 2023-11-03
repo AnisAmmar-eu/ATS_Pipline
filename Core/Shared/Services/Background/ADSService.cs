@@ -6,7 +6,6 @@ using Core.Shared.Services.Notifications.PacketNotifications;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TwinCAT;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;

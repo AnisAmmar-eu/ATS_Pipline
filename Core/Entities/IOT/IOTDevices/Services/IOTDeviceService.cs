@@ -30,7 +30,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 
 	public async Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids)
 	{
-		return (await AnodeUOW.IOTDevice.GetAll(filters: new Expression<Func<IOTDevice, bool>>[]
+		return (await AnodeUOW.IOTDevice.GetAll(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => rids.Contains(device.RID)
 		}, withTracking: false)).ConvertAll(device => new IOTDeviceStatus(device));
@@ -74,6 +74,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 			await AnodeUOW.CommitTransaction();
 			await _hubContext.Clients.All.RefreshIOTTag();
 		}
+
 		devices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
 	}
 
@@ -85,7 +86,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 	/// </returns>
 	private async Task<List<IOTDevice>> CheckAllConnections(string[] rids)
 	{
-		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(filters: new Expression<Func<IOTDevice, bool>>[]
+		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => rids.Contains(device.RID)
 		}, withTracking: true, includes: "IOTTags");

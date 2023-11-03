@@ -16,12 +16,13 @@ namespace ApiCamera.Controllers;
 [Route("apiCamera")]
 public class CameraApiController : ControllerBase
 {
-	private readonly IConfiguration _configuration;
-	private readonly ILogsService _logsService;
-	private readonly IIOTTagService _iotTagService;
 	private readonly IBITemperatureService _biTemperatureService;
+	private readonly IConfiguration _configuration;
+	private readonly IIOTTagService _iotTagService;
+	private readonly ILogsService _logsService;
 
-	public CameraApiController(ILogsService logsService, IConfiguration configuration, IIOTTagService iotTagService, IBITemperatureService biTemperatureService)
+	public CameraApiController(ILogsService logsService, IConfiguration configuration, IIOTTagService iotTagService,
+		IBITemperatureService biTemperatureService)
 	{
 		_logsService = logsService;
 		_configuration = configuration;
