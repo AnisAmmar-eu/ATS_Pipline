@@ -28,9 +28,10 @@ public class AlarmRTService : ServiceBaseEntity<IAlarmRTRepository, AlarmRT, DTO
 		List<AlarmRT> alarmRts = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
 		List<AlarmC> alarmCs = await AnodeUOW.AlarmC.GetAll(withTracking: false);
 		int nbActiveAlarms = alarmRts.Count(alarmRT => alarmRT.IsActive);
+		int nbNonAck = (int)alarmRts.Where(alarmRT => !alarmRT.IsActive).Sum(alarmRT => alarmRT.NbNonAck)!;
 		int[] stats = new int[3];
-		stats[0] = alarmCs.Count - nbActiveAlarms;
-		stats[1] = (int)alarmRts.Sum(alarmRT => alarmRT.NbNonAck)!;
+		stats[0] = alarmCs.Count - nbActiveAlarms - nbNonAck;
+		stats[1] = nbNonAck;
 		stats[2] = nbActiveAlarms;
 		return stats;
 	}

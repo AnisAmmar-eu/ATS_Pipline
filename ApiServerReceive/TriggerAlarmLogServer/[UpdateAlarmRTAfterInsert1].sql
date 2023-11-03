@@ -52,7 +52,7 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
                         SET a.NbNonAck = @NbNonAck,
                             a.IsActive = 1,
                             a.TS       = GETDATE(),
-                            a.Station  = i.Station,
+                            a.StationID  = i.StationID,
                             a.TSRaised = @MostRecentRaise,
                             a.TSClear  = NULL
                         FROM AlarmRT a
@@ -64,7 +64,7 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
                         SET a.NbNonAck = @NbNonAck,
                             a.IsActive = 0,
                             a.TS       = GETDATE(),
-                            a.Station  = i.Station,
+                            a.StationID  = i.StationID,
                             a.TSRaised = i.TSRaised,
                             a.TSClear  = i.TSClear
                         FROM AlarmRT a
@@ -74,15 +74,15 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterInsert1]
         else
             if (@IsAlarmActive >= 1)
                 begin
-                    INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised)
-                    SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, i.TSRaised
+                    INSERT INTO AlarmRT (AlarmID, IsActive, TS, StationID, NbNonAck, TSRaised)
+                    SELECT i.AlarmID, 1, GETDATE(), i.StationID, 1, i.TSRaised
                     FROM INSERTED i
                 end
             else
                 if (@NbNonAck = 1)
                     begin
-                        INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSRaised, TSClear)
-                        SELECT i.AlarmID, 0, GETDATE(), i.Station, 1, i.TSRaised, i.TSClear
+                        INSERT INTO AlarmRT (AlarmID, IsActive, TS, StationID, NbNonAck, TSRaised, TSClear)
+                        SELECT i.AlarmID, 0, GETDATE(), i.StationID, 1, i.TSRaised, i.TSClear
                         FROM INSERTED i
                     end
     END;

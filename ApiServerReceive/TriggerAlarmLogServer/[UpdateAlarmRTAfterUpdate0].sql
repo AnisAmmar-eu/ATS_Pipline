@@ -41,7 +41,7 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
                 SET a.NbNonAck = @NbNonAck,
                     a.IsActive = i.IsActive,
                     a.TS       = GETDATE(),
-                    a.Station  = i.Station,
+                    a.StationID  = i.StationID,
                     a.TSClear  = GETDATE()
                 FROM AlarmRT a
                          INNER JOIN INSERTED i ON a.AlarmID = i.AlarmID;
@@ -49,8 +49,8 @@ ALTER TRIGGER [dbo].[UpdateAlarmRTAfterUpdate0]
 
         if (@ExistRTLine = 0)
             begin
-                INSERT INTO AlarmRT (AlarmID, IsActive, TS, Station, NbNonAck, TSClear)
-                SELECT i.AlarmID, 1, GETDATE(), i.Station, 1, GETDATE()
+                INSERT INTO AlarmRT (AlarmID, IsActive, TS, StationID, NbNonAck, TSClear)
+                SELECT i.AlarmID, 1, GETDATE(), i.StationID, 1, GETDATE()
                 FROM INSERTED i
             end
 

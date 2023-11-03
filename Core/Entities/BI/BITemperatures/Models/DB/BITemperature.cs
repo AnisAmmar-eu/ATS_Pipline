@@ -7,6 +7,6 @@ namespace Core.Entities.BI.BITemperatures.Models.DB;
 public partial class BITemperature : BaseEntity, IBaseEntity<BITemperature, DTOBITemperature>
 {
 	public int StationID { get; set; }
-	public string CameraRID { get; set; }
+	public string CameraRID { get; set; } = string.Empty;
 	public double Temperature { get; set; }
 }
