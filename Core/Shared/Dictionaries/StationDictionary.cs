@@ -25,7 +25,7 @@ public static class Station
 		}
 		get => _name ?? throw new InvalidOperationException("Station name has not been defined.");
 	}
-	
+
 	public static bool IsServer { get; private set; }
 
 	private static string? _name { get; set; }

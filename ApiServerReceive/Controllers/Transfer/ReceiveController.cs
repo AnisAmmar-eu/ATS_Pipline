@@ -144,7 +144,7 @@ public class ReceiveController : ControllerBase
 
 		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
-	
+
 	[HttpPost("logs")]
 	public async Task<IActionResult> ReceiveLog([FromBody] [Required] List<DTOLog> logs)
 	{

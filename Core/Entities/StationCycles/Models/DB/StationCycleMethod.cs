@@ -64,4 +64,9 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 			ShootingTS = ShootingPacket?.ShootingTS
 		};
 	}
+
+	public int GetStationID()
+	{
+		return int.Parse(RID[..1]);
+	}
 }

@@ -6,5 +6,4 @@ namespace Core.Entities.Anodes.Services;
 
 public interface IAnodeService : IServiceBaseEntity<Anode, DTOAnode>
 {
-	
 }

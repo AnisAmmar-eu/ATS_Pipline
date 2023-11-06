@@ -50,12 +50,12 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 		return new DTOShooting(this);
 	}
 
-	public FileInfo GetImagePathFromRoot(string root, string anodeType, int camera)
+	public FileInfo GetImagePathFromRoot(int stationID, string root, string anodeType, int camera)
 	{
 		string filename =
-			$"S{Station.ID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(AnodeFormat.RIDFormat)}.jpg";
+			$"S{stationID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(AnodeFormat.RIDFormat)}.jpg";
 		string path =
-			$@"S{Station.ID:00}\T{anodeType}\Y{ShootingTS.Year}\M{ShootingTS.Month:00}\D{ShootingTS.Day:00}\C{camera:00}\";
+			$@"S{stationID:00}\T{anodeType}\Y{ShootingTS.Year}\M{ShootingTS.Month:00}\D{ShootingTS.Day:00}\C{camera:00}\";
 		return new FileInfo($@"{root}\{path}\{filename}");
 	}
 

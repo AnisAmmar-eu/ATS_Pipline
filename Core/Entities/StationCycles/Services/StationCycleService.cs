@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Detections;
@@ -12,7 +11,6 @@ using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO;
-using Core.Entities.StationCycles.Models.DTO.S1S2Cycles;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Repositories;
 using Core.Shared.Dictionaries;
@@ -67,8 +65,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (stationCycle.ShootingPacket == null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		// TODO StationID -> Method in SCy
-		return stationCycle.ShootingPacket.GetImagePathFromRoot(thumbnailsPath, stationCycle.AnodeType, camera);
+		return stationCycle.ShootingPacket.GetImagePathFromRoot(stationCycle.GetStationID(), thumbnailsPath,
+			stationCycle.AnodeType, camera);
 	}
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)
@@ -140,7 +138,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		formData.Headers.ContentType!.MediaType = "multipart/form-data";
 		foreach (StationCycle cycle in stationCycles)
 		{
-			FileInfo image1 = cycle.ShootingPacket?.GetImagePathFromRoot(imagesPath, cycle.AnodeType, 1)!;
+			FileInfo image1 =
+				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.GetStationID(), imagesPath, cycle.AnodeType, 1)!;
 			if (image1.Exists)
 			{
 				StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
@@ -148,7 +147,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 				formData.Add(content1, image1.Name, image1.Name);
 			}
 
-			FileInfo image2 = cycle.ShootingPacket?.GetImagePathFromRoot(imagesPath, cycle.AnodeType, 2)!;
+			FileInfo image2 =
+				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.GetStationID(), imagesPath, cycle.AnodeType, 2)!;
 			if (!image2.Exists) continue;
 			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
 			content2.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");

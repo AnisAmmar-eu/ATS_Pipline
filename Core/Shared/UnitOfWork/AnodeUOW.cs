@@ -71,7 +71,7 @@ public class AnodeUOW : IAnodeUOW
 	public IAlarmPLCRepository AlarmPLC { get; }
 	public IAlarmLogRepository AlarmLog { get; }
 	public IAlarmRTRepository AlarmRT { get; }
-	
+
 	public IAnodeRepository Anode { get; }
 
 	public IPacketRepository Packet { get; }
@@ -99,7 +99,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IAlarmPLCRepository) => AlarmPLC,
 			_ when repo == typeof(IAlarmLogRepository) => AlarmLog,
 			_ when repo == typeof(IAlarmRTRepository) => AlarmRT,
-			
+
 			_ when repo == typeof(IAnodeRepository) => Anode,
 
 			_ when repo == typeof(IPacketRepository) => Packet,
@@ -119,7 +119,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IActRepository) => Acts,
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
 			_ when repo == typeof(IRoleRepository) => Roles,
-			
+
 			_ when repo == typeof(ILogRepository) => Log,
 			_ => null
 		};

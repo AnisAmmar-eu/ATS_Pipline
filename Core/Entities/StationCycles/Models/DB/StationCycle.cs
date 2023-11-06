@@ -32,6 +32,6 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public string? AlarmListStatus { get; set; }
 	public int? AlarmListID { get; set; }
 	public AlarmList? AlarmListPacket { get; set; }
-	
+
 	public Anode? Anode { get; set; }
 }

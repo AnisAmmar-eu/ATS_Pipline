@@ -5,5 +5,4 @@ namespace Core.Entities.Anodes.Models.DB.AnodesD20;
 
 public partial class AnodeD20 : Anode, IBaseEntity<AnodeD20, DTOAnodeD20>
 {
-	
 }

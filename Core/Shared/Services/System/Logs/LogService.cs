@@ -28,7 +28,7 @@ public class LogService : ServiceBaseEntity<ILogRepository, Log, DTOLog>, ILogSe
 
 	public async Task<List<Log>> GetAllUnsent()
 	{
-		return await AnodeUOW.Log.GetAll(filters: new Expression<Func<Log, bool>>[]
+		return await AnodeUOW.Log.GetAll(new Expression<Func<Log, bool>>[]
 		{
 			log => !log.HasBeenSent
 		}, withTracking: false);

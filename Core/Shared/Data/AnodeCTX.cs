@@ -56,7 +56,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<AlarmLog> AlarmLog => Set<AlarmLog>();
 	public DbSet<AlarmRT> AlarmRT => Set<AlarmRT>();
 	public DbSet<AlarmCycle> AlarmCycle => Set<AlarmCycle>();
-	
+
 	// Anodes 
 	public DbSet<Anode> Anode => Set<Anode>();
 	public DbSet<AnodeD20> AnodeD20 => Set<AnodeD20>();
@@ -197,7 +197,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithOne(cycle => cycle.Anode)
 			.HasForeignKey<Anode>(anode => anode.S3S4CycleID)
 			.OnDelete(DeleteBehavior.NoAction);
-		
+
 		modelBuilder.Entity<AnodeDX>()
 			.HasOne(anode => anode.S5Cycle)
 			.WithOne(cycle => cycle.Anode)

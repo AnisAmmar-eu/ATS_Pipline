@@ -8,5 +8,4 @@ namespace Core.Entities.Anodes.Repositories;
 
 public interface IAnodeRepository : IRepositoryBaseEntity<Anode, DTOAnode>
 {
-	
 }
