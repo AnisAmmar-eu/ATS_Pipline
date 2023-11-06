@@ -14,17 +14,17 @@ namespace ApiUser.App.User.Controllers;
 [ApiController]
 public class RolesController : ControllerBase
 {
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 	private readonly IRolesService _rolesService;
 
 	/// <summary>
 	///     Roles Constructor
 	/// </summary>
-	/// <param name="logsService"></param>
+	/// <param name="logService"></param>
 	/// <param name="rolesService"></param>
-	public RolesController(ILogsService logsService, IRolesService rolesService)
+	public RolesController(ILogService logService, IRolesService rolesService)
 	{
-		_logsService = logsService;
+		_logService = logService;
 		_rolesService = rolesService;
 	}
 
@@ -43,10 +43,10 @@ public class RolesController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoRoles).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoRoles).SuccessResult(_logService, ControllerContext);
 	}
 
 	// GET apiUser/roles/{rid}
@@ -65,10 +65,10 @@ public class RolesController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoRole).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoRole).SuccessResult(_logService, ControllerContext);
 	}
 
 	// POST apiUser/roles
@@ -86,10 +86,10 @@ public class RolesController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoRole).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoRole).SuccessResult(_logService, ControllerContext);
 	}
 
 	// PUT apiUser/roles/{rid}
@@ -108,10 +108,10 @@ public class RolesController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoRole).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoRole).SuccessResult(_logService, ControllerContext);
 	}
 
 	// DELETE apiUser/roles/{rid}
@@ -129,10 +129,10 @@ public class RolesController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		return await new ApiResponseObject("The role with RID {" + rid + "} has been successfully deleted.")
-			.SuccessResult(_logsService, ControllerContext);
+			.SuccessResult(_logService, ControllerContext);
 	}
 }

@@ -13,13 +13,13 @@ namespace ApiStationCycle.Controllers;
 [Route("apiStationCycle")]
 public class StationCycleController : ControllerBase
 {
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 	private readonly IStationCycleService _stationCycleService;
 
-	public StationCycleController(IStationCycleService stationCycleService, ILogsService logsService)
+	public StationCycleController(IStationCycleService stationCycleService, ILogService logService)
 	{
 		_stationCycleService = stationCycleService;
-		_logsService = logsService;
+		_logService = logService;
 	}
 
 	[HttpGet("status")]
@@ -38,10 +38,10 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("mostRecent")]
@@ -56,10 +56,10 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("{id}")]
@@ -72,10 +72,10 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("{id}/images/{cameraNb}")]
@@ -89,7 +89,7 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");

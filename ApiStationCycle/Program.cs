@@ -73,15 +73,21 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
-builder.Services.AddSingleton<SendService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<SendService>());
+if (!Station.IsServer)
+{
+	builder.Services.AddSingleton<SendService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendService>());
+
+	builder.Services.AddSingleton<SendLogService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendLogService>());
+}
 
 WebApplication app = builder.Build();
 

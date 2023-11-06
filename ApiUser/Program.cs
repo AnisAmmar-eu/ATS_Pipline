@@ -88,7 +88,7 @@ builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
 // System services
-builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IMailsService, MailsService>();
 
 // UnitOfWork

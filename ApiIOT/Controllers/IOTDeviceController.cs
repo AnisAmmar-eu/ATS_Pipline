@@ -13,12 +13,12 @@ namespace ApiIOT.Controllers;
 public class IOTDeviceController : ControllerBase
 {
 	private readonly IIOTDeviceService _iotDeviceService;
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 
-	public IOTDeviceController(IIOTDeviceService iotDeviceService, ILogsService logsService)
+	public IOTDeviceController(IIOTDeviceService iotDeviceService, ILogService logService)
 	{
 		_iotDeviceService = iotDeviceService;
-		_logsService = logsService;
+		_logService = logService;
 	}
 
 	[HttpGet("status/{rid}")]
@@ -31,10 +31,10 @@ public class IOTDeviceController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(status).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(status).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPut("rids")]
@@ -47,10 +47,10 @@ public class IOTDeviceController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(tags).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(tags).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet]
@@ -63,10 +63,10 @@ public class IOTDeviceController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(devices).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(devices).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("{rid}")]
@@ -79,9 +79,9 @@ public class IOTDeviceController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(device).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(device).SuccessResult(_logService, ControllerContext);
 	}
 }

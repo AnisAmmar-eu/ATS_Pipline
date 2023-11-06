@@ -170,9 +170,9 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 	public async Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles)
 	{
 		// DbContext operations should NOT be done concurrently. Hence why await in loop.
+		await AnodeUOW.StartTransaction();
 		foreach (DTOStationCycle dto in dtoStationCycles)
 		{
-			await AnodeUOW.StartTransaction();
 			StationCycle cycle = dto.ToModel();
 			cycle.ID = 0;
 			if (cycle is S1S2Cycle s1S2Cycle)

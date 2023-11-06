@@ -11,12 +11,12 @@ namespace ApiAlarm.Controllers.Controllers;
 public class AlarmCController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 
-	public AlarmCController(IAlarmCService alarmCService, ILogsService logsService)
+	public AlarmCController(IAlarmCService alarmCService, ILogService logService)
 	{
 		_alarmCService = alarmCService;
-		_logsService = logsService;
+		_logService = logService;
 	}
 
 	/// <summary>
@@ -34,9 +34,9 @@ public class AlarmCController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntryPointNotFoundException)
-				return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+				return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoAlarmCs).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoAlarmCs).SuccessResult(_logService, ControllerContext);
 	}
 }

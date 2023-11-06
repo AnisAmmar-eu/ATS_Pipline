@@ -66,7 +66,7 @@ builder.Services.AddAuthentication(options =>
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();

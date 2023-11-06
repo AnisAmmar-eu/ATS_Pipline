@@ -19,12 +19,12 @@ public class CameraApiController : ControllerBase
 	private readonly IBITemperatureService _biTemperatureService;
 	private readonly IConfiguration _configuration;
 	private readonly IIOTTagService _iotTagService;
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 
-	public CameraApiController(ILogsService logsService, IConfiguration configuration, IIOTTagService iotTagService,
+	public CameraApiController(ILogService logService, IConfiguration configuration, IIOTTagService iotTagService,
 		IBITemperatureService biTemperatureService)
 	{
-		_logsService = logsService;
+		_logService = logService;
 		_configuration = configuration;
 		_iotTagService = iotTagService;
 		_biTemperatureService = biTemperatureService;
@@ -65,10 +65,10 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	#endregion
@@ -85,10 +85,10 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(temperatures).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(temperatures).SuccessResult(_logService, ControllerContext);
 	}
 
 	#endregion
@@ -108,7 +108,7 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
@@ -128,7 +128,7 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");

@@ -87,14 +87,14 @@ public class ApiResponseObject
 		};
 	}
 
-	public async Task<JsonResult> SuccessResult(ILogsService logsService, ControllerContext context)
+	public async Task<JsonResult> SuccessResult(ILogService logService, ControllerContext context)
 	{
-		await CreateLog(logsService, context);
+		await CreateLog(logService, context);
 
 		return new JsonResult(this);
 	}
 
-	public async Task<ObjectResult> ErrorResult(ILogsService logsService, ControllerContext context, Exception e)
+	public async Task<ObjectResult> ErrorResult(ILogService logService, ControllerContext context, Exception e)
 	{
 		switch (e)
 		{
@@ -128,7 +128,7 @@ public class ApiResponseObject
 				break;
 		}
 
-		await CreateLog(logsService, context);
+		await CreateLog(logService, context);
 
 		return new ObjectResult(Result)
 		{
@@ -136,11 +136,11 @@ public class ApiResponseObject
 		};
 	}
 
-	private async Task CreateLog(ILogsService logsService, ControllerContext context)
+	private async Task CreateLog(ILogService logService, ControllerContext context)
 	{
 		try
 		{
-			await logsService.Create(
+			await logService.Create(
 				DateTimeOffset.Now,
 				Dns.GetHostName(),
 				context.ActionDescriptor.ControllerTypeInfo.Assembly.ManifestModule.Name,

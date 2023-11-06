@@ -12,12 +12,12 @@ namespace ApiAlarm.Controllers.Controllers;
 public class AlarmLogController : ControllerBase
 {
 	private readonly IAlarmLogService _alarmLogService;
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 
-	public AlarmLogController(IAlarmLogService alarmLogService, ILogsService logsService)
+	public AlarmLogController(IAlarmLogService alarmLogService, ILogService logService)
 	{
 		_alarmLogService = alarmLogService;
-		_logsService = logsService;
+		_logService = logService;
 	}
 
 	/// <summary>
@@ -34,10 +34,10 @@ public class AlarmLogController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	/// <summary>
@@ -54,10 +54,10 @@ public class AlarmLogController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	/// <summary>
@@ -75,9 +75,9 @@ public class AlarmLogController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 }

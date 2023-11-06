@@ -19,6 +19,7 @@ using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
 using Core.Shared.Data;
 using Core.Shared.Repositories.System.Logs;
+using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -118,6 +119,8 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IActRepository) => Acts,
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
 			_ when repo == typeof(IRoleRepository) => Roles,
+			
+			_ when repo == typeof(ILogRepository) => Log,
 			_ => null
 		};
 	}

@@ -11,12 +11,12 @@ namespace ApiAlarm.Controllers.Controllers;
 public class AlarmRTController : ControllerBase
 {
 	private readonly IAlarmRTService _alarmRTService;
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 
-	public AlarmRTController(IAlarmRTService alarmRTService, ILogsService logsService)
+	public AlarmRTController(IAlarmRTService alarmRTService, ILogService logService)
 	{
 		_alarmRTService = alarmRTService;
-		_logsService = logsService;
+		_logService = logService;
 	}
 
 	/// <summary>
@@ -33,10 +33,10 @@ public class AlarmRTController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoAlarmRTs).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoAlarmRTs).SuccessResult(_logService, ControllerContext);
 	}
 
 	/// <summary>
@@ -57,9 +57,9 @@ public class AlarmRTController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(res).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(res).SuccessResult(_logService, ControllerContext);
 	}
 }

@@ -13,4 +13,6 @@ public partial class Log : BaseEntity, IBaseEntity<Log, DTOLog>
 	public string? Endpoint { get; set; }
 	public int? Code { get; set; }
 	public string? Value { get; set; }
+	public bool HasBeenSent { get; set; }
+	public int StationID { get; set; }
 }

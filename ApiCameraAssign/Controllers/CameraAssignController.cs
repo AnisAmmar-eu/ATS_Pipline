@@ -14,12 +14,12 @@ namespace ApiCameraAssign.Controllers;
 [Route("apiCameraAssign")]
 public class CameraAssignController : ControllerBase
 {
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 	private readonly IPacketService _packetService;
 
-	public CameraAssignController(ILogsService logsService, IPacketService packetService)
+	public CameraAssignController(ILogService logService, IPacketService packetService)
 	{
-		_logsService = logsService;
+		_logService = logService;
 		_packetService = packetService;
 	}
 
@@ -42,10 +42,10 @@ public class CameraAssignController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(packets).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(packets).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost]
@@ -58,9 +58,9 @@ public class CameraAssignController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(packet).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(packet).SuccessResult(_logService, ControllerContext);
 	}
 }

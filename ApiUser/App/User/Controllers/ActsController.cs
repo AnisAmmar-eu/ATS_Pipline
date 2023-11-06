@@ -18,14 +18,14 @@ namespace ApiUser.App.User.Controllers;
 public class ActsController : ControllerBase
 {
 	private readonly IActsService _actsService;
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 
 	/// <summary>
 	///     Acts Constructor
 	/// </summary>
-	public ActsController(ILogsService logsService, IActsService actsService)
+	public ActsController(ILogService logService, IActsService actsService)
 	{
-		_logsService = logsService;
+		_logService = logService;
 		_actsService = actsService;
 	}
 
@@ -46,10 +46,10 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(200, new { actionToken }).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(200, new { actionToken }).SuccessResult(_logService, ControllerContext);
 	}
 
 	// POST apiUser/acts/entity
@@ -67,10 +67,10 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoActEntity).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoActEntity).SuccessResult(_logService, ControllerContext);
 	}
 
 	// POST apiUser/acts/list
@@ -89,10 +89,10 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoActEntitiesStatus).SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject(dtoActEntitiesStatus).SuccessResult(_logService, ControllerContext);
 	}
 
 	// PUT apiUser/acts/assign
@@ -114,9 +114,9 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 }

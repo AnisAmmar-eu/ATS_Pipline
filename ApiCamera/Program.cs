@@ -29,7 +29,7 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();

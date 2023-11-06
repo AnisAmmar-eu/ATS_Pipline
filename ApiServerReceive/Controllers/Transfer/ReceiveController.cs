@@ -12,6 +12,7 @@ using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Models.DTO.System.Logs;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
@@ -25,18 +26,18 @@ public class ReceiveController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;
 	private readonly IAlarmLogService _alarmLogService;
-	private readonly ILogsService _logsService;
+	private readonly ILogService _logService;
 	private readonly IPacketService _packetService;
 	private readonly IStationCycleService _stationCycleService;
 
 	public ReceiveController(IAlarmLogService alarmLogService, IAlarmCService alarmCService,
-		IPacketService packetService, IStationCycleService stationCycleService, ILogsService logsService)
+		IPacketService packetService, IStationCycleService stationCycleService, ILogService logService)
 	{
 		_alarmLogService = alarmLogService;
 		_alarmCService = alarmCService;
 		_packetService = packetService;
 		_stationCycleService = stationCycleService;
-		_logsService = logsService;
+		_logService = logService;
 	}
 
 	[HttpGet("status")]
@@ -65,10 +66,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost("packets")]
@@ -80,10 +81,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	/// <summary>
@@ -104,10 +105,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost("stationCycles")]
@@ -121,10 +122,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost("images")]
@@ -138,9 +139,24 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+	}
+	
+	[HttpPost("logs")]
+	public async Task<IActionResult> ReceiveLog([FromBody] [Required] List<DTOLog> logs)
+	{
+		try
+		{
+			await _logService.ReceiveLogs(logs);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 }

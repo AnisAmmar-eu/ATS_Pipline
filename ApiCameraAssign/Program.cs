@@ -23,7 +23,7 @@ Station.Name = stationName;
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();

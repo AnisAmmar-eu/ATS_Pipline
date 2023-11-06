@@ -13,4 +13,6 @@ public partial class DTOLog : DTOBaseEntity, IDTO<Log, DTOLog>
 	public string? Endpoint { get; set; }
 	public int? Code { get; set; }
 	public string? Value { get; set; }
+	public bool HasBeenSent { get; set; } = false;
+	public int StationID { get; set; }
 }

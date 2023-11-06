@@ -70,7 +70,7 @@ builder.Services.AddAuthentication(options =>
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
@@ -82,8 +82,11 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
-builder.Services.AddSingleton<CollectService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
+if (Station.IsServer)
+{
+	builder.Services.AddSingleton<CollectService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
+}
 
 WebApplication app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using Core.Shared.Models.DB.Kernel;
+﻿using Core.Shared.Dictionaries;
+using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.System.Logs;
 
@@ -8,10 +9,13 @@ public partial class Log : BaseEntity, IBaseEntity<Log, DTOLog>
 {
 	public Log()
 	{
+		HasBeenSent = Station.IsServer;
 	}
 
-	public Log(string server, string api, string controller, string function, string endpoint, int code, string value)
+	public Log(string server, string api, string controller, string function, string endpoint, int code, string value,
+		int stationID)
 	{
+		HasBeenSent = Station.IsServer;
 		Server = server;
 		Api = api;
 		Controller = controller;
@@ -19,6 +23,7 @@ public partial class Log : BaseEntity, IBaseEntity<Log, DTOLog>
 		Endpoint = endpoint;
 		Code = code;
 		Value = value;
+		StationID = stationID;
 	}
 
 	public Log(DTOLog dto)
@@ -30,6 +35,8 @@ public partial class Log : BaseEntity, IBaseEntity<Log, DTOLog>
 		Endpoint = dto.Endpoint;
 		Code = dto.Code;
 		Value = dto.Value;
+		HasBeenSent = dto.HasBeenSent;
+		StationID = dto.StationID;
 	}
 
 	public override DTOLog ToDTO()

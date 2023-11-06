@@ -4,6 +4,7 @@ using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
@@ -20,6 +21,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -27,7 +30,7 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();

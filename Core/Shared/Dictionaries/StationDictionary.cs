@@ -1,3 +1,4 @@
+using Core.Migrations;
 using Org.BouncyCastle.Security;
 
 namespace Core.Shared.Dictionaries;
@@ -9,6 +10,7 @@ public static class Station
 	public const string Station3 = "S3";
 	public const string Station4 = "S4";
 	public const string Station5 = "S5";
+	public const string Server = "Server";
 
 	public static string Name
 	{
@@ -17,16 +19,20 @@ public static class Station
 			if (_name != null)
 				throw new InvalidOperationException("Station name has already been defined.");
 			_name = value;
+			IsServer = _name == Server;
 			Type = StationNameToType();
 			ID = StationNameToID();
 		}
 		get => _name ?? throw new InvalidOperationException("Station name has not been defined.");
 	}
+	
+	public static bool IsServer { get; private set; }
 
 	private static string? _name { get; set; }
 
 	public static StationType Type { get; private set; }
-	public static int ID { get; private set; }
+
+	public static int ID { get; set; }
 
 	public static string ServerAddress
 	{
@@ -49,6 +55,7 @@ public static class Station
 			Station1 or Station2 => StationType.S1S2,
 			Station3 or Station4 => StationType.S3S4,
 			Station5 => StationType.S5,
+			Server => StationType.Server,
 			_ => throw new InvalidParameterException("Unknown station name.")
 		};
 	}
@@ -62,6 +69,7 @@ public static class Station
 			Station3 => 3,
 			Station4 => 4,
 			Station5 => 5,
+			Server => 99,
 			_ => throw new InvalidParameterException("Unknown station name.")
 		};
 	}
@@ -71,5 +79,6 @@ public enum StationType
 {
 	S1S2,
 	S3S4,
-	S5
+	S5,
+	Server
 }
