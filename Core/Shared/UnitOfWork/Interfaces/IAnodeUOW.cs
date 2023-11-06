@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.Anodes.Repositories;
 using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Repositories;
@@ -29,6 +30,8 @@ public interface IAnodeUOW : IDisposable
 	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }
+	
+	IAnodeRepository Anode { get; }
 
 	// StationCycle
 	IStationCycleRepository StationCycle { get; }

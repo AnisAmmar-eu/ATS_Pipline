@@ -12,6 +12,7 @@ public class PacketType
 {
 	public const string Alarm = "ALARM";
 	public const string Announcement = "ANNOUNCEMENT";
+	public const string S1S2Announcement = "S1S2ANNOUNCEMENT";
 	public const string Detection = "DETECTION";
 	public const string Shooting = "SHOOTING";
 	public const string InFurnace = "INFURNACE";
@@ -20,9 +21,6 @@ public class PacketType
 
 public class ShootingUtils
 {
-	// Format
-	public const string FilenameFormat = "yyyyMMdd-HHmmss-fff";
-
 	// Filename
 	public const string TestFilename = "TestImage.jpg";
 

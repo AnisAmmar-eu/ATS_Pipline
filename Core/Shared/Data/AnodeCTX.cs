@@ -3,6 +3,9 @@ using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
+using Core.Entities.Anodes.Models.DB;
+using Core.Entities.Anodes.Models.DB.AnodesD20;
+using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
@@ -53,6 +56,11 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<AlarmLog> AlarmLog => Set<AlarmLog>();
 	public DbSet<AlarmRT> AlarmRT => Set<AlarmRT>();
 	public DbSet<AlarmCycle> AlarmCycle => Set<AlarmCycle>();
+	
+	// Anodes 
+	public DbSet<Anode> Anode => Set<Anode>();
+	public DbSet<AnodeD20> AnodeD20 => Set<AnodeD20>();
+	public DbSet<AnodeDX> AnodeDX => Set<AnodeDX>();
 
 	// Packets
 	public DbSet<Packet> Packet => Set<Packet>();
@@ -178,5 +186,22 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasMany(iotDevice => iotDevice.IOTTags)
 			.WithOne(iotTag => iotTag.IOTDevice)
 			.HasForeignKey(iotTag => iotTag.IOTDeviceID);
+
+		modelBuilder.Entity<Anode>()
+			.HasOne(anode => anode.S1S2Cycle)
+			.WithOne(cycle => cycle.Anode)
+			.HasForeignKey<Anode>(anode => anode.S1S2CycleID);
+
+		modelBuilder.Entity<Anode>()
+			.HasOne(anode => anode.S3S4Cycle)
+			.WithOne(cycle => cycle.Anode)
+			.HasForeignKey<Anode>(anode => anode.S3S4CycleID)
+			.OnDelete(DeleteBehavior.NoAction);
+		
+		modelBuilder.Entity<AnodeDX>()
+			.HasOne(anode => anode.S5Cycle)
+			.WithOne(cycle => cycle.Anode)
+			.HasForeignKey<AnodeDX>(anode => anode.S5CycleID)
+			.OnDelete(DeleteBehavior.NoAction);
 	}
 }

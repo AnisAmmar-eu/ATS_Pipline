@@ -6,6 +6,13 @@ namespace Core.Entities.Packets.Models.DTO;
 
 public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 {
+	public DTOPacket()
+	{
+		StationCycleRID = "";
+		Type = "";
+		Status = "";
+	}
+
 	public DTOPacket(Packet detection)
 	{
 		Type = "";
@@ -14,13 +21,6 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 		StationCycleRID = detection.StationCycleRID;
 		Status = detection.Status;
 		HasError = detection.HasError;
-	}
-
-	public DTOPacket()
-	{
-		StationCycleRID = "";
-		Type = "";
-		Status = "";
 	}
 
 	public override Packet ToModel()

@@ -1,4 +1,5 @@
 using Core.Entities.Packets.Dictionaries;
+using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.DTO.Detections;
@@ -42,6 +43,7 @@ public class DTOPacketBinder : IModelBinder
 		{
 			PacketType.Alarm => typeof(DTOAlarmList),
 			PacketType.Announcement => typeof(DTOAnnouncement),
+			PacketType.S1S2Announcement => typeof(S1S2Announcement),
 			PacketType.Detection => typeof(DTODetection),
 			PacketType.Shooting => typeof(DTOShooting),
 			PacketType.InFurnace => typeof(DTOInFurnace),

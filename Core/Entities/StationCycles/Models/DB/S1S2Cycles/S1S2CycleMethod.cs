@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.StationCycles.Models.DTO.S1S2Cycles;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -9,9 +10,12 @@ public partial class S1S2Cycle : StationCycle, IBaseEntity<S1S2Cycle, DTOS1S2Cyc
 	{
 	}
 
-	public S1S2Cycle(DTOS1S2Cycle dtoS1S2Cycle)
+	public S1S2Cycle(DTOS1S2Cycle dtoS1S2Cycle) : base(dtoS1S2Cycle)
 	{
-		AnnouncementPacket = dtoS1S2Cycle.AnnouncementPacket?.ToModel();
+		// Query will set the announce in the parent attribute instead of the overriden one.
+		if (dtoS1S2Cycle.AnnouncementPacket == null && base.AnnouncementPacket != null)
+			AnnouncementPacket = (S1S2Announcement?)base.AnnouncementPacket;
+		else AnnouncementPacket = dtoS1S2Cycle.AnnouncementPacket?.ToModel();
 	}
 
 	public override DTOS1S2Cycle ToDTO()

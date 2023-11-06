@@ -5,4 +5,10 @@ public class AnodeTypeDict
 {
 	public static string D20 = "D20";
 	public static string DX = "DX";
+	public static string Undefined = "Undefined";
+}
+
+public static class AnodeFormat
+{
+	public const string RIDFormat = "yyyyMMdd-HHmmss-fff";
 }

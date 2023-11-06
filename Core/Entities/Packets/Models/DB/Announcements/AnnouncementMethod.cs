@@ -25,7 +25,12 @@ public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnounc
 	public Announcement(AnnouncementStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.RID.ToRID();
-		AnodeType = adsStruct.AnodeType == 1 ? AnodeTypeDict.DX : AnodeTypeDict.D20;
+		AnodeType = adsStruct.AnodeType switch
+		{
+			1 => AnodeTypeDict.DX,
+			2 => AnodeTypeDict.D20,
+			_ => AnodeTypeDict.Undefined
+		};
 		AnnounceID = adsStruct.AnnounceID.ToRID();
 	}
 

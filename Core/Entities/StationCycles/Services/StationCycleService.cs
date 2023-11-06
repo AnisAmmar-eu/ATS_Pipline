@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
+using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Shootings;
@@ -10,6 +12,7 @@ using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO;
+using Core.Entities.StationCycles.Models.DTO.S1S2Cycles;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Repositories;
 using Core.Shared.Dictionaries;
@@ -64,6 +67,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (stationCycle.ShootingPacket == null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		// TODO StationID -> Method in SCy
 		return stationCycle.ShootingPacket.GetImagePathFromRoot(thumbnailsPath, stationCycle.AnodeType, camera);
 	}
 
@@ -187,6 +191,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			// Packets need to be commit before adding StationCycle
 			AnodeUOW.Commit();
 			await AnodeUOW.StationCycle.Add(cycle);
+			AnodeUOW.Commit();
+			await AssignCycleToAnode(cycle);
 		}
 
 		AnodeUOW.Commit();
@@ -209,5 +215,17 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			savedImage.Save(thumbnail.FullName, 0.2);
 		});
 		await Task.WhenAll(tasks);
+	}
+
+	private async Task AssignCycleToAnode(StationCycle cycle)
+	{
+		if (cycle is S1S2Cycle s1S2Cycle)
+		{
+			Anode anode = Anode.Create(s1S2Cycle);
+			anode.S1S2CycleRID = s1S2Cycle.RID;
+			anode.S1S2CycleID = s1S2Cycle.ID;
+			await AnodeUOW.Anode.Add(anode);
+		}
+		// TODO Vision
 	}
 }

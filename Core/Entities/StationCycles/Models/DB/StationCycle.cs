@@ -1,3 +1,4 @@
+using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
@@ -31,4 +32,6 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public string? AlarmListStatus { get; set; }
 	public int? AlarmListID { get; set; }
 	public AlarmList? AlarmListPacket { get; set; }
+	
+	public Anode? Anode { get; set; }
 }

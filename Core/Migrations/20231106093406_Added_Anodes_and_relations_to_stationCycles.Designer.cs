@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231106093406_Added_Anodes_and_relations_to_stationCycles")]
+    partial class Added_Anodes_and_relations_to_stationCycles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,7 +226,7 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("S3S4CycleID")
+                    b.Property<int>("S3S4CycleID")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -240,8 +242,7 @@ namespace Core.Migrations
                         .IsUnique();
 
                     b.HasIndex("S3S4CycleID")
-                        .IsUnique()
-                        .HasFilter("[S3S4CycleID] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Anode");
 
@@ -962,7 +963,7 @@ namespace Core.Migrations
                 {
                     b.HasBaseType("Core.Entities.Anodes.Models.DB.Anode");
 
-                    b.Property<int?>("S5CycleID")
+                    b.Property<int>("S5CycleID")
                         .HasColumnType("int");
 
                     b.HasIndex("S5CycleID")
@@ -1256,7 +1257,8 @@ namespace Core.Migrations
                     b.HasOne("Core.Entities.StationCycles.Models.DB.S3S4Cycles.S3S4Cycle", "S3S4Cycle")
                         .WithOne("Anode")
                         .HasForeignKey("Core.Entities.Anodes.Models.DB.Anode", "S3S4CycleID")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("S1S2Cycle");
 
@@ -1405,7 +1407,8 @@ namespace Core.Migrations
                     b.HasOne("Core.Entities.StationCycles.Models.DB.S5Cycles.S5Cycle", "S5Cycle")
                         .WithOne("Anode")
                         .HasForeignKey("Core.Entities.Anodes.Models.DB.AnodesDX.AnodeDX", "S5CycleID")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("S5Cycle");
                 });

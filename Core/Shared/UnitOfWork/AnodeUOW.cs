@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.Anodes.Repositories;
 using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
@@ -42,6 +43,8 @@ public class AnodeUOW : IAnodeUOW
 		AlarmLog = new AlarmLogRepository(_anodeCTX);
 		AlarmRT = new AlarmRTRepository(_anodeCTX);
 
+		Anode = new AnodeRepository(_anodeCTX);
+
 		Packet = new PacketRepository(_anodeCTX);
 		AlarmCycle = new AlarmCycleRepository(_anodeCTX);
 
@@ -67,6 +70,8 @@ public class AnodeUOW : IAnodeUOW
 	public IAlarmPLCRepository AlarmPLC { get; }
 	public IAlarmLogRepository AlarmLog { get; }
 	public IAlarmRTRepository AlarmRT { get; }
+	
+	public IAnodeRepository Anode { get; }
 
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
@@ -93,6 +98,8 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IAlarmPLCRepository) => AlarmPLC,
 			_ when repo == typeof(IAlarmLogRepository) => AlarmLog,
 			_ when repo == typeof(IAlarmRTRepository) => AlarmRT,
+			
+			_ when repo == typeof(IAnodeRepository) => Anode,
 
 			_ when repo == typeof(IPacketRepository) => Packet,
 			_ when repo == typeof(IAlarmCycleRepository) => Packet,

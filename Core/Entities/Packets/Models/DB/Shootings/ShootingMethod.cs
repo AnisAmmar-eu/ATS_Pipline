@@ -53,7 +53,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	public FileInfo GetImagePathFromRoot(string root, string anodeType, int camera)
 	{
 		string filename =
-			$"S{Station.ID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(ShootingUtils.FilenameFormat)}.jpg";
+			$"S{Station.ID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(AnodeFormat.RIDFormat)}.jpg";
 		string path =
 			$@"S{Station.ID:00}\T{anodeType}\Y{ShootingTS.Year}\M{ShootingTS.Month:00}\D{ShootingTS.Day:00}\C{camera:00}\";
 		return new FileInfo($@"{root}\{path}\{filename}");
@@ -63,7 +63,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	{
 		Regex regex = new("S(?<stationID>[0-9]{2})T(?<anodeType>.*)C(?<camera>[0-9]{2})T(?<TS>.*).jpg");
 		GroupCollection groups = regex.Match(filename).Groups;
-		DateTimeOffset date = DateTimeOffset.ParseExact(groups["TS"].Value, ShootingUtils.FilenameFormat,
+		DateTimeOffset date = DateTimeOffset.ParseExact(groups["TS"].Value, AnodeFormat.RIDFormat,
 			CultureInfo.InvariantCulture.DateTimeFormat);
 		string path =
 			$@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year}\M{date.Month:00}\D{date.Day:00}\C{groups["camera"]}\";
@@ -94,7 +94,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 					if (thirdHole == null)
 						rid = ExtractRIDFromName(firstHole.Name);
 					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, rid), ADSUtils.TSFormat,
+						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, rid), AnodeFormat.RIDFormat,
 							CultureInfo.InvariantCulture.DateTimeFormat);
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
@@ -108,7 +108,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 					if (firstHole == null)
 						rid = ExtractRIDFromName(thirdHole.Name);
 					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(thirdHole.Name, rid), ADSUtils.TSFormat, null);
+						DateTimeOffset.ParseExact(ExtractTSFromName(thirdHole.Name, rid), AnodeFormat.RIDFormat, null);
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
 			}
@@ -164,7 +164,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	private static void SaveImageAndThumbnail(FileInfo file, string imageRoot, string thumbnailRoot, string anodeType,
 		DateTimeOffset date, int camera)
 	{
-		string filename = $"S{Station.ID:00}T{anodeType}C{camera:00}T{date.ToString(ShootingUtils.FilenameFormat)}.jpg";
+		string filename = $"S{Station.ID:00}T{anodeType}C{camera:00}T{date.ToString(AnodeFormat.RIDFormat)}.jpg";
 		string path =
 			$@"S{Station.ID:00}\T{anodeType}\Y{date.Year}\M{date.Month:00}\D{date.Day:00}\C{camera:00}\";
 		string imagePath = $@"{imageRoot}\{path}";

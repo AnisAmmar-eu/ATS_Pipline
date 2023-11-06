@@ -1,0 +1,15 @@
+using Core.Entities.Anodes.Models.DB;
+using Core.Entities.Anodes.Models.DB.AnodesDX;
+using Core.Entities.Anodes.Models.DTO;
+using Core.Shared.Data;
+using Core.Shared.Repositories.Kernel;
+using Core.Shared.Repositories.Kernel.Interfaces;
+
+namespace Core.Entities.Anodes.Repositories;
+
+public class AnodeRepository : RepositoryBaseEntity<AnodeCTX, Anode, DTOAnode>, IAnodeRepository
+{
+	public AnodeRepository(AnodeCTX context) : base(context)
+	{
+	}
+}
