@@ -157,7 +157,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		using HttpClient httpClient = new();
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
 
-		HttpResponseMessage response = await httpClient.PostAsync("https://localhost:7280/apiServerReceive/images", formData);
+		HttpResponseMessage response =
+			await httpClient.PostAsync("https://localhost:7280/apiServerReceive/images", formData);
 		if (!response.IsSuccessStatusCode)
 			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}

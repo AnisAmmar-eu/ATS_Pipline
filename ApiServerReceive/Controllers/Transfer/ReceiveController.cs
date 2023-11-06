@@ -140,7 +140,7 @@ public class ReceiveController : ControllerBase
 		{
 			return await new ApiResponseObject().ErrorResult(_logsService, ControllerContext, e);
 		}
-		
+
 		return await new ApiResponseObject().SuccessResult(_logsService, ControllerContext);
 	}
 }
