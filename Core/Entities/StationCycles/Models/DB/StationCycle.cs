@@ -4,6 +4,7 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Shootings;
+using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -16,6 +17,8 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public string RID { get; set; } = string.Empty;
 	public string Status { get; set; } = PacketStatus.Initialized;
 	public DateTimeOffset? TSClosed { get; set; }
+	public SignMatchStatus SignStatus1 { get; set; } = SignMatchStatus.NA;
+	public SignMatchStatus SignStatus2 { get; set; } = SignMatchStatus.NA;
 
 	public string? AnnouncementStatus { get; set; }
 	public int? AnnouncementID { get; set; }

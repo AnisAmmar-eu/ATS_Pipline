@@ -14,6 +14,8 @@ public partial class DTOS5Cycle : DTOStationCycle, IDTO<S5Cycle, DTOS5Cycle>
 	public DTOS5Cycle(S5Cycle s5Cycle) : base(s5Cycle)
 	{
 		CycleType = CycleTypes.S5;
+		MatchingCamera1 = (int)s5Cycle.MatchingCamera1;
+		MatchingCamera2 = (int)s5Cycle.MatchingCamera2;
 	}
 
 	public override S5Cycle ToModel()

@@ -3,6 +3,7 @@ using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Shootings;
+using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Shared.Models.DTO.Kernel;
@@ -19,6 +20,8 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	public string Status { get; set; } = PacketStatus.Initialized;
 	public string CycleType { get; set; } = string.Empty;
 	public DateTimeOffset? TSClosed { get; set; }
+	public int SignStatus1 { get; set; } = (int)SignMatchStatus.NA;
+	public int SignStatus2 { get; set; } = (int)SignMatchStatus.NA;
 
 	public string? AnnouncementStatus { get; set; }
 	public int? AnnouncementID { get; set; }

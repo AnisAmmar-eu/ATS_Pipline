@@ -15,6 +15,8 @@ public partial class DTOS3S4Cycle : DTOStationCycle, IDTO<S3S4Cycle, DTOS3S4Cycl
 	{
 		CycleType = CycleTypes.S3S4;
 		AnnounceID = s3S4Cycle.AnnounceID;
+		MatchingCamera1 = (int)s3S4Cycle.MatchingCamera1;
+		MatchingCamera2 = (int)s3S4Cycle.MatchingCamera2;
 
 		InFurnaceStatus = s3S4Cycle.InFurnaceStatus;
 		InFurnaceID = s3S4Cycle.InFurnaceID;

@@ -6,3 +6,10 @@ public static class CycleTypes
 	public const string S3S4 = "S3S4Cycle";
 	public const string S5 = "S5Cycle";
 }
+
+public enum SignMatchStatus
+{
+	NA,
+	Ok,
+	NotOk,
+}

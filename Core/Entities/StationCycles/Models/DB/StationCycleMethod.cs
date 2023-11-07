@@ -1,3 +1,4 @@
+using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DB.S5Cycles;
@@ -21,6 +22,8 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 		RID = dtoStationCycle.RID;
 		Status = dtoStationCycle.Status;
 		TSClosed = dtoStationCycle.TSClosed;
+		SignStatus1 = (SignMatchStatus)dtoStationCycle.SignStatus1;
+		SignStatus2 = (SignMatchStatus)dtoStationCycle.SignStatus2;
 
 		AnnouncementStatus = dtoStationCycle.AnnouncementStatus;
 		AnnouncementID = dtoStationCycle.AnnouncementID;

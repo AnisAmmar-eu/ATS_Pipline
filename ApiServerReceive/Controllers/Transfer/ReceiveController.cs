@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Mime;
-using System.Text;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
@@ -12,16 +10,17 @@ using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Attributes;
 using Core.Shared.Models.DTO.System.Logs;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Ocsp;
 
 namespace ApiServerReceive.Controllers.Transfer;
 
 [ApiController]
 [Route("apiServerReceive")]
+[ServerAction]
 public class ReceiveController : ControllerBase
 {
 	private readonly IAlarmCService _alarmCService;

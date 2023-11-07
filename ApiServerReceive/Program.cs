@@ -24,6 +24,9 @@ builder.Services.AddSwaggerGen();
 string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
 Station.Name = stationName;
 
+if (!Station.IsServer)
+	throw new Exception("¨This API can only run on the server. Please update appsettings.json");
+
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

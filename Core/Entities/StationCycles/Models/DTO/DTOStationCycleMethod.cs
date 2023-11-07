@@ -19,6 +19,8 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 		RID = stationCycle.RID;
 		Status = stationCycle.Status;
 		TSClosed = stationCycle.TSClosed;
+		SignStatus1 = (int)stationCycle.SignStatus1;
+		SignStatus2 = (int)stationCycle.SignStatus2;
 
 		AnnouncementStatus = stationCycle.AnnouncementStatus;
 		AnnouncementID = stationCycle.AnnouncementID;
