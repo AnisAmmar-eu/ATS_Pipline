@@ -7,7 +7,6 @@ using Core.Entities.KPI.KPIEntries.Models.DTO.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DTO.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
-using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Services.Kernel;
@@ -23,6 +22,15 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	public KPIRTService(IAnodeUOW anodeUOW, IKPILogService kpiLogService) : base(anodeUOW)
 	{
 		_kpiLogService = kpiLogService;
+	}
+
+	public async Task<List<DTOKPIRT>> GetByRIDsAndPeriod(string period, List<string> rids)
+	{
+		period = period.ToUpper();
+		return (await AnodeUOW.KPIRT.GetAll(filters: new Expression<Func<KPIRT, bool>>[]
+		{
+			kpiRT => kpiRT.Period == period && rids.Contains(kpiRT.KPIC.RID)
+		}, withTracking: false, includes: "KPIC")).ConvertAll(kpiRT => kpiRT.ToDTO());
 	}
 
 	public async Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave)
@@ -58,16 +66,28 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		List<List<TValue>> tValuesPerPeriods = GetValuesFromPeriods<T, TDTO, TValue>(tDTOs, periods);
 
 		await AnodeUOW.StartTransaction();
-		Func<List<TValue>, string>[] functions = tDTOs[0].GetComputedValue();
+		// We compute all values for every KPIC at once to be faster and then we do it for every time period.
+		Func<List<TValue>, string[]> function = tDTOs[0].GetComputedValues();
+		for (int i = 0; i < periods.Length; ++i)
+		{
+			string[] values = function.Invoke(tValuesPerPeriods[i]);
+			for (int j = 0; j < kpiRTs.Count; ++j)
+			{
+				kpiRTs[j][i].Value = values[j];
+				AnodeUOW.KPIRT.Update(kpiRTs[j][i]);
+			}
+		}
+		/*
 		for (int i = 0; i < kpiRTs.Count; ++i)
 		{
 			List<KPIRT> kpiRTPerC = kpiRTs[i];
 			for (int j = 0; j < kpiRTPerC.Count; ++j)
 			{
-				kpiRTPerC[j].Value = functions[i].Invoke(tValuesPerPeriods[j]);
+				kpiRTPerC[j].Value = function[i].Invoke(tValuesPerPeriods[j]);
 				AnodeUOW.KPIRT.Update(kpiRTPerC[j]);
 			}
 		}
+		*/
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
@@ -113,7 +133,6 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 					kpiRT = new KPIRT
 					{
 						KPICID = kpiC.ID,
-						StationID = Station.ID,
 						Value = "",
 						Period = periods[i],
 						KPIC = kpiC

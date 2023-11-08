@@ -9,6 +9,7 @@ namespace Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 
 public interface IKPIRTService : IServiceBaseEntity<KPIRT, DTOKPIRT>
 {
+	public Task<List<DTOKPIRT>> GetByRIDsAndPeriod(string period, List<string> rids);
 	public Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave);
 
 	/// <summary>

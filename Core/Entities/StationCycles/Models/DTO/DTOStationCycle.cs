@@ -7,6 +7,7 @@ using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Shared.Dictionaries;
+using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Core.Entities.StationCycles.Models.DTO;
 
 [ModelBinder(typeof(DTOStationCycleBinder))]
-public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>
+public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>, IBaseKPI<DTOStationCycle>
 {
 	public int StationID { get; set; } = Station.ID;
 	public string AnodeType { get; set; } = string.Empty;
@@ -22,8 +23,8 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	public string Status { get; set; } = PacketStatus.Initialized;
 	public string CycleType { get; set; } = string.Empty;
 	public DateTimeOffset? TSClosed { get; set; }
-	public int SignStatus1 { get; set; } = (int)SignMatchStatus.NA;
-	public int SignStatus2 { get; set; } = (int)SignMatchStatus.NA;
+	public SignMatchStatus SignStatus1 { get; set; } = SignMatchStatus.NA;
+	public SignMatchStatus SignStatus2 { get; set; } = SignMatchStatus.NA;
 
 	public string? AnnouncementStatus { get; set; }
 	public int? AnnouncementID { get; set; }

@@ -15,7 +15,6 @@ public partial class KPIEntry : BaseEntity, IBaseEntity<KPIEntry, DTOKPIEntry>
 	{
 		ID = 0;
 		TS = DateTimeOffset.Now;
-		StationID = kpiEntry.StationID;
 		Value = kpiEntry.Value;
 		Period = kpiEntry.Period;
 		KPICID = kpiEntry.KPICID;

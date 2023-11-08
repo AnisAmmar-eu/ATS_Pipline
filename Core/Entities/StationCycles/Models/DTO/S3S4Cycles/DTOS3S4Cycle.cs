@@ -1,16 +1,17 @@
 using Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 using Core.Entities.StationCycles.Dictionaries;
+using Core.Entities.StationCycles.Interfaces;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Models.DTO.S3S4Cycles;
 
-public partial class DTOS3S4Cycle : DTOStationCycle, IDTO<S3S4Cycle, DTOS3S4Cycle>
+public partial class DTOS3S4Cycle : DTOStationCycle, IDTO<S3S4Cycle, DTOS3S4Cycle>, IMatchableCycle
 {
 	public string? AnnounceID { get; set; }
-	public int MatchingCamera1 { get; set; } = (int)SignMatchStatus.NA;
-	public int MatchingCamera2 { get; set; } = (int)SignMatchStatus.NA;
+	public SignMatchStatus MatchingCamera1 { get; set; } = SignMatchStatus.NA;
+	public SignMatchStatus MatchingCamera2 { get; set; } = SignMatchStatus.NA;
 
 	public string? InFurnaceStatus { get; set; }
 	public int? InFurnaceID { get; set; }

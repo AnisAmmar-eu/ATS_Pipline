@@ -30,7 +30,7 @@ public static class ITApis
 	public static string IOTAddress = "https://localhost:7279"; // 5246
 	public static string IOTPath = "/apiIOT/status";
 
-	// 7280 & 5247 is taken by ApiServerReceive
+	// 7280 & 5247 is taken by ApiKPI
 
 	public static string StationCycleRID = "ApiStationCycle";
 	public static string StationCycleAddress = "https://localhost:7281"; // 5248

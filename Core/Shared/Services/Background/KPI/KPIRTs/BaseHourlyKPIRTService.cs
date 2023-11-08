@@ -33,7 +33,7 @@ public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundServi
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await Task.Delay(TimeToWaitUntilNextHour());
+		// await Task.Delay(TimeToWaitUntilNextHour(), stoppingToken);
 		using PeriodicTimer timer = new(_period);
 		do
 		{

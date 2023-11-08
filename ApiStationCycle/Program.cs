@@ -92,13 +92,13 @@ if (!Station.IsServer)
 WebApplication app = builder.Build();
 
 // Initialize
-if (bool.Parse(builder.Configuration["DbInitialize"]))
+if (!Station.IsServer && bool.Parse(builder.Configuration["DbInitialize"]))
 {
 	using IServiceScope scope = app.Services.CreateScope();
 	IServiceProvider services = scope.ServiceProvider;
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
 	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-	await DBInitializer.Initialize(context, userManager);
+	await DBInitializer.InitializeStation(context, userManager);
 }
 
 app.UseSwagger();

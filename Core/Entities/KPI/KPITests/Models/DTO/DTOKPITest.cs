@@ -27,12 +27,15 @@ public class DTOKPITest : DTOBaseEntity, IDTO<KPITest, DTOKPITest>, IBaseKPI<dou
 		return new[] { "KPITest", "KPITestMax" };
 	}
 
-	public Func<List<double>, string>[] GetComputedValue()
+	public Func<List<double>, string[]> GetComputedValues()
 	{
-		return new Func<List<double>, string>[]
+		return doubleList =>
 		{
-			doubleList => doubleList.Average().ToString(CultureInfo.InvariantCulture),
-			doubleList => doubleList.Max().ToString(CultureInfo.InvariantCulture)
+			return new[]
+			{
+				doubleList.Any() ? doubleList.Average().ToString(CultureInfo.InvariantCulture) : "0",
+				doubleList.Any() ? doubleList.Max().ToString(CultureInfo.InvariantCulture): "0",
+			};
 		};
 	}
 }
