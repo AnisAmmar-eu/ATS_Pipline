@@ -19,6 +19,7 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public StationCycle(DTOStationCycle dtoStationCycle)
 	{
 		AnodeType = dtoStationCycle.AnodeType;
+		StationID = dtoStationCycle.StationID;
 		RID = dtoStationCycle.RID;
 		Status = dtoStationCycle.Status;
 		TSClosed = dtoStationCycle.TSClosed;
@@ -66,10 +67,5 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 			AnodeType = AnodeType,
 			ShootingTS = ShootingPacket?.ShootingTS
 		};
-	}
-
-	public int GetStationID()
-	{
-		return int.Parse(RID[..1]);
 	}
 }

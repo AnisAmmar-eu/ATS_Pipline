@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiStationCycle.Controllers.Server;
 
 [ApiController]
-[Route("apiStationServerCycle")]
+[Route("apiStationCycleServer")]
 [ServerAction]
 public class StationCycleServerController : ControllerBase
 {

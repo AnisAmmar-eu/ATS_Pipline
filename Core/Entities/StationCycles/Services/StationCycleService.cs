@@ -67,7 +67,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (stationCycle.ShootingPacket == null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		return stationCycle.ShootingPacket.GetImagePathFromRoot(stationCycle.GetStationID(), thumbnailsPath,
+		return stationCycle.ShootingPacket.GetImagePathFromRoot(stationCycle.StationID, thumbnailsPath,
 			stationCycle.AnodeType, camera);
 	}
 
@@ -77,7 +77,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		List<StationCycle> stationCycles = await AnodeUOW.StationCycle.GetAll(
 			filters: new Expression<Func<StationCycle, bool>>[]
 			{
-				stationCycle => (stationID == null || stationCycle.GetStationID() == stationID)
+				stationCycle => (stationID == null || stationCycle.StationID == stationID)
 				                && stationCycle.TS >= minimumDate
 			}, withTracking: false);
 		double nbMatchCam1 = 0;
@@ -176,7 +176,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		foreach (StationCycle cycle in stationCycles)
 		{
 			FileInfo image1 =
-				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.GetStationID(), imagesPath, cycle.AnodeType, 1)!;
+				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.StationID, imagesPath, cycle.AnodeType, 1)!;
 			if (image1.Exists)
 			{
 				StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
@@ -185,7 +185,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			}
 
 			FileInfo image2 =
-				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.GetStationID(), imagesPath, cycle.AnodeType, 2)!;
+				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.StationID, imagesPath, cycle.AnodeType, 2)!;
 			if (!image2.Exists) continue;
 			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
 			content2.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");

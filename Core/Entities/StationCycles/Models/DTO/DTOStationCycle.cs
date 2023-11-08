@@ -6,6 +6,7 @@ using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO.Binders;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace Core.Entities.StationCycles.Models.DTO;
 [ModelBinder(typeof(DTOStationCycleBinder))]
 public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>
 {
+	public int StationID { get; set; } = Station.ID;
 	public string AnodeType { get; set; } = string.Empty;
 	public string RID { get; set; } = string.Empty;
 	public string Status { get; set; } = PacketStatus.Initialized;
