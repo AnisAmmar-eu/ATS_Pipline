@@ -20,7 +20,7 @@ public class StationCycleServerController : ControllerBase
 		_stationCycleService = stationCycleService;
 		_logService = logService;
 	}
-	
+
 	[HttpGet("signMatchStats")]
 	public async Task<IActionResult> GetSignMatchStats()
 	{
@@ -33,7 +33,7 @@ public class StationCycleServerController : ControllerBase
 		{
 			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
-		
+
 		return await new ApiResponseObject(stats).SuccessResult(_logService, ControllerContext);
 	}
 
@@ -49,7 +49,7 @@ public class StationCycleServerController : ControllerBase
 		{
 			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
-		
+
 		return await new ApiResponseObject(stats).SuccessResult(_logService, ControllerContext);
 	}
 }

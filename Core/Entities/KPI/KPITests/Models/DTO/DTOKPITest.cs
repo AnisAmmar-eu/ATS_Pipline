@@ -34,7 +34,7 @@ public class DTOKPITest : DTOBaseEntity, IDTO<KPITest, DTOKPITest>, IBaseKPI<dou
 			return new[]
 			{
 				doubleList.Any() ? doubleList.Average().ToString(CultureInfo.InvariantCulture) : "0",
-				doubleList.Any() ? doubleList.Max().ToString(CultureInfo.InvariantCulture): "0",
+				doubleList.Any() ? doubleList.Max().ToString(CultureInfo.InvariantCulture) : "0"
 			};
 		};
 	}

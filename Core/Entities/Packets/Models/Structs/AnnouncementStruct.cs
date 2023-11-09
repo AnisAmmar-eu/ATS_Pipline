@@ -8,7 +8,7 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 namespace Core.Entities.Packets.Models.Structs;
 
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
-public struct AnnouncementStruct : IBaseADS<Packet, AnnouncementStruct>
+public struct AnnouncementStruct : IBaseADS<Packet>
 {
 	public RIDStruct RID;
 	public RIDStruct AnnounceID;

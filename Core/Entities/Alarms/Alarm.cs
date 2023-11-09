@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
+using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsPLC.Models.DB;
+using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms;
@@ -19,31 +21,22 @@ namespace Core.Entities.Alarms;
  */
 
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
-public struct Alarm : IBaseADS<AlarmPLC, Alarm>
+public struct Alarm : IBaseADS<Alarm>
 {
 	// Type must be 'blittable' to the corresponding PLC Struct Type
 	// See MSDN for MarshalAs and Default Marshalling.
 	[MarshalAs(UnmanagedType.I1)] public bool Value;
-	public uint ID;
 	[MarshalAs(UnmanagedType.I1)] public bool OneShot;
 
-	public uint TimeStamp;
-	public uint TimeStampMS;
+	public TimestampStruct TimeStamp;
 
-	public uint Status;
+	[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
+	public string RID;
 
-	public Alarm(bool value)
+	// This is tricky but other notifications are supposed to be converted to something before being processed.
+	// This one does not but we pretend that we do something.
+	public Alarm ToModel()
 	{
-		Value = true;
-		ID = 2005;
-		OneShot = false;
-		TimeStamp = 0;
-		TimeStampMS = 0;
-		Status = 2;
-	}
-
-	public AlarmPLC ToModel()
-	{
-		return new AlarmPLC(this);
+		return this;
 	}
 }

@@ -20,21 +20,21 @@ public class IOTInitializer
 		InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
 
 		// APIs
-		InitializeApi(anodeCTX, ITApis.IOTRID, ITApis.IOTAddress, ITApis.IOTPath, true);
+		InitializeApi(anodeCTX, ITApisDict.IOTRID, ITApisDict.IOTAddress, ITApisDict.IOTPath, true);
 		string[] rids =
 		{
-			ITApis.ADSRID, ITApis.AlarmRID, ITApis.CameraRID, ITApis.CameraAssignRID, ITApis.StationCycleRID,
-			ITApis.UserRID
+			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.CameraAssignRID, ITApisDict.KPIRID,
+			ITApisDict.StationCycleRID, ITApisDict.UserRID
 		};
 		string[] addresses =
 		{
-			ITApis.ADSAddress, ITApis.AlarmAddress, ITApis.CameraAddress, ITApis.CameraAssignAddress,
-			ITApis.StationCycleAddress, ITApis.UserAddress
+			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.CameraAssignAddress,
+			ITApisDict.KPIAddress, ITApisDict.StationCycleAddress, ITApisDict.UserAddress
 		};
 		string[] paths =
 		{
-			ITApis.ADSPath, ITApis.AlarmPath, ITApis.CameraPath, ITApis.CameraAssignPath, ITApis.StationCyclePath,
-			ITApis.UserPath
+			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.CameraAssignPath,
+			ITApisDict.KPIPath, ITApisDict.StationCyclePath, ITApisDict.UserPath
 		};
 		for (int i = 0; i < rids.Length; ++i)
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
@@ -296,6 +296,65 @@ public class IOTInitializer
 		};
 		anodeCTX.OTTwinCat.Add(twinCat);
 		anodeCTX.SaveChanges();
+
+		#region Camera Temperature
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.Temperature + 1,
+			Name = "Cam 01 - Temperature",
+			Description = "Temperature for Camera 1",
+			CurrentValue = "19.84",
+			NewValue = "",
+			ValueType = IOTTagType.Double,
+			HasNewValue = false,
+			Path = IOTTagPath.Temperature + 1,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.Temperature + 2,
+			Name = "Cam 02 - Temperature",
+			Description = "Temperature for Camera 2",
+			CurrentValue = "19.84",
+			NewValue = "",
+			ValueType = IOTTagType.Double,
+			HasNewValue = false,
+			Path = IOTTagPath.Temperature + 2,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.TemperatureOkWarnThreshold,
+			Name = "Ok - Warn Threshold",
+			Description = "Ok - Warn temperature threshold",
+			CurrentValue = "42.0",
+			NewValue = "",
+			ValueType = IOTTagType.Double,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.TemperatureOkWarnThreshold,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
+		{
+			RID = IOTTagRID.TemperatureWarnErrorThreshold,
+			Name = "Warn - Error Threshold",
+			Description = "Warn - Error temperature threshold",
+			CurrentValue = "70.0",
+			NewValue = "",
+			ValueType = IOTTagType.Double,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.TemperatureWarnErrorThreshold,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat
+		});
+
+		#endregion
 
 		#region TestMode
 

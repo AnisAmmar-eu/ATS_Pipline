@@ -8,15 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Shared.Services.Notifications.PacketNotifications;
 
-public class PacketNotification<TStruct> : BaseNotification<IPacketService, Packet, DTOPacket, TStruct>
-	where TStruct : struct, IBaseADS<Packet, TStruct>
+public class PacketNotification<TStruct> : BaseNotification<Packet, TStruct>
+	where TStruct : struct, IBaseADS<Packet>
 {
-	protected override async Task AddElement(IServiceProvider services, Packet entity)
+	protected override async Task AddElement(IServiceProvider services, Packet alarm)
 	{
 		IPacketService packetService = services.GetRequiredService<IPacketService>();
 		IHubContext<StationCycleHub, IStationCycleHub> hubContext =
 			services.GetRequiredService<IHubContext<StationCycleHub, IStationCycleHub>>();
-		await packetService.BuildPacket(entity);
+		await packetService.BuildPacket(alarm);
 		await hubContext.Clients.All.RefreshStationCycle();
 	}
 }

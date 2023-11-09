@@ -82,12 +82,6 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
-if (Station.IsServer)
-{
-	builder.Services.AddSingleton<CollectService>();
-	builder.Services.AddHostedService(provider => provider.GetRequiredService<CollectService>());
-}
-
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.

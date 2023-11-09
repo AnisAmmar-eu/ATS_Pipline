@@ -11,5 +11,5 @@ public enum SignMatchStatus
 {
 	NA,
 	Ok,
-	NotOk,
+	NotOk
 }

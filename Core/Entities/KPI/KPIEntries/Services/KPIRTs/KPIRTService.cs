@@ -27,7 +27,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	public async Task<List<DTOKPIRT>> GetByRIDsAndPeriod(string period, List<string> rids)
 	{
 		period = period.ToUpper();
-		return (await AnodeUOW.KPIRT.GetAll(filters: new Expression<Func<KPIRT, bool>>[]
+		return (await AnodeUOW.KPIRT.GetAll(new Expression<Func<KPIRT, bool>>[]
 		{
 			kpiRT => kpiRT.Period == period && rids.Contains(kpiRT.KPIC.RID)
 		}, withTracking: false, includes: "KPIC")).ConvertAll(kpiRT => kpiRT.ToDTO());

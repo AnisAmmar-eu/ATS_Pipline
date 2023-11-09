@@ -1,23 +1,18 @@
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
-using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Notifications;
 
 public class
-	BaseNotification<TService, T, TDTO, TStruct>
-	where T : class, IBaseEntity<T, TDTO>
-	where TDTO : class, IDTO<T, TDTO>
-	where TService : class, IServiceBaseEntity<T, TDTO>
-	where TStruct : struct, IBaseADS<T, TStruct>
+	BaseNotification<T, TStruct>
+	where TStruct : struct, IBaseADS<T>
 {
 	private uint _newMsg;
 	private uint _oldEntry;
 	private uint _remove;
 	private ResultHandle _resultHandle = null!;
-	protected bool _toDequeue = true;
+	protected bool ToDequeue = true;
 
 	public BaseNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry)
 	{
@@ -31,9 +26,9 @@ public class
 	{
 	}
 
-	protected static async Task<BaseNotification<TService, T, TDTO, TStruct>> CreateSub<TNotification>(dynamic ads,
+	protected static async Task<BaseNotification<T, TStruct>> CreateSub<TNotification>(dynamic ads,
 		string removeSymbol, string newMsgSymbol, string oldEntrySymbol)
-		where TNotification : BaseNotification<TService, T, TDTO, TStruct>, new()
+		where TNotification : BaseNotification<T, TStruct>, new()
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
 
@@ -41,7 +36,7 @@ public class
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
-		int size = sizeof(bool);
+		const int size = sizeof(bool);
 		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(newMsgSymbol, size,
 			new NotificationSettings(AdsTransMode.OnChange, 0, 0), ads, ads.cancel);
 		TNotification notification =
@@ -53,11 +48,11 @@ public class
 				_resultHandle = resultHandle
 			};
 		tcClient.AdsNotification += notification.GetElement;
-		// No neeed to verify if the queue has already an element, a notification is automatically sent when pairing.
+		// No need to verify if the queue has already an element, a notification is automatically sent when pairing.
 		return notification;
 	}
 
-	public void GetElement(object? sender, AdsNotificationEventArgs e)
+	private void GetElement(object? sender, AdsNotificationEventArgs e)
 	{
 		bool newMsg = BitConverter.ToBoolean(e.Data.Span);
 		if (e.Handle == _resultHandle.Handle && newMsg)
@@ -68,7 +63,7 @@ public class
 		}
 	}
 
-	public async void GetElementSub(dynamic dynamicObject)
+	private async void GetElementSub(dynamic dynamicObject)
 	{
 		AdsClient? tcClient = dynamicObject.tcClient as AdsClient;
 		//tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
@@ -82,7 +77,7 @@ public class
 		try
 		{
 			await AddElement(services, entity);
-			if (_toDequeue) tcClient.WriteAny(_remove, true);
+			if (ToDequeue) tcClient.WriteAny(_remove, true);
 		}
 		catch
 		{
@@ -91,9 +86,8 @@ public class
 		}
 	}
 
-	protected virtual async Task AddElement(IServiceProvider services, T entity)
+	protected virtual Task AddElement(IServiceProvider services, T alarm)
 	{
-		TService serviceAds = services.GetRequiredService<TService>();
-		await serviceAds.Add(entity);
+		return Task.CompletedTask;
 	}
 }

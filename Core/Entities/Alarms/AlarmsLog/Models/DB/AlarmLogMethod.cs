@@ -2,6 +2,7 @@
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -15,7 +16,7 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 
 	public AlarmLog(AlarmC alarmC)
 	{
-		TS = DateTime.Now;
+		TS = DateTimeOffset.Now;
 		IsAck = false;
 		HasBeenSent = false;
 		AlarmID = alarmC.ID;

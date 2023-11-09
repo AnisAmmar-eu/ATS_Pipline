@@ -93,9 +93,15 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 						if (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok)
 							AddAtIndex(values, cycle.StationID, nbMatchCam1Index);
 					}
-					else AddAtIndex(values, cycle.StationID, nbSignedIndex);
+					else
+					{
+						AddAtIndex(values, cycle.StationID, nbSignedIndex);
+					}
 				}
-				else AddAtIndex(values, cycle.StationID, nbNotSignedIndex);
+				else
+				{
+					AddAtIndex(values, cycle.StationID, nbNotSignedIndex);
+				}
 			});
 			List<string> ans = new();
 			// The int[,] is flattened into a List<string> and the match cam1 percentage is computed.

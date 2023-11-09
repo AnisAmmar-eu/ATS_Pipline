@@ -3,7 +3,7 @@ namespace Core.Shared.Dictionaries;
 public class ADSUtils
 {
 	// AlarmNotification
-	public const string AlarmAcquitMsg = "VA_ALM.msgAcquit";
+	public const string AlarmRemove = "VA_ALM.remove";
 	public const string AlarmNewMsg = "VA_ALM.msgNew";
 	public const string AlarmToRead = "VA_ALM.oldEntry";
 
@@ -31,8 +31,8 @@ public class ADSUtils
 	public const string ShootingAcquitMsg = "";
 	public const string ShootingNewMsg = "";
 	public const string ShootingToRead = "";
-	public static int AdsPort = 851;
+	public const int AdsPort = 851;
 
 	// MeasureNotification	
-	public static string MeasurementVariable = "VA_PXX.P04_In";
+	public const string MeasurementVariable = "VA_PXX.P04_In";
 }

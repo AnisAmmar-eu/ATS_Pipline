@@ -75,7 +75,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 	{
 		DateTimeOffset minimumDate = DateTimeOffset.Now.Subtract(period);
 		List<StationCycle> stationCycles = await AnodeUOW.StationCycle.GetAll(
-			filters: new Expression<Func<StationCycle, bool>>[]
+			new Expression<Func<StationCycle, bool>>[]
 			{
 				stationCycle => (stationID == null || stationCycle.StationID == stationID)
 				                && stationCycle.TS >= minimumDate
@@ -97,10 +97,15 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 					if (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok)
 						nbMatchCam1++;
 				}
-				else nbSigned++;
+				else
+				{
+					nbSigned++;
+				}
 			}
 			else
+			{
 				nbNotSigned++;
+			}
 		});
 		int percentageCam1 = nbTotalMatch == 0 ? 0 : (int)(nbMatchCam1 / nbTotalMatch * 100);
 		return new[] { nbSignedAndMatched, nbSigned, nbNotSigned, percentageCam1 };

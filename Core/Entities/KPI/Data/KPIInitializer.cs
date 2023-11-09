@@ -21,7 +21,7 @@ public class KPIInitializer
 		anodeCTX.KPIC.Add(new KPIC(KPICRID.StationCycleMatchingCam1, "Station cycle matching camera 1",
 			"Percentage of station cycles matched by camera 1."));
 		anodeCTX.SaveChanges();
-		
+
 		for (int i = 1; i <= 5; ++i)
 			InitializeStation(anodeCTX, i);
 	}

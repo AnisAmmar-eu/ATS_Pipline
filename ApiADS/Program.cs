@@ -1,3 +1,4 @@
+using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
@@ -28,7 +29,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<IAlarmPLCService, AlarmPLCService>();
+builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();

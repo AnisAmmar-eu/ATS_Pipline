@@ -2,43 +2,47 @@ namespace Core.Entities.IOT.Dictionaries;
 
 public static class DeviceRID
 {
-	public static string Camera1 = "Camera1";
-	public static string Camera2 = "Camera2";
+	public const string Camera1 = "Camera1";
+	public const string Camera2 = "Camera2";
 
-	public static string TwinCat = "TwinCat";
+	public const string TwinCat = "TwinCat";
 }
 
-public static class ITApis
+public static class ITApisDict
 {
-	public static string ADSRID = "ApiADS";
-	public static string ADSAddress = "https://localhost:7275"; // 5242
-	public static string ADSPath = "/apiADS/status";
+	public const string ADSRID = "ApiADS";
+	public const string ADSAddress = "https://localhost:7275"; // 5242
+	public const string ADSPath = "/apiADS/status";
 
-	public static string AlarmRID = "ApiAlarm";
-	public static string AlarmAddress = "https://localhost:7276"; // 5243
-	public static string AlarmPath = "/apiAlarm/status";
+	public const string AlarmRID = "ApiAlarm";
+	public const string AlarmAddress = "https://localhost:7276"; // 5243
+	public const string AlarmPath = "/apiAlarm/status";
 
-	public static string CameraRID = "ApiCamera";
-	public static string CameraAddress = "https://localhost:7277"; // 5244
-	public static string CameraPath = "/apiCamera/status";
+	public const string CameraRID = "ApiCamera";
+	public const string CameraAddress = "https://localhost:7277"; // 5244
+	public const string CameraPath = "/apiCamera/status";
 
-	public static string CameraAssignRID = "ApiCameraAssign";
-	public static string CameraAssignAddress = "https://localhost:7278"; // 5245
-	public static string CameraAssignPath = "/apiCameraAssign/status";
+	public const string CameraAssignRID = "ApiCameraAssign";
+	public const string CameraAssignAddress = "https://localhost:7278"; // 5245
+	public const string CameraAssignPath = "/apiCameraAssign/status";
 
-	public static string IOTRID = "ApiIOT";
-	public static string IOTAddress = "https://localhost:7279"; // 5246
-	public static string IOTPath = "/apiIOT/status";
+	public const string IOTRID = "ApiIOT";
+	public const string IOTAddress = "https://localhost:7279"; // 5246
+	public const string IOTPath = "/apiIOT/status";
 
-	// 7280 & 5247 is taken by ApiKPI
+	public const string KPIRID = "ApiKPI";
+	public const string KPIAddress = "https://localhost:7280"; // 5247
+	public const string KPIPath = "/apiKPI/status";
 
-	public static string StationCycleRID = "ApiStationCycle";
-	public static string StationCycleAddress = "https://localhost:7281"; // 5248
-	public static string StationCyclePath = "/apiStationCycle/status";
+	// 7281 & 5248 is taken by ApiServerReceive
 
-	public static string UserRID = "ApiUser";
-	public static string UserAddress = "https://localhost:7282"; // 5249
-	public static string UserPath = "/apiUser/status";
+	public const string StationCycleRID = "ApiStationCycle";
+	public const string StationCycleAddress = "https://localhost:7282"; // 5249
+	public const string StationCyclePath = "/apiStationCycle/status";
+
+	public const string UserRID = "ApiUser";
+	public const string UserAddress = "https://localhost:7283"; // 5250
+	public const string UserPath = "/apiUser/status";
 }
 
 public static class TriggerSources

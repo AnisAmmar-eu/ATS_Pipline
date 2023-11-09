@@ -7,7 +7,7 @@ public class DetectionNotification : PacketNotification<DetectionStruct>
 {
 	public DetectionNotification()
 	{
-		_toDequeue = false;
+		ToDequeue = false;
 	}
 
 	public static async Task<DetectionNotification> Create(dynamic ads)

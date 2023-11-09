@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
+using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
@@ -26,66 +27,60 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 		//_myHub = myHub;
 	}
 
-	public async Task<IEnumerable<DTOAlarmPLC>> Collect()
+	public async Task Collect(Alarm alarm)
 	{
-		List<AlarmPLC> allAlarmsPLC = await AnodeUOW.AlarmPLC.GetAll(withTracking: false);
-		if (allAlarmsPLC.Count == 0) return Array.Empty<DTOAlarmPLC>();
-		await AnodeUOW.StartTransaction();
-		for (int index = 0; index < allAlarmsPLC.Count; index++)
+		try
 		{
-			try
-			{
-				int i = index; // Copied here because of try catch scoping to remove a warning.
+			// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
+			AlarmLog alarmWithStatus1 = await AnodeUOW.AlarmLog.GetByWithIncludes(
+				new Expression<Func<AlarmLog, bool>>[]
+				{
+					alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID
+				},
+				query => query.OrderByDescending(alarmLog => alarmLog.ID));
+			if (alarm.Value) return; // alarmLog is already active.
+			alarmWithStatus1.IsActive = false;
+			alarmWithStatus1.TSClear = alarm.TimeStamp.GetTimestamp();
+			alarmWithStatus1.TS = DateTime.Now;
+			alarmWithStatus1.IsAck = false;
+			alarmWithStatus1.HasBeenSent = false;
+			await AnodeUOW.StartTransaction();
+			AnodeUOW.AlarmLog.Update(alarmWithStatus1);
+		}
+		catch (EntityNotFoundException)
+		{
+			if (!alarm.Value) return; // alarmLog is already inactive or cleared.
 
-				// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
-				AlarmLog alarmWithStatus1 = await AnodeUOW.AlarmLog.GetByWithIncludes(
-					new Expression<Func<AlarmLog, bool>>[]
-					{
-						alarm => alarm.IsActive && alarm.AlarmID == allAlarmsPLC[i].AlarmID
-					},
-					query => query.OrderByDescending(alarmLog => alarmLog.ID));
-				if (allAlarmsPLC[i].IsActive) continue; // alarmLog is already active.
-				alarmWithStatus1.IsActive = false;
-				alarmWithStatus1.TSClear = allAlarmsPLC[index].TS;
-				alarmWithStatus1.TS = DateTime.Now;
-				alarmWithStatus1.IsAck = false;
-				alarmWithStatus1.HasBeenSent = false;
-				AnodeUOW.AlarmLog.Update(alarmWithStatus1);
+			// If an alarmLog doesn't exist, this alarm just raised.
+			AlarmC alarmC = await AnodeUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[]
+			{
+				alarmLog => alarmLog.RID == alarm.RID
+			});
+			AlarmLog newAlarmLog = new(alarmC)
+			{
+				Alarm = alarmC,
+				TS = DateTime.Now,
+				HasBeenSent = false
+			};
+			if (alarm.OneShot)
+			{
+				newAlarmLog.IsActive = false;
+				newAlarmLog.TSClear = alarm.TimeStamp.GetTimestamp();
 			}
-			catch (EntityNotFoundException)
+			else
 			{
-				if (!allAlarmsPLC[index].IsActive) continue; // alarmLog is already inactive or cleared.
-
-				// If an alarmLog doesn't exist, this alarm just raised.
-				AlarmLog newAlarmLog = new(await AnodeUOW.AlarmC.GetById(allAlarmsPLC[index].AlarmID))
-				{
-					AlarmID = allAlarmsPLC[index].AlarmID,
-					TS = DateTime.Now,
-					HasBeenSent = false
-				};
-				if (allAlarmsPLC[index].IsOneShot)
-				{
-					newAlarmLog.IsActive = false;
-					newAlarmLog.TSClear = allAlarmsPLC[index].TS;
-				}
-				else
-				{
-					newAlarmLog.IsActive = true;
-				}
-
-				newAlarmLog.TSRaised = allAlarmsPLC[index].TS;
-				await AnodeUOW.AlarmLog.Add(newAlarmLog);
+				newAlarmLog.IsActive = true;
 			}
 
-			AnodeUOW.AlarmPLC.Remove(allAlarmsPLC[index]);
-			AnodeUOW.Commit();
+			newAlarmLog.TSRaised = alarm.TimeStamp.GetTimestamp();
+			await AnodeUOW.StartTransaction();
+			await AnodeUOW.AlarmLog.Add(newAlarmLog);
 		}
 
-		// await  _myHub.RequestAlarmLogData();
+		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
-		return allAlarmsPLC.ConvertAll(alarmPLC => alarmPLC.ToDTO());
 	}
 
 	public async Task<List<DTOFAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)

@@ -53,7 +53,8 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 		List<IOTTag> updatedTags = new();
 		foreach (IOTTag iotTag in IOTTags)
 		{
-			if (!(iotTag is OTTagTwinCat otTagTwinCat))
+			bool hasBeenUpdated = false;
+			if (iotTag is not OTTagTwinCat otTagTwinCat)
 				continue;
 			uint varHandle = tcClient.CreateVariableHandle(iotTag.Path);
 			if (iotTag is { IsReadOnly: false, HasNewValue: true })
@@ -62,19 +63,17 @@ public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
 				if (resultWrite.ErrorCode != AdsErrorCode.NoError)
 					return new List<IOTTag>(); // Same as above
 				iotTag.HasNewValue = false;
-				iotTag.CurrentValue = iotTag.NewValue;
+				hasBeenUpdated = true;
+			}
+
+			// Else updates the current value bc it might have changed since.
+			ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, cancel, otTagTwinCat);
+			if (resultRead.ErrorCode != AdsErrorCode.NoError)
+				return new List<IOTTag>(); // Same as above
+			hasBeenUpdated = hasBeenUpdated || iotTag.CurrentValue != resultRead.Value?.ToString();
+			if (hasBeenUpdated)
 				updatedTags.Add(iotTag);
-			}
-			else
-			{
-				// Else updates the current value bc it might have changed since.
-				ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, cancel, otTagTwinCat);
-				if (resultRead.ErrorCode != AdsErrorCode.NoError)
-					return new List<IOTTag>(); // Same as above
-				if (iotTag.CurrentValue != resultRead.Value?.ToString())
-					updatedTags.Add(iotTag);
-				iotTag.CurrentValue = resultRead.Value?.ToString()!;
-			}
+			iotTag.CurrentValue = resultRead.Value?.ToString()!;
 		}
 
 		return updatedTags;

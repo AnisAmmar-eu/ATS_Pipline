@@ -6,7 +6,7 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 namespace Core.Entities.Packets.Models.Structs;
 
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
-public struct InFurnaceStruct : IBaseADS<Packet, InFurnaceStruct>
+public struct InFurnaceStruct : IBaseADS<Packet>
 {
 	public RIDStruct StationCycleRID;
 	public RIDStruct AnnounceID;

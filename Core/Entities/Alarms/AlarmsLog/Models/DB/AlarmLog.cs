@@ -1,4 +1,5 @@
-﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel;
@@ -8,7 +9,6 @@ namespace Core.Entities.Alarms.AlarmsLog.Models.DB;
 
 public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 {
-	private AlarmC? _alarm;
 	public bool HasBeenSent { get; set; }
 	public int AlarmID { get; set; }
 	public int StationID { get; set; } = Station.ID;
@@ -19,6 +19,11 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	public TimeSpan? Duration { get; set; }
 	public DateTimeOffset? TSRead { get; set; }
 	public DateTimeOffset? TSGet { get; set; } // Useful? TSGet == TS ?
+
+	// Only used in Collect() as AlarmC is not yet known.
+	[NotMapped] public string? RID { get; set; }
+
+	private AlarmC? _alarm;
 
 	public AlarmC Alarm
 	{

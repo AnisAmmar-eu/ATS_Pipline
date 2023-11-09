@@ -4,6 +4,7 @@ public class IOTTagType
 {
 	public static string String = "string";
 	public static string Int = "int";
+	public static string Double = "double";
 	public static string UShort = "ushort";
 	public static string Bool = "bool";
 }
@@ -31,6 +32,16 @@ public static class IOTTagRID
 	public const string AdaptiveNoiseSuppressionFactor = "AdaptiveNoiseSuppressionFactor";
 	public const string Sharpness = "Sharpness";
 	public const string AcquisitionFrameRate = "AcquisitionFrameRate";
+
+	#endregion
+
+	// Those are handled in the TwinCat
+
+	#region Camera Temperature
+
+	public const string Temperature = "Temperature";
+	public const string TemperatureOkWarnThreshold = "TemperatureOkWarnThreshold";
+	public const string TemperatureWarnErrorThreshold = "TemperatureWarnErrorThreshold";
 
 	#endregion
 
@@ -165,6 +176,14 @@ public static class IOTTagPath
 	public const string AdaptiveNoiseSuppressionFactor = "AdaptiveNoiseSuppressionFactor";
 	public const string Sharpness = "Sharpness";
 	public const string AcquisitionFrameRate = "AcquisitionFrameRate";
+
+	#endregion
+
+	#region Camera Temperature
+
+	public const string Temperature = "";
+	public const string TemperatureOkWarnThreshold = "";
+	public const string TemperatureWarnErrorThreshold = "";
 
 	#endregion
 

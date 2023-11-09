@@ -52,6 +52,24 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 		return bool.Parse(testModeTag.CurrentValue);
 	}
 
+	public async Task<DTOIOTTag> UpdateTagByRID(string rid, string value)
+	{
+		IOTTag tag = await AnodeUOW.IOTTag.GetBy(new Expression<Func<IOTTag, bool>>[]
+		{
+			tag => tag.RID == rid
+		}, withTracking: false);
+		if (tag.IsReadOnly)
+			throw new InvalidOperationException(
+				"Trying to write a ReadOnly tag. Other changes have been discarded.");
+		tag.HasNewValue = true;
+		tag.NewValue = value;
+		await AnodeUOW.StartTransaction();
+		AnodeUOW.IOTTag.Update(tag);
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+		return tag.ToDTO();
+	}
+
 	public async Task<List<DTOIOTTag>> UpdateTags(IEnumerable<PatchIOTTag> updateList)
 	{
 		List<IOTTag> updatedTags = new();

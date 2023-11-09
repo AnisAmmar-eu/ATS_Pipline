@@ -69,6 +69,22 @@ public class IOTTagController : ControllerBase
 		return await new ApiResponseObject(tag).SuccessResult(_logService, ControllerContext);
 	}
 
+	[HttpPut("{rid}/{value}")]
+	public async Task<IActionResult> SetTagValueByRID([FromRoute] string rid, [FromRoute] string value)
+	{
+		DTOIOTTag dtoTag;
+		try
+		{
+			dtoTag = await _iotTagService.UpdateTagByRID(rid, value);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(dtoTag).SuccessResult(_logService, ControllerContext);
+	}
+
 	[HttpPut]
 	public async Task<IActionResult> SetTagsValues([FromBody] [Required] List<PatchIOTTag> toUpdate)
 	{
