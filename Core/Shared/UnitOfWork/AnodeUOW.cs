@@ -19,7 +19,6 @@ using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
 using Core.Shared.Data;
 using Core.Shared.Repositories.System.Logs;
-using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

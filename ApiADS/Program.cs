@@ -1,5 +1,4 @@
 using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Services;

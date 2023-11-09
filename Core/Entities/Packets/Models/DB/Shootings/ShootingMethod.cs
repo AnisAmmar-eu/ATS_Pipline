@@ -1,4 +1,3 @@
-using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;

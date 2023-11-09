@@ -15,7 +15,7 @@ public class ADSService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<ADSService> _logger;
 	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
-	private bool _connected = false;
+	private bool _connected;
 	private int _executionCount;
 
 	public ADSService(ILogger<ADSService> logger, IServiceScopeFactory factory)

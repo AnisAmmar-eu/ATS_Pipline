@@ -1,6 +1,4 @@
 using System.Runtime.InteropServices;
-using Core.Entities.Alarms.AlarmsLog.Models.DB;
-using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 

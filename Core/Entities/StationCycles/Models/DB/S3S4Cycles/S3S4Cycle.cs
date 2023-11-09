@@ -10,8 +10,6 @@ namespace Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 public partial class S3S4Cycle : StationCycle, IBaseEntity<S3S4Cycle, DTOS3S4Cycle>, IMatchableCycle
 {
 	public string? AnnounceID { get; set; }
-	public SignMatchStatus MatchingCamera1 { get; set; } = SignMatchStatus.NA;
-	public SignMatchStatus MatchingCamera2 { get; set; } = SignMatchStatus.NA;
 
 	public string? InFurnaceStatus { get; set; }
 	public int? InFurnaceID { get; set; }
@@ -20,4 +18,6 @@ public partial class S3S4Cycle : StationCycle, IBaseEntity<S3S4Cycle, DTOS3S4Cyc
 	public string? OutFurnaceStatus { get; set; }
 	public int? OutFurnaceID { get; set; }
 	public OutFurnace? OutFurnacePacket { get; set; }
+	public SignMatchStatus MatchingCamera1 { get; set; } = SignMatchStatus.NA;
+	public SignMatchStatus MatchingCamera2 { get; set; } = SignMatchStatus.NA;
 }

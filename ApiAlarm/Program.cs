@@ -5,7 +5,6 @@ using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
-using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.AlarmHub;

@@ -6,10 +6,6 @@ namespace Core.Entities.Alarms.AlarmsPLC.Models.DB;
 
 public partial class AlarmPLC : BaseEntity, IBaseEntity<AlarmPLC, DTOAlarmPLC>
 {
-	public AlarmPLC()
-	{
-	}
-
 	public override DTOAlarmPLC ToDTO()
 	{
 		return new DTOAlarmPLC(this);

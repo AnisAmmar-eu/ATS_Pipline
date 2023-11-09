@@ -1,4 +1,3 @@
-using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Interfaces;
 using Core.Entities.StationCycles.Models.DTO.S5Cycles;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -13,8 +12,8 @@ public partial class S5Cycle : StationCycle, IBaseEntity<S5Cycle, DTOS5Cycle>, I
 
 	public S5Cycle(DTOS5Cycle dtoS5Cycle) : base(dtoS5Cycle)
 	{
-		MatchingCamera1 = (SignMatchStatus)dtoS5Cycle.MatchingCamera1;
-		MatchingCamera2 = (SignMatchStatus)dtoS5Cycle.MatchingCamera2;
+		MatchingCamera1 = dtoS5Cycle.MatchingCamera1;
+		MatchingCamera2 = dtoS5Cycle.MatchingCamera2;
 	}
 
 	public override DTOS5Cycle ToDTO()

@@ -44,11 +44,6 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 		AlarmListPacket = stationCycle.AlarmListPacket?.ToDTO();
 	}
 
-	public override StationCycle ToModel()
-	{
-		return new StationCycle(this);
-	}
-
 	public DTOStationCycle GetValue()
 	{
 		return this;
@@ -117,6 +112,11 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 
 			return ans.ToArray();
 		};
+	}
+
+	public override StationCycle ToModel()
+	{
+		return new StationCycle(this);
 	}
 
 	private static void AddAtIndex(int[,] table, int stationID, int index)
