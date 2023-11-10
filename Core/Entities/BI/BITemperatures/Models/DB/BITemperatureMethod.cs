@@ -1,7 +1,6 @@
 using System.Globalization;
 using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.DB;
-using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;

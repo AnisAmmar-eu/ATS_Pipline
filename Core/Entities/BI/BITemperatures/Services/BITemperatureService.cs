@@ -26,7 +26,7 @@ public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, 
 
 	public async Task LogNewValues()
 	{
-		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag.GetAll(filters: new Expression<Func<IOTTag, bool>>[]
+		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag.GetAll(new Expression<Func<IOTTag, bool>>[]
 		{
 			tag => _temperatureTagsRIDs.Contains(tag.RID)
 		}, withTracking: false);

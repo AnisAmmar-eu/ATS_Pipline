@@ -1,5 +1,4 @@
 using Core.Entities.IOT.IOTDevices.Models.DB;
-using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
 namespace Core.Entities.IOT.IOTDevices.Models.Structs;
 

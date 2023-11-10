@@ -32,6 +32,7 @@ public class TemperatureService : BackgroundService
 			asyncScope.ServiceProvider.GetRequiredService<IBITemperatureService>();
 		using PeriodicTimer timer = new(_period);
 		do
+		{
 			try
 			{
 				_logger.LogInformation("TemperatureService running at: {time}", DateTimeOffset.Now);
@@ -52,7 +53,7 @@ public class TemperatureService : BackgroundService
 					"Failed to execute PeriodicTemperatureService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken));
+		} while (!stoppingToken.IsCancellationRequested
+		         && await timer.WaitForNextTickAsync(stoppingToken));
 	}
 }
