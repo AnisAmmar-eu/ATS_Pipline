@@ -2,8 +2,8 @@ using System.Linq.Expressions;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.BI.BITemperatures.Repositories;
-using Core.Entities.IOT.IOTDevices.Models.DB;
-using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
+using Core.Entities.IOT.Dictionaries;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -12,6 +12,8 @@ namespace Core.Entities.BI.BITemperatures.Services;
 public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, BITemperature, DTOBITemperature>,
 	IBITemperatureService
 {
+	private readonly string[] _temperatureTagsRIDs = { $"{IOTTagRID.Temperature}{1}", $"{IOTTagRID.Temperature}{2}" };
+
 	public BITemperatureService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
@@ -24,15 +26,15 @@ public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, 
 
 	public async Task LogNewValues()
 	{
-		List<OTCamera> cameras = (await AnodeUOW.IOTDevice.GetAll(new Expression<Func<IOTDevice, bool>>[]
+		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag.GetAll(filters: new Expression<Func<IOTTag, bool>>[]
 		{
-			device => device is OTCamera
-		}, withTracking: false)).ConvertAll(device => device as OTCamera)!;
-		if (!cameras.Any())
+			tag => _temperatureTagsRIDs.Contains(tag.RID)
+		}, withTracking: false);
+		if (!temperatureTags.Any())
 			return;
 		await AnodeUOW.StartTransaction();
-		foreach (OTCamera camera in cameras)
-			await AnodeUOW.BITemperature.Add(new BITemperature(camera));
+		foreach (IOTTag tag in temperatureTags)
+			await AnodeUOW.BITemperature.Add(new BITemperature(tag));
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();

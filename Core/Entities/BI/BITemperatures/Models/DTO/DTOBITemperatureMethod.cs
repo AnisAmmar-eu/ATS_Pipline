@@ -15,7 +15,7 @@ public partial class DTOBITemperature : DTOBaseEntity, IDTO<BITemperature, DTOBI
 		ID = biTemperature.ID;
 		TS = biTemperature.TS;
 		StationID = biTemperature.StationID;
-		CameraRID = biTemperature.CameraRID;
+		CameraRID = biTemperature.TemperatureRID;
 		Temperature = biTemperature.Temperature;
 	}
 }

@@ -51,7 +51,6 @@ public class IOTInitializer
 			Name = prefix + " Camera",
 			Description = prefix + " Camera IOTDevice",
 			Address = (port - 1).ToString(),
-			Temperature = 19.84,
 			IsConnected = false
 		};
 		anodeCTX.OTCamera.Add(cam);

@@ -1,5 +1,7 @@
+using System.Globalization;
 using Core.Entities.BI.BITemperatures.Models.DTO;
-using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
+using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -12,12 +14,12 @@ public partial class BITemperature : BaseEntity, IBaseEntity<BITemperature, DTOB
 	{
 	}
 
-	public BITemperature(OTCamera camera)
+	public BITemperature(IOTTag cameraTemperature)
 	{
 		TS = DateTimeOffset.Now;
-		CameraRID = camera.RID;
+		TemperatureRID = cameraTemperature.RID;
 		StationID = Station.ID;
-		Temperature = camera.Temperature;
+		Temperature = double.Parse(cameraTemperature.CurrentValue, CultureInfo.InvariantCulture);
 	}
 
 	public override DTOBITemperature ToDTO()

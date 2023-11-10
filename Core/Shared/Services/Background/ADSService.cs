@@ -15,7 +15,6 @@ public class ADSService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<ADSService> _logger;
 	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
-	private bool _connected;
 	private int _executionCount;
 
 	public ADSService(ILogger<ADSService> logger, IServiceScopeFactory factory)
@@ -34,7 +33,6 @@ public class ADSService : BackgroundService
 			try
 			{
 				AdsClient tcClient = await InitializeConnection(asyncScope, cancel);
-				_connected = true;
 				// If the TC disconnects, it will loop back to the top
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
 				while (true)
@@ -49,7 +47,6 @@ public class ADSService : BackgroundService
 				_executionCount++;
 				_logger.LogInformation(
 					"Executed PeriodicADSService - Count: {count}", _executionCount);
-				_connected = false;
 			}
 	}
 

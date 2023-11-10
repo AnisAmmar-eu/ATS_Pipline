@@ -18,7 +18,7 @@ public class TemperatureService : BackgroundService
 		_factory = factory;
 	}
 
-	private TimeSpan TimeToWaitUntilNextQuarterHour()
+	private static TimeSpan TimeToWaitUntilNextQuarterHour()
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
 		return TimeSpan.FromMinutes(15 - now.Minute % 15);
@@ -31,8 +31,7 @@ public class TemperatureService : BackgroundService
 		IBITemperatureService biTemperatureService =
 			asyncScope.ServiceProvider.GetRequiredService<IBITemperatureService>();
 		using PeriodicTimer timer = new(_period);
-		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken))
+		do
 			try
 			{
 				_logger.LogInformation("TemperatureService running at: {time}", DateTimeOffset.Now);
@@ -53,5 +52,7 @@ public class TemperatureService : BackgroundService
 					"Failed to execute PeriodicTemperatureService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
+		while (!stoppingToken.IsCancellationRequested
+		       && await timer.WaitForNextTickAsync(stoppingToken));
 	}
 }

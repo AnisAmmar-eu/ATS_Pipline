@@ -25,7 +25,7 @@ public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundServi
 		_logger = logger;
 	}
 
-	private TimeSpan TimeToWaitUntilNextHour()
+	private static TimeSpan TimeToWaitUntilNextHour()
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
 		return TimeSpan.FromMinutes(60 - now.Minute);
@@ -33,7 +33,7 @@ public class BaseHourlyKPIRTService<T, TDTO, TService, TValue> : BackgroundServi
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		// await Task.Delay(TimeToWaitUntilNextHour(), stoppingToken);
+		await Task.Delay(TimeToWaitUntilNextHour(), stoppingToken);
 		using PeriodicTimer timer = new(_period);
 		do
 		{
