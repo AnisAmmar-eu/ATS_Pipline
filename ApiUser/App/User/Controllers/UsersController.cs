@@ -117,7 +117,7 @@ public class UsersController : ControllerBase
 	/// </summary>
 	/// <param name="username"></param>
 	/// <returns>A <see cref="DTOUser" /></returns>
-	[HttpGet("{name}")]
+	[HttpGet("username/{username}")]
 	public async Task<IActionResult> GetByUsername([Required] string username)
 	{
 		DTOUser dtoUser;
@@ -143,7 +143,7 @@ public class UsersController : ControllerBase
 	/// </summary>
 	/// <param name="id"></param>
 	/// <returns>A <see cref="DTOUser" /></returns>
-	[HttpGet("{id}")]
+	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetById([Required] string id)
 	{
 		DTOUser dtoUser;
