@@ -7,8 +7,6 @@ using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.Packets.Services;
-using Core.Entities.StationCycles.Dictionaries;
-using Core.Entities.StationCycles.Interfaces;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
@@ -69,46 +67,6 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
 		return stationCycle.ShootingPacket.GetImagePathFromRoot(stationCycle.StationID, thumbnailsPath,
 			stationCycle.AnodeType, camera);
-	}
-
-	public async Task<int[]> GetMatchingStats(TimeSpan period, int? stationID = null)
-	{
-		DateTimeOffset minimumDate = DateTimeOffset.Now.Subtract(period);
-		List<StationCycle> stationCycles = await AnodeUOW.StationCycle.GetAll(
-			new Expression<Func<StationCycle, bool>>[]
-			{
-				stationCycle => (stationID == null || stationCycle.StationID == stationID)
-				                && stationCycle.TS >= minimumDate
-			}, withTracking: false);
-		double nbMatchCam1 = 0;
-		double nbTotalMatch = 0;
-		int nbSignedAndMatched = 0;
-		int nbSigned = 0;
-		int nbNotSigned = 0;
-		stationCycles.ForEach(cycle =>
-		{
-			if (cycle.SignStatus1 == SignMatchStatus.Ok && cycle.SignStatus2 == SignMatchStatus.Ok)
-			{
-				if (cycle is IMatchableCycle matchableCycle && (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok ||
-				                                                matchableCycle.MatchingCamera2 == SignMatchStatus.Ok))
-				{
-					nbSignedAndMatched++;
-					nbTotalMatch++;
-					if (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok)
-						nbMatchCam1++;
-				}
-				else
-				{
-					nbSigned++;
-				}
-			}
-			else
-			{
-				nbNotSigned++;
-			}
-		});
-		int percentageCam1 = nbTotalMatch == 0 ? 0 : (int)(nbMatchCam1 / nbTotalMatch * 100);
-		return new[] { nbSignedAndMatched, nbSigned, nbNotSigned, percentageCam1 };
 	}
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)

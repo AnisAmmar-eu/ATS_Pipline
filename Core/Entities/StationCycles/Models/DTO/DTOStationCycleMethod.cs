@@ -77,7 +77,7 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 			int[,] values = new int[6, 5];
 			stationCycles.ForEach(cycle =>
 			{
-				if (cycle is { SignStatus1: SignMatchStatus.Ok, SignStatus2: SignMatchStatus.Ok })
+				if (cycle.SignStatus1 == SignMatchStatus.Ok || cycle.SignStatus2 == SignMatchStatus.Ok)
 				{
 					if (cycle is IMatchableCycle matchableCycle &&
 					    (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok ||
