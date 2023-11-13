@@ -5,7 +5,6 @@ using Core.Shared.Attributes;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
-using BadHttpRequestException = Microsoft.AspNetCore.Http.BadHttpRequestException;
 
 namespace ApiVision.Controllers;
 
@@ -14,8 +13,8 @@ namespace ApiVision.Controllers;
 [ServerAction]
 public class FileSettingController : ControllerBase
 {
-	private readonly ILogService _logService;
 	private readonly IFileSettingService _fileSettingService;
+	private readonly ILogService _logService;
 
 	public FileSettingController(ILogService logService, IFileSettingService fileSettingService)
 	{

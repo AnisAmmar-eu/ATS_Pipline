@@ -8,9 +8,4 @@ public class UploadFileSetting
 	public string Username { get; set; } = string.Empty;
 	public string Comment { get; set; } = string.Empty;
 	public IFormFile? File { get; set; } = null;
-
-	public UploadFileSetting()
-	{
-		
-	}
 }

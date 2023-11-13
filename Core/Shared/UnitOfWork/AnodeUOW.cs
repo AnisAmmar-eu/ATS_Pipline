@@ -124,7 +124,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IActRepository) => Acts,
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
 			_ when repo == typeof(IRoleRepository) => Roles,
-			
+
 			_ when repo == typeof(IFileSettingRepository) => FileSetting,
 
 			_ when repo == typeof(ILogRepository) => Log,

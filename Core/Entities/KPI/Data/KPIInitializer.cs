@@ -1,6 +1,5 @@
 using Core.Entities.KPI.KPICs.Dictionaries;
 using Core.Entities.KPI.KPICs.Models.DB;
-using Core.Migrations;
 using Core.Shared.Data;
 
 namespace Core.Entities.KPI.Data;

@@ -13,7 +13,7 @@ public class KPITest : BaseEntity, IBaseEntity<KPITest, DTOKPITest>, IBaseKPI<do
 	{
 		return new DTOKPITest(this);
 	}
-	
+
 	public double GetValue()
 	{
 		return Value;

@@ -24,7 +24,7 @@ public static class VisionInitializer
 			LastModification = DateTimeOffset.Now,
 			LastUsername = "init",
 			LastUploadName = "",
-			LastComment = "init",
+			LastComment = "init"
 		});
 	}
 }

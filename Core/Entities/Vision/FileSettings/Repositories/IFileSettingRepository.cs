@@ -6,5 +6,4 @@ namespace Core.Entities.Vision.FileSettings.Repositories;
 
 public interface IFileSettingRepository : IRepositoryBaseEntity<FileSetting, DTOFileSetting>
 {
-	
 }

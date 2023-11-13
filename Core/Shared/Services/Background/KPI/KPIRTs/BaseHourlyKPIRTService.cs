@@ -34,7 +34,7 @@ public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundSe
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		// await Task.Delay(TimeToWaitUntilNextHour(), stoppingToken);
+		await Task.Delay(TimeToWaitUntilNextHour(), stoppingToken);
 		using PeriodicTimer timer = new(_period);
 		do
 		{
@@ -49,7 +49,8 @@ public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundSe
 					asyncScope.ServiceProvider.GetRequiredService<IKPIRTService>();
 
 				_logger.LogInformation("Calling ComputeKPIRTs");
-				await kpirtService.ComputeKPIRTs<T, TDTO, TRepository, TValue>((anodeUOW.GetRepoByType(typeof(TRepository)) as TRepository)!);
+				await kpirtService.ComputeKPIRTs<T, TDTO, TRepository, TValue>(
+					(anodeUOW.GetRepoByType(typeof(TRepository)) as TRepository)!);
 
 				_executionCount++;
 				_logger.LogInformation("Executed BaseKPIRTService - Count: {count}", _executionCount);

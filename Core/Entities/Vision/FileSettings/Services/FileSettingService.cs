@@ -6,11 +6,11 @@ using Core.Entities.Vision.FileSettings.Repositories;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 
 namespace Core.Entities.Vision.FileSettings.Services;
 
-public class FileSettingService : ServiceBaseEntity<IFileSettingRepository, FileSetting, DTOFileSetting>, IFileSettingService
+public class FileSettingService : ServiceBaseEntity<IFileSettingRepository, FileSetting, DTOFileSetting>,
+	IFileSettingService
 {
 	public FileSettingService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
@@ -22,7 +22,7 @@ public class FileSettingService : ServiceBaseEntity<IFileSettingRepository, File
 		{
 			setting => setting.RID == uploadFileSetting.RID
 		}, withTracking: false);
-		
+
 		fileSetting.LastUsername = uploadFileSetting.Username;
 		fileSetting.LastComment = uploadFileSetting.Comment;
 		fileSetting.LastModification = DateTimeOffset.Now;

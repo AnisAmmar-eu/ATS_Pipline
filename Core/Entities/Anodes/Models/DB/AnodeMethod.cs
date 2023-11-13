@@ -16,13 +16,6 @@ public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>, 
 		return new DTOAnode(this);
 	}
 
-	public static Anode Create(StationCycle stationCycle)
-	{
-		if (stationCycle.AnodeType == AnodeTypeDict.D20)
-			return new AnodeD20();
-		return new AnodeDX();
-	}
-
 	public Anode GetValue()
 	{
 		return this;
@@ -35,9 +28,13 @@ public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>, 
 
 	public Func<List<Anode>, string[]> GetComputedValues()
 	{
-		return anodes =>
-		{
-			return new[] { anodes.Count.ToString() };
-		};
+		return anodes => { return new[] { anodes.Count.ToString() }; };
+	}
+
+	public static Anode Create(StationCycle stationCycle)
+	{
+		if (stationCycle.AnodeType == AnodeTypeDict.D20)
+			return new AnodeD20();
+		return new AnodeDX();
 	}
 }

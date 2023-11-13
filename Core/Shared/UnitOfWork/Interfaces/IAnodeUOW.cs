@@ -50,9 +50,9 @@ public interface IAnodeUOW : IDisposable
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
-	
+
 	// Vision
-	IFileSettingRepository FileSetting { get;  }
+	IFileSettingRepository FileSetting { get; }
 
 	public object? GetRepoByType(Type repo);
 

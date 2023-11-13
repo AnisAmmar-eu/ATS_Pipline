@@ -95,7 +95,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
 	public DbSet<KPITest> KPITest => Set<KPITest>();
 	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
-	
+
 	// Vision
 	public DbSet<FileSetting> FileSetting => Set<FileSetting>();
 

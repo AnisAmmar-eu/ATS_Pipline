@@ -11,7 +11,6 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Services.Kernel;
-using Core.Shared.Services.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.KPI.KPIEntries.Services.KPIRTs;

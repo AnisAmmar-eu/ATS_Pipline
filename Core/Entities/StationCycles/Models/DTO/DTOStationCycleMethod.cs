@@ -1,10 +1,4 @@
-using Core.Entities.KPI.KPICs.Dictionaries;
-using Core.Entities.KPI.KPICs.Models.DB;
-using Core.Entities.StationCycles.Dictionaries;
-using Core.Entities.StationCycles.Interfaces;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Shared.Dictionaries;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -51,5 +45,4 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	{
 		return new StationCycle(this);
 	}
-
 }

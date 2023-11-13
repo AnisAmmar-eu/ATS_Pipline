@@ -50,27 +50,6 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 		return new DTOStationCycle(this);
 	}
 
-	public static StationCycle Create()
-	{
-		if (Station.Type == StationType.S1S2)
-			return new S1S2Cycle();
-		if (Station.Type == StationType.S3S4)
-			return new S3S4Cycle();
-		return new S5Cycle();
-	}
-
-	public ReducedStationCycle Reduce()
-	{
-		return new ReducedStationCycle
-		{
-			ID = ID,
-			RID = RID,
-			AnodeSize = DetectionPacket?.AnodeSize,
-			AnodeType = AnodeType,
-			ShootingTS = ShootingPacket?.ShootingTS
-		};
-	}
-	
 	public StationCycle GetValue()
 	{
 		return this;
@@ -87,7 +66,7 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 		// RIDS of the server and every station are added in the following order: rids, rids1, rids2...
 		for (int i = 0; i <= 5; ++i)
 			ans.AddRange(signMatchRIDs.Select(rid => rid + (i == 0 ? "" : i.ToString())));
-		
+
 		ans.AddRange(new[] { KPICRID.D20Anodes, KPICRID.DXAnodes });
 		for (int i = 1; i <= 5; ++i)
 			ans.Add($"{KPICRID.AnodesStation}{i}");
@@ -146,6 +125,7 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 				int percentageCam1 = nbTotalMatch == 0 ? 0 : (int)((double)nbMatchCam1 / nbTotalMatch * 100);
 				ans.Add(percentageCam1.ToString());
 			}
+
 			ans.Add(nbD20.ToString());
 			ans.Add(nbDX.ToString());
 			ans.AddRange(nbAnodes.Select(x => x.ToString()));
@@ -153,6 +133,28 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 			return ans.ToArray();
 		};
 	}
+
+	public static StationCycle Create()
+	{
+		if (Station.Type == StationType.S1S2)
+			return new S1S2Cycle();
+		if (Station.Type == StationType.S3S4)
+			return new S3S4Cycle();
+		return new S5Cycle();
+	}
+
+	public ReducedStationCycle Reduce()
+	{
+		return new ReducedStationCycle
+		{
+			ID = ID,
+			RID = RID,
+			AnodeSize = DetectionPacket?.AnodeSize,
+			AnodeType = AnodeType,
+			ShootingTS = ShootingPacket?.ShootingTS
+		};
+	}
+
 	private static void AddAtIndex(int[,] table, int stationID, int index)
 	{
 		// 0 is the index of the global values.

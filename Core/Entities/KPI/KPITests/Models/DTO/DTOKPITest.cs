@@ -1,6 +1,4 @@
-using System.Globalization;
 using Core.Entities.KPI.KPITests.Models.DB;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
@@ -16,5 +14,4 @@ public class DTOKPITest : DTOBaseEntity, IDTO<KPITest, DTOKPITest>
 	}
 
 	public double Value { get; set; }
-
 }
