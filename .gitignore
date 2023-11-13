@@ -2,3 +2,15 @@
 .idea
 bin
 obj
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+.config/
+
+# Images and user specific configs.
+*.jpg
+*.user
+*.userosscache
+*.sln.docstates
+*.pubxml

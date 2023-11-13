@@ -9,9 +9,9 @@ using Core.Shared.Dictionaries;
 
 namespace Core.Entities.IOT.Data;
 
-public class IOTInitializer
+public static class IOTInitializer
 {
-	public static void Initialize(AnodeCTX anodeCTX)
+	public static void InitializeStation(AnodeCTX anodeCTX)
 	{
 		if (anodeCTX.IOTDevice.Any())
 			return;
@@ -23,24 +23,48 @@ public class IOTInitializer
 		InitializeApi(anodeCTX, ITApisDict.IOTRID, ITApisDict.IOTAddress, ITApisDict.IOTPath, true);
 		string[] rids =
 		{
-			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.CameraAssignRID, ITApisDict.KPIRID,
-			ITApisDict.StationCycleRID, ITApisDict.UserRID, ITApisDict.VisionRID
+			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.CameraAssignRID,
+			ITApisDict.StationCycleRID, ITApisDict.UserRID
 		};
 		string[] addresses =
 		{
 			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.CameraAssignAddress,
-			ITApisDict.KPIAddress, ITApisDict.StationCycleAddress, ITApisDict.UserAddress, ITApisDict.VisionAddress
+			ITApisDict.StationCycleAddress, ITApisDict.UserAddress
 		};
 		string[] paths =
 		{
 			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.CameraAssignPath,
-			ITApisDict.KPIPath, ITApisDict.StationCyclePath, ITApisDict.UserPath, ITApisDict.VisionPath
+			ITApisDict.StationCyclePath, ITApisDict.UserPath
 		};
 		for (int i = 0; i < rids.Length; ++i)
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
 
 		// TODO Path.
 		InitializeTwinCat(anodeCTX, DeviceRID.TwinCat, ADSUtils.AdsPort.ToString(), "");
+	}
+
+	public static void InitializeServer(AnodeCTX anodeCTX)
+	{
+		if (anodeCTX.IOTDevice.Any())
+			return;
+
+		// No need for test mode in server.
+		string[] rids =
+		{
+			ITApisDict.IOTRID, ITApisDict.AlarmRID, ITApisDict.KPIRID, ITApisDict.StationCycleRID, ITApisDict.UserRID
+		};
+		string[] addresses =
+		{
+			ITApisDict.IOTAddress, ITApisDict.AlarmAddress, ITApisDict.KPIAddress, ITApisDict.StationCycleAddress,
+			ITApisDict.UserAddress
+		};
+		string[] paths =
+		{
+			ITApisDict.IOTPath, ITApisDict.AlarmPath, ITApisDict.KPIPath, ITApisDict.StationCyclePath,
+			ITApisDict.UserPath
+		};
+		for (int i = 0; i < rids.Length; ++i)
+			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
