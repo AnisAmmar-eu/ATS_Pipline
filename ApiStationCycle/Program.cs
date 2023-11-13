@@ -1,4 +1,5 @@
 using System.Text;
+using Core.Entities.BenchmarkTests.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Entities.User.Models.DB.Roles;
@@ -74,6 +75,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddScoped<ILogService, LogService>();
+
+builder.Services.AddScoped<IBenchmarkTestService, BenchmarkTestService>();
 
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();

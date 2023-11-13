@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231113132355_Add_Benchmark_Test")]
+    partial class Add_Benchmark_Test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,8 +260,7 @@ namespace Core.Migrations
 
                     b.Property<string>("AnodeType")
                         .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CameraID")
                         .HasColumnType("int");
@@ -275,8 +276,6 @@ namespace Core.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("AnodeType");
 
                     b.ToTable("BenchmarkTest");
                 });

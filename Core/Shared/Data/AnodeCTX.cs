@@ -6,6 +6,7 @@ using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Anodes.Models.DB.AnodesD20;
 using Core.Entities.Anodes.Models.DB.AnodesDX;
+using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
@@ -50,6 +51,8 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	}
 
 	public DbSet<Log> Log => Set<Log>();
+
+	public DbSet<BenchmarkTest> BenchmarkTest => Set<BenchmarkTest>();
 
 	// Alarms
 	public DbSet<AlarmPLC> AlarmPLC => Set<AlarmPLC>();
@@ -207,5 +210,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithOne(cycle => cycle.Anode)
 			.HasForeignKey<AnodeDX>(anode => anode.S5CycleID)
 			.OnDelete(DeleteBehavior.NoAction);
+
+		modelBuilder.Entity<BenchmarkTest>().Property<string>(b => b.AnodeType).HasMaxLength(16);
 	}
 }
