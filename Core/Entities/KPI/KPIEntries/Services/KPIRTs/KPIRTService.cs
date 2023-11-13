@@ -54,12 +54,16 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		where TDTO : class, IDTO<T, TDTO>
 		where TRepository : class, IRepositoryBaseEntity<T, TDTO>
 	{
+		string[] periods = { KPIPeriod.Day, KPIPeriod.Week, KPIPeriod.Month, KPIPeriod.Year };
+		DateTimeOffset oldest = KPIPeriod.GetStartRange(KPIPeriod.Year, DateTimeOffset.Now);
 		// Logic -> GetAll of T, get its KPICRIDs (create KPIRT if necessary) and make the computations on it.
-		List<T> entities = await tRepository.GetAll(withTracking: false);
+		List<T> entities = await tRepository.GetAll(new Expression<Func<T, bool>>[]
+		{
+			entity => entity.TS >= oldest
+		},withTracking: false);
 		if (entities.Count == 0)
 			return;
 		string[] kpiCRIDs = entities[0].GetKPICRID();
-		string[] periods = { KPIPeriod.Day, KPIPeriod.Week, KPIPeriod.Month, KPIPeriod.Year };
 
 		List<List<KPIRT>> kpiRTs = await GetKPIRTsFromKPICsAndPeriods(kpiCRIDs, periods);
 
