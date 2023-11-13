@@ -44,8 +44,8 @@ builder.Services.AddScoped<IKPILogService, KPILogService>();
 
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();
-//builder.Services.AddSingleton<HourlyStationCycleService>();
-//builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyStationCycleService>());
+builder.Services.AddSingleton<HourlyStationCycleService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyStationCycleService>());
 
 builder.Services.AddScoped<IAnodeService, AnodeService>();
 builder.Services.AddSingleton<HourlyAnodeService>();
