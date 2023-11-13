@@ -1,10 +1,8 @@
 using Core.Entities.IOT.IOTDevices.Models.DB;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DTO;
 
-public partial class DTOIOTDevice : DTOBaseEntity, IDTO<IOTDevice, DTOIOTDevice>
+public partial class DTOIOTDevice
 {
 	public DTOIOTDevice()
 	{

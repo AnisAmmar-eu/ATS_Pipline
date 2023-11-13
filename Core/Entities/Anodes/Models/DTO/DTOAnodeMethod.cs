@@ -1,10 +1,8 @@
 using Core.Entities.Anodes.Models.DB;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Anodes.Models.DTO;
 
-public partial class DTOAnode : DTOBaseEntity, IDTO<Anode, DTOAnode>
+public partial class DTOAnode
 {
 	public DTOAnode(Anode anode)
 	{

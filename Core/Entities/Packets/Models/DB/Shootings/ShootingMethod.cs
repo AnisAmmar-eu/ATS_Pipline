@@ -6,14 +6,13 @@ using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Dictionaries;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 using Stemmer.Cvb;
 using TwinCAT.Ads;
 
 namespace Core.Entities.Packets.Models.DB.Shootings;
 
-public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
+public partial class Shooting
 {
 	public Shooting()
 	{

@@ -5,13 +5,12 @@ using Core.Entities.Packets.Models.DTO.Furnaces;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
 using Core.Shared.Dictionaries;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 using Newtonsoft.Json;
 
 namespace Core.Entities.Packets.Models.DB.Furnaces;
 
-public abstract partial class Furnace : Packet, IBaseEntity<Furnace, DTOFurnace>
+public abstract partial class Furnace
 {
 	protected Furnace()
 	{

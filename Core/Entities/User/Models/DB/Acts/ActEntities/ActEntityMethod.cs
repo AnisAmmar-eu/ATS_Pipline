@@ -1,10 +1,8 @@
 ﻿using Core.Entities.User.Models.DTO.Acts.ActEntities;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.User.Models.DB.Acts.ActEntities;
 
-public partial class ActEntity : BaseEntity, IBaseEntity<ActEntity, DTOActEntity>
+public partial class ActEntity
 {
 	public ActEntity()
 	{

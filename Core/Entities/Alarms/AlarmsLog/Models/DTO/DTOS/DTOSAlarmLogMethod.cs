@@ -2,7 +2,7 @@ using Core.Entities.Alarms.AlarmsLog.Models.DB;
 
 namespace Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
 
-public partial class DTOSAlarmLog : DTOAlarmLog
+public partial class DTOSAlarmLog
 {
 	public DTOSAlarmLog()
 	{

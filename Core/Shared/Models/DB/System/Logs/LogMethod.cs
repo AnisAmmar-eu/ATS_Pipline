@@ -1,11 +1,9 @@
 ﻿using Core.Shared.Dictionaries;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.System.Logs;
 
 namespace Core.Shared.Models.DB.System.Logs;
 
-public partial class Log : BaseEntity, IBaseEntity<Log, DTOLog>
+public partial class Log
 {
 	public Log()
 	{

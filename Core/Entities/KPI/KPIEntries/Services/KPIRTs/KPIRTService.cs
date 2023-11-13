@@ -60,7 +60,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		List<T> entities = await tRepository.GetAll(new Expression<Func<T, bool>>[]
 		{
 			entity => entity.TS >= oldest
-		},withTracking: false);
+		}, withTracking: false);
 		if (entities.Count == 0)
 			return;
 		string[] kpiCRIDs = entities[0].GetKPICRID();

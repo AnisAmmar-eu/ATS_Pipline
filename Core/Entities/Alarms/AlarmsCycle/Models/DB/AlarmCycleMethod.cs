@@ -1,11 +1,9 @@
 using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsCycle.Models.DB;
 
-public partial class AlarmCycle : BaseEntity, IBaseEntity<AlarmCycle, DTOAlarmCycle>
+public partial class AlarmCycle
 {
 	public AlarmCycle()
 	{

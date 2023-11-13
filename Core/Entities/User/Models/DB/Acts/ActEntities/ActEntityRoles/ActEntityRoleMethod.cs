@@ -2,11 +2,10 @@
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.User.Models.DTO.Acts.ActEntities.ActEntityRoles;
-using Core.Shared.Models.DB.Kernel;
 
 namespace Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 
-public partial class ActEntityRole : BaseEntity
+public partial class ActEntityRole
 {
 	public ActEntityRole()
 	{

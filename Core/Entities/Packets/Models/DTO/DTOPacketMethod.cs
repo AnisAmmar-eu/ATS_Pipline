@@ -1,10 +1,8 @@
 using Core.Entities.Packets.Models.DB;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Models.DTO;
 
-public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
+public partial class DTOPacket
 {
 	public DTOPacket()
 	{

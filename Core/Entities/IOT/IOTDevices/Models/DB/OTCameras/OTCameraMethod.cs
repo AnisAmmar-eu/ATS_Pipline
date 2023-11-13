@@ -3,7 +3,6 @@ using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.Camera;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
@@ -11,7 +10,7 @@ using Stemmer.Cvb.GenApi;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
-public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
+public partial class OTCamera
 {
 	public override DTOOTCamera ToDTO()
 	{

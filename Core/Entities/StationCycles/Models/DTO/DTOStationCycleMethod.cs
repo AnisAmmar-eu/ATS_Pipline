@@ -1,10 +1,8 @@
 using Core.Entities.StationCycles.Models.DB;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Models.DTO;
 
-public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>
+public partial class DTOStationCycle
 {
 	public DTOStationCycle()
 	{

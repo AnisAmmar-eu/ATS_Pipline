@@ -3,11 +3,10 @@ using System.Runtime.Versioning;
 using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DTO.Auth.Register;
 using Core.Entities.User.Models.DTO.Users;
-using Microsoft.AspNetCore.Identity;
 
 namespace Core.Entities.User.Models.DB.Users;
 
-public partial class ApplicationUser : IdentityUser
+public partial class ApplicationUser
 {
 	public ApplicationUser()
 	{

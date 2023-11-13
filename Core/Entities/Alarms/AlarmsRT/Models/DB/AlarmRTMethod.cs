@@ -1,11 +1,9 @@
 ﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsRT.Models.DB;
 
-public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
+public partial class AlarmRT
 {
 	public AlarmRT()
 	{

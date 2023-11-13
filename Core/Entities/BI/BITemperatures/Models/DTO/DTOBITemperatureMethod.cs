@@ -1,10 +1,8 @@
 using Core.Entities.BI.BITemperatures.Models.DB;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.BI.BITemperatures.Models.DTO;
 
-public partial class DTOBITemperature : DTOBaseEntity, IDTO<BITemperature, DTOBITemperature>
+public partial class DTOBITemperature
 {
 	public DTOBITemperature()
 	{

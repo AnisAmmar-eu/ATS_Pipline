@@ -4,12 +4,11 @@ using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB.AlarmLists;
 
-public partial class AlarmList : Packet, IBaseEntity<AlarmList, DTOAlarmList>
+public partial class AlarmList
 {
 	public AlarmList()
 	{

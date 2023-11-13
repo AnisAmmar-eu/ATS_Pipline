@@ -7,12 +7,10 @@ using Core.Entities.StationCycles.Models.DB.S5Cycles;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Shared.Dictionaries;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Models.DB;
 
-public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOStationCycle>, IBaseKPI<StationCycle>
+public partial class StationCycle
 {
 	protected StationCycle()
 	{

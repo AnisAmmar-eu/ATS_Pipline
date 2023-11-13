@@ -2,7 +2,6 @@ using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTTwinCats;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
 using Org.BouncyCastle.Security;
@@ -11,7 +10,7 @@ using TwinCAT.Ads;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 
-public partial class OTTwinCat : IOTDevice, IBaseEntity<OTTwinCat, DTOOTTwinCat>
+public partial class OTTwinCat
 {
 	public override DTOOTTwinCat ToDTO()
 	{

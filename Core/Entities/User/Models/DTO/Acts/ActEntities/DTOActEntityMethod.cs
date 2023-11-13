@@ -1,11 +1,9 @@
 ﻿using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.User.Models.DTO.Acts.ActEntities;
 
-public partial class DTOActEntity : DTOBaseEntity, IDTO<ActEntity, DTOActEntity>
+public partial class DTOActEntity
 {
 	public DTOActEntity()
 	{

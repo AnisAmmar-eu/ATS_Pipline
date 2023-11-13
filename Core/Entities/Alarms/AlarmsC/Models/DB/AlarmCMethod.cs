@@ -1,10 +1,8 @@
 ﻿using Core.Entities.Alarms.AlarmsC.Models.DTO;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsC.Models.DB;
 
-public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
+public partial class AlarmC
 {
 	public AlarmC()
 	{

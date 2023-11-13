@@ -4,12 +4,11 @@ using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Exceptions;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB.Detections;
 
-public partial class Detection : Packet, IBaseEntity<Detection, DTODetection>
+public partial class Detection
 {
 	public Detection()
 	{

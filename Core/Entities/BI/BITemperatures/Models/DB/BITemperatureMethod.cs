@@ -2,12 +2,10 @@ using System.Globalization;
 using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Dictionaries;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.BI.BITemperatures.Models.DB;
 
-public partial class BITemperature : BaseEntity, IBaseEntity<BITemperature, DTOBITemperature>
+public partial class BITemperature
 {
 	public BITemperature()
 	{

@@ -1,12 +1,10 @@
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB;
 
-public partial class Packet : BaseEntity, IBaseEntity<Packet, DTOPacket>
+public partial class Packet
 {
 	public Packet()
 	{

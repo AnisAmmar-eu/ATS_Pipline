@@ -1,10 +1,8 @@
 ﻿using Core.Entities.Alarms.AlarmsLog.Models.DB;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsLog.Models.DTO;
 
-public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
+public partial class DTOAlarmLog
 {
 	public DTOAlarmLog()
 	{

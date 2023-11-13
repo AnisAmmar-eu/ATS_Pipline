@@ -1,10 +1,8 @@
 using Core.Entities.Vision.FileSettings.Models.DB;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Vision.FileSettings.Models.DTO;
 
-public partial class DTOFileSetting : DTOBaseEntity, IDTO<FileSetting, DTOFileSetting>
+public partial class DTOFileSetting
 {
 	public DTOFileSetting()
 	{
