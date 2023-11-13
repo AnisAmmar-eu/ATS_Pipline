@@ -21,7 +21,7 @@ public class IOTTagController : ControllerBase
 		_logService = logService;
 	}
 
-	[HttpGet("{rid}")]
+	[HttpGet("rid/{rid}")]
 	public async Task<IActionResult> GetTagValueByRID([FromRoute] [Required] string rid)
 	{
 		DTOIOTTag tag;
@@ -53,7 +53,7 @@ public class IOTTagController : ControllerBase
 		return await new ApiResponseObject(tags).SuccessResult(_logService, ControllerContext);
 	}
 
-	[HttpGet("{id}")]
+	[HttpGet("id/{id}")]
 	public async Task<IActionResult> GetTagValueByID([FromRoute] [Required] int id)
 	{
 		DTOIOTTag tag;
