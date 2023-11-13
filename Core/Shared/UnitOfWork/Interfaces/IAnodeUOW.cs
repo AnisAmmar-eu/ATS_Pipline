@@ -16,6 +16,7 @@ using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
+using Core.Entities.Vision.FileSettings.Repositories;
 using Core.Shared.Repositories.System.Logs;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
@@ -49,6 +50,9 @@ public interface IAnodeUOW : IDisposable
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
+	
+	// Vision
+	IFileSettingRepository FileSetting { get;  }
 
 	public object? GetRepoByType(Type repo);
 

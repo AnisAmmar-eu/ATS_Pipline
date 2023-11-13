@@ -17,6 +17,7 @@ using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
+using Core.Entities.Vision.FileSettings.Repositories;
 using Core.Shared.Data;
 using Core.Shared.Repositories.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -62,6 +63,8 @@ public class AnodeUOW : IAnodeUOW
 		Acts = new ActRepository(_anodeCTX);
 		ActEntities = new ActEntityRepository(_anodeCTX);
 		Roles = new RoleRepository(_anodeCTX);
+
+		FileSetting = new FileSettingRepository(_anodeCTX);
 	}
 
 	public ILogRepository Log { get; }
@@ -89,6 +92,9 @@ public class AnodeUOW : IAnodeUOW
 	// IOT
 	public IIOTDeviceRepository IOTDevice { get; }
 	public IIOTTagRepository IOTTag { get; }
+
+	// Vision
+	public IFileSettingRepository FileSetting { get; }
 
 	public object? GetRepoByType(Type repo)
 	{
@@ -118,6 +124,8 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IActRepository) => Acts,
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
 			_ when repo == typeof(IRoleRepository) => Roles,
+			
+			_ when repo == typeof(IFileSettingRepository) => FileSetting,
 
 			_ when repo == typeof(ILogRepository) => Log,
 			_ => null

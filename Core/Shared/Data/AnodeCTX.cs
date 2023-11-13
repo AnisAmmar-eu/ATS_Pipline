@@ -36,6 +36,7 @@ using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
+using Core.Entities.Vision.FileSettings.Models.DB;
 using Core.Shared.Models.DB.System.Logs;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -94,6 +95,9 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
 	public DbSet<KPITest> KPITest => Set<KPITest>();
 	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
+	
+	// Vision
+	public DbSet<FileSetting> FileSetting => Set<FileSetting>();
 
 	// Action
 	public DbSet<Act> Acts => Set<Act>();
