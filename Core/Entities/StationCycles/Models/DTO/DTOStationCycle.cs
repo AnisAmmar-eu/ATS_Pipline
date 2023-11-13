@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Core.Entities.StationCycles.Models.DTO;
 
 [ModelBinder(typeof(DTOStationCycleBinder))]
-public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>, IBaseKPI<DTOStationCycle>
+public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>
 {
 	public int StationID { get; set; } = Station.ID;
 	public string AnodeType { get; set; } = string.Empty;

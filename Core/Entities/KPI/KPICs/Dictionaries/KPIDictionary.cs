@@ -9,6 +9,7 @@ public static class KPICRID
 	public const string StationCycleMatchingCam1 = "StationCycleMatchingFirstCam";
 	
 	// == Anode count by stations and type ==
+	public const string AnodesTotalNumber = "AnodesTotalNumber";
 	public const string AnodesStation = "AnodesStation";
 	public const string D20Anodes = "D20Anodes";
 	public const string DXAnodes = "DXAnodes";

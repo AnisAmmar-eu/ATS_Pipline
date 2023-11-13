@@ -23,6 +23,7 @@ public static class KPIInitializer
 			"Percentage of station cycles matched by camera 1."));
 
 		// == Anode count by stations and type ==
+		anodeCTX.KPIC.Add(new KPIC(KPICRID.AnodesTotalNumber, "Anodes total number", "Total number of anodes"));
 		anodeCTX.KPIC.Add(new KPIC(KPICRID.D20Anodes, "D20 Anodes", "Total number of D20 Anodes"));
 		anodeCTX.KPIC.Add(new KPIC(KPICRID.DXAnodes, "DX Anodes", "Total number of DX Anodes"));
 

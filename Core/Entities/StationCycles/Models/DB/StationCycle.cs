@@ -12,7 +12,7 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Models.DB;
 
-public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOStationCycle>
+public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOStationCycle>, IBaseKPI<StationCycle>
 {
 	public int StationID { get; set; } = Station.ID;
 	public string AnodeType { get; set; } = string.Empty;

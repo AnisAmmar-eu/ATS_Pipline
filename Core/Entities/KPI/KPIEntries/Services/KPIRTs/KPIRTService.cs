@@ -9,6 +9,7 @@ using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Services.Kernel;
 using Core.Shared.Services.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -49,25 +50,25 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	#region KPIRT computing
 
 	// See summary in interface
-	public async Task ComputeKPIRTs<T, TDTO, TService, TValue>(TService tService)
-		where T : class, IBaseEntity<T, TDTO>
-		where TDTO : class, IDTO<T, TDTO>, IBaseKPI<TValue>
-		where TService : class, IServiceBaseEntity<T, TDTO>
+	public async Task ComputeKPIRTs<T, TDTO, TRepository, TValue>(TRepository tRepository)
+		where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
+		where TDTO : class, IDTO<T, TDTO>
+		where TRepository : class, IRepositoryBaseEntity<T, TDTO>
 	{
 		// Logic -> GetAll of T, get its KPICRIDs (create KPIRT if necessary) and make the computations on it.
-		List<TDTO> tDTOs = await tService.GetAll();
-		if (tDTOs.Count == 0)
+		List<T> entities = await tRepository.GetAll(withTracking: false);
+		if (entities.Count == 0)
 			return;
-		string[] kpiCRIDs = tDTOs[0].GetKPICRID();
+		string[] kpiCRIDs = entities[0].GetKPICRID();
 		string[] periods = { KPIPeriod.Day, KPIPeriod.Week, KPIPeriod.Month, KPIPeriod.Year };
 
 		List<List<KPIRT>> kpiRTs = await GetKPIRTsFromKPICsAndPeriods(kpiCRIDs, periods);
 
-		List<List<TValue>> tValuesPerPeriods = GetValuesFromPeriods<T, TDTO, TValue>(tDTOs, periods);
+		List<List<TValue>> tValuesPerPeriods = GetValuesFromPeriods<T, TDTO, TValue>(entities, periods);
 
 		await AnodeUOW.StartTransaction();
 		// We compute all values for every KPIC at once to be faster and then we do it for every time period.
-		Func<List<TValue>, string[]> function = tDTOs[0].GetComputedValues();
+		Func<List<TValue>, string[]> function = entities[0].GetComputedValues();
 		for (int i = 0; i < periods.Length; ++i)
 		{
 			string[] values = function.Invoke(tValuesPerPeriods[i]);
@@ -77,17 +78,6 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 				AnodeUOW.KPIRT.Update(kpiRTs[j][i]);
 			}
 		}
-		/*
-		for (int i = 0; i < kpiRTs.Count; ++i)
-		{
-			List<KPIRT> kpiRTPerC = kpiRTs[i];
-			for (int j = 0; j < kpiRTPerC.Count; ++j)
-			{
-				kpiRTPerC[j].Value = function[i].Invoke(tValuesPerPeriods[j]);
-				AnodeUOW.KPIRT.Update(kpiRTPerC[j]);
-			}
-		}
-		*/
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
@@ -158,7 +148,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	/// <summary>
 	///     Will get every value from tDTOs split into time periods from smallest time period to largest.
 	/// </summary>
-	/// <param name="tDTOs">List of DTOS of type tDTO</param>
+	/// <param name="entities">List of DTOS of type tDTO</param>
 	/// <param name="periods">List of periods used to determine time periods</param>
 	/// <typeparam name="T">Entity type</typeparam>
 	/// <typeparam name="TDTO">DTO type</typeparam>
@@ -167,9 +157,9 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	///     A list of list of TValues, first level split those lists depending on time frames,
 	///     second level is a collection of all values of all tDTOs in corresponding time frame.
 	/// </returns>
-	private List<List<TValue>> GetValuesFromPeriods<T, TDTO, TValue>(List<TDTO> tDTOs, string[] periods)
-		where T : class, IBaseEntity<T, TDTO>
-		where TDTO : class, IDTO<T, TDTO>, IBaseKPI<TValue>
+	private List<List<TValue>> GetValuesFromPeriods<T, TDTO, TValue>(List<T> entities, string[] periods)
+		where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
+		where TDTO : class, IDTO<T, TDTO>
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
 		List<List<TValue>> tValuesPerPeriods = new();
@@ -180,10 +170,10 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 			periodsStartRange.Add(KPIPeriod.GetStartRange(period, now));
 		}
 
-		foreach (TDTO tDTO in tDTOs)
+		foreach (T entity in entities)
 			for (int i = 0; i < periods.Length; ++i)
-				if (tDTO.TS >= periodsStartRange[i])
-					tValuesPerPeriods[i].Add(tDTO.GetValue());
+				if (entity.TS >= periodsStartRange[i])
+					tValuesPerPeriods[i].Add(entity.GetValue());
 
 		return tValuesPerPeriods;
 	}

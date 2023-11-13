@@ -7,7 +7,7 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.Anodes.Models.DB;
 
-public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>
+public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>, IBaseKPI<Anode>
 {
 	public string S1S2CycleRID { get; set; } = string.Empty;
 	public string Status { get; set; } = PacketStatus.Initialized;
