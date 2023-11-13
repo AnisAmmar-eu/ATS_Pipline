@@ -28,9 +28,9 @@ public partial class OTCamera : IOTDevice, IBaseEntity<OTCamera, DTOOTCamera>
 			NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
 			double temperature = (nodeMap["DeviceTemperature"] as FloatNode)!.Value;
 			using HttpClient httpClient = new();
-			int cameraNb = RID == DeviceRID.Camera1 ? 1 : 2;
+			string tempRID = RID == DeviceRID.Camera1 ? IOTTagRID.TemperatureCam1 : IOTTagRID.TemperatureCam2;
 			await httpClient.PutAsync(
-				$"{ITApisDict.IOTAddress}/apiIOT/iotTags/{IOTTagRID.Temperature}{cameraNb}/{temperature}", null);
+				$"{ITApisDict.IOTAddress}/apiIOT/iotTags/{tempRID}/{temperature}", null);
 			return true;
 		}
 		catch (Exception)

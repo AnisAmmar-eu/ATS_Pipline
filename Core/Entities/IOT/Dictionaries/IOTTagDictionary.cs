@@ -39,7 +39,8 @@ public static class IOTTagRID
 
 	#region Camera Temperature
 
-	public const string Temperature = "Temperature";
+	public const string TemperatureCam1 = "TemperatureCam1";
+	public const string TemperatureCam2 = "TemperatureCam2";
 	public const string TemperatureOkWarnThreshold = "TemperatureOkWarnThreshold";
 	public const string TemperatureWarnErrorThreshold = "TemperatureWarnErrorThreshold";
 
@@ -181,7 +182,8 @@ public static class IOTTagPath
 
 	#region Camera Temperature
 
-	public const string Temperature = "";
+	public const string TemperatureCam1 = "";
+	public const string TemperatureCam2 = "";
 	public const string TemperatureOkWarnThreshold = "";
 	public const string TemperatureWarnErrorThreshold = "";
 

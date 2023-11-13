@@ -12,7 +12,7 @@ namespace Core.Entities.BI.BITemperatures.Services;
 public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, BITemperature, DTOBITemperature>,
 	IBITemperatureService
 {
-	private readonly string[] _temperatureTagsRIDs = { $"{IOTTagRID.Temperature}{1}", $"{IOTTagRID.Temperature}{2}" };
+	private readonly string[] _temperatureTagsRIDs = { IOTTagRID.TemperatureCam1, IOTTagRID.TemperatureCam2 };
 
 	public BITemperatureService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

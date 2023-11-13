@@ -324,27 +324,27 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagRID.Temperature + 1,
+			RID = IOTTagRID.TemperatureCam1,
 			Name = "Cam 01 - Temperature",
 			Description = "Temperature for Camera 1",
 			CurrentValue = "19.84",
 			NewValue = "",
 			ValueType = IOTTagType.Double,
 			HasNewValue = false,
-			Path = IOTTagPath.Temperature + 1,
+			Path = IOTTagPath.TemperatureCam1,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat
 		{
-			RID = IOTTagRID.Temperature + 2,
+			RID = IOTTagRID.TemperatureCam2,
 			Name = "Cam 02 - Temperature",
 			Description = "Temperature for Camera 2",
 			CurrentValue = "19.84",
 			NewValue = "",
 			ValueType = IOTTagType.Double,
 			HasNewValue = false,
-			Path = IOTTagPath.Temperature + 2,
+			Path = IOTTagPath.TemperatureCam2,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat
 		});

@@ -1,7 +1,9 @@
 using Core.Entities.KPI.KPICs.Dictionaries;
+using Core.Entities.KPI.KPICs.Models.DB;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Interfaces;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
@@ -51,7 +53,7 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 
 	public string[] GetKPICRID()
 	{
-		List<string> rids = new()
+		List<string> signMatchRIDs = new()
 		{
 			KPICRID.StationCycleMatched, KPICRID.StationCycleSigned, KPICRID.StationCycleNotSigned,
 			KPICRID.StationCycleMatchingCam1
@@ -59,7 +61,11 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 		List<string> ans = new();
 		// RIDS of the server and every station are added in the following order: rids, rids1, rids2...
 		for (int i = 0; i <= 5; ++i)
-			ans.AddRange(rids.Select(rid => rid + (i == 0 ? "" : i.ToString())));
+			ans.AddRange(signMatchRIDs.Select(rid => rid + (i == 0 ? "" : i.ToString())));
+		
+		ans.AddRange(new[] { KPICRID.D20Anodes, KPICRID.DXAnodes });
+		for (int i = 1; i <= 5; ++i)
+			ans.Add($"{KPICRID.AnodesStation}{i}");
 
 		return ans.ToArray();
 	}
@@ -73,42 +79,51 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 			const int nbNotSignedIndex = 2;
 			const int nbMatchCam1Index = 3;
 			const int nbTotalMatchIndex = 4;
+			int nbD20 = 0;
+			int nbDX = 0;
 			// Because there is 6 times 5 values
-			int[,] values = new int[6, 5];
+			int[,] signMatchValues = new int[6, 5];
+			int[] nbAnodes = new int[5];
 			stationCycles.ForEach(cycle =>
 			{
+				nbAnodes[cycle.StationID - 1]++;
+				if (cycle.AnodeType == AnodeTypeDict.D20) nbD20++;
+				else if (cycle.AnodeType == AnodeTypeDict.DX) nbDX++;
 				if (cycle.SignStatus1 == SignMatchStatus.Ok || cycle.SignStatus2 == SignMatchStatus.Ok)
 				{
 					if (cycle is IMatchableCycle matchableCycle &&
 					    (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok ||
 					     matchableCycle.MatchingCamera2 == SignMatchStatus.Ok))
 					{
-						AddAtIndex(values, cycle.StationID, nbSignedAndMatchedIndex);
-						AddAtIndex(values, cycle.StationID, nbTotalMatchIndex);
+						AddAtIndex(signMatchValues, cycle.StationID, nbSignedAndMatchedIndex);
+						AddAtIndex(signMatchValues, cycle.StationID, nbTotalMatchIndex);
 						if (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok)
-							AddAtIndex(values, cycle.StationID, nbMatchCam1Index);
+							AddAtIndex(signMatchValues, cycle.StationID, nbMatchCam1Index);
 					}
 					else
 					{
-						AddAtIndex(values, cycle.StationID, nbSignedIndex);
+						AddAtIndex(signMatchValues, cycle.StationID, nbSignedIndex);
 					}
 				}
 				else
 				{
-					AddAtIndex(values, cycle.StationID, nbNotSignedIndex);
+					AddAtIndex(signMatchValues, cycle.StationID, nbNotSignedIndex);
 				}
 			});
 			List<string> ans = new();
 			// The int[,] is flattened into a List<string> and the match cam1 percentage is computed.
-			for (int i = 0; i < values.GetLength(0); ++i)
+			for (int i = 0; i < signMatchValues.GetLength(0); ++i)
 			{
 				for (int j = 0; j < 3; ++j)
-					ans.Add(values[i, j].ToString());
-				int nbMatchCam1 = values[i, nbMatchCam1Index];
-				int nbTotalMatch = values[i, nbTotalMatchIndex];
+					ans.Add(signMatchValues[i, j].ToString());
+				int nbMatchCam1 = signMatchValues[i, nbMatchCam1Index];
+				int nbTotalMatch = signMatchValues[i, nbTotalMatchIndex];
 				int percentageCam1 = nbTotalMatch == 0 ? 0 : (int)((double)nbMatchCam1 / nbTotalMatch * 100);
 				ans.Add(percentageCam1.ToString());
 			}
+			ans.Add(nbD20.ToString());
+			ans.Add(nbDX.ToString());
+			ans.AddRange(nbAnodes.Select(x => x.ToString()));
 
 			return ans.ToArray();
 		};
