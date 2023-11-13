@@ -24,17 +24,17 @@ public class IOTInitializer
 		string[] rids =
 		{
 			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.CameraAssignRID, ITApisDict.KPIRID,
-			ITApisDict.StationCycleRID, ITApisDict.UserRID
+			ITApisDict.StationCycleRID, ITApisDict.UserRID, ITApisDict.VisionRID
 		};
 		string[] addresses =
 		{
 			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.CameraAssignAddress,
-			ITApisDict.KPIAddress, ITApisDict.StationCycleAddress, ITApisDict.UserAddress
+			ITApisDict.KPIAddress, ITApisDict.StationCycleAddress, ITApisDict.UserAddress, ITApisDict.VisionAddress
 		};
 		string[] paths =
 		{
 			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.CameraAssignPath,
-			ITApisDict.KPIPath, ITApisDict.StationCyclePath, ITApisDict.UserPath
+			ITApisDict.KPIPath, ITApisDict.StationCyclePath, ITApisDict.UserPath, ITApisDict.VisionPath
 		};
 		for (int i = 0; i < rids.Length; ++i)
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);

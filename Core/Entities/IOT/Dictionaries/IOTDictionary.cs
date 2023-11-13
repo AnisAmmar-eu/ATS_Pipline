@@ -43,6 +43,10 @@ public static class ITApisDict
 	public const string UserRID = "ApiUser";
 	public const string UserAddress = "https://localhost:7283"; // 5250
 	public const string UserPath = "/apiUser/status";
+
+	public const string VisionRID = "ApiVision";
+	public const string VisionAddress = "https://localhost:7284"; // 5251
+	public const string VisionPath = "/apiVision/status";
 }
 
 public static class TriggerSources

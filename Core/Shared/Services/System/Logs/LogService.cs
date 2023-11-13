@@ -26,6 +26,11 @@ public class LogService : ServiceBaseEntity<ILogRepository, Log, DTOLog>, ILogSe
 			.ToList();
 	}
 
+	public async Task<List<DTOLog>> GetRange(int start, int nbItems)
+	{
+		return (await AnodeUOW.Log.GetRange(start, nbItems)).ConvertAll(log => log.ToDTO());
+	}
+
 	public async Task<List<Log>> GetAllUnsent()
 	{
 		return await AnodeUOW.Log.GetAll(new Expression<Func<Log, bool>>[]
@@ -71,6 +76,11 @@ public class LogService : ServiceBaseEntity<ILogRepository, Log, DTOLog>, ILogSe
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
+	}
+
+	public async Task DeleteAllLogs()
+	{
+		await AnodeUOW.Log.DeleteAll();
 	}
 
 	public async Task Create(
