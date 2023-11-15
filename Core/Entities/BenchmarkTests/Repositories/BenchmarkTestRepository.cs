@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Entities.BenchmarkTests.Repositories;
 
-public class BenchmarkTestRepository : RepositoryBaseEntity<AnodeCTX, BenchmarkTest, DTOBenchmarkTest>, IBenchmarkTestRepository
+public class BenchmarkTestRepository : RepositoryBaseEntity<AnodeCTX, BenchmarkTest, DTOBenchmarkTest>,
+	IBenchmarkTestRepository
 {
 	public BenchmarkTestRepository(AnodeCTX context) : base(context)
 	{
@@ -16,7 +17,7 @@ public class BenchmarkTestRepository : RepositoryBaseEntity<AnodeCTX, BenchmarkT
 	{
 		return await _context.BenchmarkTest.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
 	}
-    
+
 	public async Task RemoveAll()
 	{
 		_context.BenchmarkTest.RemoveRange(_context.BenchmarkTest);

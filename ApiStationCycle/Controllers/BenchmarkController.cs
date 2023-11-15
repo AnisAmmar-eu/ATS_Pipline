@@ -9,8 +9,8 @@ namespace ApiStationCycle.Controllers;
 [Route("benchmark")]
 public class BenchmarkController : ControllerBase
 {
-	private IBenchmarkTestService _benchmarkTestService;
-	private ILogService _logService;
+	private readonly IBenchmarkTestService _benchmarkTestService;
+	private readonly ILogService _logService;
 
 	public BenchmarkController(IBenchmarkTestService benchmarkTestService, ILogService logService)
 	{

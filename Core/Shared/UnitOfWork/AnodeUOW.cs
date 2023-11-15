@@ -39,7 +39,7 @@ public class AnodeUOW : IAnodeUOW
 		_anodeCTX = anodeCTX;
 
 		BenchmarkTest = new BenchmarkTestRepository(_anodeCTX);
-		
+
 		Log = new LogRepository(_anodeCTX);
 
 		AlarmC = new AlarmCRepository(_anodeCTX);
@@ -71,7 +71,7 @@ public class AnodeUOW : IAnodeUOW
 	}
 
 	public IBenchmarkTestRepository BenchmarkTest { get; }
-	
+
 	public ILogRepository Log { get; }
 
 	public IAlarmCRepository AlarmC { get; }
@@ -106,7 +106,7 @@ public class AnodeUOW : IAnodeUOW
 		return repo switch
 		{
 			_ when repo == typeof(IBenchmarkTestRepository) => BenchmarkTest,
-			
+
 			_ when repo == typeof(IAlarmCRepository) => AlarmC,
 			_ when repo == typeof(IAlarmPLCRepository) => AlarmPLC,
 			_ when repo == typeof(IAlarmLogRepository) => AlarmLog,

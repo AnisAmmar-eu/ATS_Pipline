@@ -28,7 +28,7 @@ namespace Core.Shared.UnitOfWork.Interfaces;
 public interface IAnodeUOW : IDisposable
 {
 	IBenchmarkTestRepository BenchmarkTest { get; }
-	
+
 	ILogRepository Log { get; }
 	IAlarmCRepository AlarmC { get; }
 	IAlarmPLCRepository AlarmPLC { get; }

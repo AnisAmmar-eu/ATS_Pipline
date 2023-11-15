@@ -9,38 +9,42 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.BenchmarkTests.Services;
 
-public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>, IBenchmarkTestService
+public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>,
+	IBenchmarkTestService
 {
 	private readonly Random _random = new();
-	
+
 	public BenchmarkTestService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
 	public async Task<List<TimeSpan>> StartTest(int nbItems)
 	{
+		Stopwatch watch = new();
+		List<TimeSpan> ans = new();
 		int nbRows = AnodeUOW.BenchmarkTest.GetCount();
 		if (nbRows < nbItems)
 		{
-			nbItems = nbItems - nbRows - 1;
+			watch.Start();
+			nbItems = nbItems - nbRows;
 			DateTimeOffset now = DateTimeOffset.Now;
-			await AnodeUOW.BenchmarkTest.RemoveAll();
 			await AnodeUOW.StartTransaction();
 			for (int i = 0; i < nbItems; ++i)
 				await AnodeUOW.BenchmarkTest.Add(GenerateTest(now, i));
-			BenchmarkTest test = GenerateTest(now, 0, "RandomRID");
-			await AnodeUOW.BenchmarkTest.Add(test);
+			// BenchmarkTest test = GenerateTest(now, 0, "RandomRID");
+			// await AnodeUOW.BenchmarkTest.Add(test);
 			AnodeUOW.Commit();
 			await AnodeUOW.CommitTransaction();
-		} else if (nbRows > nbItems)
+			watch.Stop();
+			ans.Add(watch.Elapsed);
+		}
+		else if (nbRows > nbItems)
 		{
 			int toRemove = nbRows - nbItems;
 			AnodeUOW.BenchmarkTest.RemoveRange(await AnodeUOW.BenchmarkTest.GetRange(nbRows - toRemove, toRemove));
 		}
 
-		List<TimeSpan> ans = new();
-		Stopwatch watch = new();
-		watch.Start();
+		watch.Restart();
 		await AnodeUOW.BenchmarkTest.GetAll(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.StationID == 3
@@ -55,14 +59,14 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		await AnodeUOW.BenchmarkTest.GetBy(new Expression<Func<BenchmarkTest, bool>>[]
+		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetBy(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.RID == "RandomRID"
 		});
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		await AnodeUOW.BenchmarkTest.GetById(4212120);
+		await AnodeUOW.BenchmarkTest.GetById(test.ID);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 
@@ -76,7 +80,7 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		string anodeType = _random.Next(1, 3) == 1 ? AnodeTypeDict.D20 : AnodeTypeDict.DX;
 		DateTimeOffset ts = now.Subtract(TimeSpan.FromMinutes(index));
 		rid ??= $"{ts.ToString(AnodeFormat.RIDFormat)}_{stationID}_{cameraID}_{anodeType}";
-		return new BenchmarkTest()
+		return new BenchmarkTest
 		{
 			TS = ts,
 			StationID = stationID,
