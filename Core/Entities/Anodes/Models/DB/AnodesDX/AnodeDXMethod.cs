@@ -7,7 +7,9 @@ namespace Core.Entities.Anodes.Models.DB.AnodesDX;
 public partial class AnodeDX
 {
 	public AnodeDX()
-	{}
+	{
+	}
+
 	public AnodeDX(S1S2Cycle cycle) : base(cycle)
 	{
 	}

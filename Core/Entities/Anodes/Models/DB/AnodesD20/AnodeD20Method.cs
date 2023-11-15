@@ -1,4 +1,3 @@
-using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.Anodes.Models.DTO.AnodesD20;
 using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
 
