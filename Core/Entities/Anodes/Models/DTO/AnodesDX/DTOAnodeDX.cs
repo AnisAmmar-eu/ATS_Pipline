@@ -1,5 +1,5 @@
 using Core.Entities.Anodes.Models.DB.AnodesDX;
-using Core.Entities.StationCycles.Models.DTO.S5Cycles;
+using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Anodes.Models.DTO.AnodesDX;

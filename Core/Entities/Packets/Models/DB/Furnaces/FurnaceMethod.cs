@@ -3,7 +3,7 @@ using System.Text;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Furnaces;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DB.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
 using Newtonsoft.Json;

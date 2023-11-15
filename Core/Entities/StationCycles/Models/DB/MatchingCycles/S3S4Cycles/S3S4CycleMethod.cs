@@ -1,6 +1,6 @@
-using Core.Entities.StationCycles.Models.DTO.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
 
-namespace Core.Entities.StationCycles.Models.DB.S3S4Cycles;
+namespace Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
 
 public partial class S3S4Cycle
 {

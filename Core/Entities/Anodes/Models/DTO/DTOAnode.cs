@@ -1,7 +1,7 @@
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
-using Core.Entities.StationCycles.Models.DTO.S1S2Cycles;
-using Core.Entities.StationCycles.Models.DTO.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 

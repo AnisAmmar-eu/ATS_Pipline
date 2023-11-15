@@ -1,5 +1,5 @@
 using Core.Entities.Anodes.Models.DTO.AnodesD20;
-using Core.Entities.StationCycles.Models.DB.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
 
 namespace Core.Entities.Anodes.Models.DB.AnodesD20;
 

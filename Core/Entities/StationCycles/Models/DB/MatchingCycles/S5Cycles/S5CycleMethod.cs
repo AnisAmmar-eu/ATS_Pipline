@@ -1,6 +1,6 @@
-using Core.Entities.StationCycles.Models.DTO.S5Cycles;
+using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
 
-namespace Core.Entities.StationCycles.Models.DB.S5Cycles;
+namespace Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles;
 
 public partial class S5Cycle
 {
