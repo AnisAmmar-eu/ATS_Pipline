@@ -222,8 +222,6 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		if (cycle is S1S2Cycle s1S2Cycle)
 		{
 			Anode anode = Anode.Create(s1S2Cycle);
-			anode.S1S2CycleRID = s1S2Cycle.RID;
-			anode.S1S2CycleID = s1S2Cycle.ID;
 			await AnodeUOW.Anode.Add(anode);
 		}
 		// TODO Vision

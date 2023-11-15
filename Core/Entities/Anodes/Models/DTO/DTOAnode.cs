@@ -14,7 +14,11 @@ public partial class DTOAnode : DTOBaseEntity, IDTO<Anode, DTOAnode>
 	public DateTimeOffset? ClosedTS { get; set; }
 
 	public int S1S2CycleID { get; set; }
+	public int S1S2CycleStationID { get; set; }
+	public DateTimeOffset S1S2CycleTS { get; set; }
 	public int? S3S4CycleID { get; set; }
+	public int? S3S4CycleStationID { get; set; }
+	public DateTimeOffset? S3S4CycleTS { get; set; }
 
 	public DTOS3S4Cycle? S3S4Cycle { get; set; }
 

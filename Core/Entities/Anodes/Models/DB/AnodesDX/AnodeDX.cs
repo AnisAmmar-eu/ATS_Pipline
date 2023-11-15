@@ -7,5 +7,6 @@ namespace Core.Entities.Anodes.Models.DB.AnodesDX;
 public partial class AnodeDX : Anode, IBaseEntity<AnodeDX, DTOAnodeDX>
 {
 	public int? S5CycleID { get; set; }
+	public DateTimeOffset? S5CycleTS { get; set; }
 	public S5Cycle? S5Cycle { get; set; }
 }
