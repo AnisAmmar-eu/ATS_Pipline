@@ -95,34 +95,15 @@ public class CameraApiController : ControllerBase
 
 	#region Get TestImages
 
-	[HttpGet("1/testImage")]
-	public async Task<IActionResult> GetCamera1TestImage()
+	[HttpGet("{cameraId}/testImage")]
+	public async Task<IActionResult> GetCameraTestImage(int cameraId)
 	{
 		byte[] image;
 		DateTimeOffset ts;
 		try
 		{
-			FileInfo imageFile = new(ShootingUtils.CameraTest1 + ShootingUtils.TestFilename);
-			ts = imageFile.CreationTime;
-			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
-		return File(image, "image/jpeg", ts.ToString(AnodeFormat.RIDFormat));
-	}
-
-	[HttpGet("2/testImage")]
-	public async Task<IActionResult> GetCamera2TestImage()
-	{
-		byte[] image;
-		DateTimeOffset ts;
-		try
-		{
-			FileInfo imageFile = new(ShootingUtils.CameraTest2 + ShootingUtils.TestFilename);
+			string cameraTestPath = cameraId == 1 ? ShootingUtils.CameraTest1 : ShootingUtils.CameraTest2;
+			FileInfo imageFile = new(cameraTestPath + ShootingUtils.TestFilename);
 			ts = imageFile.CreationTime;
 			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
 		}
