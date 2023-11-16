@@ -11,6 +11,7 @@
         <Folder Include="Migrations\"/>
         <Folder Include="Shared\Models\DB\System\"/>
         <Folder Include="Shared\Models\DTO\System\"/>
+        <Folder Include="Shared\Pagination\Sorting\" />
         <Folder Include="Shared\Repositories\System\"/>
         <Folder Include="Shared\Services\Background\BI\"/>
         <Folder Include="Shared\Services\System\"/>

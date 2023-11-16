@@ -2,7 +2,7 @@ using Core.Entities.StationCycles.Models.DTO.MatchingCycles;
 
 namespace Core.Entities.StationCycles.Models.DB.MatchingCycles;
 
-public partial class MatchingCycle
+public abstract partial class MatchingCycle
 {
 	public MatchingCycle()
 	{

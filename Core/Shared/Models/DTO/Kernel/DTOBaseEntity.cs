@@ -12,6 +12,16 @@ public class DTOBaseEntity : IDTO<BaseEntity, DTOBaseEntity>
 
 	public DateTimeOffset? TS { get; set; }
 
+	public DTOBaseEntity()
+	{
+	}
+
+	protected DTOBaseEntity(BaseEntity entity)
+	{
+		ID = entity.ID;
+		TS = entity.TS;
+	}
+
 	/// <summary>
 	///     Convert the DTO to its entity
 	/// </summary>

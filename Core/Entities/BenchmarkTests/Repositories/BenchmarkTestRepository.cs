@@ -13,9 +13,17 @@ public class BenchmarkTestRepository : RepositoryBaseEntity<AnodeCTX, BenchmarkT
 	{
 	}
 
-	public async Task<List<BenchmarkTest>> GetRange(int start, int nbItems)
+	public async Task<List<BenchmarkTest>> OldGetRange(int start, int nbItems)
 	{
 		return await _context.BenchmarkTest.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
+	}
+
+	public async Task<List<BenchmarkTest>> GetRangeForPagination(int nbItems, int lastID)
+	{
+		return await _context.BenchmarkTest.OrderByDescending(b => b.ID)
+			.Where(b => lastID == 0 || b.ID < lastID)
+			.Take(nbItems)
+			.ToListAsync();
 	}
 
 	public async Task RemoveAll()

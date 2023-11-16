@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices.ComTypes;
+using Core.Entities.BenchmarkTests.Models.DB;
+using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
@@ -16,6 +19,22 @@ public class BenchmarkController : ControllerBase
 	{
 		_benchmarkTestService = benchmarkTestService;
 		_logService = logService;
+	}
+
+	[HttpGet("range/{nbOfItems}/{lastID}")]
+	public async Task<IActionResult> GetRange([FromRoute] int nbOfItems, [FromRoute] int lastID)
+	{
+		List<DTOBenchmarkTest> res;
+		try
+		{
+			res = await _benchmarkTestService.GetRange(nbOfItems, lastID);
+		}
+		catch (Exception e)
+		{
+			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+		}
+
+		return await new ApiResponseObject(res).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("{nbOfItems}")]

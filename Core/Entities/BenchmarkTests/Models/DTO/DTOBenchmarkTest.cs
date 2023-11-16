@@ -11,7 +11,7 @@ public class DTOBenchmarkTest : DTOBaseEntity, IDTO<BenchmarkTest, DTOBenchmarkT
 	{
 	}
 
-	public DTOBenchmarkTest(BenchmarkTest benchmarkTest)
+	public DTOBenchmarkTest(BenchmarkTest benchmarkTest) : base(benchmarkTest)
 	{
 		RID = benchmarkTest.RID;
 		CameraID = benchmarkTest.CameraID;

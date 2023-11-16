@@ -41,7 +41,7 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		else if (nbRows > nbItems)
 		{
 			int toRemove = nbRows - nbItems;
-			AnodeUOW.BenchmarkTest.RemoveRange(await AnodeUOW.BenchmarkTest.GetRange(nbRows - toRemove, toRemove));
+			AnodeUOW.BenchmarkTest.RemoveRange(await AnodeUOW.BenchmarkTest.OldGetRange(nbRows - toRemove, toRemove));
 		}
 
 		watch.Restart();
@@ -71,6 +71,11 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		ans.Add(watch.Elapsed);
 
 		return ans;
+	}
+
+	public async Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID)
+	{
+		return (await AnodeUOW.BenchmarkTest.GetRangeForPagination(nbItems, lastID)).ConvertAll(b => b.ToDTO());
 	}
 
 	private BenchmarkTest GenerateTest(DateTimeOffset now, int index, string? rid = null)

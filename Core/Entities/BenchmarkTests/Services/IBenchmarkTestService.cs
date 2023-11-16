@@ -7,4 +7,5 @@ namespace Core.Entities.BenchmarkTests.Services;
 public interface IBenchmarkTestService : IServiceBaseEntity<BenchmarkTest, DTOBenchmarkTest>
 {
 	public Task<List<TimeSpan>> StartTest(int nbItems);
+	public Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID);
 }

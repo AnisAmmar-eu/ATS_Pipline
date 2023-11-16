@@ -2,7 +2,7 @@ using Core.Entities.StationCycles.Models.DTO.SigningCycles;
 
 namespace Core.Entities.StationCycles.Models.DB.SigningCycles;
 
-public partial class SigningCycle
+public abstract partial class SigningCycle
 {
 	public SigningCycle()
 	{
