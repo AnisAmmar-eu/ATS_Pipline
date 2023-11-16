@@ -1,3 +1,4 @@
+using System.Configuration;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
@@ -21,7 +22,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 if (!Station.IsServer)

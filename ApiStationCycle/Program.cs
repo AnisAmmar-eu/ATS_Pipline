@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Text;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Entities.Packets.Services;
@@ -26,6 +27,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
+Station.Name = stationName;
+
+string? address = builder.Configuration.GetValue<string>("ServerConfig:Address");
+if (address == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:Address");
+Station.ServerAddress = address;
+
 builder.Services.AddAuthentication(options =>
 	{
 		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -37,13 +48,16 @@ builder.Services.AddAuthentication(options =>
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
+		string? jwtSecret = builder.Configuration["JWT:Secret"];
+		if (jwtSecret == null)
+			throw new ConfigurationErrorsException("Missing JWT Secret");
 		options.TokenValidationParameters = new TokenValidationParameters
 		{
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidAudience = builder.Configuration["JWT:ValidAudience"],
 			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
 		};
 		options.Events = new JwtBearerEvents
 		{
@@ -58,11 +72,6 @@ builder.Services.AddAuthentication(options =>
 			OnAuthenticationFailed = _ => Task.CompletedTask
 		};
 	});
-
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-Station.Name = stationName;
-string address = builder.Configuration.GetValue<string>("ServerConfig:Address");
-Station.ServerAddress = address;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -95,7 +104,10 @@ if (!Station.IsServer)
 WebApplication app = builder.Build();
 
 // Initialize
-if (!Station.IsServer && bool.Parse(builder.Configuration["DbInitialize"]))
+string? dbInitialize = builder.Configuration["DbInitialize"];
+if (dbInitialize == null)
+	throw new ConfigurationErrorsException("Missing DbInitialize");
+if (!Station.IsServer && bool.Parse(dbInitialize))
 {
 	using IServiceScope scope = app.Services.CreateScope();
 	IServiceProvider services = scope.ServiceProvider;
@@ -108,6 +120,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 string? clientHost = builder.Configuration["ClientHost"];
+if (clientHost == null)
+	throw new ConfigurationErrorsException("Missing ClientHost");
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")

@@ -92,7 +92,7 @@ public class StationCycleController : ControllerBase
 			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
 		return File(await System.IO.File.ReadAllBytesAsync(result.FullName), "image/jpeg", result.Name);
 	}
 }

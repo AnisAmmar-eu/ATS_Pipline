@@ -1,3 +1,4 @@
+using System.Configuration;
 using Core.Entities.Vision.FileSettings.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -17,7 +18,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 if (!Station.IsServer)

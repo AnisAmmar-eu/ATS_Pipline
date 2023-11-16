@@ -1,4 +1,5 @@
-﻿using Core.Entities.Packets.Services;
+﻿using System.Configuration;
+using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -17,7 +18,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
@@ -39,6 +42,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 string? clientHost = builder.Configuration["ClientHost"];
+if (clientHost == null)
+	throw new ConfigurationErrorsException("Missing ClientHost");
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")

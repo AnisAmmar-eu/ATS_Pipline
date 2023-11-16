@@ -111,7 +111,7 @@ public class CameraApiController : ControllerBase
 			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
 		return File(image, "image/jpeg", ts.ToString(AnodeFormat.RIDFormat));
 	}
 
@@ -131,7 +131,7 @@ public class CameraApiController : ControllerBase
 			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
 		return File(image, "image/jpeg", ts.ToString(AnodeFormat.RIDFormat));
 	}
 

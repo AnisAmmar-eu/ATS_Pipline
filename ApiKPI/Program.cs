@@ -1,3 +1,4 @@
+using System.Configuration;
 using Core.Entities.Anodes.Services;
 using Core.Entities.KPI.KPICs.Services;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
@@ -24,7 +25,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 if (!Station.IsServer)
@@ -73,7 +76,11 @@ builder.Services.AddCors(options =>
 
 WebApplication app = builder.Build();
 
-if (bool.Parse(builder.Configuration["DbInitialize"]))
+
+string? dbInitialize = builder.Configuration["DbInitialize"];
+if (dbInitialize == null)
+	throw new ConfigurationErrorsException("Missing DbInitialize");
+if (bool.Parse(dbInitialize))
 {
 	using IServiceScope scope = app.Services.CreateScope();
 	IServiceProvider services = scope.ServiceProvider;

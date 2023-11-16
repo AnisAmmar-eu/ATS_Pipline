@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Reflection;
 using System.Text;
 using ApiUser.SwaggerConfig;
@@ -25,7 +26,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
@@ -53,13 +56,16 @@ builder.Services.AddAuthentication(options =>
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
+		string? jwtSecret = builder.Configuration["JWT:Secret"];
+		if (jwtSecret == null)
+			throw new ConfigurationErrorsException("Missing JWT Secret");
 		options.TokenValidationParameters = new TokenValidationParameters
 		{
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidAudience = builder.Configuration["JWT:ValidAudience"],
 			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
 		};
 		options.Events = new JwtBearerEvents
 		{
@@ -138,6 +144,8 @@ builder.Services.AddSwaggerGen(options =>
 WebApplication app = builder.Build();
 
 string? clientHost = builder.Configuration["ClientHost"];
+if (clientHost == null)
+	throw new ConfigurationErrorsException("Missing ClientHost");
 app.UseCors(policyBuilder => policyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()

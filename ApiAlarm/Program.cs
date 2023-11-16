@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Text;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
@@ -25,9 +26,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
-string address = builder.Configuration.GetValue<string>("ServerConfig:Address");
+
+string? address = builder.Configuration.GetValue<string>("ServerConfig:Address");
+if (address == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:Address");
 Station.ServerAddress = address;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
@@ -44,13 +50,16 @@ builder.Services.AddAuthentication(options =>
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
+		string? jwtSecret = builder.Configuration["JWT:Secret"];
+		if (jwtSecret == null)
+			throw new ConfigurationErrorsException("Missing JWT Secret");
 		options.TokenValidationParameters = new TokenValidationParameters
 		{
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidAudience = builder.Configuration["JWT:ValidAudience"],
 			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
 		};
 		options.Events = new JwtBearerEvents
 		{
@@ -91,6 +100,8 @@ app.UseSwaggerUI();
 //}
 
 string? clientHost = builder.Configuration["ClientHost"];
+if (clientHost == null)
+	throw new ConfigurationErrorsException("Missing ClientHost");
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")

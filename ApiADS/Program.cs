@@ -1,3 +1,4 @@
+using System.Configuration;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
@@ -20,10 +21,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
+if (stationName == null)
+	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (connectionString == null)
+	throw new ConfigurationErrorsException("Missing DefaultConnection");
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
