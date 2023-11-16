@@ -11,7 +11,6 @@ using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Jwt;
 using Core.Shared.Services.System.Logs;
-using Core.Shared.Services.System.Mails;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -89,7 +88,6 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 
 // System services
 builder.Services.AddScoped<ILogService, LogService>();
-builder.Services.AddScoped<IMailsService, MailsService>();
 
 // UnitOfWork
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();

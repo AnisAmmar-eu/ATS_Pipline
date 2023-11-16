@@ -4,7 +4,6 @@ using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
-using Org.BouncyCastle.Security;
 using TwinCAT;
 using TwinCAT.Ads;
 
@@ -87,7 +86,7 @@ public partial class OTTwinCat
 			_ when tag.ValueType == IOTTagType.UShort => await tcClient.ReadAnyAsync<ushort>(varHandle, cancel),
 			_ when tag.ValueType == IOTTagType.String => await tcClient.ReadAnyAsync<string>(varHandle, cancel),
 			_ when tag.ValueType == IOTTagType.Bool => await tcClient.ReadAnyAsync<bool>(varHandle, cancel),
-			_ => throw new InvalidParameterException(Name + " tag has an invalid type for TwinCat")
+			_ => throw new InvalidOperationException(Name + " tag has an invalid type for TwinCat")
 		});
 	}
 
@@ -103,7 +102,7 @@ public partial class OTTwinCat
 			_ when tag.ValueType == IOTTagType.String => await tcClient.WriteAnyAsync(varHandle, tag.NewValue, cancel),
 			_ when tag.ValueType == IOTTagType.Bool => await tcClient.WriteAnyAsync(varHandle, bool.Parse(tag.NewValue),
 				cancel),
-			_ => throw new InvalidParameterException(Name + " tag has an invalid tag.ValueType for TwinCat")
+			_ => throw new InvalidOperationException(Name + " tag has an invalid tag.ValueType for TwinCat")
 		};
 	}
 }

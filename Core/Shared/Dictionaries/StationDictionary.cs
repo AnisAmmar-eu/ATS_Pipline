@@ -1,5 +1,3 @@
-using Org.BouncyCastle.Security;
-
 namespace Core.Shared.Dictionaries;
 
 public static class Station
@@ -55,7 +53,7 @@ public static class Station
 			Station3 or Station4 => StationType.S3S4,
 			Station5 => StationType.S5,
 			Server => StationType.Server,
-			_ => throw new InvalidParameterException("Unknown station name.")
+			_ => throw new InvalidOperationException("Unknown station name.")
 		};
 	}
 
@@ -69,7 +67,7 @@ public static class Station
 			Station4 => 4,
 			Station5 => 5,
 			Server => 99,
-			_ => throw new InvalidParameterException("Unknown station name.")
+			_ => throw new InvalidOperationException("Unknown station name.")
 		};
 	}
 }

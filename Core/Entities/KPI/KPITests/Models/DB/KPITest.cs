@@ -19,7 +19,7 @@ public class KPITest : BaseEntity, IBaseEntity<KPITest, DTOKPITest>, IBaseKPI<do
 		return Value;
 	}
 
-	public string[] GetKPICRID()
+	public static string[] GetKPICRID()
 	{
 		return new[] { "KPITest", "KPITestMax" };
 	}

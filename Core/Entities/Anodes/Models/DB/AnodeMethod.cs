@@ -34,7 +34,7 @@ public abstract partial class Anode
 		return this;
 	}
 
-	public string[] GetKPICRID()
+	public static string[] GetKPICRID()
 	{
 		return new[] { KPICRID.AnodesTotalNumber };
 	}

@@ -53,7 +53,7 @@ public partial class StationCycle
 		return this;
 	}
 
-	public string[] GetKPICRID()
+	public static string[] GetKPICRID()
 	{
 		List<string> signMatchRIDs = new()
 		{

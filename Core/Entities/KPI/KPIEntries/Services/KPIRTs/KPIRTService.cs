@@ -63,7 +63,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		}, withTracking: false);
 		if (entities.Count == 0)
 			return;
-		string[] kpiCRIDs = entities[0].GetKPICRID();
+		string[] kpiCRIDs = T.GetKPICRID();
 
 		List<List<KPIRT>> kpiRTs = await GetKPIRTsFromKPICsAndPeriods(kpiCRIDs, periods);
 
