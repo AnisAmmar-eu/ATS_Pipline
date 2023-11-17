@@ -113,7 +113,7 @@ public class CameraApiController : ControllerBase
 		}
 
 		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
-		return File(image, "image/jpeg", ts.ToString(AnodeFormat.RIDFormat));
+		return File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
 	}
 
 	#endregion
