@@ -146,12 +146,12 @@ public class ActsService : IActsService
 
 		foreach (ActEntityRole actEntityRole in actEntity.ActEntityRoles)
 		{
-			string? applicationName = null;
-
-			if (actEntityRole.ApplicationType == ApplicationTypeRID.ROLE)
-				applicationName = (await _rolesManager.FindByIdAsync(actEntityRole.ApplicationID)).Name;
-			else if (actEntityRole.ApplicationType == ApplicationTypeRID.USER)
-				applicationName = (await _usersManager.FindByIdAsync(actEntityRole.ApplicationID)).UserName;
+			string? applicationName = actEntityRole.ApplicationType switch
+			{
+				ApplicationTypeRID.ROLE => (await _rolesManager.FindByIdAsync(actEntityRole.ApplicationID))?.Name,
+				ApplicationTypeRID.USER => (await _usersManager.FindByIdAsync(actEntityRole.ApplicationID))?.UserName,
+				_ => null
+			};
 
 			dtoActEntity.Applications.Add(actEntityRole.ToDTO(applicationName));
 		}
@@ -224,9 +224,9 @@ public class ActsService : IActsService
 					foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
 						         a.Type == ApplicationTypeRID.ROLE))
 					{
-						ApplicationRole? role = await _rolesManager.FindByNameAsync(application.Name);
+						ApplicationRole? role = await _rolesManager.FindByNameAsync(application.Name ?? string.Empty);
 						if (role == null)
-							throw new EntityNotFoundException("role", application.Name ?? "");
+							throw new EntityNotFoundException("role", application.Name ?? string.Empty);
 
 						actEntity.ActEntityRoles?.Add(new ActEntityRole(actEntity, role));
 					}
@@ -235,7 +235,7 @@ public class ActsService : IActsService
 					foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
 						         a.Type == ApplicationTypeRID.USER))
 					{
-						ApplicationUser? user = await _usersManager.FindByNameAsync(application.Name);
+						ApplicationUser? user = await _usersManager.FindByNameAsync(application.Name ?? string.Empty);
 						if (user == null)
 							throw new EntityNotFoundException("user", application.Name ?? "");
 

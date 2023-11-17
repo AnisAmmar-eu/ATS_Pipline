@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +24,10 @@ public class JwtService : IJwtService
 	/// <returns>The created token</returns>
 	public string GenerateToken(List<Claim> claims, int time = 120)
 	{
-		SymmetricSecurityKey authSigningKey = new(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+		string? jwtSecret = _configuration["JWT:Secret"];
+		if (jwtSecret == null)
+			throw new ConfigurationErrorsException("Missing JWT:Secret");
+		SymmetricSecurityKey authSigningKey = new(Encoding.UTF8.GetBytes(jwtSecret));
 
 		// Generate token with claims and secret key
 		JwtSecurityToken token = new(
@@ -42,7 +46,10 @@ public class JwtService : IJwtService
 		try
 		{
 			JwtSecurityTokenHandler tokenHandler = new();
-			byte[] key = Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]);
+			string? jwtSecret = _configuration["JWT:Secret"];
+			if (jwtSecret == null)
+				throw new ConfigurationErrorsException("Missing JWT:Secret");
+			byte[] key = Encoding.UTF8.GetBytes(jwtSecret);
 			tokenHandler.ValidateToken(token, new TokenValidationParameters
 			{
 				ValidateIssuerSigningKey = true,

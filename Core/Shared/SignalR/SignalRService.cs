@@ -12,7 +12,7 @@ public class SignalRService : ISignalRService
 		if (httpContext == null)
 			return hubContext.Clients.All;
 
-		string connectionsId = httpContext.Request.Headers["x-connections-signalr"];
+		string? connectionsId = httpContext.Request.Headers["x-connections-signalr"];
 		if (connectionsId == null)
 			return hubContext.Clients.All;
 		string[] callerConnections = connectionsId.Split(',');

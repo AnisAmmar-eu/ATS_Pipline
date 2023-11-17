@@ -1,3 +1,4 @@
+using System.Configuration;
 using Core.Entities.IOT.IOTDevices.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,9 @@ public class IOTService : BackgroundService
 		IIOTDeviceService iotDeviceService =
 			asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string[] rids = configuration.GetSection("Devices").Get<string[]>();
+		string[]? rids = configuration.GetSection("Devices").Get<string[]>();
+		if (rids == null)
+			throw new ConfigurationErrorsException("Missing Devices");
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try

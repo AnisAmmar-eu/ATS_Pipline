@@ -6,12 +6,11 @@ public partial class DTOUser
 {
 	public DTOUser()
 	{
-		Username = "";
 	}
 
 	public DTOUser(ApplicationUser user)
 	{
-		Username = user.UserName;
+		Username = user.UserName ?? string.Empty;
 		Firstname = user.Firstname;
 		Lastname = user.Lastname;
 	}

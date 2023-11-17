@@ -123,7 +123,7 @@ public class UsersService : IUsersService
 		IList<string>? rolesName = await _userManager.GetRolesAsync(user);
 
 		return await _roleManager.Roles
-			.Where(r => rolesName.Contains(r.Name))
+			.Where(r => r.Name != null && rolesName.Contains(r.Name))
 			.AsNoTracking()
 			.Select(r => r.ToDTO())
 			.ToListAsync();

@@ -49,8 +49,10 @@ public class AuthService : IAuthService
 		// Create User
 		user = dtoRegister.ToUser();
 
-		IdentityResult? IdentityResult = await _userManager.CreateAsync(user, dtoRegister.Password);
-		if (IdentityResult.Succeeded == false)
+		if (dtoRegister.Password == null)
+			throw new NoDataException("No password has been given.");
+		IdentityResult identityResult = await _userManager.CreateAsync(user, dtoRegister.Password);
+		if (identityResult.Succeeded == false)
 			throw new EntityNotFoundException("Error during user creation.");
 
 		// Add Roles
@@ -71,7 +73,7 @@ public class AuthService : IAuthService
 	/// <exception cref="UnauthorizedAccessException"></exception>
 	public async Task<ApplicationUser> CheckCredentials(DTOLogin dtoLogin)
 	{
-		ApplicationUser user = await _userManager.FindByNameAsync(dtoLogin.Username);
+		ApplicationUser? user = await _userManager.FindByNameAsync(dtoLogin.Username);
 		if (user == null)
 			throw new UnauthorizedAccessException("Invalid credentials");
 
@@ -188,7 +190,7 @@ public class AuthService : IAuthService
 		if (userId == null)
 			throw new UnauthorizedAccessException("Invalid user.");
 
-		ApplicationUser user = await _userManager.FindByIdAsync(userId);
+		ApplicationUser? user = await _userManager.FindByIdAsync(userId);
 
 		if (user == null)
 			throw new UnauthorizedAccessException("Invalid user.");
@@ -217,9 +219,16 @@ public class AuthService : IAuthService
 
 		foreach (string roleName in await GetRoles(user))
 		{
-			ApplicationRole role = await _roleManager.FindByNameAsync(roleName);
-			if (role.Type == ApplicationRoleType.SYSTEM_FIVES || role.Type == ApplicationRoleType.SYSTEM_ATS)
-				httpContext.Items["HasAdminRole"] = true;
+			ApplicationRole? role = await _roleManager.FindByNameAsync(roleName);
+			switch (role)
+			{
+				case null:
+					continue;
+				case { Type: ApplicationRoleType.SYSTEM_FIVES or ApplicationRoleType.SYSTEM_ATS }:
+					httpContext.Items["HasAdminRole"] = true;
+					break;
+			}
+
 			userRolesID.Add(role.Id);
 		}
 
@@ -237,10 +246,10 @@ public class AuthService : IAuthService
 		List<Claim> authClaims = new()
 		{
 			new Claim("Id", user.Id),
-			new Claim(ClaimTypes.Name, user.UserName),
-			new Claim("Username", user.UserName),
-			new Claim("Firstname", user.Firstname ?? ""),
-			new Claim("Lastname", user.Lastname ?? ""),
+			new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
+			new Claim("Username", user.UserName ?? string.Empty),
+			new Claim("Firstname", user.Firstname ?? string.Empty),
+			new Claim("Lastname", user.Lastname ?? string.Empty),
 			new Claim("IsEkium", user.IsEkium.ToString()),
 			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 		};

@@ -2,5 +2,5 @@
 
 public partial class DTORole
 {
-	public string RID { get; set; }
+	public string RID { get; set; } = string.Empty;
 }

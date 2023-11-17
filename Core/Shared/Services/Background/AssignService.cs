@@ -1,3 +1,4 @@
+using System.Configuration;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Shootings;
@@ -31,8 +32,12 @@ public class AssignService : BackgroundService
 			asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		using PeriodicTimer timer = new(_period);
-		string imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
-		string thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
+		if (imagesPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+		string? thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		if (thumbnailsPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try

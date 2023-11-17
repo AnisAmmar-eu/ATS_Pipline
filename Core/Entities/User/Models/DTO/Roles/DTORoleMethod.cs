@@ -6,11 +6,10 @@ public partial class DTORole
 {
 	public DTORole()
 	{
-		RID = "";
 	}
 
 	public DTORole(ApplicationRole role)
 	{
-		RID = role.Name;
+		RID = role.Name ?? string.Empty;
 	}
 }

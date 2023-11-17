@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Text;
@@ -64,7 +65,9 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		StationCycle stationCycle = await AnodeUOW.StationCycle.GetById(id, includes: "ShootingPacket");
 		if (stationCycle.ShootingPacket == null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
-		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		string? thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		if (thumbnailsPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 		return stationCycle.ShootingPacket.GetImagePathFromRoot(stationCycle.StationID, thumbnailsPath,
 			stationCycle.AnodeType, camera);
 	}
@@ -133,7 +136,9 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task SendStationImages(List<StationCycle> stationCycles)
 	{
-		string imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
+		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
+		if (imagesPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
 		MultipartFormDataContent formData = new();
 		formData.Headers.ContentType!.MediaType = "multipart/form-data";
 		foreach (StationCycle cycle in stationCycles)
@@ -201,8 +206,12 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task ReceiveStationImage(IFormFileCollection formFiles)
 	{
-		string imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
-		string thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
+		if (imagesPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+		string? thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		if (thumbnailsPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{
 			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
