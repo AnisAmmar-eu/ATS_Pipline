@@ -4,6 +4,7 @@ using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Shared.Dictionaries;
+using Core.Shared.Pagination.Filtering;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -73,9 +74,11 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		return ans;
 	}
 
-	public async Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID)
+	public async Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID,
+		IEnumerable<FilterParam>? filterParams = null)
 	{
-		return (await AnodeUOW.BenchmarkTest.GetRangeForPagination(nbItems, lastID)).ConvertAll(b => b.ToDTO());
+		return (await AnodeUOW.BenchmarkTest.GetRangeForPagination(nbItems, lastID, filterParams)).ConvertAll(b =>
+			b.ToDTO());
 	}
 
 	private BenchmarkTest GenerateTest(DateTimeOffset now, int index, string? rid = null)

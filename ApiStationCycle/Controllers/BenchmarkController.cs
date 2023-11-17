@@ -1,8 +1,7 @@
-using System.Runtime.InteropServices.ComTypes;
-using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Shared.Models.HttpResponse;
+using Core.Shared.Pagination.Filtering;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,13 +20,14 @@ public class BenchmarkController : ControllerBase
 		_logService = logService;
 	}
 
-	[HttpGet("range/{nbOfItems}/{lastID}")]
-	public async Task<IActionResult> GetRange([FromRoute] int nbOfItems, [FromRoute] int lastID)
+	[HttpPut("range/{nbOfItems}/{lastID}")]
+	public async Task<IActionResult> GetRange([FromRoute] int nbOfItems, [FromRoute] int lastID,
+		[FromBody] IEnumerable<FilterParam> filterParams)
 	{
 		List<DTOBenchmarkTest> res;
 		try
 		{
-			res = await _benchmarkTestService.GetRange(nbOfItems, lastID);
+			res = await _benchmarkTestService.GetRange(nbOfItems, lastID, filterParams);
 		}
 		catch (Exception e)
 		{
