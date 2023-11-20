@@ -5,6 +5,7 @@ using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.Anodes.Repositories;
 using Core.Entities.BenchmarkTests.Repositories;
+using Core.Entities.BenchmarkTests.Repositories.CameraTests;
 using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
@@ -39,6 +40,7 @@ public class AnodeUOW : IAnodeUOW
 		_anodeCTX = anodeCTX;
 
 		BenchmarkTest = new BenchmarkTestRepository(_anodeCTX);
+		CameraTest = new CameraTestRepository(_anodeCTX);
 
 		Log = new LogRepository(_anodeCTX);
 
@@ -70,6 +72,7 @@ public class AnodeUOW : IAnodeUOW
 		FileSetting = new FileSettingRepository(_anodeCTX);
 	}
 
+	public ICameraTestRepository CameraTest { get; }
 	public IBenchmarkTestRepository BenchmarkTest { get; }
 
 	public ILogRepository Log { get; }

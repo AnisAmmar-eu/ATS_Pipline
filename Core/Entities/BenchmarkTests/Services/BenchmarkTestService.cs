@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Core.Entities.BenchmarkTests.Models.DB;
+using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Shared.Dictionaries;
+using Core.Shared.Pagination;
 using Core.Shared.Pagination.Filtering;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -14,6 +16,8 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 	IBenchmarkTestService
 {
 	private readonly Random _random = new();
+	private CameraTest? Cam1 = null;
+	private CameraTest? Cam2 = null;
 
 	public BenchmarkTestService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
@@ -31,7 +35,7 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 			DateTimeOffset now = DateTimeOffset.Now;
 			await AnodeUOW.StartTransaction();
 			for (int i = 0; i < nbItems; ++i)
-				await AnodeUOW.BenchmarkTest.Add(GenerateTest(now, i));
+				await AnodeUOW.BenchmarkTest.Add(await GenerateTest(now, i));
 			// BenchmarkTest test = GenerateTest(now, 0, "RandomRID");
 			// await AnodeUOW.BenchmarkTest.Add(test);
 			AnodeUOW.Commit();
@@ -74,17 +78,29 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		return ans;
 	}
 
-	public async Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID,
-		IEnumerable<FilterParam>? filterParams = null)
+	public async Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID, Pagination pagination)
+
 	{
-		return (await AnodeUOW.BenchmarkTest.GetRangeForPagination(nbItems, lastID, filterParams)).ConvertAll(b =>
+		return (await AnodeUOW.BenchmarkTest.GetRangeForPagination(nbItems, lastID, pagination)).ConvertAll(b =>
 			b.ToDTO());
 	}
 
-	private BenchmarkTest GenerateTest(DateTimeOffset now, int index, string? rid = null)
+	private async Task<BenchmarkTest> GenerateTest(DateTimeOffset now, int index, string? rid = null)
 	{
 		int stationID = _random.Next(1, 6);
 		int cameraID = _random.Next(1, 3);
+		CameraTest cam;
+		if (cameraID == 1)
+		{
+			Cam1 ??= await AnodeUOW.CameraTest.GetById(1);
+			cam = Cam1;
+		}
+		else
+		{
+			Cam2 ??= await AnodeUOW.CameraTest.GetById(2);
+			cam = Cam2;
+		}
+
 		string anodeType = _random.Next(1, 3) == 1 ? AnodeTypeDict.D20 : AnodeTypeDict.DX;
 		DateTimeOffset ts = now.Subtract(TimeSpan.FromMinutes(index));
 		rid ??= $"{ts.ToString(AnodeFormat.RIDFormat)}_{stationID}_{cameraID}_{anodeType}";
@@ -93,6 +109,7 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 			TS = ts,
 			StationID = stationID,
 			CameraID = cameraID,
+			CameraTest = cam,
 			AnodeType = anodeType,
 			RID = rid
 		};

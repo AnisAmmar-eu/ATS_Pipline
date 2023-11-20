@@ -1,8 +1,9 @@
-using System.Linq.Expressions;
 using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Shared.Data;
+using Core.Shared.Pagination;
 using Core.Shared.Pagination.Filtering;
+using Core.Shared.Pagination.Sorting;
 using Core.Shared.Repositories.Kernel;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,14 +21,11 @@ public class BenchmarkTestRepository : RepositoryBaseEntity<AnodeCTX, BenchmarkT
 		return await _context.BenchmarkTest.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
 	}
 
-	public async Task<List<BenchmarkTest>> GetRangeForPagination(int nbItems, int lastID,
-		IEnumerable<FilterParam>? filterParams)
+	public async Task<List<BenchmarkTest>> GetRangeForPagination(int nbItems, int lastID, Pagination pagination)
 	{
-		Expression<Func<BenchmarkTest, bool>> filterExpr = Filter<BenchmarkTest>.FiltersToWhereClause(filterParams);
-		Func<BenchmarkTest, bool> lkj = filterExpr.Compile();
-		return await _context.BenchmarkTest.OrderByDescending(b => b.ID)
-			.Where(b => lastID == 0 || b.ID < lastID)
-			.Where(filterExpr)
+		return await _context.BenchmarkTest.Include("CameraTest").AsNoTracking()
+			.FilterFromPagination(pagination, lastID) // Custom function in filter.
+			.SortFromPagination(pagination) // Custom function in Sort.
 			.Take(nbItems)
 			.ToListAsync();
 	}

@@ -5,6 +5,7 @@ using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.Anodes.Repositories;
 using Core.Entities.BenchmarkTests.Repositories;
+using Core.Entities.BenchmarkTests.Repositories.CameraTests;
 using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Repositories;
@@ -28,6 +29,7 @@ namespace Core.Shared.UnitOfWork.Interfaces;
 public interface IAnodeUOW : IDisposable
 {
 	IBenchmarkTestRepository BenchmarkTest { get; }
+	ICameraTestRepository CameraTest { get; }
 
 	ILogRepository Log { get; }
 	IAlarmCRepository AlarmC { get; }

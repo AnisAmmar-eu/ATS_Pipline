@@ -7,6 +7,7 @@ using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Anodes.Models.DB.AnodesD20;
 using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.BenchmarkTests.Models.DB;
+using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
@@ -53,6 +54,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<Log> Log => Set<Log>();
 
 	public DbSet<BenchmarkTest> BenchmarkTest => Set<BenchmarkTest>();
+	public DbSet<CameraTest> CameraTest => Set<CameraTest>();
 
 	// Alarms
 	public DbSet<AlarmPLC> AlarmPLC => Set<AlarmPLC>();
@@ -215,5 +217,9 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.OnDelete(DeleteBehavior.NoAction);
 
 		modelBuilder.Entity<BenchmarkTest>().Property<string>(b => b.AnodeType).HasMaxLength(16);
+		modelBuilder.Entity<CameraTest>()
+			.HasMany(c => c.BenchmarkTests)
+			.WithOne(b => b.CameraTest)
+			.HasForeignKey(b => b.CameraID);
 	}
 }

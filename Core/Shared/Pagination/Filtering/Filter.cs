@@ -1,11 +1,24 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using Core.Shared.Models.DB.Kernel;
+using Core.Shared.Pagination.Sorting;
 
 namespace Core.Shared.Pagination.Filtering;
 
-public static class Filter<T>
+public static class Filter
 {
-	public static Expression<Func<T, bool>> FiltersToWhereClause(IEnumerable<FilterParam>? filterParams)
+	public static IQueryable<T> FilterFromPagination<T>(this IQueryable<T> source, Pagination pagination, int lastID)
+		where T : BaseEntity
+	{
+		SortOption sortOption = SortOptionMap.Get(pagination.SortParam.SortOptionName);
+		if (sortOption == SortOption.Ascending)
+			return source.Where(t => lastID == 0 || t.ID > lastID)
+				.Where(FiltersToWhereClause<T>(pagination.FilterParams));
+		return source.Where(t => lastID == 0 || t.ID < lastID)
+			.Where(FiltersToWhereClause<T>(pagination.FilterParams));
+	}
+
+	private static Expression<Func<T, bool>> FiltersToWhereClause<T>(IEnumerable<FilterParam>? filterParams)
 	{
 		if (filterParams == null)
 			return t => true;
@@ -13,7 +26,8 @@ public static class Filter<T>
 		ParameterExpression param = Expression.Parameter(typeof(T));
 
 		// Maps the filterParams into a list of Expression<Func<T, bool>> with the FilterToExpression list.
-		List<Expression> filters = filterParams.Select(filterParam => FilterToExpression(filterParam, param)).ToList();
+		List<Expression> filters =
+			filterParams.Select(filterParam => FilterToExpression<T>(filterParam, param)).ToList();
 
 		if (!filters.Any())
 			return t => true;
@@ -24,14 +38,10 @@ public static class Filter<T>
 		return Expression.Lambda<Func<T, bool>>(expr, param);
 	}
 
-	private static Expression FilterToExpression(FilterParam filterParam, ParameterExpression param)
+	private static Expression FilterToExpression<T>(FilterParam filterParam, ParameterExpression param)
 	{
 		// Gets the property of the class from its column name.
 		FilterOption filterOption = FilterOptionMap.Get(filterParam.FilterOptionName);
-		PropertyInfo? filterColumn = typeof(T).GetProperty(filterParam.ColumnName,
-			BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
-		if (filterColumn == null)
-			throw new InvalidDataException("FilterParam Column name is invalid.");
 		switch (filterOption)
 		{
 			case FilterOption.Nothing:
@@ -48,11 +58,14 @@ public static class Filter<T>
 			case FilterOption.IsLessThanOrEqualTo:
 			case FilterOption.IsEqualTo:
 			case FilterOption.IsNotEqualTo:
+				string[] names = filterParam.ColumnName.Split('.');
+				PropertyInfo filterColumn = GetColumnProperty<T>(names);
+
 				IComparable? refValue = ParseComparable(filterColumn.PropertyType, filterParam.FilterValue);
 				if (refValue == null)
 					throw new ArgumentException("Error happened during parsing of filterValue");
 				return GetExpressionBody(filterOption,
-					Expression.Property(param, filterParam.ColumnName),
+					GetPropertyExpression(param, names),
 					Expression.Constant(refValue, refValue.GetType()));
 			default:
 				throw new ArgumentOutOfRangeException();
@@ -71,6 +84,33 @@ public static class Filter<T>
 			FilterOption.IsNotEqualTo => Expression.NotEqual(left, right),
 			_ => throw new ArgumentOutOfRangeException(nameof(filterOption), filterOption, null)
 		};
+	}
+
+	private static PropertyInfo GetColumnProperty<T>(string[] names)
+	{
+		PropertyInfo? propertyInfo = null;
+		Type type = typeof(T);
+		foreach (string name in names)
+		{
+			propertyInfo = type.GetProperty(name,
+				BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
+			if (propertyInfo == null)
+				throw new InvalidDataException("FilterParam Column name is invalid.");
+			type = propertyInfo.PropertyType;
+		}
+
+		if (propertyInfo == null)
+			throw new InvalidDataException("FilterParam Column name is invalid.");
+
+		return propertyInfo;
+	}
+
+	private static Expression GetPropertyExpression(ParameterExpression param, string[] names)
+	{
+		Expression property = Expression.Property(param, names[0]);
+		for (int i = 1; i < names.Length; ++i)
+			property = Expression.Property(property, names[i]);
+		return property;
 	}
 
 	private static IComparable? ParseComparable(Type type, string value)

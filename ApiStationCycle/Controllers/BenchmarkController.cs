@@ -1,6 +1,7 @@
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Shared.Models.HttpResponse;
+using Core.Shared.Pagination;
 using Core.Shared.Pagination.Filtering;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +23,12 @@ public class BenchmarkController : ControllerBase
 
 	[HttpPut("range/{nbOfItems}/{lastID}")]
 	public async Task<IActionResult> GetRange([FromRoute] int nbOfItems, [FromRoute] int lastID,
-		[FromBody] IEnumerable<FilterParam> filterParams)
+		[FromBody] Pagination pagination)
 	{
 		List<DTOBenchmarkTest> res;
 		try
 		{
-			res = await _benchmarkTestService.GetRange(nbOfItems, lastID, filterParams);
+			res = await _benchmarkTestService.GetRange(nbOfItems, lastID, pagination);
 		}
 		catch (Exception e)
 		{
