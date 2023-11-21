@@ -69,7 +69,7 @@ public class UserInitializer
 		if (!anodeCTX.Users.Any())
 		{
 			// Create User
-			ApplicationUser newUser = new()
+			ApplicationUser ekiumUser = new()
 			{
 				UserName = "ekium-admin",
 				Firstname = "ekium",
@@ -77,9 +77,25 @@ public class UserInitializer
 				IsEkium = true,
 				Source = SourceAuth.EKIDI
 			};
+			ApplicationUser fivesUser = new()
+			{
+				UserName = "fives-admin",
+				Firstname = "fives",
+				Lastname = "admin",
+				IsEkium = true,
+				Source = SourceAuth.EKIDI
+			};
 
-			await userManager.CreateAsync(newUser, "ekiumAdmin2022$");
-			await userManager.AddToRoleAsync(newUser, RoleNames.FIVES);
+			await userManager.CreateAsync(ekiumUser, "ekiumAdmin2022$");
+			await userManager.CreateAsync(fivesUser, "fivesAdmin2024$");
+
+			// loop through the roles and add them to the user
+			string[] roleNames = { RoleNames.ADMIN, RoleNames.ATS, RoleNames.FIVES, RoleNames.FORCING, RoleNames.OPERATOR, RoleNames.SETTINGS, RoleNames.VISITOR };
+			foreach (string roleName in roleNames)
+			{
+				await userManager.AddToRoleAsync(ekiumUser, roleName);
+				await userManager.AddToRoleAsync(fivesUser, roleName);
+			}
 		}
 
 		#endregion

@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
@@ -82,17 +83,20 @@ public class StationCycleController : ControllerBase
 	public async Task<IActionResult> GetImageByIdAndCamera([Required] [FromRoute] int id,
 		[Required] [FromRoute] int cameraNb)
 	{
-		FileInfo result;
+		byte[] image;
+		DateTimeOffset ts;
 		try
 		{
-			result = await _stationCycleService.GetImagesFromIDAndCamera(id, cameraNb);
+			FileInfo imageFile = await _stationCycleService.GetImagesFromIDAndCamera(id, cameraNb);
+			ts = imageFile.CreationTime;
+			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
 		}
 		catch (Exception e)
 		{
 			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
-		return File(await System.IO.File.ReadAllBytesAsync(result.FullName), "image/jpeg", result.Name);
+		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		return File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
 	}
 }
