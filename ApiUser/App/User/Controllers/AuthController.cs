@@ -41,12 +41,12 @@ public class AuthController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject("User {" + dtoRegister.Username + "} has been successfully created.")
+		return new ControllerResponseObject("User {" + dtoRegister.Username + "} has been successfully created.")
 			.SuccessResult();
 	}
 
@@ -69,17 +69,17 @@ public class AuthController : ControllerBase
 			try
 			{
 				result = await _authService.RegisterSource(dtoLogin);
-				return new ApiResponseObject(result).SuccessResult();
+				return new ControllerResponseObject(result).SuccessResult();
 			}
 			catch (EntityNotFoundException e2)
 			{
-				return new ApiResponseObject(e2.Message).BadRequestResult();
+				return new ControllerResponseObject(e2.Message).BadRequestResult();
 			}
 			catch (Exception e2)
 			{
 				if (e2 is UnauthorizedAccessException) return Unauthorized(e2.Message);
 
-				return new ApiResponseObject(500, "An undefined error happened.").ErrorResult();
+				return new ControllerResponseObject(500, "An undefined error happened.").ErrorResult();
 			}
 		}
 		catch (Exception e)
@@ -87,6 +87,6 @@ public class AuthController : ControllerBase
 			return Unauthorized(e.Message);
 		}
 
-		return new ApiResponseObject(result).SuccessResult();
+		return new ControllerResponseObject(result).SuccessResult();
 	}
 }

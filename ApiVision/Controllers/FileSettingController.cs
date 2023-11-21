@@ -34,9 +34,9 @@ public class FileSettingController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoFileSetting).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtoFileSetting).SuccessResult(_logService, ControllerContext);
 	}
 }

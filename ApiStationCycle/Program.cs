@@ -1,5 +1,6 @@
 using System.Configuration;
 using System.Text;
+using Carter;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
@@ -92,6 +93,8 @@ builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
+builder.Services.AddCarter();
+
 if (!Station.IsServer)
 {
 	builder.Services.AddSingleton<SendService>();
@@ -136,5 +139,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapCarter();
 
 app.Run();

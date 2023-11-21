@@ -9,6 +9,10 @@ public partial class AnodeD20
 	{
 	}
 
+	public AnodeD20(DTOAnodeD20 dtoAnodeD20) : base(dtoAnodeD20)
+	{
+	}
+
 	public AnodeD20(S1S2Cycle cycle) : base(cycle)
 	{
 	}

@@ -25,7 +25,7 @@ public class StationCycleController : ControllerBase
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{
-		return new ApiResponseObject().SuccessResult();
+		return new ControllerResponseObject().SuccessResult();
 	}
 
 	[HttpGet]
@@ -38,10 +38,10 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("mostRecent")]
@@ -56,10 +56,10 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("{id}")]
@@ -72,10 +72,10 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(result).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("{id}/images/{cameraNb}")]
@@ -89,7 +89,7 @@ public class StationCycleController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");

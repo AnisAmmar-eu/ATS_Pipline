@@ -19,4 +19,9 @@ public partial class DTOIOTDevice
 		IsConnected = iotDevice.IsConnected;
 		IOTTags = iotDevice.IOTTags.ConvertAll(tag => tag.ToDTO());
 	}
+
+	public override IOTDevice ToModel()
+	{
+		return new IOTDevice(this);
+	}
 }

@@ -1,4 +1,4 @@
-namespace Core.Shared.Pagination.Sorting;
+namespace Core.Shared.Paginations.Sorting;
 
 public class SortParam
 {

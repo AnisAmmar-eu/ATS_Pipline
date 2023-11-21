@@ -8,6 +8,14 @@ public partial class KPIEntry
 	public KPIEntry()
 	{
 	}
+	
+	public KPIEntry(DTOKPIEntry dtoKPIEntry) : base(dtoKPIEntry)
+	{
+		Value = dtoKPIEntry.Value;
+		Period = dtoKPIEntry.Period;
+		KPICID = dtoKPIEntry.KPICID;
+		KPIC = dtoKPIEntry.KPIC.ToModel();
+	}
 
 	protected KPIEntry(KPIEntry kpiEntry, KPIC kpiC)
 	{

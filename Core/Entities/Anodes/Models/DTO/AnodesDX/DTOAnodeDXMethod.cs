@@ -10,4 +10,9 @@ public partial class DTOAnodeDX
 		S5CycleTS = anodeDX.S5CycleTS;
 		S5Cycle = anodeDX.S5Cycle?.ToDTO();
 	}
+
+	public override AnodeDX ToModel()
+	{
+		return new AnodeDX(this);
+	}
 }

@@ -33,10 +33,10 @@ public class AlarmRTController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoAlarmRTs).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtoAlarmRTs).SuccessResult(_logService, ControllerContext);
 	}
 
 	/// <summary>
@@ -57,9 +57,9 @@ public class AlarmRTController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(res).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(res).SuccessResult(_logService, ControllerContext);
 	}
 }

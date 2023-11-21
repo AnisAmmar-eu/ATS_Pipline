@@ -9,6 +9,11 @@ public partial class S3S4Shooting
 	{
 	}
 
+	public S3S4Shooting(DTOS3S4Shooting dtos3S4Shooting) : base(dtos3S4Shooting)
+	{
+		IsDoubleAnode = dtos3S4Shooting.IsDoubleAnode;
+	}
+
 	public S3S4Shooting(ShootingStruct adsStruct) : base(adsStruct)
 	{
 	}

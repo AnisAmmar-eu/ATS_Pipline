@@ -7,4 +7,9 @@ public partial class DTOKPIRT
 	public DTOKPIRT(KPIRT kpiRT) : base(kpiRT)
 	{
 	}
+
+	public override KPIRT ToModel()
+	{
+		return new KPIRT(this);
+	}
 }

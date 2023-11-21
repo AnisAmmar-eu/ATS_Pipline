@@ -7,7 +7,7 @@ using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.Anodes.Models.DTO;
 
-public partial class DTOAnode : DTOBaseEntity, IDTO<Anode, DTOAnode>
+public abstract partial class DTOAnode : DTOBaseEntity, IDTO<Anode, DTOAnode>
 {
 	public string S1S2CycleRID { get; set; } = string.Empty;
 	public string Status { get; set; } = PacketStatus.Initialized;

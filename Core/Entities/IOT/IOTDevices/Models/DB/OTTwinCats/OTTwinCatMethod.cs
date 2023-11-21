@@ -11,6 +11,14 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 
 public partial class OTTwinCat
 {
+	public OTTwinCat()
+	{
+	}
+
+	public OTTwinCat(DTOOTTwinCat dtoOTTwinCat) : base(dtoOTTwinCat)
+	{
+	}
+
 	public override DTOOTTwinCat ToDTO()
 	{
 		return new DTOOTTwinCat(this);

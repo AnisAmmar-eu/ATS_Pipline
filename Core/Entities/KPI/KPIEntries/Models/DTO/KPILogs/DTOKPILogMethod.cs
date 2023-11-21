@@ -7,4 +7,9 @@ public partial class DTOKPILog
 	public DTOKPILog(KPILog kpiLog) : base(kpiLog)
 	{
 	}
+
+	public override KPILog ToModel()
+	{
+		return new KPILog(this);
+	}
 }

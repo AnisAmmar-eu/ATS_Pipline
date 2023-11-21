@@ -26,11 +26,11 @@ public class LogsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		// No logs for this.
-		return new ApiResponseObject(logs).SuccessResult();
+		return new ControllerResponseObject(logs).SuccessResult();
 	}
 
 	[HttpGet("{startPosition}/{nbOfItems}")]
@@ -43,11 +43,11 @@ public class LogsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		// No logs for this.
-		return new ApiResponseObject(logs).SuccessResult();
+		return new ControllerResponseObject(logs).SuccessResult();
 	}
 
 	[HttpDelete]
@@ -59,9 +59,9 @@ public class LogsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 }

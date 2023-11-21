@@ -1,9 +1,9 @@
 using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Shared.Data;
-using Core.Shared.Pagination;
-using Core.Shared.Pagination.Filtering;
-using Core.Shared.Pagination.Sorting;
+using Core.Shared.Paginations;
+using Core.Shared.Paginations.Filtering;
+using Core.Shared.Paginations.Sorting;
 using Core.Shared.Repositories.Kernel;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,8 +24,8 @@ public class BenchmarkTestRepository : RepositoryBaseEntity<AnodeCTX, BenchmarkT
 	public async Task<List<BenchmarkTest>> GetRangeForPagination(int nbItems, int lastID, Pagination pagination)
 	{
 		return await _context.BenchmarkTest.Include("CameraTest").AsNoTracking()
-			.FilterFromPagination(pagination, lastID) // Custom function in filter.
-			.SortFromPagination(pagination) // Custom function in Sort.
+			.FilterFromPagination<BenchmarkTest, DTOBenchmarkTest>(pagination, lastID) // Custom function in filter.
+			.SortFromPagination<BenchmarkTest, DTOBenchmarkTest>(pagination) // Custom function in Sort.
 			.Take(nbItems)
 			.ToListAsync();
 	}

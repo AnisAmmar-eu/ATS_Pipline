@@ -8,6 +8,13 @@ public partial class KPIC
 	{
 	}
 
+	public KPIC(DTOKPIC dtoKPIC) : base(dtoKPIC)
+	{
+		RID = dtoKPIC.RID;
+		Name = dtoKPIC.Name;
+		Description = dtoKPIC.Description;
+	}
+
 	public KPIC(string rid, string name, string description)
 	{
 		RID = rid;

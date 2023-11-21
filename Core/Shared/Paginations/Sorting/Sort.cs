@@ -1,12 +1,14 @@
 using System.Linq.Expressions;
-using Core.Shared.Models.DB.Kernel;
+using Core.Shared.Models.DB.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
 
-namespace Core.Shared.Pagination.Sorting;
+namespace Core.Shared.Paginations.Sorting;
 
 public static class Sort
 {
-	public static IOrderedQueryable<T> SortFromPagination<T>(this IQueryable<T> source, Pagination pagination)
-		where T: BaseEntity
+	public static IOrderedQueryable<T> SortFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
+		where T : class, IBaseEntity<T, TDTO>
+		where TDTO : class, IDTO<T, TDTO>
 	{
 		SortParam sortParam = pagination.SortParam;
 		SortOption sortOption = SortOptionMap.Get(sortParam.SortOptionName);

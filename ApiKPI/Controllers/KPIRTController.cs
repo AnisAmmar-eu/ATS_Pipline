@@ -33,9 +33,9 @@ public class KPIRTController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtos).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtos).SuccessResult(_logService, ControllerContext);
 	}
 }

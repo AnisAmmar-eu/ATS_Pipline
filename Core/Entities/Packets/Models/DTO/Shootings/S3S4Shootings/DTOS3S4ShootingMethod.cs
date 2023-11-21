@@ -8,4 +8,9 @@ public partial class DTOS3S4Shooting
 	{
 		IsDoubleAnode = s3S4Shooting.IsDoubleAnode;
 	}
+
+	public override S3S4Shooting ToModel()
+	{
+		return new S3S4Shooting(this);
+	}
 }

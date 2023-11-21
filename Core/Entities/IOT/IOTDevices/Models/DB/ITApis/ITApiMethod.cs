@@ -5,6 +5,14 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 
 public partial class ITApi
 {
+	public ITApi()
+	{
+	}
+
+	public ITApi(DTOITApi dtoITApi) : base(dtoITApi)
+	{
+	}
+
 	public override DTOITApi ToDTO()
 	{
 		return new DTOITApi(this);

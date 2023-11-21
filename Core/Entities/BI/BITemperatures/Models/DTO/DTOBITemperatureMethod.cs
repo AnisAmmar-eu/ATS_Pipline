@@ -13,7 +13,12 @@ public partial class DTOBITemperature
 		ID = biTemperature.ID;
 		TS = biTemperature.TS;
 		StationID = biTemperature.StationID;
-		CameraRID = biTemperature.TemperatureRID;
+		TemperatureRID = biTemperature.TemperatureRID;
 		Temperature = biTemperature.Temperature;
+	}
+
+	public override BITemperature ToModel()
+	{
+		return new BITemperature(this);
 	}
 }

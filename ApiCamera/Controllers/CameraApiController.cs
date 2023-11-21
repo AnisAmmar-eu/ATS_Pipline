@@ -33,7 +33,7 @@ public class CameraApiController : ControllerBase
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{
-		return new ApiResponseObject().SuccessResult();
+		return new ControllerResponseObject().SuccessResult();
 	}
 
 	#region Acquisition
@@ -65,10 +65,10 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	#endregion
@@ -85,10 +85,10 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(temperatures).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(temperatures).SuccessResult(_logService, ControllerContext);
 	}
 
 	#endregion
@@ -108,7 +108,7 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
@@ -128,7 +128,7 @@ public class CameraApiController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
 		Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");

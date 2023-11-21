@@ -11,6 +11,15 @@ public partial class BITemperature
 	{
 	}
 
+	public BITemperature(DTOBITemperature dtoBITemperature) : base(dtoBITemperature)
+	{
+		ID = dtoBITemperature.ID;
+		TS = (DateTimeOffset)dtoBITemperature.TS!;
+		StationID = dtoBITemperature.StationID;
+		TemperatureRID = dtoBITemperature.TemperatureRID;
+		Temperature = dtoBITemperature.Temperature;
+	}
+
 	public BITemperature(IOTTag cameraTemperature)
 	{
 		TS = DateTimeOffset.Now;

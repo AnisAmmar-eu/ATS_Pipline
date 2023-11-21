@@ -8,15 +8,18 @@ public partial class DTOIOTTag
 	{
 	}
 
-	public DTOIOTTag(IOTTag iotTag)
+	public DTOIOTTag(IOTTag iotTag) : base(iotTag)
 	{
-		ID = iotTag.ID;
-		TS = iotTag.TS;
 		RID = iotTag.RID;
 		Name = iotTag.Name;
 		CurrentValue = iotTag.CurrentValue;
 		NewValue = iotTag.NewValue;
 		HasNewValue = iotTag.HasNewValue;
 		IsReadOnly = iotTag.IsReadOnly;
+	}
+
+	public override IOTTag ToModel()
+	{
+		return new IOTTag(this);
 	}
 }

@@ -2,6 +2,9 @@
 using Core.Shared.Exceptions;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Core.Shared.Paginations;
+using Core.Shared.Paginations.Filtering;
+using Core.Shared.Paginations.Sorting;
 using Core.Shared.Repositories.Kernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -139,6 +142,21 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	)
 	{
 		return await Query(filters, orderBy, withTracking, maxCount, includes).ToListAsync();
+	}
+
+	public async Task<List<T>> GetWithPagination(Pagination pagination, int nbItems, int lastID)
+	{
+		// No split query because we are using .Take();
+		// No tracking as this is used for back to front purposes and thus useless.
+		// First line is aggregating every include
+		return await
+			pagination.Includes.Aggregate(_context.Set<T>().AsQueryable(),
+					(current, value) => current.Include(value))
+			.AsNoTracking()
+			.FilterFromPagination<T, TDTO>(pagination, lastID)
+			.SortFromPagination<T, TDTO>(pagination)
+			.Take(nbItems)
+			.ToListAsync();
 	}
 
 	/// <summary>

@@ -12,4 +12,9 @@ public partial class DTOAlarmPLC
 		IsActive = alarmPLC.IsActive;
 		IsOneShot = alarmPLC.IsOneShot;
 	}
+
+	public override AlarmPLC ToModel()
+	{
+		return new AlarmPLC(this);
+	}
 }

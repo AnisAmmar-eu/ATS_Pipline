@@ -31,10 +31,10 @@ public class IOTTagController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(tag).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(tag).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPut("rids")]
@@ -47,10 +47,10 @@ public class IOTTagController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(tags).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(tags).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("id/{id}")]
@@ -63,10 +63,10 @@ public class IOTTagController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(tag).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(tag).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPut("{rid}/{value}")]
@@ -79,10 +79,10 @@ public class IOTTagController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoTag).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtoTag).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPut]
@@ -95,9 +95,9 @@ public class IOTTagController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoTags).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtoTags).SuccessResult(_logService, ControllerContext);
 	}
 }

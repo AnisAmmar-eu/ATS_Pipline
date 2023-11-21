@@ -17,6 +17,6 @@ public class ApiUserController : ControllerBase
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{
-		return new ApiResponseObject().SuccessResult();
+		return new ControllerResponseObject().SuccessResult();
 	}
 }

@@ -11,4 +11,9 @@ public partial class DTOKPIEntry
 		KPICID = kpiEntry.KPICID;
 		KPIC = kpiEntry.KPIC.ToDTO();
 	}
+
+	public override KPIEntry ToModel()
+	{
+		return new KPIEntry(this);
+	}
 }

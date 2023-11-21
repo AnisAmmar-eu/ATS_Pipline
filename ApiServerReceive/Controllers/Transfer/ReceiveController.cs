@@ -42,7 +42,7 @@ public class ReceiveController : ControllerBase
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{
-		return new ApiResponseObject().SuccessResult();
+		return new ControllerResponseObject().SuccessResult();
 	}
 
 	[HttpPost]
@@ -65,10 +65,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost("packets")]
@@ -80,10 +80,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	/// <summary>
@@ -104,10 +104,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost("stationCycles")]
@@ -121,10 +121,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost("images")]
@@ -138,10 +138,10 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost("logs")]
@@ -153,9 +153,9 @@ public class ReceiveController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 }

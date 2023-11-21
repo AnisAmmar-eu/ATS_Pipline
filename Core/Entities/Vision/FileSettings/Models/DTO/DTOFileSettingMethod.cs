@@ -8,15 +8,18 @@ public partial class DTOFileSetting
 	{
 	}
 
-	public DTOFileSetting(FileSetting fileSetting)
+	public DTOFileSetting(FileSetting fileSetting) : base(fileSetting)
 	{
-		ID = fileSetting.ID;
-		TS = fileSetting.TS;
 		RID = fileSetting.RID;
 		FilePath = fileSetting.FilePath;
 		LastModification = fileSetting.LastModification;
 		LastUsername = fileSetting.LastUsername;
 		LastUploadName = fileSetting.LastUploadName;
 		LastComment = fileSetting.LastComment;
+	}
+
+	public override FileSetting ToModel()
+	{
+		return new FileSetting(this);
 	}
 }

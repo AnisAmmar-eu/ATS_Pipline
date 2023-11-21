@@ -11,4 +11,9 @@ public partial class DTOOTCamera
 	public DTOOTCamera(OTCamera otCamera) : base(otCamera)
 	{
 	}
+
+	public override OTCamera ToModel()
+	{
+		return new OTCamera(this);
+	}
 }

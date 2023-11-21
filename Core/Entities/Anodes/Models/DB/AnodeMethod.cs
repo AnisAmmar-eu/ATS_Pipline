@@ -14,6 +14,23 @@ public abstract partial class Anode
 	{
 	}
 
+	protected Anode(DTOAnode dtoAnode)
+	{
+		S1S2CycleRID = dtoAnode.S1S2CycleRID;
+		Status = dtoAnode.Status;
+		ClosedTS = dtoAnode.ClosedTS;
+
+		S1S2CycleID = dtoAnode.S1S2CycleID;
+		S1S2CycleStationID = dtoAnode.S1S2CycleStationID;
+		S1S2CycleTS = dtoAnode.S1S2CycleTS;
+		S1S2Cycle = dtoAnode.S1S2Cycle.ToModel();
+
+		S3S4CycleID = dtoAnode.S3S4CycleID;
+		S3S4CycleStationID = dtoAnode.S3S4CycleStationID;
+		S3S4CycleTS = dtoAnode.S3S4CycleTS;
+		S3S4Cycle = dtoAnode.S3S4Cycle?.ToModel();
+	}
+
 	protected Anode(S1S2Cycle cycle)
 	{
 		S1S2Cycle = cycle;
@@ -26,7 +43,12 @@ public abstract partial class Anode
 
 	public override DTOAnode ToDTO()
 	{
-		return new DTOAnode(this);
+		return this switch
+		{
+			AnodeD20 anodeD20 => anodeD20.ToDTO(),
+			AnodeDX anodeDX => anodeDX.ToDTO(),
+			_ => throw new InvalidCastException("Trying to convert an abstract class to DTO")
+		};
 	}
 
 	public Anode GetValue()

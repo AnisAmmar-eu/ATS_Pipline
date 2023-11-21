@@ -6,6 +6,11 @@ namespace Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
 
 public partial class KPIRT
 {
+	public KPIRT()
+	{}
+	
+	public KPIRT(DTOKPIRT dtoKPIRT) : base(dtoKPIRT)
+	{}
 	public override DTOKPIRT ToDTO()
 	{
 		return new DTOKPIRT(this);

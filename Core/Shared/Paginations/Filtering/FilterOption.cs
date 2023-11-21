@@ -1,4 +1,4 @@
-namespace Core.Shared.Pagination.Filtering;
+namespace Core.Shared.Paginations.Filtering;
 
 public static class FilterOptionMap
 {

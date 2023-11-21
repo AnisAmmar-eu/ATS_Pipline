@@ -26,4 +26,10 @@ public class DTOBenchmarkTest : DTOBaseEntity, IDTO<BenchmarkTest, DTOBenchmarkT
 	public DTOCameraTest CameraTest { get; set; }
 	public int StationID { get; set; }
 	public string AnodeType { get; set; } = AnodeTypeDict.Undefined;
+
+	
+	public override BenchmarkTest ToModel()
+	{
+		return new BenchmarkTest(this);
+	}
 }

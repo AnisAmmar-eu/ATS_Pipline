@@ -1,8 +1,7 @@
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Shared.Models.HttpResponse;
-using Core.Shared.Pagination;
-using Core.Shared.Pagination.Filtering;
+using Core.Shared.Paginations;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,10 +31,10 @@ public class BenchmarkController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(res).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(res).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpGet("{nbOfItems}")]
@@ -48,9 +47,9 @@ public class BenchmarkController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(ans).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(ans).SuccessResult(_logService, ControllerContext);
 	}
 }

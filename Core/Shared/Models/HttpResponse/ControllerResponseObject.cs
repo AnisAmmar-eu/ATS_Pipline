@@ -6,56 +6,56 @@ using Newtonsoft.Json;
 
 namespace Core.Shared.Models.HttpResponse;
 
-public class ApiResponseObject
+public class ControllerResponseObject
 {
 	// With default statusCode
-	public ApiResponseObject()
+	public ControllerResponseObject()
 	{
-		Status = new ApiStatusObject { Code = 200 };
+		Status = new ControllerStatusObject { Code = 200 };
 	}
 
-	public ApiResponseObject(object? result)
+	public ControllerResponseObject(object? result)
 	{
 		Result = result;
-		Status = new ApiStatusObject { Code = 200 };
+		Status = new ControllerStatusObject { Code = 200 };
 	}
 
-	public ApiResponseObject(string message)
+	public ControllerResponseObject(string message)
 	{
-		Status = new ApiStatusObject { Code = 200, Message = message };
+		Status = new ControllerStatusObject { Code = 200, Message = message };
 	}
 
-	public ApiResponseObject(string message, object? result)
+	public ControllerResponseObject(string message, object? result)
 	{
 		Result = result;
-		Status = new ApiStatusObject { Code = 200, Message = message };
+		Status = new ControllerStatusObject { Code = 200, Message = message };
 	}
 
 	// With statusCode
-	public ApiResponseObject(int code)
+	public ControllerResponseObject(int code)
 	{
-		Status = new ApiStatusObject { Code = code };
+		Status = new ControllerStatusObject { Code = code };
 	}
 
-	public ApiResponseObject(int code, object? result)
+	public ControllerResponseObject(int code, object? result)
 	{
 		Result = result;
-		Status = new ApiStatusObject { Code = code };
+		Status = new ControllerStatusObject { Code = code };
 	}
 
-	public ApiResponseObject(int code, string message)
+	public ControllerResponseObject(int code, string message)
 	{
-		Status = new ApiStatusObject { Code = code, Message = message };
+		Status = new ControllerStatusObject { Code = code, Message = message };
 	}
 
-	public ApiResponseObject(int code, string message, object? result)
+	public ControllerResponseObject(int code, string message, object? result)
 	{
 		Result = result;
-		Status = new ApiStatusObject { Code = code, Message = message };
+		Status = new ControllerStatusObject { Code = code, Message = message };
 	}
 
 	public object? Result { get; set; }
-	public ApiStatusObject Status { get; set; }
+	public ControllerStatusObject Status { get; set; }
 
 	/*
 	public JsonResult JsonResult()

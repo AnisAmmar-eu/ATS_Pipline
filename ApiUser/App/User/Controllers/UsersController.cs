@@ -47,12 +47,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject(result).SuccessResult();
+		return new ControllerResponseObject(result).SuccessResult();
 	}
 
 	#endregion
@@ -75,12 +75,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject(dtoUsers).SuccessResult();
+		return new ControllerResponseObject(dtoUsers).SuccessResult();
 	}
 
 	#endregion
@@ -103,12 +103,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject(dtoUsers).SuccessResult();
+		return new ControllerResponseObject(dtoUsers).SuccessResult();
 	}
 
 	// GET apiUser/users/{username}
@@ -129,12 +129,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject(dtoUser).SuccessResult();
+		return new ControllerResponseObject(dtoUser).SuccessResult();
 	}
 
 	// GET apiUser/users/{id}
@@ -155,12 +155,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject(dtoUser).SuccessResult();
+		return new ControllerResponseObject(dtoUser).SuccessResult();
 	}
 
 	// PUT apiUser/users/{username}
@@ -180,12 +180,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject(dtoUser).SuccessResult();
+		return new ControllerResponseObject(dtoUser).SuccessResult();
 	}
 
 	// DELETE apiUser/users/{username}
@@ -204,12 +204,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject("User [" + username + "] has been deleted.").SuccessResult();
+		return new ControllerResponseObject("User [" + username + "] has been deleted.").SuccessResult();
 	}
 
 	#endregion
@@ -233,12 +233,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject("The password has been updated.").SuccessResult();
+		return new ControllerResponseObject("The password has been updated.").SuccessResult();
 	}
 
 	// PUT apiUser/users/{username}/password/user
@@ -260,12 +260,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject("The password has been updated.").SuccessResult();
+		return new ControllerResponseObject("The password has been updated.").SuccessResult();
 	}
 
 	// POST apiUser/users/{username}/password/reset
@@ -284,12 +284,12 @@ public class UsersController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntityNotFoundException)
-				return new ApiResponseObject(e.Message).BadRequestResult();
+				return new ControllerResponseObject(e.Message).BadRequestResult();
 
-			return new ApiResponseObject(500, e.Message).ErrorResult();
+			return new ControllerResponseObject(500, e.Message).ErrorResult();
 		}
 
-		return new ApiResponseObject("The password has been reset.").SuccessResult();
+		return new ControllerResponseObject("The password has been reset.").SuccessResult();
 	}
 
 	#endregion

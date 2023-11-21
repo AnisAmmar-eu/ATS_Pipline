@@ -12,6 +12,14 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
 public partial class OTCamera
 {
+	public OTCamera()
+	{
+	}
+
+	public OTCamera(DTOOTCamera dtoOTCamera) : base(dtoOTCamera)
+	{
+	}
+
 	public override DTOOTCamera ToDTO()
 	{
 		return new DTOOTCamera(this);

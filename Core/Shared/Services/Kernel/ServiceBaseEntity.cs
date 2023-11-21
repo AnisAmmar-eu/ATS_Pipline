@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Core.Shared.Paginations;
 using Core.Shared.Repositories.Kernel.Interfaces;
 using Core.Shared.Services.Kernel.Interfaces;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -40,6 +41,13 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 			entity.ToDTO());
 	}
 
+	public async Task<List<TDTO>> GetWithPagination(Pagination pagination, int nbItems, int lastID)
+
+	{
+		return (await _repository.GetWithPagination(pagination, nbItems, lastID)).ConvertAll(entity =>
+			entity.ToDTO());
+	}
+
 	public async Task<TDTO> Add(T entity)
 	{
 		await AnodeUOW.StartTransaction();
@@ -73,6 +81,21 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 		return entity.ToDTO();
 	}
 
+	public async Task<List<TDTO>> UpdateAll(IEnumerable<T> entities)
+	{
+		await AnodeUOW.StartTransaction();
+		List<TDTO> result = new();
+		foreach (T entity in entities)
+		{
+			_repository.Update(entity);
+			result.Add(entity.ToDTO());
+		}
+
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+		return result;
+	}
+
 	public async Task<TDTO> Remove(T entity)
 	{
 		await AnodeUOW.StartTransaction();
@@ -80,5 +103,20 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		return entity.ToDTO();
+	}
+    
+	public async Task<List<TDTO>> RemoveAll(IEnumerable<T> entities)
+	{
+		await AnodeUOW.StartTransaction();
+		List<TDTO> result = new();
+		foreach (T entity in entities)
+		{
+			_repository.Remove(entity);
+			result.Add(entity.ToDTO());
+		}
+
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+		return result;
 	}
 }

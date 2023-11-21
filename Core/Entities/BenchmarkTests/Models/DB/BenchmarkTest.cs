@@ -27,6 +27,19 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 
 	#endregion
 
+	public BenchmarkTest()
+	{
+	}
+
+	public BenchmarkTest(DTOBenchmarkTest dtoBenchmarkTest) : base(dtoBenchmarkTest)
+	{
+		RID = dtoBenchmarkTest.RID;
+		CameraID = dtoBenchmarkTest.CameraID;
+		CameraTest = dtoBenchmarkTest.CameraTest.ToModel();
+		StationID = dtoBenchmarkTest.StationID;
+		AnodeType = dtoBenchmarkTest.AnodeType;
+	}
+
 	public override DTOBenchmarkTest ToDTO()
 	{
 		return new DTOBenchmarkTest(this);

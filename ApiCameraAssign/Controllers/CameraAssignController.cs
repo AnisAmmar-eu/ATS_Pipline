@@ -26,7 +26,7 @@ public class CameraAssignController : ControllerBase
 	[HttpGet("status")]
 	public IActionResult GetStatus()
 	{
-		return new ApiResponseObject().SuccessResult();
+		return new ControllerResponseObject().SuccessResult();
 	}
 
 	[HttpGet]
@@ -42,10 +42,10 @@ public class CameraAssignController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(packets).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(packets).SuccessResult(_logService, ControllerContext);
 	}
 
 	[HttpPost]
@@ -58,9 +58,9 @@ public class CameraAssignController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(packet).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(packet).SuccessResult(_logService, ControllerContext);
 	}
 }

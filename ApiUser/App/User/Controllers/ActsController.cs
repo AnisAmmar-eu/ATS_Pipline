@@ -46,10 +46,10 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(200, new { actionToken }).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(200, new { actionToken }).SuccessResult(_logService, ControllerContext);
 	}
 
 	// POST apiUser/acts/entity
@@ -67,10 +67,10 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoActEntity).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtoActEntity).SuccessResult(_logService, ControllerContext);
 	}
 
 	// POST apiUser/acts/list
@@ -89,10 +89,10 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoActEntitiesStatus).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtoActEntitiesStatus).SuccessResult(_logService, ControllerContext);
 	}
 
 	// PUT apiUser/acts/assign
@@ -114,9 +114,9 @@ public class ActsController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
 	}
 }

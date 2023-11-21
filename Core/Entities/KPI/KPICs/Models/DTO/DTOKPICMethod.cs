@@ -10,4 +10,9 @@ public partial class DTOKPIC
 		Name = kpic.Name;
 		Description = kpic.Description;
 	}
+
+	public override KPIC ToModel()
+	{
+		return new KPIC(this);
+	}
 }

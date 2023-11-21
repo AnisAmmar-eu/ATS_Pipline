@@ -17,14 +17,14 @@ public interface IDTO<T, TDTO>
 	// ///     Converts the DTO to the entity as a <see cref="BaseEntity{T}" />.
 	// /// </summary>
 	// /// <returns></returns>
-	// public IBaseEntity<T, DTO> ToEntity()
-	// {
-	//     return ToModel();
-	// }
+	public IBaseEntity<T, TDTO> ToEntity()
+	{
+	    return ToModel();
+	}
 
 	// /// <summary>
 	// ///     Converts the DTO to the model as its own type.
 	// /// </summary>
 	// /// <returns></returns>
-	// T ToModel();
+	T ToModel();
 }

@@ -5,8 +5,7 @@ using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Shared.Dictionaries;
-using Core.Shared.Pagination;
-using Core.Shared.Pagination.Filtering;
+using Core.Shared.Paginations;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -16,8 +15,8 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 	IBenchmarkTestService
 {
 	private readonly Random _random = new();
-	private CameraTest? Cam1 = null;
-	private CameraTest? Cam2 = null;
+	private static CameraTest? _cam1 = null;
+	private static CameraTest? _cam2 = null;
 
 	public BenchmarkTestService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
@@ -53,25 +52,25 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		await AnodeUOW.BenchmarkTest.GetAll(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.StationID == 3
-		});
+		}, withTracking: false, includes: "CameraTest");
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
 		await AnodeUOW.BenchmarkTest.GetAll(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.AnodeType == AnodeTypeDict.D20
-		});
+		}, withTracking: false, includes: "CameraTest");
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
 		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetBy(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.RID == "RandomRID"
-		});
+		}, withTracking: false, includes: "CameraTest");
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		await AnodeUOW.BenchmarkTest.GetById(test.ID);
+		await AnodeUOW.BenchmarkTest.GetById(test.ID, withTracking: false, includes: "CameraTest");
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 
@@ -92,13 +91,13 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		CameraTest cam;
 		if (cameraID == 1)
 		{
-			Cam1 ??= await AnodeUOW.CameraTest.GetById(1);
-			cam = Cam1;
+			_cam1 ??= await AnodeUOW.CameraTest.GetById(1);
+			cam = _cam1;
 		}
 		else
 		{
-			Cam2 ??= await AnodeUOW.CameraTest.GetById(2);
-			cam = Cam2;
+			_cam2 ??= await AnodeUOW.CameraTest.GetById(2);
+			cam = _cam2;
 		}
 
 		string anodeType = _random.Next(1, 3) == 1 ? AnodeTypeDict.D20 : AnodeTypeDict.DX;

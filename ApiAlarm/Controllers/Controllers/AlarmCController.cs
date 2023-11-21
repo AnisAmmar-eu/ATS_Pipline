@@ -34,9 +34,9 @@ public class AlarmCController : ControllerBase
 		catch (Exception e)
 		{
 			if (e is EntryPointNotFoundException)
-				return await new ApiResponseObject().ErrorResult(_logService, ControllerContext, e);
+				return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
 		}
 
-		return await new ApiResponseObject(dtoAlarmCs).SuccessResult(_logService, ControllerContext);
+		return await new ControllerResponseObject(dtoAlarmCs).SuccessResult(_logService, ControllerContext);
 	}
 }

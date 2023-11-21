@@ -1,14 +1,16 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Pagination.Sorting;
+using Core.Shared.Models.DB.Kernel.Interfaces;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Core.Shared.Paginations.Sorting;
 
-namespace Core.Shared.Pagination.Filtering;
+namespace Core.Shared.Paginations.Filtering;
 
 public static class Filter
 {
-	public static IQueryable<T> FilterFromPagination<T>(this IQueryable<T> source, Pagination pagination, int lastID)
-		where T : BaseEntity
+	public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination, int lastID)
+		where T : class, IBaseEntity<T, TDTO>
+		where TDTO : class, IDTO<T, TDTO>
 	{
 		SortOption sortOption = SortOptionMap.Get(pagination.SortParam.SortOptionName);
 		if (sortOption == SortOption.Ascending)

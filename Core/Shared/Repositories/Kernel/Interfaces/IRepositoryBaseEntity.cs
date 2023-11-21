@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Core.Shared.Paginations;
 
 namespace Core.Shared.Repositories.Kernel.Interfaces;
 
@@ -94,6 +95,8 @@ public interface IRepositoryBaseEntity<T, TDTO>
 		int? maxCount = null,
 		Dictionary<string, string[]>? includes = null
 	);
+
+	Task<List<T>> GetWithPagination(Pagination pagination, int nbItems, int lastID);
 
 	/// <summary>
 	///     Find entities by a predicate
