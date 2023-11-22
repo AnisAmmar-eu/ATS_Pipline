@@ -1,36 +1,30 @@
-﻿using Core.Entities.Alarms.AlarmsLog.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Carter;
+using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Shared.Models.ApiResponses;
+using Core.Shared.Services.System.Logs;
 
 namespace ApiAlarm.Controllers.Transfer;
 
-[ApiController]
-[Route("apiAlarm/transfer")]
-public class TransferController : ControllerBase
+public class TransferController : ICarterModule
 {
-	private readonly IAlarmLogService _alarmLogService;
-
-	public TransferController(IAlarmLogService alarmLogService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_alarmLogService = alarmLogService;
+		app.MapPost("apiAlarm/transfer/alarmsLog", TransferAlarmsLog);
 	}
 
-
-	[HttpPost("alarmsLog")]
-	public async Task<IActionResult> TransferAlarmsLog()
+	private static async Task<IResult> TransferAlarmsLog(IAlarmLogService alarmLogService, ILogService logService, HttpContext httpContext)
 	{
 		try
 		{
-			HttpResponseMessage response = await _alarmLogService.SendLogsToServer();
+			HttpResponseMessage response = await alarmLogService.SendLogsToServer();
 			if (response.IsSuccessStatusCode)
-				return Ok(true);
-			string errorMessage = await response.Content.ReadAsStringAsync();
-			return StatusCode((int)response.StatusCode, errorMessage);
+				return new ApiResponse().SuccessResult();
+			throw new Exception(await response.Content.ReadAsStringAsync());
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
-			// Handle any exception
-			Console.WriteLine($"Une erreur s'est produite lors de l'envoi de la requête : {ex.Message}");
-			return StatusCode(500, "Erreur interne du serveur");
+			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 	}
+
 }

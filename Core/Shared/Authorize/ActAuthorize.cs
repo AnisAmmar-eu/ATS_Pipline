@@ -1,22 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Core.Shared.Authorize;
 
-public class ActAuthorize : TypeFilterAttribute
+public class ActAuthorize : IAuthorizationRequirement
 {
-	public ActAuthorize(string rid, string entityType, string entityProperty, string parentType, string parentProperty)
-		: base(typeof(ActAuthorizeLogic))
+	public ActAuthorize(string rid)
 	{
-		Arguments = new object[] { rid, entityType, entityProperty, parentType, parentProperty };
+		RID = rid;
 	}
-
-	public ActAuthorize(string rid, string entityType, string entityProperty) : base(typeof(ActAuthorizeLogic))
-	{
-		Arguments = new object[] { rid, entityType, entityProperty };
-	}
-
-	public ActAuthorize(string rid) : base(typeof(ActAuthorizeLogic))
-	{
-		Arguments = new object[] { rid };
-	}
+	
+	public string RID { get; set; }
 }

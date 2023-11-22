@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Carter;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
@@ -10,152 +11,116 @@ using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Entities.StationCycles.Services;
-using Core.Shared.Attributes;
+using Core.Shared.Dictionaries;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Models.ApiResponses;
+using Core.Shared.Models.DB.Kernel;
+using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.System.Logs;
-using Core.Shared.Models.HttpResponse;
+using Core.Shared.Services.Kernel.Interfaces;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiServerReceive.Controllers.Transfer;
 
-[ApiController]
-[Route("apiServerReceive")]
-[ServerAction]
-public class ReceiveController : ControllerBase
+public class ReceiveController : BaseEndpoint<BaseEntity, DTOBaseEntity, IServiceBaseEntity<BaseEntity, DTOBaseEntity>>,
+	ICarterModule
 {
-	private readonly IAlarmCService _alarmCService;
-	private readonly IAlarmLogService _alarmLogService;
-	private readonly ILogService _logService;
-	private readonly IPacketService _packetService;
-	private readonly IStationCycleService _stationCycleService;
-
-	public ReceiveController(IAlarmLogService alarmLogService, IAlarmCService alarmCService,
-		IPacketService packetService, IStationCycleService stationCycleService, ILogService logService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_alarmLogService = alarmLogService;
-		_alarmCService = alarmCService;
-		_packetService = packetService;
-		_stationCycleService = stationCycleService;
-		_logService = logService;
+		if (!Station.IsServer)
+			return;
+		RouteGroupBuilder group = app.MapGroup("apiServerReceive").WithTags(nameof(ReceiveController));
+
+		group.MapGet("status", GetStatus);
+		group.MapPost("alarmsLog", ReceiveAlarmLog);
+		group.MapPost("packets", ReceivePacket);
+		group.MapPost("furnacePackets", ReceiveFurnacePacketForStationCycle);
+		group.MapPost("stationCycles", ReceiveStationCycle);
+		group.MapPost("images", ReceiveImage);
+		group.MapPost("logs", ReceiveLog);
 	}
 
-	[HttpGet("status")]
-	public IActionResult GetStatus()
+	private static Ok<ApiResponse> GetStatus()
 	{
-		return new ControllerResponseObject().SuccessResult();
+		return new ApiResponse().SuccessResult();
 	}
 
-	[HttpPost]
-	[Route("alarmsLog")]
-	public async Task<IActionResult> ReceiveAlarmLog([FromBody] [Required] List<DTOSAlarmLog> dtoAlarmLogs)
+	private static async Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(
+		[FromBody] [Required] List<DTOSAlarmLog> dtoAlarmLogs, IAlarmCService alarmCService,
+		IAlarmLogService alarmLogService, ILogService logService, HttpContext httpContext)
 	{
-		try
+		return await GenericControllerEmptyResponse(async () =>
 		{
 			foreach (DTOSAlarmLog alarmLog in dtoAlarmLogs)
 			{
-				DTOAlarmC newAlarmC = await _alarmCService.GetByRID(alarmLog.AlarmRID);
+				DTOAlarmC newAlarmC = await alarmCService.GetByRID(alarmLog.AlarmRID);
 
 				AlarmLog alarmLogToAdd = alarmLog.ToModel();
 				alarmLogToAdd.ID = 0;
 				alarmLogToAdd.IsAck = false;
 				alarmLogToAdd.HasBeenSent = true;
 				alarmLogToAdd.AlarmID = newAlarmC.ID;
-				await _alarmLogService.Add(alarmLogToAdd);
+				await alarmLogService.Add(alarmLogToAdd);
 			}
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+		}, logService, httpContext);
 	}
 
-	[HttpPost("packets")]
-	public async Task<IActionResult> ReceivePacket([FromBody] [Required] IEnumerable<DTOPacket> packet)
+	private static async Task<JsonHttpResult<ApiResponse>> ReceivePacket(
+		[FromBody] [Required] IEnumerable<DTOPacket> packets, IPacketService packetService, ILogService logService,
+		HttpContext httpContext)
 	{
-		try
-		{
-			await _packetService.ReceivePackets(packet);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+		return await GenericControllerEmptyResponse(async () => await packetService.ReceivePackets(packets), logService,
+			httpContext);
 	}
 
 	/// <summary>
 	///     This function will take a furnace packet as argument and will build it. Building it will make it associate
 	///     to its stationCycle. StationCycle MUST NOT be marked as sent in the server.
 	/// </summary>
-	/// <param name="dtoPacket"></param>
+	/// <param name="dtoPackets">Received packets</param>
+	/// <param name="packetService">Packet service</param>
+	/// <param name="logService">Log service</param>
+	/// <param name="httpContext">Http context</param>
 	/// <returns></returns>
-	[HttpPost("furnacePackets")]
-	public async Task<IActionResult> ReceiveFurnacePacketForStationCycle([FromBody] [Required] DTOPacket dtoPacket)
+	private static async Task<JsonHttpResult<ApiResponse>> ReceiveFurnacePacketForStationCycle(
+		[FromBody] [Required] DTOPacket dtoPackets, IPacketService packetService, ILogService logService,
+		HttpContext httpContext)
 	{
-		try
+		return await GenericControllerEmptyResponse(async () =>
 		{
-			if (dtoPacket is not DTOFurnace)
+			if (dtoPackets is not DTOFurnace)
 				throw new InvalidOperationException("Given packet MUST be a Furnace packet.");
-			dtoPacket.ID = 0;
-			await _packetService.BuildPacket(dtoPacket.ToModel());
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+			dtoPackets.ID = 0;
+			await packetService.BuildPacket(dtoPackets.ToModel());
+		}, logService, httpContext);
 	}
 
-	[HttpPost("stationCycles")]
-	public async Task<IActionResult> ReceiveStationCycle(
+	private static async Task<JsonHttpResult<ApiResponse>> ReceiveStationCycle(
 		[FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))]
-		List<DTOStationCycle> dtoStationCycles)
+		List<DTOStationCycle> dtoStationCycles,
+		IStationCycleService stationCycleService, ILogService logService, HttpContext httpContext)
 	{
-		try
-		{
-			await _stationCycleService.ReceiveStationCycles(dtoStationCycles);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+		return await GenericControllerEmptyResponse(
+			async () => await stationCycleService.ReceiveStationCycles(dtoStationCycles), logService, httpContext);
 	}
 
-	[HttpPost("images")]
-	public async Task<IActionResult> ReceiveImage()
+	private static async Task<JsonHttpResult<ApiResponse>> ReceiveImage(IStationCycleService stationCycleService,
+		ILogService logService, HttpContext httpContext)
 	{
-		try
+		return await GenericControllerEmptyResponse(async () =>
 		{
 			FormFileCollection images = new();
-			images.AddRange(Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
-			await _stationCycleService.ReceiveStationImage(images);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+			images.AddRange(httpContext.Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
+			await stationCycleService.ReceiveStationImage(images);
+		}, logService, httpContext);
 	}
 
-	[HttpPost("logs")]
-	public async Task<IActionResult> ReceiveLog([FromBody] [Required] List<DTOLog> logs)
+	private static async Task<JsonHttpResult<ApiResponse>> ReceiveLog([FromBody] [Required] List<DTOLog> logs,
+		ILogService logService, HttpContext httpContext)
 	{
-		try
-		{
-			await _logService.ReceiveLogs(logs);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+		return await GenericControllerEmptyResponse(async () => await logService.ReceiveLogs(logs), logService,
+			httpContext);
 	}
 }

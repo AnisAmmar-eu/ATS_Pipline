@@ -1,8 +1,13 @@
+using Carter;
+using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Models.DTO.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Shared.Attributes;
-using Core.Shared.Models.HttpResponse;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiKPI.Controllers;
@@ -10,32 +15,23 @@ namespace ApiKPI.Controllers;
 [ApiController]
 [Route("apiKPIRT")]
 [ServerAction]
-public class KPIRTController : ControllerBase
+public class KPIRTController : BaseEndpoint<KPIRT, DTOKPIRT, IKPIRTService>, ICarterModule
 {
-	private readonly IKPIRTService _kpirtService;
-	private readonly ILogService _logService;
-
-
-	public KPIRTController(IKPIRTService kpirtService, ILogService logService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_kpirtService = kpirtService;
-		_logService = logService;
+		RouteGroupBuilder group = app.MapGroup("apiKPIRT").WithTags(nameof(KPIRTController));
+		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+
+		group.MapPut("{timePeriod}", GetByTimePeriodAndRIDs)
+			.WithSummary("Get KPIRT within a single time period by RIDs").WithOpenApi();
 	}
 
 	[HttpPut]
 	[Route("{timePeriod}")]
-	public async Task<IActionResult> GetByRIDs([FromRoute] string timePeriod, [FromBody] List<string> rids)
+	private static async Task<JsonHttpResult<ApiResponse>> GetByTimePeriodAndRIDs([FromRoute] string timePeriod,
+		[FromBody] List<string> rids, IKPIRTService kpirtService, ILogService logService, HttpContext httpContext)
 	{
-		List<DTOKPIRT> dtos;
-		try
-		{
-			dtos = await _kpirtService.GetByRIDsAndPeriod(timePeriod, rids);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(dtos).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await kpirtService.GetByRIDsAndPeriod(timePeriod, rids), logService,
+			httpContext);
 	}
 }

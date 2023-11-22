@@ -1,4 +1,5 @@
 using System.Configuration;
+using Carter;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
@@ -52,6 +53,8 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<ADSSer
 builder.Services.AddSingleton<IOTService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
 
+builder.Services.AddCarter();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,7 +67,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapCarter();
 
 app.MapHub<StationCycleHub>("/stationCycleHub");
 app.MapHub<IOTHub>("/iotHub");

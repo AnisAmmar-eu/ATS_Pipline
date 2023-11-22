@@ -1,119 +1,117 @@
 using ApiCamera.Utils;
+using Azure;
+using Carter;
 using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Dictionaries;
 using Core.Shared.Dictionaries;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.Camera;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Stemmer.Cvb;
 
 namespace ApiCamera.Controllers;
 
-[ApiController]
-[Route("apiCamera")]
-public class CameraApiController : ControllerBase
+public class CameraApiController : ICarterModule
 {
-	private readonly IBITemperatureService _biTemperatureService;
-	private readonly IConfiguration _configuration;
-	private readonly IIOTTagService _iotTagService;
-	private readonly ILogService _logService;
-
-	public CameraApiController(ILogService logService, IConfiguration configuration, IIOTTagService iotTagService,
-		IBITemperatureService biTemperatureService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_logService = logService;
-		_configuration = configuration;
-		_iotTagService = iotTagService;
-		_biTemperatureService = biTemperatureService;
+		RouteGroupBuilder group = app.MapGroup("apiCamera").WithTags(nameof(CameraApiController));
+
+		group.MapGet("status", GetStatus);
+		group.MapGet("acquisition", AcquisitionAsync);
+		group.MapGet("temperature", GetTemperatures);
+		group.MapGet("{cameraID}/testImage", GetCameraTestImage);
 	}
 
-	[HttpGet("status")]
-	public IActionResult GetStatus()
+	private static IActionResult GetStatus()
 	{
 		return new ControllerResponseObject().SuccessResult();
 	}
 
 	#region Acquisition
 
-	[HttpGet("acquisition")]
-	public async Task<IActionResult> AcquisitionAsync()
+	private static async Task<JsonHttpResult<ApiResponse>> AcquisitionAsync(IConfiguration configuration,
+		IIOTTagService iotTagService, ILogService logService, HttpContext httpContext)
 	{
-		int port1 = _configuration.GetValue<int>("CameraConfig:Camera1:Port");
-		int port2 = _configuration.GetValue<int>("CameraConfig:Camera2:Port");
 		try
 		{
+			int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
+			int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
 			Device device1 = CameraConnectionManager.Connect(port1);
 			if (Station.Type != StationType.S5)
 			{
 				// Create an instance of the camera
 				Device device2 = CameraConnectionManager.Connect(port2);
-				Task task1 = CameraUtils.RunAcquisition(_iotTagService, device1, "jpg", ShootingUtils.Camera1,
+				Task task1 = CameraUtils.RunAcquisition(iotTagService, device1, "jpg", ShootingUtils.Camera1,
 					ShootingUtils.CameraTest1);
-				Task task2 = CameraUtils.RunAcquisition(_iotTagService, device2, "jpg", ShootingUtils.Camera2,
+				Task task2 = CameraUtils.RunAcquisition(iotTagService, device2, "jpg", ShootingUtils.Camera2,
 					ShootingUtils.CameraTest2);
 				await task1;
 				await task2;
 			}
 			else
 			{
-				await CameraUtils.RunAcquisition(_iotTagService, device1, "jpg", ShootingUtils.Camera1,
+				await CameraUtils.RunAcquisition(iotTagService, device1, "jpg", ShootingUtils.Camera1,
 					ShootingUtils.CameraTest1, ShootingUtils.Camera2, ShootingUtils.CameraTest2);
 			}
 		}
 		catch (Exception e)
 		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+		return await new ApiResponse().SuccessResult(logService, httpContext.GetEndpoint());
 	}
 
 	#endregion
 
 	#region Get Temperature
 
-	[HttpGet("temperature")]
-	public async Task<IActionResult> GetTemperatures()
+	private static async Task<JsonHttpResult<ApiResponse>> GetTemperatures(IBITemperatureService biTemperatureService,
+		ILogService logService, HttpContext httpContext)
 	{
 		List<DTOBITemperature> temperatures;
 		try
 		{
-			temperatures = await _biTemperatureService.GetAll();
+			temperatures = await biTemperatureService.GetAll();
 		}
 		catch (Exception e)
 		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 
-		return await new ControllerResponseObject(temperatures).SuccessResult(_logService, ControllerContext);
+		return await new ApiResponse(temperatures).SuccessResult(logService, httpContext.GetEndpoint());
 	}
 
 	#endregion
 
 	#region Get TestImages
 
-	[HttpGet("{cameraId}/testImage")]
-	public async Task<IActionResult> GetCameraTestImage(int cameraId)
+	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetCameraTestImage(
+		[FromRoute] int cameraID, ILogService logService,
+		HttpContext httpContext)
 	{
 		byte[] image;
 		DateTimeOffset ts;
 		try
 		{
-			string cameraTestPath = cameraId == 1 ? ShootingUtils.CameraTest1 : ShootingUtils.CameraTest2;
+			string cameraTestPath = cameraID == 1 ? ShootingUtils.CameraTest1 : ShootingUtils.CameraTest2;
 			FileInfo imageFile = new(cameraTestPath + ShootingUtils.TestFilename);
 			ts = imageFile.CreationTime;
-			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
+			image = await File.ReadAllBytesAsync(imageFile.FullName);
 		}
 		catch (Exception e)
 		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 
-		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
-		return File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
+		httpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		return TypedResults.File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
 	}
 
 	#endregion

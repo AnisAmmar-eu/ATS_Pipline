@@ -1,9 +1,10 @@
 ﻿using Core.Shared.Models.DB.System.Logs;
 using Core.Shared.Models.DTO.System.Logs;
+using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Shared.Services.System.Logs;
 
-public interface ILogService
+public interface ILogService : IServiceBaseEntity<Log, DTOLog>
 {
 	public Task<List<DTOLog>> GetAll();
 	public Task<List<DTOLog>> GetRange(int start, int nbItems);

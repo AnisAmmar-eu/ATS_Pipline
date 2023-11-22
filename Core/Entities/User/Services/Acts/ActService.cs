@@ -6,33 +6,34 @@ using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
+using Core.Entities.User.Models.DTO.Acts;
 using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Models.DTO.Acts.ActEntities.ActEntityRoles;
+using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Services.Auth;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Jwt;
+using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Core.Entities.User.Services.Acts;
 
-public class ActsService : IActsService
+public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActService
 {
 	private readonly IAuthService _authService;
 	private readonly IJwtService _jwtService;
 	private readonly RoleManager<ApplicationRole> _rolesManager;
-	private readonly IAnodeUOW _unitOfWork;
 	private readonly UserManager<ApplicationUser> _usersManager;
 
-	public ActsService(
+	public ActService(
 		IAnodeUOW unitOfWork,
 		IAuthService authService,
 		IJwtService jwtService,
 		UserManager<ApplicationUser> usersManager,
-		RoleManager<ApplicationRole> rolesManager)
+		RoleManager<ApplicationRole> rolesManager) : base(unitOfWork)
 	{
-		_unitOfWork = unitOfWork;
 		_authService = authService;
 		_jwtService = jwtService;
 		_usersManager = usersManager;
@@ -64,13 +65,13 @@ public class ActsService : IActsService
 	/// <returns>A <see cref="DTOActEntityStatus" /></returns>
 	public async Task<DTOActEntityStatus> GetAction(HttpContext httpContext, DTOActEntityStatus dtoActEntityStatus)
 	{
-		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntityStatus.Act?.RID,
+		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(dtoActEntityStatus.Act?.RID,
 			dtoActEntityStatus.Act?.EntityType, dtoActEntityStatus.Act?.ParentType);
 		ActEntity actEntity;
 
 		try
 		{
-			actEntity = await _unitOfWork.ActEntities.GetByActWithIncludes(act, dtoActEntityStatus.EntityID,
+			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes(act, dtoActEntityStatus.EntityID,
 				dtoActEntityStatus.ParentID);
 		}
 		catch (Exception e)
@@ -124,13 +125,13 @@ public class ActsService : IActsService
 	/// <returns>A <see cref="DTOActEntity" /></returns>
 	public async Task<DTOActEntity> GetActionEntityRoles(DTOActEntity dtoActEntity)
 	{
-		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID,
+		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID,
 			dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
 		ActEntity actEntity;
 
 		try
 		{
-			actEntity = await _unitOfWork.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID,
+			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID,
 				dtoActEntity.ParentID);
 		}
 		catch (Exception e)
@@ -162,7 +163,7 @@ public class ActsService : IActsService
 
 	public async Task AssignAction(DTOActEntity dtoActEntity, bool remove = true)
 	{
-		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID,
+		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID,
 			dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
 
 		string? signatureType = dtoActEntity.SignatureType;
@@ -171,7 +172,7 @@ public class ActsService : IActsService
 
 		try
 		{
-			actEntity = await _unitOfWork.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID,
+			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID,
 				dtoActEntity.ParentID);
 		}
 		catch (Exception e)
@@ -180,27 +181,27 @@ public class ActsService : IActsService
 				throw;
 		}
 
-		await _unitOfWork.StartTransaction();
+		await AnodeUOW.StartTransaction();
 
 		if (actEntity == null)
 		{
 			if (signatureType == null)
 			{
-				await _unitOfWork.CommitTransaction();
+				await AnodeUOW.CommitTransaction();
 				return;
 			}
 
 			actEntity = dtoActEntity.ToModel(act, signatureType);
 
-			await _unitOfWork.ActEntities.Add(actEntity);
+			await AnodeUOW.ActEntities.Add(actEntity);
 		}
 		else
 		{
 			if (signatureType == null)
 			{
-				_unitOfWork.ActEntities.Remove(actEntity);
-				_unitOfWork.Commit();
-				await _unitOfWork.CommitTransaction();
+				AnodeUOW.ActEntities.Remove(actEntity);
+				AnodeUOW.Commit();
+				await AnodeUOW.CommitTransaction();
 				return;
 			}
 
@@ -209,10 +210,10 @@ public class ActsService : IActsService
 			if (actEntity.ActEntityRoles != null && remove)
 				actEntity.ActEntityRoles.Clear();
 
-			_unitOfWork.ActEntities.Update(actEntity);
+			AnodeUOW.ActEntities.Update(actEntity);
 		}
 
-		_unitOfWork.Commit();
+		AnodeUOW.Commit();
 
 		switch (signatureType)
 		{
@@ -245,10 +246,10 @@ public class ActsService : IActsService
 				break;
 		}
 
-		_unitOfWork.ActEntities.Update(actEntity);
-		_unitOfWork.Commit();
+		AnodeUOW.ActEntities.Update(actEntity);
+		AnodeUOW.Commit();
 
-		await _unitOfWork.CommitTransaction();
+		await AnodeUOW.CommitTransaction();
 	}
 
 	/// <summary>
@@ -263,15 +264,15 @@ public class ActsService : IActsService
 	public async Task DeleteActionEntity(string actRID, string? entityType = null, int? entityID = null,
 		string? parentType = null, int? parentID = null)
 	{
-		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(actRID, entityType, parentType);
+		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(actRID, entityType, parentType);
 
 		// [T0DO] -> Confirm if the list is necessary 
-		List<ActEntity> actEntities = await _unitOfWork.ActEntities.GetAllByActWithIncludes(act, entityID, parentID);
+		List<ActEntity> actEntities = await AnodeUOW.ActEntities.GetAllByActWithIncludes(act, entityID, parentID);
 
 		if (actEntities.Count > 0)
 		{
-			_unitOfWork.ActEntities.RemoveRange(actEntities);
-			_unitOfWork.Commit();
+			AnodeUOW.ActEntities.RemoveRange(actEntities);
+			AnodeUOW.Commit();
 		}
 	}
 
@@ -283,16 +284,16 @@ public class ActsService : IActsService
 	/// <returns>True/False</returns>
 	public async Task<bool> DuplicateActionEntities(DTOActEntityToValid dtoActToDuplicate, DTOActEntityToValid dtoAct)
 	{
-		Act actFromDuplicate = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActToDuplicate.Act?.RID,
+		Act actFromDuplicate = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(dtoActToDuplicate.Act?.RID,
 			dtoActToDuplicate.Act?.EntityType, dtoActToDuplicate.Act?.ParentType);
-		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoAct.Act?.RID, dtoAct.Act?.EntityType,
+		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(dtoAct.Act?.RID, dtoAct.Act?.EntityType,
 			dtoAct.Act?.ParentType);
 
 		ActEntity? actEntityToDuplicate;
 
 		try
 		{
-			actEntityToDuplicate = await _unitOfWork.ActEntities.GetByActWithIncludes(actFromDuplicate,
+			actEntityToDuplicate = await AnodeUOW.ActEntities.GetByActWithIncludes(actFromDuplicate,
 				dtoActToDuplicate.EntityID, dtoActToDuplicate.ParentID);
 		}
 		catch (Exception e)
@@ -303,13 +304,13 @@ public class ActsService : IActsService
 			return false;
 		}
 
-		await _unitOfWork.StartTransaction();
+		await AnodeUOW.StartTransaction();
 
 		ActEntity? actEntity;
 
 		try
 		{
-			actEntity = await _unitOfWork.ActEntities.GetByActWithIncludes(act, dtoAct.EntityID, dtoAct.ParentID);
+			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes(act, dtoAct.EntityID, dtoAct.ParentID);
 		}
 		catch (Exception e)
 		{
@@ -325,8 +326,8 @@ public class ActsService : IActsService
 				SignatureType = actEntityToDuplicate.SignatureType
 			};
 
-			await _unitOfWork.ActEntities.Add(actEntity);
-			_unitOfWork.Commit();
+			await AnodeUOW.ActEntities.Add(actEntity);
+			AnodeUOW.Commit();
 		}
 
 		foreach (ActEntityRole actEntityRole in actEntityToDuplicate.ActEntityRoles)
@@ -337,10 +338,10 @@ public class ActsService : IActsService
 				ApplicationType = actEntityRole.ApplicationType
 			});
 
-		_unitOfWork.ActEntities.Update(actEntity);
-		_unitOfWork.Commit();
+		AnodeUOW.ActEntities.Update(actEntity);
+		AnodeUOW.Commit();
 
-		await _unitOfWork.CommitTransaction();
+		await AnodeUOW.CommitTransaction();
 
 		return true;
 	}
@@ -356,14 +357,14 @@ public class ActsService : IActsService
 	{
 		await _authService.SetContextWithUser(httpContext);
 
-		Act act = await _unitOfWork.Acts.GetByRIDAndTypeWithIncludes(dtoActEntityToValid.Act?.RID,
+		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(dtoActEntityToValid.Act?.RID,
 			dtoActEntityToValid.Act?.EntityType, dtoActEntityToValid.Act?.ParentType);
 
 		ActEntity actEntity;
 
 		try
 		{
-			actEntity = await _unitOfWork.ActEntities.GetByActWithIncludes(act, dtoActEntityToValid.EntityID,
+			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes(act, dtoActEntityToValid.EntityID,
 				dtoActEntityToValid.ParentID);
 		}
 		catch (Exception e)

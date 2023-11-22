@@ -1,42 +1,35 @@
+using Carter;
+using Core.Entities.Vision.FileSettings.Models.DB;
 using Core.Entities.Vision.FileSettings.Models.DTO;
 using Core.Entities.Vision.FileSettings.Models.UploadFileSettings;
 using Core.Entities.Vision.FileSettings.Services;
-using Core.Shared.Attributes;
-using Core.Shared.Models.HttpResponse;
+using Core.Shared.Dictionaries;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiVision.Controllers;
 
-[ApiController]
-[Route("apiVision/fileSettings")]
-[ServerAction]
-public class FileSettingController : ControllerBase
+public class FileSettingController : BaseEndpoint<FileSetting, DTOFileSetting, IFileSettingService>, ICarterModule
 {
-	private readonly IFileSettingService _fileSettingService;
-	private readonly ILogService _logService;
-
-	public FileSettingController(ILogService logService, IFileSettingService fileSettingService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_logService = logService;
-		_fileSettingService = fileSettingService;
+		if (!Station.IsServer)
+			return;
+		app.MapGroup("apiVision/fileSettings").WithTags(nameof(FileSettingController)).MapPut("", UploadFileSetting);
 	}
 
-	[HttpPut]
-	public async Task<IActionResult> UploadFileSetting([FromForm] UploadFileSetting uploadFileSetting)
+	private static async Task<JsonHttpResult<ApiResponse>> UploadFileSetting(
+		[FromForm] UploadFileSetting uploadFileSetting, IFileSettingService fileSettingService, ILogService logService,
+		HttpContext httpContext)
 	{
-		DTOFileSetting dtoFileSetting;
-		try
+		return await GenericController(async () =>
 		{
 			if (uploadFileSetting.File == null)
 				throw new BadHttpRequestException("No file was given");
-			dtoFileSetting = await _fileSettingService.ReceiveFile(uploadFileSetting, uploadFileSetting.File);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(dtoFileSetting).SuccessResult(_logService, ControllerContext);
+			return await fileSettingService.ReceiveFile(uploadFileSetting, uploadFileSetting.File);
+		}, logService, httpContext);
 	}
 }

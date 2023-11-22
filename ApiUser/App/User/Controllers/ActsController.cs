@@ -1,10 +1,15 @@
-﻿using Core.Entities.User.Dictionaries;
+﻿using Carter;
+using Core.Entities.User.Dictionaries;
+using Core.Entities.User.Models.DB.Acts;
+using Core.Entities.User.Models.DTO.Acts;
 using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
 using Core.Shared.Authorize;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiUser.App.User.Controllers;
@@ -12,21 +17,21 @@ namespace ApiUser.App.User.Controllers;
 /// <summary>
 ///     Acts Routes
 /// </summary>
-[Route("apiUser/acts")]
-[ApiController]
-[Authorize]
-public class ActsController : ControllerBase
+public class ActsController : BaseEndpoint<Act, DTOAct, IActService>, ICarterModule
 {
-	private readonly IActsService _actsService;
-	private readonly ILogService _logService;
-
 	/// <summary>
-	///     Acts Constructor
+	/// Add Routes from CarterModule
 	/// </summary>
-	public ActsController(ILogService logService, IActsService actsService)
+	/// <param name="app"></param>
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_logService = logService;
-		_actsService = actsService;
+		RouteGroupBuilder
+			group = app.MapGroup("apiUser/acts").WithTags(nameof(ActsController)).RequireAuthorization();
+
+		group.MapPost("hasRights", HasRights);
+		group.MapPost("entity", GetActEntityWithRoles);
+		group.MapPost("list", GetActEntitiesStatusFromList);
+		group.MapPut("assign", AssignActionsFromList).RequireAuthorization(ActionRID.ADMIN_GENERAL_RIGHTS);
 	}
 
 	// POST apiUser/acts/hasRights
@@ -34,22 +39,18 @@ public class ActsController : ControllerBase
 	///     Check if a user has the rights to do an action
 	/// </summary>
 	/// <param name="dtoActEntityToValid"></param>
+	/// <param name="actService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns>The action token as string</returns>
-	[HttpPost("hasRights")]
-	public async Task<IActionResult> HasRights([FromBody] DTOActEntityToValid dtoActEntityToValid)
+	private static async Task<JsonHttpResult<ApiResponse>> HasRights([FromBody] DTOActEntityToValid dtoActEntityToValid,
+		IActService actService, ILogService logService, HttpContext httpContext)
 	{
-		string actionToken;
-
-		try
+		return await GenericController(async () =>
 		{
-			actionToken = await _actsService.HasRights(HttpContext, dtoActEntityToValid);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(200, new { actionToken }).SuccessResult(_logService, ControllerContext);
+			string actionToken = await actService.HasRights(httpContext, dtoActEntityToValid);
+			return new { actionToken };
+		}, logService, httpContext);
 	}
 
 	// POST apiUser/acts/entity
@@ -57,20 +58,15 @@ public class ActsController : ControllerBase
 	///     Get an actEntity with roles and users
 	/// </summary>
 	/// <param name="dtoActEntity"></param>
+	/// <param name="actService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="DTOActEntity" /></returns>
-	[HttpPost("entity")]
-	public async Task<IActionResult> GetActEntityWithRoles([FromBody] DTOActEntity dtoActEntity)
+	private static async Task<JsonHttpResult<ApiResponse>> GetActEntityWithRoles([FromBody] DTOActEntity dtoActEntity,
+		IActService actService, ILogService logService, HttpContext httpContext)
 	{
-		try
-		{
-			dtoActEntity = await _actsService.GetActionEntityRoles(dtoActEntity);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(dtoActEntity).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await actService.GetActionEntityRoles(dtoActEntity), logService,
+			httpContext);
 	}
 
 	// POST apiUser/acts/list
@@ -78,21 +74,16 @@ public class ActsController : ControllerBase
 	///     Retreive all actEntities status from a given list
 	/// </summary>
 	/// <param name="dtoActEntitiesStatus"></param>
+	/// <param name="actService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="List{DTOActEntityStatus}" /></returns>
-	[HttpPost("list")]
-	public async Task<IActionResult> GetActEntitiesStatusFromList(
-		[FromBody] List<DTOActEntityStatus> dtoActEntitiesStatus)
+	private static async Task<JsonHttpResult<ApiResponse>> GetActEntitiesStatusFromList(
+		[FromBody] List<DTOActEntityStatus> dtoActEntitiesStatus, IActService actService, ILogService logService,
+		HttpContext httpContext)
 	{
-		try
-		{
-			dtoActEntitiesStatus = await _actsService.ActionsFromList(HttpContext, dtoActEntitiesStatus);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(dtoActEntitiesStatus).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await actService.ActionsFromList(httpContext, dtoActEntitiesStatus),
+			logService, httpContext);
 	}
 
 	// PUT apiUser/acts/assign
@@ -100,23 +91,20 @@ public class ActsController : ControllerBase
 	///     Assign acts from MANAGE
 	/// </summary>
 	/// <param name="dtoActEntities"></param>
+	/// <param name="actService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedAccessException"></exception>
-	[HttpPut("assign")]
-	[ActAuthorize(ActionRID.ADMIN_GENERAL_RIGHTS)]
-	public async Task<IActionResult> AssignActionsFromList([FromBody] List<DTOActEntity> dtoActEntities)
+	private static async Task<JsonHttpResult<ApiResponse>> AssignActionsFromList(
+		[FromBody] List<DTOActEntity> dtoActEntities, IActService actService, ILogService logService,
+		HttpContext httpContext)
 	{
-		try
+		return await GenericControllerEmptyResponse(async () =>
 		{
 			foreach (DTOActEntity dtoActEntity in dtoActEntities.Where(dto =>
 				         dto.Act != null && dto.Act.RID.StartsWith("MANAGE.")))
-				await _actsService.AssignAction(dtoActEntity);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject().SuccessResult(_logService, ControllerContext);
+				await actService.AssignAction(dtoActEntity);
+		}, logService, httpContext);
 	}
 }

@@ -2,12 +2,15 @@ using System.Configuration;
 using System.Reflection;
 using System.Text;
 using ApiUser.SwaggerConfig;
+using Carter;
+using Core.Entities.User.Dictionaries;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.User.Services.Acts;
 using Core.Entities.User.Services.Auth;
 using Core.Entities.User.Services.Roles;
 using Core.Entities.User.Services.Users;
+using Core.Shared.Authorize;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Jwt;
@@ -15,6 +18,7 @@ using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -86,7 +90,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // User Services
-builder.Services.AddScoped<IActsService, ActsService>();
+builder.Services.AddScoped<IActService, ActService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
@@ -98,6 +102,15 @@ builder.Services.AddScoped<ILogService, LogService>();
 // UnitOfWork
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
+builder.Services.AddCarter();
+
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy(ActionRID.ADMIN_GENERAL_RIGHTS,
+		policy => policy.AddRequirements(new ActAuthorize(ActionRID.ADMIN_GENERAL_RIGHTS)));
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, ActAuthorizeHandler>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -166,5 +179,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapCarter();
 
 app.Run();

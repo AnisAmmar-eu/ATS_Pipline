@@ -1,4 +1,5 @@
 using System.Configuration;
+using Carter;
 using Core.Entities.Anodes.Services;
 using Core.Entities.KPI.KPICs.Services;
 using Core.Entities.KPI.KPIEntries.Services.KPILogs;
@@ -62,6 +63,7 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
+builder.Services.AddCarter();
 
 builder.Services.AddCors(options =>
 {
@@ -104,6 +106,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapCarter();
 
 app.Run();

@@ -72,11 +72,6 @@ public partial class ApiResponse
 		return TypedResults.Ok(this);
 	}
 
-	public BadRequest<ApiResponse> BadRequestResult()
-	{
-		Status.Code = 400;
-		return TypedResults.BadRequest(this);
-	}
 
 	public JsonHttpResult<ApiResponse> ErrorResult()
 	{

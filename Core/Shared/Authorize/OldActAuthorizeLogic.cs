@@ -9,16 +9,16 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Core.Shared.Authorize;
 
-public class ActAuthorizeLogic : IAuthorizationFilter
+public class OldActAuthorizeLogic : IAuthorizationFilter
 {
-	private readonly IActsService _actsService;
+	private readonly IActService _actService;
 	private readonly string? _entityProperty;
 	private readonly string? _entityType;
 	private readonly string? _parentProperty;
 	private readonly string? _parentType;
 	private readonly string _rid;
 
-	public ActAuthorizeLogic(IActsService actsService, string rid, string? entityType = null,
+	public OldActAuthorizeLogic(IActService actService, string rid, string? entityType = null,
 		string? entityProperty = null, string? parentType = null, string? parentProperty = null)
 	{
 		_rid = rid;
@@ -26,7 +26,7 @@ public class ActAuthorizeLogic : IAuthorizationFilter
 		_entityProperty = entityProperty;
 		_parentType = parentType;
 		_parentProperty = parentProperty;
-		_actsService = actsService;
+		_actService = actService;
 	}
 
 	public void OnAuthorization(AuthorizationFilterContext context)
@@ -53,7 +53,7 @@ public class ActAuthorizeLogic : IAuthorizationFilter
 			parentID ??= int.TryParse(queryString.Get(_parentProperty), out tmp) ? tmp : null;
 		}
 
-		bool result = _actsService.ValidActionToken(context.HttpContext,
+		bool result = _actService.ValidActionToken(context.HttpContext,
 			new List<DTOActEntityToValid>
 			{
 				new()

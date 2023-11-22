@@ -1,4 +1,6 @@
-using Core.Shared.Models.HttpResponse;
+using Carter;
+using Core.Shared.Models.ApiResponses;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiUser.App;
@@ -6,17 +8,23 @@ namespace ApiUser.App;
 /// <summary>
 ///     Api for general API operations eg. get status.
 /// </summary>
-[ApiController]
-[Route("apiUser")]
-public class ApiUserController : ControllerBase
+public class ApiUserController : ICarterModule
 {
+	/// <summary>
+	/// Add Routes from CarterModule
+	/// </summary>
+	/// <param name="app"></param>
+	public void AddRoutes(IEndpointRouteBuilder app)
+	{
+		app.MapGroup("apiUser").WithTags(nameof(ApiUserController)).MapGet("status", GetStatus);
+	}
+
 	/// <summary>
 	///     Returns 200. Useful to know if the API is down or not.
 	/// </summary>
 	/// <returns></returns>
-	[HttpGet("status")]
-	public IActionResult GetStatus()
+	private static Ok<ApiResponse> GetStatus()
 	{
-		return new ControllerResponseObject().SuccessResult();
+		return new ApiResponse().SuccessResult();
 	}
 }

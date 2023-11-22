@@ -1,9 +1,12 @@
-﻿using Core.Entities.User.Models.DTO.Acts.ActEntities;
+﻿using Core.Entities.User.Models.DB.Acts;
+using Core.Entities.User.Models.DTO.Acts;
+using Core.Entities.User.Models.DTO.Acts.ActEntities;
+using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.User.Services.Acts;
 
-public interface IActsService
+public interface IActService : IServiceBaseEntity<Act, DTOAct>
 {
 	Task<List<DTOActEntityStatus>> ActionsFromList(HttpContext httpContext,
 		List<DTOActEntityStatus> dtoActEntitiesStatus);

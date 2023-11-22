@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
 	/// <param name="toAdmin"></param>
 	/// <returns>True/False</returns>
 	[HttpPut("{username}/admin")]
-	[ActAuthorize(ActionRID.ADMIN_GENERAL_RIGHTS)]
+	[OldActAuthorize(ActionRID.ADMIN_GENERAL_RIGHTS)]
 	public async Task<IActionResult> SetAdmin(string username, [FromBody] bool toAdmin)
 	{
 		bool result;

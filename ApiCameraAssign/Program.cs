@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using Carter;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Data;
@@ -36,6 +37,8 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 builder.Services.AddSingleton<AssignService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<AssignService>());
 
+builder.Services.AddCarter();
+
 WebApplication app = builder.Build();
 
 app.UseSwagger();
@@ -57,6 +60,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapCarter();
 
 app.Run();

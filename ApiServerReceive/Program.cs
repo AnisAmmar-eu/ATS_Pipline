@@ -1,4 +1,5 @@
 using System.Configuration;
+using Carter;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
@@ -49,6 +50,8 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
+builder.Services.AddCarter();
+
 
 builder.Services.AddCors(options =>
 {
@@ -79,6 +82,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapCarter();
 
 app.Run();

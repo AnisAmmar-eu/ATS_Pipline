@@ -35,7 +35,7 @@ Station.Name = stationName;
 
 string? address = builder.Configuration.GetValue<string>("ServerConfig:Address");
 if (address == null)
-	throw new ConfigurationErrorsException("Missing StationConfig:Address");
+	throw new ConfigurationErrorsException("Missing ServerConfig:Address");
 Station.ServerAddress = address;
 
 builder.Services.AddAuthentication(options =>
@@ -137,8 +137,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllers();
 
 app.MapCarter();
 

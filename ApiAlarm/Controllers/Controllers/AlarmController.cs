@@ -1,15 +1,18 @@
-using Core.Shared.Models.HttpResponse;
-using Microsoft.AspNetCore.Mvc;
+using Carter;
+using Core.Shared.Models.ApiResponses;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiAlarm.Controllers.Controllers;
 
-[ApiController]
-[Route("apiAlarm")]
-public class AlarmController : ControllerBase
+public class AlarmController : ICarterModule
 {
-	[HttpGet("status")]
-	public IActionResult GetStatus()
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		return new ControllerResponseObject().SuccessResult();
+		app.MapGet("apiAlarm/status", GetStatus);
+	}
+
+	private static Ok<ApiResponse> GetStatus()
+	{
+		return new ApiResponse().SuccessResult();
 	}
 }

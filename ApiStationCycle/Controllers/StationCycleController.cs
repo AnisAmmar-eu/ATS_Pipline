@@ -1,102 +1,75 @@
 using System.ComponentModel.DataAnnotations;
+using Carter;
+using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Services;
-using Core.Shared.Dictionaries;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Exceptions;
-using Core.Shared.Models.HttpResponse;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiStationCycle.Controllers;
 
 [ApiController]
 [Route("apiStationCycle")]
-public class StationCycleController : ControllerBase
+public class StationCycleController : BaseEndpoint<StationCycle, DTOStationCycle, IStationCycleService>, ICarterModule
 {
-	private readonly ILogService _logService;
-	private readonly IStationCycleService _stationCycleService;
-
-	public StationCycleController(IStationCycleService stationCycleService, ILogService logService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_stationCycleService = stationCycleService;
-		_logService = logService;
+		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleController));
+		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+
+		group.MapGet("status", GetStatus);
+		group.MapGet("reduced", GetAllRIDs);
+		group.MapGet("mostRecent", GetMostRecent);
+		group.MapGet("{id}/images/{cameraNb}", GetImageByIdAndCamera);
 	}
 
-	[HttpGet("status")]
-	public IActionResult GetStatus()
+	private static Ok<ApiResponse> GetStatus()
 	{
-		return new ControllerResponseObject().SuccessResult();
+		return new ApiResponse().SuccessResult();
 	}
 
-	[HttpGet]
-	public async Task<IActionResult> GetAllRIDs()
+	private static async Task<JsonHttpResult<ApiResponse>> GetAllRIDs(IStationCycleService stationCycleService,
+		ILogService logService, HttpContext httpContext)
 	{
-		List<ReducedStationCycle> result;
-		try
-		{
-			result = await _stationCycleService.GetAllRIDs();
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await stationCycleService.GetAllRIDs(), logService, httpContext);
 	}
 
-	[HttpGet("mostRecent")]
-	public async Task<IActionResult> GetMostRecent()
+	private static async Task<JsonHttpResult<ApiResponse>> GetMostRecent(IStationCycleService stationCycleService,
+		ILogService logService, HttpContext httpContext)
 	{
-		ReducedStationCycle? result;
-		try
+		return await GenericController(async () =>
 		{
-			result = await _stationCycleService.GetMostRecentWithIncludes();
+			ReducedStationCycle? result = await stationCycleService.GetMostRecentWithIncludes();
 			if (result == null)
 				throw new NoDataException("There is no station cycles yet.");
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
+			return result;
+		}, logService, httpContext);
 	}
 
-	[HttpGet("{id}")]
-	public async Task<IActionResult> GetByID([Required] [FromRoute] int id)
-	{
-		DTOStationCycle result;
-		try
-		{
-			result = await _stationCycleService.GetByID(id);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
-	}
-
-	[HttpGet("{id}/images/{cameraNb}")]
-	public async Task<IActionResult> GetImageByIdAndCamera([Required] [FromRoute] int id,
-		[Required] [FromRoute] int cameraNb)
+	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetImageByIdAndCamera(
+		[Required] [FromRoute] int id, [Required] [FromRoute] int cameraNb, IStationCycleService stationCycleService,
+		ILogService logService, HttpContext httpContext)
 	{
 		byte[] image;
 		DateTimeOffset ts;
 		try
 		{
-			FileInfo imageFile = await _stationCycleService.GetImagesFromIDAndCamera(id, cameraNb);
+			FileInfo imageFile = await stationCycleService.GetImagesFromIDAndCamera(id, cameraNb);
 			ts = imageFile.CreationTime;
 			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
 		}
 		catch (Exception e)
 		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
+			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 
-		Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
-		return File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
+		httpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		return TypedResults.File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
 	}
 }

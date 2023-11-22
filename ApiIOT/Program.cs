@@ -1,5 +1,6 @@
 using System.Configuration;
 using System.Text;
+using Carter;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Data;
@@ -85,6 +86,8 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTSer
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
+builder.Services.AddCarter();
+
 WebApplication app = builder.Build();
 
 app.UseSwagger();
@@ -106,8 +109,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
+app.MapCarter();
+	 
 app.MapHub<IOTHub>("/iotHub");
 
 app.Run();

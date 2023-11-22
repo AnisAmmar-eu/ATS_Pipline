@@ -1,87 +1,49 @@
 using System.ComponentModel.DataAnnotations;
+using Carter;
+using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Services;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiIOT.Controllers;
 
-[ApiController]
-[Route("apiIOT/iotDevices")]
-public class IOTDeviceController : ControllerBase
+public class IOTDeviceController : BaseEndpoint<IOTDevice, DTOIOTDevice, IIOTDeviceService>, ICarterModule
 {
-	private readonly IIOTDeviceService _iotDeviceService;
-	private readonly ILogService _logService;
-
-	public IOTDeviceController(IIOTDeviceService iotDeviceService, ILogService logService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_iotDeviceService = iotDeviceService;
-		_logService = logService;
+		RouteGroupBuilder group = app.MapGroup("apiIOT/iotDevices").WithTags(nameof(IOTDeviceController));
+		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+
+		group.MapGet("status/{rid}", GetStatusByRID).WithSummary("Get a device's status by its RID").WithOpenApi();
+		group.MapGet("{rid}", GetIOTDeviceByRID).WithSummary("Get a device by its RID").WithOpenApi();
+		group.MapPut("rids", GetTagValueByArrayRID).WithSummary("Get devices by their RIDs").WithOpenApi();
 	}
 
-	[HttpGet("status/{rid}")]
-	public async Task<IActionResult> GetStatusByRID([Required] [FromRoute] string rid)
+	private static async Task<JsonHttpResult<ApiResponse>> GetStatusByRID([Required] [FromRoute] string rid,
+		IIOTDeviceService iotDeviceService, ILogService logService, HttpContext httpContext)
 	{
-		IOTDeviceStatus status;
-		try
-		{
-			status = await _iotDeviceService.GetStatusByRID(rid);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(status).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await iotDeviceService.GetStatusByRID(rid), logService, httpContext);
 	}
 
-	[HttpPut("rids")]
-	public async Task<IActionResult> GetTagValueByArrayRID([FromBody] [Required] IEnumerable<string> rids)
+	private static async Task<JsonHttpResult<ApiResponse>> GetIOTDeviceByRID([Required] string rid,
+		IIOTDeviceService iotDeviceService, ILogService logService, HttpContext httpContext)
 	{
-		List<IOTDeviceStatus> tags;
-		try
-		{
-			tags = await _iotDeviceService.GetStatusByArrayRID(rids);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(tags).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await iotDeviceService.GetByRIDWithIncludes(rid), logService,
+			httpContext);
 	}
 
-	[HttpGet]
-	public async Task<IActionResult> GetAllIOTDevices()
+	private static async Task<JsonHttpResult<ApiResponse>> GetTagValueByArrayRID(
+		[FromBody] [Required] IEnumerable<string> rids, IIOTDeviceService iotDeviceService, ILogService logService,
+		HttpContext httpContext)
 	{
-		List<DTOIOTDevice> devices;
-		try
-		{
-			devices = await _iotDeviceService.GetAllWithIncludes();
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(devices).SuccessResult(_logService, ControllerContext);
-	}
-
-	[HttpGet("{rid}")]
-	public async Task<IActionResult> GetIOTDeviceByRID([Required] string rid)
-	{
-		DTOIOTDevice device;
-		try
-		{
-			device = await _iotDeviceService.GetByRIDWithIncludes(rid);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(device).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await iotDeviceService.GetStatusByArrayRID(rids), logService,
+			httpContext);
 	}
 }

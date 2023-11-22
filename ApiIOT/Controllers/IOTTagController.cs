@@ -1,103 +1,56 @@
 using System.ComponentModel.DataAnnotations;
+using Carter;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.Structs;
 using Core.Entities.IOT.IOTTags.Services;
-using Core.Shared.Models.HttpResponse;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiIOT.Controllers;
 
-[ApiController]
-[Route("apiIOT/iotTags")]
-public class IOTTagController : ControllerBase
+public class IOTTagController : BaseEndpoint<IOTTag, DTOIOTTag, IIOTTagService>, ICarterModule
 {
-	private readonly IIOTTagService _iotTagService;
-	private readonly ILogService _logService;
-
-	public IOTTagController(IIOTTagService iotTagService, ILogService logService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_iotTagService = iotTagService;
-		_logService = logService;
+		RouteGroupBuilder group = app.MapGroup("apiIOT/iotTags").WithTags(nameof(IOTTagController));
+		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+
+		group.MapGet("rid/{rid}", GetTagValueByRID).WithSummary("Get a tag by its RID").WithOpenApi();
+		group.MapPut("rids", GetTagValueByArrayRID).WithSummary("Get tags by their RIDs").WithOpenApi();
+		group.MapPut("setValue/{rid}/{value}", SetTagValueByRID).WithSummary("Set a tag value by its RID")
+			.WithOpenApi();
+		group.MapPut("setValue", SetTagsValues).WithSummary("Set tags values").WithOpenApi();
 	}
 
-	[HttpGet("rid/{rid}")]
-	public async Task<IActionResult> GetTagValueByRID([FromRoute] [Required] string rid)
+	private static async Task<JsonHttpResult<ApiResponse>> GetTagValueByRID([FromRoute] [Required] string rid,
+		IIOTTagService iotTagService, ILogService logService, HttpContext httpContext)
 	{
-		DTOIOTTag tag;
-		try
-		{
-			tag = await _iotTagService.GetByRID(rid);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(tag).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await iotTagService.GetByRID(rid), logService, httpContext);
 	}
 
-	[HttpPut("rids")]
-	public async Task<IActionResult> GetTagValueByArrayRID([FromBody] [Required] IEnumerable<string> rids)
+	private static async Task<JsonHttpResult<ApiResponse>> GetTagValueByArrayRID(
+		[FromBody] [Required] IEnumerable<string> rids, IIOTTagService iotTagService, ILogService logService,
+		HttpContext httpContext)
 	{
-		List<DTOIOTTag> tags;
-		try
-		{
-			tags = await _iotTagService.GetByArrayRID(rids);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(tags).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await iotTagService.GetByArrayRID(rids), logService, httpContext);
 	}
 
-	[HttpGet("id/{id}")]
-	public async Task<IActionResult> GetTagValueByID([FromRoute] [Required] int id)
+	private static async Task<JsonHttpResult<ApiResponse>> SetTagValueByRID([FromRoute] string rid,
+		[FromRoute] string value, IIOTTagService iotTagService, ILogService logService, HttpContext httpContext)
 	{
-		DTOIOTTag tag;
-		try
-		{
-			tag = await _iotTagService.GetByID(id);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(tag).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await iotTagService.UpdateTagByRID(rid, value), logService,
+			httpContext);
 	}
 
-	[HttpPut("{rid}/{value}")]
-	public async Task<IActionResult> SetTagValueByRID([FromRoute] string rid, [FromRoute] string value)
+	private static async Task<JsonHttpResult<ApiResponse>> SetTagsValues(
+		[FromBody] [Required] List<PatchIOTTag> toUpdate, IIOTTagService iotTagService, ILogService logService,
+		HttpContext httpContext)
 	{
-		DTOIOTTag dtoTag;
-		try
-		{
-			dtoTag = await _iotTagService.UpdateTagByRID(rid, value);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(dtoTag).SuccessResult(_logService, ControllerContext);
-	}
-
-	[HttpPut]
-	public async Task<IActionResult> SetTagsValues([FromBody] [Required] List<PatchIOTTag> toUpdate)
-	{
-		List<DTOIOTTag> dtoTags;
-		try
-		{
-			dtoTags = await _iotTagService.UpdateTags(toUpdate);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(dtoTags).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await iotTagService.UpdateTags(toUpdate), logService, httpContext);
 	}
 }

@@ -1,5 +1,6 @@
 using System.Configuration;
 using System.Text;
+using Carter;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsPLC.Services;
@@ -33,7 +34,7 @@ Station.Name = stationName;
 
 string? address = builder.Configuration.GetValue<string>("ServerConfig:Address");
 if (address == null)
-	throw new ConfigurationErrorsException("Missing StationConfig:Address");
+	throw new ConfigurationErrorsException("Missing ServerConfig:Address");
 Station.ServerAddress = address;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
@@ -90,6 +91,8 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
+builder.Services.AddCarter();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -116,6 +119,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapCarter();
 
 app.MapHub<AlarmHub>("/alarmsHub");
 

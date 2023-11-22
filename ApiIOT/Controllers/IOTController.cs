@@ -1,14 +1,17 @@
+using Carter;
 using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiIOT.Controllers;
 
-[ApiController]
-[Route("apiIOT")]
-public class IOTController : ControllerBase
+public class IOTController : ICarterModule
 {
-	[HttpGet("status")]
-	public IActionResult GetStatus()
+	public void AddRoutes(IEndpointRouteBuilder app)
+	{
+		app.MapGroup("apiIOT").WithTags(nameof(IOTController)).MapGet("status", GetStatus);
+	}
+
+	private static IActionResult GetStatus()
 	{
 		return new ControllerResponseObject().SuccessResult();
 	}

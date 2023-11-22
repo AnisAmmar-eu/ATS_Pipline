@@ -1,17 +1,22 @@
+using Carter;
 using Core.Shared.Attributes;
-using Core.Shared.Models.HttpResponse;
-using Microsoft.AspNetCore.Mvc;
+using Core.Shared.Dictionaries;
+using Core.Shared.Models.ApiResponses;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiKPI.Controllers;
 
-[ApiController]
-[Route("apiKPI")]
-[ServerAction]
-public class KPIController : ControllerBase
+public class KPIController : ICarterModule
 {
-	[HttpGet("status")]
-	public IActionResult GetStatus()
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		return new ControllerResponseObject().SuccessResult();
+		if (!Station.IsServer)
+			return;
+		app.MapGroup("apiKPI").WithTags(nameof(KPIController)).MapGet("status", GetStatus);
+	}
+
+	private static Ok<ApiResponse> GetStatus()
+	{
+		return new ApiResponse().SuccessResult();
 	}
 }

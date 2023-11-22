@@ -1,42 +1,23 @@
+using Carter;
+using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Services;
-using Core.Shared.Models.HttpResponse;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiAlarm.Controllers.Controllers;
 
-[ApiController]
-[Route("apiAlarm/alarmsRealTime")]
-public class AlarmRTController : ControllerBase
+public class AlarmRTController : BaseEndpoint<AlarmRT, DTOAlarmRT, IAlarmRTService>, ICarterModule
 {
-	private readonly IAlarmRTService _alarmRTService;
-	private readonly ILogService _logService;
-
-	public AlarmRTController(IAlarmRTService alarmRTService, ILogService logService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_alarmRTService = alarmRTService;
-		_logService = logService;
-	}
+		RouteGroupBuilder group = app.MapGroup("apiAlarm/alarmsRealTime").WithTags(nameof(AlarmRTController));
+		MapBaseEndpoints(group, BaseEndpointFlags.Read);
 
-	/// <summary>
-	///     Returns all AlarmsRT
-	/// </summary>
-	/// <returns></returns>
-	[HttpGet]
-	public async Task<IActionResult> GetAll()
-	{
-		List<DTOAlarmRT> dtoAlarmRTs;
-		try
-		{
-			dtoAlarmRTs = await _alarmRTService.GetAll();
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(dtoAlarmRTs).SuccessResult(_logService, ControllerContext);
+		group.MapGet("stats", GetAlarmRTStats);
 	}
 
 	/// <summary>
@@ -47,19 +28,10 @@ public class AlarmRTController : ControllerBase
 	///     res[1] => Nb NonAck
 	///     res[2] => Nb Active alarms;
 	/// </returns>
-	[HttpGet("stats")]
-	public async Task<IActionResult> GetAlarmRTStats()
+	private static async Task<JsonHttpResult<ApiResponse>> GetAlarmRTStats(
+		IAlarmRTService alarmRTService, ILogService logService,
+		HttpContext httpContext)
 	{
-		int[] res;
-		try
-		{
-			res = await _alarmRTService.GetAlarmRTStats();
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(res).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await alarmRTService.GetAlarmRTStats(), logService, httpContext);
 	}
 }
