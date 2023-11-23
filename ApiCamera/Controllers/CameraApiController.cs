@@ -26,7 +26,7 @@ public class CameraApiController : ICarterModule
 		group.MapGet("{cameraID}/testImage", GetCameraTestImage);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

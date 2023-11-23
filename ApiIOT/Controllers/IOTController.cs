@@ -11,7 +11,7 @@ public class IOTController : ICarterModule
 		app.MapGroup("apiIOT").WithTags(nameof(IOTController)).MapGet("status", GetStatus);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

@@ -1,10 +1,12 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Paginations;
+using Core.Shared.Paginations.Filtering;
 using Core.Shared.Services.Kernel.Interfaces;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Builder;
@@ -20,10 +22,12 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 	where TDTO : class, IDTO<T, TDTO>
 	where TService : IServiceBaseEntity<T, TDTO>
 {
-	protected static void MapBaseEndpoints(RouteGroupBuilder group, BaseEndpointFlags flags)
+	private string[] Includes = { };
+	protected void MapBaseEndpoints(RouteGroupBuilder group, BaseEndpointFlags flags, params string[] includes)
 	{
 		string dtoName = typeof(TDTO).Name;
 		string tName = typeof(T).Name;
+		Includes = includes;
 		if ((flags & BaseEndpointFlags.Create) == BaseEndpointFlags.Create)
 			group.MapPost("", Add)
 				.WithSummary($"Add the {dtoName} in the body to the database").WithOpenApi();
@@ -40,6 +44,11 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 			group.MapPut("id/{id}", GetByIDWithIncludes)
 				.WithSummary($"Get all {tName}s by ID with includes listed in body").WithOpenApi();
 
+			group.MapGet("{columnName}/{filterValue}", GetByGeneric)
+				.WithSummary($"Get a {tName} by a filterValue in columnName").WithOpenApi();
+			group.MapPut("{columnName}/{filterValue}", GetByGenericWithIncludes)
+				.WithSummary($"Get a {tName} by a filterValue in columnName with includes").WithOpenApi();
+
 			group.MapPut("pagination/{nbItems}/{lastID}", GetWithPagination)
 				.WithSummary($"Get a {tName} by paging, sorting and filtering with includes").WithOpenApi();
 		}
@@ -54,12 +63,95 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 				.WithSummary($"Remove the {dtoName} in the body").Accepts<TDTO>("application/json").WithOpenApi();
 	}
 
-	#region Add
+	#region Create
 
 	private static async Task<JsonHttpResult<ApiResponse>> Add(TService service, ILogService logService,
 		HttpContext httpContext, TDTO dto)
 	{
 		return await GenericController(async () => await service.Add(dto.ToModel()), logService, httpContext);
+	}
+
+	#endregion
+
+	#region Read
+
+	private async Task<JsonHttpResult<ApiResponse>> GetByID(TService service, ILogService logService,
+		HttpContext httpContext, [FromRoute] int id)
+	{
+		return await GenericController(async () => await service.GetByID(id, includes: Includes), logService,
+			httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(TService service, ILogService logService,
+		HttpContext httpContext, [FromRoute] int id, [FromBody] string[] includes)
+	{
+		return await GenericController(async () => await service.GetByID(id, includes: includes), logService,
+			httpContext);
+	}
+
+	private async Task<JsonHttpResult<ApiResponse>> GetByGeneric(TService service, ILogService logService,
+		HttpContext httpContext, [FromRoute] string columnName, [FromRoute] string filterValue)
+	{
+		return await GenericController(async () =>
+		{
+			FilterParam param = new()
+			{
+				ColumnName = columnName,
+				FilterValue = filterValue,
+				FilterOptionName = "Equal",
+			};
+			Pagination pagination = new()
+			{
+				Includes = Includes,
+				FilterParams = new List<FilterParam> { param }
+			};
+			return await service.GetWithPagination(pagination, 0, 0);
+		}, logService, httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetByGenericWithIncludes(TService service,
+		ILogService logService,
+		HttpContext httpContext, [FromRoute] string columnName, [FromRoute] string filterValue,
+		[FromBody] string[] includes)
+	{
+		return await GenericController(async () =>
+		{
+			FilterParam param = new()
+			{
+				ColumnName = columnName,
+				FilterValue = filterValue,
+				FilterOptionName = "Equal",
+			};
+			Pagination pagination = new()
+			{
+				Includes = includes,
+				FilterParams = new List<FilterParam> { param }
+			};
+			return await service.GetWithPagination(pagination, 0, 0);
+		}, logService, httpContext);
+	}
+
+	private async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
+		HttpContext httpContext)
+	{
+		return await GenericController(async () => await service.GetAll(includes: Includes), logService,
+			httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(TService service, ILogService logService,
+		HttpContext httpContext, [FromBody] string[] includes)
+	{
+		return await GenericController(async () => await service.GetAll(includes: includes), logService,
+			httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetWithPagination(TService service, ILogService logService,
+		HttpContext httpContext, [FromRoute] int nbItems, [FromRoute] int lastID,
+		[FromBody] Pagination pagination)
+	{
+		return await GenericController(
+			async () => await service.GetWithPagination(pagination, nbItems, lastID), logService,
+			httpContext);
 	}
 
 	#endregion
@@ -91,6 +183,7 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 
 	#endregion
 
+
 	// Use this method if custom binding is needed and you cannot have an inferred body parameter.
 	private static async ValueTask<TDTO> ReadWithBindAsync(HttpContext httpContext)
 	{
@@ -115,45 +208,4 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 		return await (ValueTask<TDTO?>)bind.Invoke(null, new object[] { httpContext })! ??
 		       throw new ArgumentException("Empty body or binding failed");
 	}
-
-	#region Read
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetByID(TService service, ILogService logService,
-		HttpContext httpContext, [FromRoute] int id)
-	{
-		return await GenericController(async () => await service.GetByID(id), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(TService service, ILogService logService,
-		HttpContext httpContext, [FromRoute] int id, [FromBody] string[] includes)
-	{
-		return await GenericController(async () => await service.GetByID(id, includes: includes), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
-		HttpContext httpContext)
-	{
-		return await GenericController(async () => await service.GetAll(), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(TService service, ILogService logService,
-		HttpContext httpContext, [FromBody] string[] includes)
-	{
-		return await GenericController(async () => await service.GetAll(includes: includes), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetWithPagination(TService service, ILogService logService,
-		HttpContext httpContext, [FromRoute] int nbItems, [FromRoute] int lastID,
-		[FromBody] Pagination pagination)
-	{
-		return await GenericController(
-			async () => await service.GetWithPagination(pagination, nbItems, lastID), logService,
-			httpContext);
-	}
-
-	#endregion
 }

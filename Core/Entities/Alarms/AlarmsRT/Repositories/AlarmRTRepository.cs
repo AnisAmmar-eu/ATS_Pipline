@@ -17,6 +17,6 @@ public class AlarmRTRepository : RepositoryBaseEntity<AnodeCTX, AlarmRT, DTOAlar
 		Func<IQueryable<AlarmRT>, IOrderedQueryable<AlarmRT>>? orderBy = null,
 		bool withTracking = true)
 	{
-		return await GetAll(filters, orderBy, withTracking, includes: new[] { "Alarm" });
+		return await GetAll(filters, orderBy, withTracking, includes: nameof(AlarmRT.Alarm));
 	}
 }

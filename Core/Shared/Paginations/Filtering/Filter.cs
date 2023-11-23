@@ -118,6 +118,8 @@ public static class Filter
 
 	private static IComparable? ParseComparable(Type type, string value)
 	{
+		if (type == typeof(string))
+			return value;
 		// Verifies if the type is parsable or not by using reflection.
 		bool isParsable = type.GetInterfaces()
 			.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IParsable<>));

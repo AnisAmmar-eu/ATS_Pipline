@@ -14,7 +14,7 @@ public class VisionController : ICarterModule
 		app.MapGroup("apiVision").WithTags(nameof(VisionController)).MapGet("status", GetStatus);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

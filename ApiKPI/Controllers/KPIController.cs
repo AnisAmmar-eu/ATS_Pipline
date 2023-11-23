@@ -14,7 +14,7 @@ public class KPIController : ICarterModule
 		app.MapGroup("apiKPI").WithTags(nameof(KPIController)).MapGet("status", GetStatus);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;

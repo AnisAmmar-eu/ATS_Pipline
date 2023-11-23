@@ -11,7 +11,7 @@ public class AlarmController : ICarterModule
 		app.MapGet("apiAlarm/status", GetStatus);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

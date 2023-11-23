@@ -27,7 +27,7 @@ public class StationCycleController : BaseEndpoint<StationCycle, DTOStationCycle
 		group.MapGet("{id}/images/{cameraNb}", GetImageByIdAndCamera);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

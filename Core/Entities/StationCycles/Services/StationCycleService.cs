@@ -49,7 +49,8 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 	public async Task<List<ReducedStationCycle>> GetAllRIDs()
 	{
 		return (await AnodeUOW.StationCycle.GetAll(withTracking: false,
-			includes: new[] { "DetectionPacket", "ShootingPacket" })).ConvertAll(cycle => cycle.Reduce());
+				includes: new[] { nameof(StationCycle.DetectionPacket), nameof(StationCycle.ShootingPacket) }))
+			.ConvertAll(cycle => cycle.Reduce());
 	}
 
 	public async Task<List<StationCycle>> GetAllReadyToSent()
@@ -62,7 +63,7 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 
 	public async Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera)
 	{
-		StationCycle stationCycle = await AnodeUOW.StationCycle.GetById(id, includes: "ShootingPacket");
+		StationCycle stationCycle = await AnodeUOW.StationCycle.GetById(id, includes: nameof(StationCycle.ShootingPacket));
 		if (stationCycle.ShootingPacket == null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 		string? thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");

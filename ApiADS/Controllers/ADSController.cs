@@ -11,7 +11,7 @@ public class ADSController : ICarterModule
 		app.MapGet("apiADS/status", GetStatus);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

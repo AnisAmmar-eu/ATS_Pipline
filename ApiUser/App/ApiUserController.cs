@@ -22,7 +22,7 @@ public class ApiUserController : ICarterModule
 	///     Returns 200. Useful to know if the API is down or not.
 	/// </summary>
 	/// <returns></returns>
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

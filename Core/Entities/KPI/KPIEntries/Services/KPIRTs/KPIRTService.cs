@@ -30,7 +30,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 		return (await AnodeUOW.KPIRT.GetAll(new Expression<Func<KPIRT, bool>>[]
 		{
 			kpiRT => kpiRT.Period == period && rids.Contains(kpiRT.KPIC.RID)
-		}, withTracking: false, includes: "KPIC")).ConvertAll(kpiRT => kpiRT.ToDTO());
+		}, withTracking: false, includes: nameof(KPIRT.KPIC))).ConvertAll(kpiRT => kpiRT.ToDTO());
 	}
 
 	public async Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave)

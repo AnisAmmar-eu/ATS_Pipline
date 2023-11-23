@@ -12,6 +12,11 @@ namespace Core.Shared.Models.ApiResponses;
 
 public partial class ApiResponse
 {
+	private static readonly JsonSerializerOptions JsonOptions = new()
+	{
+		PropertyNamingPolicy = null,
+	};
+	
 	// With default statusCode
 	public ApiResponse()
 	{
@@ -58,30 +63,22 @@ public partial class ApiResponse
 		Status = new ApiStatus { Code = code, Message = message };
 	}
 
-	/*
-	public JsonResult JsonResult()
-	{
-	    return new JsonResult(this);
-	}
-	*/
-
-	public Ok<ApiResponse> SuccessResult()
+	public JsonHttpResult<ApiResponse> SuccessResult()
 	{
 		Status.Code = 200;
-		return TypedResults.Ok(this);
+		return TypedResults.Json(this, JsonOptions);
 	}
 
 
 	public JsonHttpResult<ApiResponse> ErrorResult()
 	{
-		return TypedResults.Json(this, statusCode: Status.Code);
+		return TypedResults.Json(this, statusCode: Status.Code, options: JsonOptions);
 	}
 
 	public async Task<JsonHttpResult<ApiResponse>> SuccessResult(ILogService logService, Endpoint? endpoint)
 	{
 		await CreateLog(logService, endpoint);
-
-		return TypedResults.Json(this);
+		return TypedResults.Json(this, JsonOptions);
 	}
 
 	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(ILogService logService, Endpoint? endpoint, Exception e)
@@ -120,7 +117,7 @@ public partial class ApiResponse
 
 		await CreateLog(logService, endpoint);
 
-		return TypedResults.Json(this, statusCode: Status.Code);
+		return TypedResults.Json(this, statusCode: Status.Code, options: JsonOptions);
 	}
 
 	private async Task CreateLog(ILogService logService, Endpoint? endpoint)

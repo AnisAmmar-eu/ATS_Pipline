@@ -11,7 +11,7 @@ public class CameraAssignController : ICarterModule
 		app.MapGroup("apiCameraAssign").WithTags(nameof(CameraAssignController)).MapGet("status", GetStatus);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

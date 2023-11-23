@@ -17,25 +17,9 @@ public class AlarmLogController : BaseEndpoint<AlarmLog, DTOAlarmLog, IAlarmLogS
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiAlarm/alarmsLog").WithTags(nameof(AlarmLogController));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(AlarmLog.Alarm));
 
-		group.MapGet("{alarmClassID}", GetAlarmLogByClassID);
 		group.MapPost("ack", AckAlarmLogs);
-	}
-
-	/// <summary>
-	///     Get by class ID
-	/// </summary>
-	/// <param name="alarmClassID"></param>
-	/// <param name="alarmLogService"></param>
-	/// <param name="logService"></param>
-	/// <param name="httpContext"></param>
-	/// <returns></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetAlarmLogByClassID([Required] int alarmClassID,
-		IAlarmLogService alarmLogService, ILogService logService, HttpContext httpContext)
-	{
-		return await GenericController(async () => await alarmLogService.GetByClassID(alarmClassID), logService,
-			httpContext);
 	}
 
 	/// <summary>

@@ -149,14 +149,14 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 		// No split query because we are using .Take();
 		// No tracking as this is used for back to front purposes and thus useless.
 		// First line is aggregating every include
-		return await
-			pagination.Includes.Aggregate(_context.Set<T>().AsQueryable(),
-					(current, value) => current.Include(value))
-				.AsNoTracking()
-				.FilterFromPagination<T, TDTO>(pagination, lastID)
-				.SortFromPagination<T, TDTO>(pagination)
-				.Take(nbItems)
-				.ToListAsync();
+		IOrderedQueryable<T> query = pagination.Includes
+			.Aggregate(_context.Set<T>()
+				.AsQueryable(), (current, value) => current.Include(value))
+			.AsNoTracking()
+			.FilterFromPagination<T, TDTO>(pagination, lastID).SortFromPagination<T, TDTO>(pagination);
+		if (nbItems == 0)
+			return await query.ToListAsync();
+		return await query.Take(nbItems).ToListAsync();
 	}
 
 	/// <summary>

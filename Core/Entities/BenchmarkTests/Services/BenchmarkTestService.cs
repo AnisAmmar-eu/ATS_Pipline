@@ -52,25 +52,25 @@ public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, 
 		await AnodeUOW.BenchmarkTest.GetAll(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.StationID == 3
-		}, withTracking: false, includes: "CameraTest");
+		}, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
 		await AnodeUOW.BenchmarkTest.GetAll(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.AnodeType == AnodeTypeDict.D20
-		}, withTracking: false, includes: "CameraTest");
+		}, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
 		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetBy(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.RID == "RandomRID"
-		}, withTracking: false, includes: "CameraTest");
+		}, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		await AnodeUOW.BenchmarkTest.GetById(test.ID, withTracking: false, includes: "CameraTest");
+		await AnodeUOW.BenchmarkTest.GetById(test.ID, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 

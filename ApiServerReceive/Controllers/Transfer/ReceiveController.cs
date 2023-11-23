@@ -38,7 +38,7 @@ public class ReceiveController : BaseController, ICarterModule
 		group.MapPost("logs", ReceiveLog);
 	}
 
-	private static Ok<ApiResponse> GetStatus()
+	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();
 	}

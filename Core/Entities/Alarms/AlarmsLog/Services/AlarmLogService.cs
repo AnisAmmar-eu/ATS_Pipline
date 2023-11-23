@@ -103,21 +103,6 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 		return ackAlarmLogs;
 	}
 
-
-	public async Task<List<DTOAlarmLog>> GetAllForFront()
-	{
-		List<AlarmLog> allAlarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes();
-		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO());
-	}
-
-	public async Task<List<DTOAlarmLog>> GetByClassID(int alarmID)
-	{
-		return (await AnodeUOW.AlarmLog.GetAllWithIncludes(new Expression<Func<AlarmLog, bool>>[]
-		{
-			alarmLog => alarmLog.AlarmID == alarmID
-		})).ConvertAll(alarmLog => alarmLog.ToDTO());
-	}
-
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
 		const string api2Url = "https://localhost:7207/apiServerReceive/alarmsLog";

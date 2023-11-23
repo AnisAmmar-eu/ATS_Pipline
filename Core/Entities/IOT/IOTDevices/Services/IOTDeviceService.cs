@@ -38,7 +38,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 
 	public async Task<List<DTOIOTDevice>> GetAllWithIncludes()
 	{
-		return (await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: "IOTTags")).ConvertAll(device =>
+		return (await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: nameof(IOTDevice.IOTTags))).ConvertAll(device =>
 			device.ToDTO());
 	}
 
@@ -47,7 +47,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		return (await AnodeUOW.IOTDevice.GetBy(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => device.RID == rid
-		}, withTracking: false, includes: new[] { "IOTTags" })).ToDTO();
+		}, withTracking: false, includes: nameof(IOTDevice.IOTTags))).ToDTO();
 	}
 
 	public async Task CheckAllConnectionsAndApplyTags(string[] rids)
@@ -89,7 +89,7 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(new Expression<Func<IOTDevice, bool>>[]
 		{
 			device => rids.Contains(device.RID)
-		}, withTracking: true, includes: "IOTTags");
+		}, withTracking: true, includes: nameof(IOTDevice.IOTTags));
 		List<IOTDevice> connectedDevices = new();
 		List<IOTDevice> disconnectedDevices = new();
 		IEnumerable<Task<IOTDevice>> task = devices.Select(async device =>
