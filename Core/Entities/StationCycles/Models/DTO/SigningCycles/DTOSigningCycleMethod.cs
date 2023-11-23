@@ -1,5 +1,4 @@
 using Core.Entities.StationCycles.Models.DB.SigningCycles;
-using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 
 namespace Core.Entities.StationCycles.Models.DTO.SigningCycles;

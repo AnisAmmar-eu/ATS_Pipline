@@ -90,7 +90,11 @@ public class UserInitializer
 			await userManager.CreateAsync(fivesUser, "fivesAdmin2024$");
 
 			// loop through the roles and add them to the user
-			string[] roleNames = { RoleNames.ADMIN, RoleNames.ATS, RoleNames.FIVES, RoleNames.FORCING, RoleNames.OPERATOR, RoleNames.SETTINGS, RoleNames.VISITOR };
+			string[] roleNames =
+			{
+				RoleNames.ADMIN, RoleNames.ATS, RoleNames.FIVES, RoleNames.FORCING, RoleNames.OPERATOR,
+				RoleNames.SETTINGS, RoleNames.VISITOR
+			};
 			foreach (string roleName in roleNames)
 			{
 				await userManager.AddToRoleAsync(ekiumUser, roleName);

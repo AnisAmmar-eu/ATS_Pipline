@@ -11,7 +11,8 @@ public partial class KPILog
 	}
 
 	public KPILog(DTOKPILog dtoKPILog) : base(dtoKPILog)
-	{}
+	{
+	}
 
 	public KPILog(KPIRT kpiRT, KPIC kpiC) : base(kpiRT, kpiC)
 	{

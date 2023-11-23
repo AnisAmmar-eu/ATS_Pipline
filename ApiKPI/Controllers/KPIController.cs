@@ -1,5 +1,4 @@
 using Carter;
-using Core.Shared.Attributes;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
 using Microsoft.AspNetCore.Http.HttpResults;

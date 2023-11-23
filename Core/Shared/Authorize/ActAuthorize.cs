@@ -8,6 +8,6 @@ public class ActAuthorize : IAuthorizationRequirement
 	{
 		RID = rid;
 	}
-	
+
 	public string RID { get; set; }
 }

@@ -1,8 +1,6 @@
 using Carter;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Models.HttpResponse;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ApiIOT.Controllers;
 

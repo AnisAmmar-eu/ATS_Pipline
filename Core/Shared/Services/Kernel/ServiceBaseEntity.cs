@@ -104,7 +104,7 @@ public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDT
 		await AnodeUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
-    
+
 	public async Task<List<TDTO>> RemoveAll(IEnumerable<T> entities)
 	{
 		await AnodeUOW.StartTransaction();

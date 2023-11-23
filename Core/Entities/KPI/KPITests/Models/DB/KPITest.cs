@@ -1,5 +1,4 @@
 using System.Globalization;
-using Core.Entities.KPI.KPICs.Models.DB;
 using Core.Entities.KPI.KPITests.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -8,10 +7,9 @@ namespace Core.Entities.KPI.KPITests.Models.DB;
 
 public class KPITest : BaseEntity, IBaseEntity<KPITest, DTOKPITest>, IBaseKPI<double>
 {
-	public double Value { get; set; }
-
 	public KPITest()
-	{}
+	{
+	}
 
 	public KPITest(DTOKPITest dtoKPITest) : base(dtoKPITest)
 	{
@@ -19,6 +17,9 @@ public class KPITest : BaseEntity, IBaseEntity<KPITest, DTOKPITest>, IBaseKPI<do
 		TS = (DateTimeOffset)dtoKPITest.TS!;
 		Value = dtoKPITest.Value;
 	}
+
+	public double Value { get; set; }
+
 	public override DTOKPITest ToDTO()
 	{
 		return new DTOKPITest(this);

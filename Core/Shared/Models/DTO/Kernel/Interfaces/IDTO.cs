@@ -19,7 +19,7 @@ public interface IDTO<T, TDTO>
 	// /// <returns></returns>
 	public IBaseEntity<T, TDTO> ToEntity()
 	{
-	    return ToModel();
+		return ToModel();
 	}
 
 	// /// <summary>

@@ -8,10 +8,6 @@ namespace Core.Shared.Models.DTO.Kernel;
 /// </summary>
 public class DTOBaseEntity : IDTO<BaseEntity, DTOBaseEntity>
 {
-	public int ID { get; set; }
-
-	public DateTimeOffset? TS { get; set; }
-
 	public DTOBaseEntity()
 	{
 	}
@@ -21,6 +17,10 @@ public class DTOBaseEntity : IDTO<BaseEntity, DTOBaseEntity>
 		ID = entity.ID;
 		TS = entity.TS;
 	}
+
+	public int ID { get; set; }
+
+	public DateTimeOffset? TS { get; set; }
 
 	/// <summary>
 	///     Convert the DTO to its entity

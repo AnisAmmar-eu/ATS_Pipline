@@ -6,7 +6,6 @@ using Core.Shared.Models.DB.System.Logs;
 using Core.Shared.Models.DTO.System.Logs;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ApiStationCycle.Controllers;
 

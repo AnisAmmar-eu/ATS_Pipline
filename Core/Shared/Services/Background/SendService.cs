@@ -35,9 +35,7 @@ public class SendService : BackgroundService
 				_logger.LogInformation("Calling SendStationCycle");
 				List<StationCycle> stationCycles = await stationCycleService.GetAllReadyToSent();
 				foreach (StationCycle stationCycle in stationCycles)
-				{
 					await stationCycleService.SendStationCycle(stationCycle, Station.ServerAddress);
-				}
 
 				_executionCount++;
 				_logger.LogInformation(

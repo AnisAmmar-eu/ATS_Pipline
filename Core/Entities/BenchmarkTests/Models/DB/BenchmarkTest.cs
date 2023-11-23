@@ -10,23 +10,6 @@ namespace Core.Entities.BenchmarkTests.Models.DB;
 [Index(nameof(RID))]
 public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmarkTest>
 {
-	public string RID { get; set; } = string.Empty;
-	public int CameraID { get; set; }
-	public int StationID { get; set; }
-	public string AnodeType { get; set; } = AnodeTypeDict.Undefined;
-
-	#region NavProperties
-
-	private CameraTest? _cameraTest { get; set; }
-
-	public CameraTest CameraTest
-	{
-		set => _cameraTest = value;
-		get => _cameraTest ?? throw new InvalidOperationException("Uninitialized property: " + nameof(CameraTest));
-	}
-
-	#endregion
-
 	public BenchmarkTest()
 	{
 	}
@@ -40,8 +23,25 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 		AnodeType = dtoBenchmarkTest.AnodeType;
 	}
 
+	public string RID { get; set; } = string.Empty;
+	public int CameraID { get; set; }
+	public int StationID { get; set; }
+	public string AnodeType { get; set; } = AnodeTypeDict.Undefined;
+
 	public override DTOBenchmarkTest ToDTO()
 	{
 		return new DTOBenchmarkTest(this);
 	}
+
+	#region NavProperties
+
+	private CameraTest? _cameraTest { get; set; }
+
+	public CameraTest CameraTest
+	{
+		set => _cameraTest = value;
+		get => _cameraTest ?? throw new InvalidOperationException("Uninitialized property: " + nameof(CameraTest));
+	}
+
+	#endregion
 }

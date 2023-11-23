@@ -6,10 +6,13 @@ namespace Core.Entities.BenchmarkTests.Models.DTO.CameraTests;
 
 public class DTOCameraTest : DTOBaseEntity, IDTO<CameraTest, DTOCameraTest>
 {
-	public DTOCameraTest() : base()
-	{}
-	public DTOCameraTest(CameraTest cameraTest)	: base(cameraTest)
-	{}
+	public DTOCameraTest()
+	{
+	}
+
+	public DTOCameraTest(CameraTest cameraTest) : base(cameraTest)
+	{
+	}
 
 	public override CameraTest ToModel()
 	{

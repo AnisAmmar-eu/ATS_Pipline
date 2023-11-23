@@ -8,35 +8,35 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Entities\BI\" />
-        <Folder Include="Migrations\" />
-        <Folder Include="Shared\Models\DB\System\" />
-        <Folder Include="Shared\Models\DTO\System\" />
-        <Folder Include="Shared\Repositories\System\" />
-        <Folder Include="Shared\Services\Background\BI\" />
-        <Folder Include="Shared\Services\System\" />
+        <Folder Include="Entities\BI\"/>
+        <Folder Include="Migrations\"/>
+        <Folder Include="Shared\Models\DB\System\"/>
+        <Folder Include="Shared\Models\DTO\System\"/>
+        <Folder Include="Shared\Repositories\System\"/>
+        <Folder Include="Shared\Services\Background\BI\"/>
+        <Folder Include="Shared\Services\System\"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Beckhoff.TwinCAT.Ads" Version="6.1.86" />
-        <PackageReference Include="Carter" Version="7.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="Beckhoff.TwinCAT.Ads" Version="6.1.86"/>
+        <PackageReference Include="Carter" Version="7.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-        <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+        <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0"/>
     </ItemGroup>
 
     <ItemGroup>

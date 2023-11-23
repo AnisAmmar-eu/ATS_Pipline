@@ -17,7 +17,7 @@ namespace ApiUser.App.User.Controllers;
 public class UserController : BaseController, ICarterModule
 {
 	/// <summary>
-	/// Add Routes from CarterModule
+	///     Add Routes from CarterModule
 	/// </summary>
 	/// <param name="app"></param>
 	/// <exception cref="NotImplementedException"></exception>

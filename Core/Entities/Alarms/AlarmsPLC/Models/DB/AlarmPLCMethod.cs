@@ -4,8 +4,9 @@ namespace Core.Entities.Alarms.AlarmsPLC.Models.DB;
 
 public partial class AlarmPLC
 {
-	public AlarmPLC() : base()
-	{}
+	public AlarmPLC()
+	{
+	}
 
 	public AlarmPLC(DTOAlarmPLC dtoAlarmPLC) : base(dtoAlarmPLC)
 	{
@@ -15,6 +16,7 @@ public partial class AlarmPLC
 		IsActive = dtoAlarmPLC.IsActive;
 		IsOneShot = dtoAlarmPLC.IsOneShot;
 	}
+
 	public override DTOAlarmPLC ToDTO()
 	{
 		return new DTOAlarmPLC(this);

@@ -7,8 +7,9 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB;
 public partial class IOTDevice
 {
 	protected IOTDevice()
-	{}
-	
+	{
+	}
+
 	public IOTDevice(DTOIOTDevice dtoIOTDevice) : base(dtoIOTDevice)
 	{
 		ID = dtoIOTDevice.ID;
@@ -20,6 +21,7 @@ public partial class IOTDevice
 		IsConnected = dtoIOTDevice.IsConnected;
 		IOTTags = dtoIOTDevice.IOTTags.ConvertAll(tag => tag.ToModel());
 	}
+
 	public override DTOIOTDevice ToDTO()
 	{
 		return new DTOIOTDevice(this);

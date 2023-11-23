@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using Core.Entities.User.Models.DTO.Acts;
 using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
@@ -9,9 +8,9 @@ namespace Core.Shared.Authorize;
 
 public class ActAuthorizeHandler : AuthorizationHandler<ActAuthorize>
 {
-	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IActService _actService;
-	
+	private readonly IHttpContextAccessor _httpContextAccessor;
+
 	public ActAuthorizeHandler(IHttpContextAccessor httpContextAccessor, IActService actService)
 	{
 		_httpContextAccessor = httpContextAccessor;
@@ -34,7 +33,7 @@ public class ActAuthorizeHandler : AuthorizationHandler<ActAuthorize>
 				{
 					Act = new DTOAct
 					{
-						RID = requirement.RID,
+						RID = requirement.RID
 					},
 					EntityID = null,
 					ParentID = null
@@ -42,9 +41,7 @@ public class ActAuthorizeHandler : AuthorizationHandler<ActAuthorize>
 			}
 		);
 		if (!result)
-		{
 			context.Fail(new AuthorizationFailureReason(this, "Access denied"));
-		}
 		else context.Succeed(requirement);
 
 		return Task.CompletedTask;

@@ -152,11 +152,11 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 		return await
 			pagination.Includes.Aggregate(_context.Set<T>().AsQueryable(),
 					(current, value) => current.Include(value))
-			.AsNoTracking()
-			.FilterFromPagination<T, TDTO>(pagination, lastID)
-			.SortFromPagination<T, TDTO>(pagination)
-			.Take(nbItems)
-			.ToListAsync();
+				.AsNoTracking()
+				.FilterFromPagination<T, TDTO>(pagination, lastID)
+				.SortFromPagination<T, TDTO>(pagination)
+				.Take(nbItems)
+				.ToListAsync();
 	}
 
 	/// <summary>

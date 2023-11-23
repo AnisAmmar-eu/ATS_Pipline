@@ -8,7 +8,7 @@ public partial class KPIEntry
 	public KPIEntry()
 	{
 	}
-	
+
 	public KPIEntry(DTOKPIEntry dtoKPIEntry) : base(dtoKPIEntry)
 	{
 		Value = dtoKPIEntry.Value;

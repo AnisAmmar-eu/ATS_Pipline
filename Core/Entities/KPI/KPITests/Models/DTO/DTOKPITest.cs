@@ -14,6 +14,7 @@ public class DTOKPITest : DTOBaseEntity, IDTO<KPITest, DTOKPITest>
 	}
 
 	public double Value { get; set; }
+
 	public override KPITest ToModel()
 	{
 		return new KPITest(this);

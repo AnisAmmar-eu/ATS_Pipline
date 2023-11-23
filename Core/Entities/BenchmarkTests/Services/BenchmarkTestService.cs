@@ -14,9 +14,9 @@ namespace Core.Entities.BenchmarkTests.Services;
 public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>,
 	IBenchmarkTestService
 {
+	private static CameraTest? _cam1;
+	private static CameraTest? _cam2;
 	private readonly Random _random = new();
-	private static CameraTest? _cam1 = null;
-	private static CameraTest? _cam2 = null;
 
 	public BenchmarkTestService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

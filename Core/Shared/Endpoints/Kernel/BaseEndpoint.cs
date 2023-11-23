@@ -25,10 +25,8 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 		string dtoName = typeof(TDTO).Name;
 		string tName = typeof(T).Name;
 		if ((flags & BaseEndpointFlags.Create) == BaseEndpointFlags.Create)
-		{
 			group.MapPost("", Add)
 				.WithSummary($"Add the {dtoName} in the body to the database").WithOpenApi();
-		}
 
 		if ((flags & BaseEndpointFlags.Read) == BaseEndpointFlags.Read)
 		{
@@ -47,17 +45,13 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 		}
 
 		if ((flags & BaseEndpointFlags.Update) == BaseEndpointFlags.Update)
-		{
 			group.MapPut("update", Update)
 				.WithSummary($"Update the {dtoName} in the body if it already exist").Accepts<TDTO>("application/json")
 				.WithOpenApi();
-		}
 
 		if ((flags & BaseEndpointFlags.Delete) == BaseEndpointFlags.Delete)
-		{
 			group.MapDelete("", Remove)
 				.WithSummary($"Remove the {dtoName} in the body").Accepts<TDTO>("application/json").WithOpenApi();
-		}
 	}
 
 	#region Add
@@ -66,47 +60,6 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 		HttpContext httpContext, TDTO dto)
 	{
 		return await GenericController(async () => await service.Add(dto.ToModel()), logService, httpContext);
-	}
-
-	#endregion
-
-	#region Read
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetByID(TService service, ILogService logService,
-		HttpContext httpContext, [FromRoute] int id)
-	{
-		return await GenericController(async () => await service.GetByID(id), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(TService service, ILogService logService,
-		HttpContext httpContext, [FromRoute] int id, [FromBody] string[] includes)
-	{
-		return await GenericController(async () => await service.GetByID(id, includes: includes), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
-		HttpContext httpContext)
-	{
-		return await GenericController(async () => await service.GetAll(), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(TService service, ILogService logService,
-		HttpContext httpContext, [FromBody] string[] includes)
-	{
-		return await GenericController(async () => await service.GetAll(includes: includes), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetWithPagination(TService service, ILogService logService,
-		HttpContext httpContext, [FromRoute] int nbItems, [FromRoute] int lastID,
-		[FromBody] Pagination pagination)
-	{
-		return await GenericController(
-			async () => await service.GetWithPagination(pagination, nbItems, lastID), logService,
-			httpContext);
 	}
 
 	#endregion
@@ -162,4 +115,45 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 		return await (ValueTask<TDTO?>)bind.Invoke(null, new object[] { httpContext })! ??
 		       throw new ArgumentException("Empty body or binding failed");
 	}
+
+	#region Read
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetByID(TService service, ILogService logService,
+		HttpContext httpContext, [FromRoute] int id)
+	{
+		return await GenericController(async () => await service.GetByID(id), logService,
+			httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(TService service, ILogService logService,
+		HttpContext httpContext, [FromRoute] int id, [FromBody] string[] includes)
+	{
+		return await GenericController(async () => await service.GetByID(id, includes: includes), logService,
+			httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
+		HttpContext httpContext)
+	{
+		return await GenericController(async () => await service.GetAll(), logService,
+			httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(TService service, ILogService logService,
+		HttpContext httpContext, [FromBody] string[] includes)
+	{
+		return await GenericController(async () => await service.GetAll(includes: includes), logService,
+			httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetWithPagination(TService service, ILogService logService,
+		HttpContext httpContext, [FromRoute] int nbItems, [FromRoute] int lastID,
+		[FromBody] Pagination pagination)
+	{
+		return await GenericController(
+			async () => await service.GetWithPagination(pagination, nbItems, lastID), logService,
+			httpContext);
+	}
+
+	#endregion
 }

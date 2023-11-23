@@ -1,5 +1,4 @@
 using Core.Entities.IOT.IOTTags.Models.DTO;
-using TwinCAT.PlcOpen;
 
 namespace Core.Entities.IOT.IOTTags.Models.DB;
 

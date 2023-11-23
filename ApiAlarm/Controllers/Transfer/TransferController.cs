@@ -12,7 +12,8 @@ public class TransferController : ICarterModule
 		app.MapPost("apiAlarm/transfer/alarmsLog", TransferAlarmsLog);
 	}
 
-	private static async Task<IResult> TransferAlarmsLog(IAlarmLogService alarmLogService, ILogService logService, HttpContext httpContext)
+	private static async Task<IResult> TransferAlarmsLog(IAlarmLogService alarmLogService, ILogService logService,
+		HttpContext httpContext)
 	{
 		try
 		{
@@ -26,5 +27,4 @@ public class TransferController : ICarterModule
 			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 	}
-
 }

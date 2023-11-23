@@ -4,9 +4,6 @@ using Core.Entities.User.Models.DTO.Roles;
 using Core.Entities.User.Services.Roles;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Models.DB.Kernel;
-using Core.Shared.Models.DTO.Kernel;
-using Core.Shared.Services.Kernel.Interfaces;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +16,7 @@ namespace ApiUser.App.User.Controllers;
 public class RoleController : BaseController, ICarterModule
 {
 	/// <summary>
-	///	Add Routes from CarterModule
+	///     Add Routes from CarterModule
 	/// </summary>
 	/// <param name="app"></param>
 	/// <exception cref="NotImplementedException"></exception>

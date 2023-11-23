@@ -24,7 +24,7 @@ public class AlarmLogController : BaseEndpoint<AlarmLog, DTOAlarmLog, IAlarmLogS
 	}
 
 	/// <summary>
-	///		Get by class ID
+	///     Get by class ID
 	/// </summary>
 	/// <param name="alarmClassID"></param>
 	/// <param name="alarmLogService"></param>

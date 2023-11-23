@@ -8,7 +8,8 @@ namespace Core.Shared.Paginations.Filtering;
 
 public static class Filter
 {
-	public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination, int lastID)
+	public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination,
+		int lastID)
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>
 	{

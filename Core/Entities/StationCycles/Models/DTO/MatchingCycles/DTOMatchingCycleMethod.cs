@@ -1,7 +1,6 @@
 using Core.Entities.StationCycles.Models.DB.MatchingCycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
-using Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 
 namespace Core.Entities.StationCycles.Models.DTO.MatchingCycles;
 

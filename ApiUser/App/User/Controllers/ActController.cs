@@ -4,10 +4,8 @@ using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DTO.Acts;
 using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
-using Core.Shared.Authorize;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +18,7 @@ namespace ApiUser.App.User.Controllers;
 public class ActController : BaseEndpoint<Act, DTOAct, IActService>, ICarterModule
 {
 	/// <summary>
-	/// Add Routes from CarterModule
+	///     Add Routes from CarterModule
 	/// </summary>
 	/// <param name="app"></param>
 	public void AddRoutes(IEndpointRouteBuilder app)

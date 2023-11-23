@@ -2,7 +2,6 @@ using Carter;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Models.DTO.KPIRTs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
-using Core.Shared.Attributes;
 using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;

@@ -19,5 +19,5 @@ public enum SortOption
 {
 	None,
 	Ascending,
-	Descending,
+	Descending
 }

@@ -1,7 +1,6 @@
 using Carter;
 using Core.Shared.Models.ApiResponses;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ApiUser.App;
 
@@ -11,7 +10,7 @@ namespace ApiUser.App;
 public class ApiUserController : ICarterModule
 {
 	/// <summary>
-	/// Add Routes from CarterModule
+	///     Add Routes from CarterModule
 	/// </summary>
 	/// <param name="app"></param>
 	public void AddRoutes(IEndpointRouteBuilder app)

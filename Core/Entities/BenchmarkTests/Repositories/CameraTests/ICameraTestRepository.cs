@@ -6,5 +6,4 @@ namespace Core.Entities.BenchmarkTests.Repositories.CameraTests;
 
 public interface ICameraTestRepository : IRepositoryBaseEntity<CameraTest, DTOCameraTest>
 {
-	
 }

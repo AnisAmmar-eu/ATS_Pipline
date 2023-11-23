@@ -128,46 +128,6 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		}
 	}
 
-	private async Task SendStationImages(StationCycle stationCycle)
-	{
-		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath == null)
-			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
-		MultipartFormDataContent formData = new();
-		formData.Headers.ContentType!.MediaType = "multipart/form-data";
-
-		FileInfo image1 =
-			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
-				stationCycle.AnodeType, 1)!;
-		if (image1.Exists)
-		{
-			StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
-			content1.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-			formData.Add(content1, image1.Name, image1.Name);
-		}
-
-		FileInfo image2 =
-			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
-				stationCycle.AnodeType, 2)!;
-		if (image2.Exists)
-		{
-			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
-			content2.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-			formData.Add(content2, image2.Name, image2.Name);
-		}
-
-		if (!formData.Any())
-			return;
-
-		using HttpClient httpClient = new();
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-
-		HttpResponseMessage response =
-			await httpClient.PostAsync("https://localhost:7280/apiServerReceive/images", formData);
-		if (!response.IsSuccessStatusCode)
-			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
-	}
-
 	public async Task ReceiveStationCycle(DTOStationCycle dtoStationCycle)
 	{
 		// DbContext operations should NOT be done concurrently. Hence why await in loop.
@@ -217,6 +177,46 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			savedImage.Save(thumbnail.FullName, 0.2);
 		});
 		await Task.WhenAll(tasks);
+	}
+
+	private async Task SendStationImages(StationCycle stationCycle)
+	{
+		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
+		if (imagesPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+		MultipartFormDataContent formData = new();
+		formData.Headers.ContentType!.MediaType = "multipart/form-data";
+
+		FileInfo image1 =
+			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
+				stationCycle.AnodeType, 1)!;
+		if (image1.Exists)
+		{
+			StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
+			content1.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+			formData.Add(content1, image1.Name, image1.Name);
+		}
+
+		FileInfo image2 =
+			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
+				stationCycle.AnodeType, 2)!;
+		if (image2.Exists)
+		{
+			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
+			content2.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+			formData.Add(content2, image2.Name, image2.Name);
+		}
+
+		if (!formData.Any())
+			return;
+
+		using HttpClient httpClient = new();
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+
+		HttpResponseMessage response =
+			await httpClient.PostAsync("https://localhost:7280/apiServerReceive/images", formData);
+		if (!response.IsSuccessStatusCode)
+			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}
 
 	private async Task AssignCycleToAnode(StationCycle cycle)
