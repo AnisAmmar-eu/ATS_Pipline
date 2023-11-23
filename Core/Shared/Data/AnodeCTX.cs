@@ -1,7 +1,6 @@
 ﻿using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
-using Core.Entities.Alarms.AlarmsPLC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Anodes.Models.DB.AnodesD20;
@@ -19,7 +18,6 @@ using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Entities.KPI.KPICs.Models.DB;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
-using Core.Entities.KPI.KPITests.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
@@ -57,7 +55,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<CameraTest> CameraTest => Set<CameraTest>();
 
 	// Alarms
-	public DbSet<AlarmPLC> AlarmPLC => Set<AlarmPLC>();
 	public DbSet<AlarmC> AlarmC => Set<AlarmC>();
 	public DbSet<AlarmLog> AlarmLog => Set<AlarmLog>();
 	public DbSet<AlarmRT> AlarmRT => Set<AlarmRT>();
@@ -98,7 +95,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<KPIC> KPIC => Set<KPIC>();
 	public DbSet<KPILog> KPILog => Set<KPILog>();
 	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
-	public DbSet<KPITest> KPITest => Set<KPITest>();
 	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
 
 	// Vision

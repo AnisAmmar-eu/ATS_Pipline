@@ -7,5 +7,4 @@ namespace Core.Entities.Alarms.AlarmsC.Services;
 public interface IAlarmCService : IServiceBaseEntity<AlarmC, DTOAlarmC>
 {
 	public Task<DTOAlarmC> GetByRID(string RID);
-	public Task<DTOAlarmC> AddReceivedAlarmC(DTOAlarmC received);
 }

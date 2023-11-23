@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
@@ -25,28 +23,6 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 
 		await AnodeUOW.CommitTransaction();
 		return packet.ToDTO();
-	}
-
-	public async Task<HttpResponseMessage> SendPacketsToServer()
-	{
-		List<Packet> packets = await AnodeUOW.Packet.GetAll();
-		const string api2Url = "https://localhost:7207/apiServerReceive/packets";
-		string jsonData = JsonSerializer.Serialize(packets.ConvertAll(packet => packet.ToDTO()));
-		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
-
-		using (HttpClient httpClient = new())
-		{
-			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
-
-			if (!response.IsSuccessStatusCode || !packets.Any()) return response;
-
-			await AnodeUOW.StartTransaction();
-			packets.ForEach(packet => { AnodeUOW.Packet.Remove(packet); });
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
-
-			return response;
-		}
 	}
 
 	public async Task<List<Packet>> ReceivePackets(IEnumerable<DTOPacket> dtoPackets)

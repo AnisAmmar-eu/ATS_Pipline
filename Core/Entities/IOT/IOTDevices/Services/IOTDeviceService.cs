@@ -36,20 +36,6 @@ public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevic
 		}, withTracking: false)).ConvertAll(device => new IOTDeviceStatus(device));
 	}
 
-	public async Task<List<DTOIOTDevice>> GetAllWithIncludes()
-	{
-		return (await AnodeUOW.IOTDevice.GetAll(withTracking: false, includes: nameof(IOTDevice.IOTTags))).ConvertAll(device =>
-			device.ToDTO());
-	}
-
-	public async Task<DTOIOTDevice> GetByRIDWithIncludes(string rid)
-	{
-		return (await AnodeUOW.IOTDevice.GetBy(new Expression<Func<IOTDevice, bool>>[]
-		{
-			device => device.RID == rid
-		}, withTracking: false, includes: nameof(IOTDevice.IOTTags))).ToDTO();
-	}
-
 	public async Task CheckAllConnectionsAndApplyTags(string[] rids)
 	{
 		List<IOTDevice> devices = await CheckAllConnections(rids);

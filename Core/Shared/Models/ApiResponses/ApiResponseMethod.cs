@@ -14,9 +14,9 @@ public partial class ApiResponse
 {
 	private static readonly JsonSerializerOptions JsonOptions = new()
 	{
-		PropertyNamingPolicy = null,
+		PropertyNamingPolicy = null
 	};
-	
+
 	// With default statusCode
 	public ApiResponse()
 	{

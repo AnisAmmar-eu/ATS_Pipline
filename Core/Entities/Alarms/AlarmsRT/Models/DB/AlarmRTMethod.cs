@@ -15,10 +15,8 @@ public partial class AlarmRT
 		Alarm = alarmC;
 	}
 
-	public AlarmRT(DTOAlarmRT dtoAlarmRT)
+	public AlarmRT(DTOAlarmRT dtoAlarmRT) : base(dtoAlarmRT)
 	{
-		ID = dtoAlarmRT.ID;
-		TS = (DateTimeOffset)dtoAlarmRT.TS!;
 		IRID = dtoAlarmRT.IRID;
 		AlarmID = dtoAlarmRT.AlarmID;
 		StationID = dtoAlarmRT.StationID;

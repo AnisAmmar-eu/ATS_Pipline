@@ -3,7 +3,6 @@ using System.Text;
 using Carter;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Alarms.AlarmsPLC.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -84,7 +83,6 @@ builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 builder.Services.AddScoped<IAlarmRTService, AlarmRTService>();
-builder.Services.AddScoped<IAlarmPLCService, AlarmPLCService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();

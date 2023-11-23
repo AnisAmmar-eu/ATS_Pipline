@@ -14,6 +14,7 @@ public class BenchmarkController : BaseEndpoint<BenchmarkTest, DTOBenchmarkTest,
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle/benchmark2")
 			.WithTags(nameof(BenchmarkController));
 		MapBaseEndpoints(group,
-			BaseEndpointFlags.Create | BaseEndpointFlags.Read | BaseEndpointFlags.Update | BaseEndpointFlags.Delete);
+			BaseEndpointFlags.Create | BaseEndpointFlags.Read | BaseEndpointFlags.Update | BaseEndpointFlags.Delete,
+			nameof(BenchmarkTest.CameraTest));
 	}
 }

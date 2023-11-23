@@ -6,7 +6,6 @@ namespace Core.Entities.BI.BITemperatures.Services;
 
 public interface IBITemperatureService : IServiceBaseEntity<BITemperature, DTOBITemperature>
 {
-	public Task<List<DTOBITemperature>> GetAll();
 	public Task LogNewValues();
 	public Task PurgeByTimestamp(TimeSpan lifespan);
 }

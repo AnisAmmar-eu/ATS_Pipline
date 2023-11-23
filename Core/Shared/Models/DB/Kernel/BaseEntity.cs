@@ -12,7 +12,7 @@ public class BaseEntity : IBaseEntity<BaseEntity, DTOBaseEntity>
 	{
 	}
 
-	public BaseEntity(DTOBaseEntity dto)
+	protected BaseEntity(DTOBaseEntity dto)
 	{
 		ID = dto.ID;
 		TS = (DateTimeOffset)dto.TS!;

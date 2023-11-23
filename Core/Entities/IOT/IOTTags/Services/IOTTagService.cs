@@ -17,14 +17,6 @@ public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOT
 	{
 	}
 
-	public async Task<DTOIOTTag> GetByRID(string rid)
-	{
-		return (await AnodeUOW.IOTTag.GetBy(new Expression<Func<IOTTag, bool>>[]
-		{
-			tag => tag.RID == rid
-		}, withTracking: false)).ToDTO();
-	}
-
 	public async Task<List<DTOIOTTag>> GetByArrayRID(IEnumerable<string> rids)
 	{
 		return (await AnodeUOW.IOTTag.GetAll(new Expression<Func<IOTTag, bool>>[]

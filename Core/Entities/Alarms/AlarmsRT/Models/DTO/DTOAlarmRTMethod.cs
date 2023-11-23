@@ -4,10 +4,8 @@ namespace Core.Entities.Alarms.AlarmsRT.Models.DTO;
 
 public partial class DTOAlarmRT
 {
-	public DTOAlarmRT(AlarmRT alarmRT)
+	public DTOAlarmRT(AlarmRT alarmRT) : base(alarmRT)
 	{
-		ID = alarmRT.ID;
-		TS = alarmRT.TS;
 		IRID = alarmRT.IRID;
 		AlarmID = alarmRT.AlarmID;
 		StationID = alarmRT.StationID;

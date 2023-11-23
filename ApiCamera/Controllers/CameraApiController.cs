@@ -1,10 +1,10 @@
 using ApiCamera.Utils;
 using Carter;
-using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Dictionaries;
 using Core.Shared.Dictionaries;
+using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.Camera;
 using Core.Shared.Services.System.Logs;
@@ -14,7 +14,7 @@ using Stemmer.Cvb;
 
 namespace ApiCamera.Controllers;
 
-public class CameraApiController : ICarterModule
+public class CameraApiController : BaseController, ICarterModule
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
@@ -36,7 +36,7 @@ public class CameraApiController : ICarterModule
 	private static async Task<JsonHttpResult<ApiResponse>> AcquisitionAsync(IConfiguration configuration,
 		IIOTTagService iotTagService, ILogService logService, HttpContext httpContext)
 	{
-		try
+		return await GenericControllerEmptyResponse(async () =>
 		{
 			int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
 			int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
@@ -57,13 +57,7 @@ public class CameraApiController : ICarterModule
 				await CameraUtils.RunAcquisition(iotTagService, device1, "jpg", ShootingUtils.Camera1,
 					ShootingUtils.CameraTest1, ShootingUtils.Camera2, ShootingUtils.CameraTest2);
 			}
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
-		}
-
-		return await new ApiResponse().SuccessResult(logService, httpContext.GetEndpoint());
+		}, logService, httpContext);
 	}
 
 	#endregion
@@ -73,17 +67,7 @@ public class CameraApiController : ICarterModule
 	private static async Task<JsonHttpResult<ApiResponse>> GetTemperatures(IBITemperatureService biTemperatureService,
 		ILogService logService, HttpContext httpContext)
 	{
-		List<DTOBITemperature> temperatures;
-		try
-		{
-			temperatures = await biTemperatureService.GetAll();
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
-		}
-
-		return await new ApiResponse(temperatures).SuccessResult(logService, httpContext.GetEndpoint());
+		return await GenericController(async () => await biTemperatureService.GetAll(), logService, httpContext);
 	}
 
 	#endregion

@@ -8,10 +8,10 @@ namespace Core.Entities.Alarms.AlarmsC.Models.DB;
 
 public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 {
-	public string RID { get; set; }
-	public string Name { get; set; }
-	public string Description { get; set; }
-	public string Category { get; set; }
+	public string RID { get; set; } = string.Empty;
+	public string Name { get; set; } = string.Empty;
+	public string Description { get; set; } = string.Empty;
+	public string Category { get; set; } = string.Empty;
 	public int Severity { get; set; }
 
 	#region Nav Properties

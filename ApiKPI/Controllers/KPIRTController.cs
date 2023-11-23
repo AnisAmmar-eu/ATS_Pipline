@@ -19,7 +19,7 @@ public class KPIRTController : BaseEndpoint<KPIRT, DTOKPIRT, IKPIRTService>, ICa
 		if (!Station.IsServer)
 			return;
 		RouteGroupBuilder group = app.MapGroup("apiKPIRT").WithTags(nameof(KPIRTController));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(KPIRT.KPIC));
 
 		group.MapPut("{timePeriod}", GetByTimePeriodAndRIDs)
 			.WithSummary("Get KPIRT within a single time period by RIDs").WithOpenApi();

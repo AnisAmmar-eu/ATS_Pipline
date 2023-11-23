@@ -20,17 +20,10 @@ public class IOTTagController : BaseEndpoint<IOTTag, DTOIOTTag, IIOTTagService>,
 		RouteGroupBuilder group = app.MapGroup("apiIOT/iotTags").WithTags(nameof(IOTTagController));
 		MapBaseEndpoints(group, BaseEndpointFlags.Read);
 
-		group.MapGet("rid/{rid}", GetTagValueByRID).WithSummary("Get a tag by its RID").WithOpenApi();
 		group.MapPut("rids", GetTagValueByArrayRID).WithSummary("Get tags by their RIDs").WithOpenApi();
 		group.MapPut("setValue/{rid}/{value}", SetTagValueByRID).WithSummary("Set a tag value by its RID")
 			.WithOpenApi();
 		group.MapPut("setValue", SetTagsValues).WithSummary("Set tags values").WithOpenApi();
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetTagValueByRID([FromRoute] [Required] string rid,
-		IIOTTagService iotTagService, ILogService logService, HttpContext httpContext)
-	{
-		return await GenericController(async () => await iotTagService.GetByRID(rid), logService, httpContext);
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> GetTagValueByArrayRID(

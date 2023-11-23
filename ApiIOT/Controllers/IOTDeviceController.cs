@@ -17,11 +17,10 @@ public class IOTDeviceController : BaseEndpoint<IOTDevice, DTOIOTDevice, IIOTDev
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiIOT/iotDevices").WithTags(nameof(IOTDeviceController));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(IOTDevice.IOTTags));
 
-		group.MapGet("status/{rid}", GetStatusByRID).WithSummary("Get a device's status by its RID").WithOpenApi();
-		group.MapGet("{rid}", GetIOTDeviceByRID).WithSummary("Get a device by its RID").WithOpenApi();
-		group.MapPut("rids", GetTagValueByArrayRID).WithSummary("Get devices by their RIDs").WithOpenApi();
+		group.MapGet("status/{rid}", GetStatusByRID).WithSummary("Get a device's STATUS by its RID").WithOpenApi();
+		group.MapPut("rids", GetDevicesByArrayRID).WithSummary("Get devices by their RIDs").WithOpenApi();
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> GetStatusByRID([Required] [FromRoute] string rid,
@@ -30,14 +29,7 @@ public class IOTDeviceController : BaseEndpoint<IOTDevice, DTOIOTDevice, IIOTDev
 		return await GenericController(async () => await iotDeviceService.GetStatusByRID(rid), logService, httpContext);
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> GetIOTDeviceByRID([Required] string rid,
-		IIOTDeviceService iotDeviceService, ILogService logService, HttpContext httpContext)
-	{
-		return await GenericController(async () => await iotDeviceService.GetByRIDWithIncludes(rid), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetTagValueByArrayRID(
+	private static async Task<JsonHttpResult<ApiResponse>> GetDevicesByArrayRID(
 		[FromBody] [Required] IEnumerable<string> rids, IIOTDeviceService iotDeviceService, ILogService logService,
 		HttpContext httpContext)
 	{

@@ -6,16 +6,10 @@ public partial class DTOAlarmC
 {
 	public DTOAlarmC()
 	{
-		RID = "";
-		Name = "";
-		Description = "";
-		Category = "";
 	}
 
-	public DTOAlarmC(AlarmC alarmC)
+	public DTOAlarmC(AlarmC alarmC) : base(alarmC)
 	{
-		ID = alarmC.ID;
-		TS = alarmC.TS;
 		RID = alarmC.RID;
 		Name = alarmC.Name;
 		Description = alarmC.Description;

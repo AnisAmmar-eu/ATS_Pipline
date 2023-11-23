@@ -18,12 +18,6 @@ public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, 
 	{
 	}
 
-	public async Task<List<DTOBITemperature>> GetAll()
-	{
-		return (await AnodeUOW.BITemperature.GetAll(withTracking: false)).ConvertAll(
-			temperature => temperature.ToDTO());
-	}
-
 	public async Task LogNewValues()
 	{
 		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag.GetAll(new Expression<Func<IOTTag, bool>>[]

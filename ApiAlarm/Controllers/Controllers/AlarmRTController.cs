@@ -15,7 +15,7 @@ public class AlarmRTController : BaseEndpoint<AlarmRT, DTOAlarmRT, IAlarmRTServi
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiAlarm/alarmsRealTime").WithTags(nameof(AlarmRTController));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(AlarmRT.Alarm));
 
 		group.MapGet("stats", GetAlarmRTStats);
 	}

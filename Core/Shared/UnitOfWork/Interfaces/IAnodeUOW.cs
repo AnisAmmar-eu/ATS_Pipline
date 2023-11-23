@@ -1,7 +1,6 @@
 ﻿using Core.Entities.Alarms.AlarmsC.Repositories;
 using Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
-using Core.Entities.Alarms.AlarmsPLC.Repositories;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
 using Core.Entities.Anodes.Repositories;
 using Core.Entities.BenchmarkTests.Repositories;
@@ -12,7 +11,6 @@ using Core.Entities.IOT.IOTTags.Repositories;
 using Core.Entities.KPI.KPICs.Repositories;
 using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
-using Core.Entities.KPI.KPITests.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
@@ -33,7 +31,6 @@ public interface IAnodeUOW : IDisposable
 
 	ILogRepository Log { get; }
 	IAlarmCRepository AlarmC { get; }
-	IAlarmPLCRepository AlarmPLC { get; }
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }
 
@@ -46,7 +43,6 @@ public interface IAnodeUOW : IDisposable
 	IKPICRepository KPIC { get; }
 	IKPILogRepository KPILog { get; }
 	IKPIRTRepository KPIRT { get; }
-	IKPITestRepository KPITest { get; }
 	IBITemperatureRepository BITemperature { get; }
 
 	// IOT

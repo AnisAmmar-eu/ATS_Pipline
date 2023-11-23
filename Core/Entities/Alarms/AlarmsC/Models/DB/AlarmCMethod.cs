@@ -6,16 +6,10 @@ public partial class AlarmC
 {
 	public AlarmC()
 	{
-		Name = "";
-		Description = "";
-		RID = "";
-		Category = "";
 	}
 
-	public AlarmC(DTOAlarmC alarmC)
+	public AlarmC(DTOAlarmC alarmC) : base(alarmC)
 	{
-		ID = alarmC.ID;
-		TS = (DateTimeOffset)alarmC.TS!;
 		RID = alarmC.RID;
 		Name = alarmC.Name;
 		Description = alarmC.Description;
