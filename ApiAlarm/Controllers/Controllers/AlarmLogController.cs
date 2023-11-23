@@ -1,83 +1,55 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
+using Carter;
+using Core.Entities.Alarms.AlarmsLog.Models.DB;
+using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Shared.Models.HttpResponse;
+using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiAlarm.Controllers.Controllers;
 
-[ApiController]
-[Route("apiAlarm/alarmsLog")]
-public class AlarmLogController : ControllerBase
+public class AlarmLogController : BaseEndpoint<AlarmLog, DTOAlarmLog, IAlarmLogService>, ICarterModule
 {
-	private readonly IAlarmLogService _alarmLogService;
-	private readonly ILogService _logService;
-
-	public AlarmLogController(IAlarmLogService alarmLogService, ILogService logService)
+	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		_alarmLogService = alarmLogService;
-		_logService = logService;
+		RouteGroupBuilder group = app.MapGroup("apiAlarm/alarmsLog").WithTags(nameof(AlarmLogController));
+		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+
+		group.MapGet("{alarmClassID}", GetAlarmLogByClassID);
+		group.MapPost("ack", AckAlarmLogs);
 	}
 
 	/// <summary>
-	///     Get all logs.
+	///		Get by class ID
 	/// </summary>
+	/// <param name="alarmClassID"></param>
+	/// <param name="alarmLogService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns></returns>
-	[HttpGet]
-	public async Task<IActionResult> GetAllAlarmLog()
+	private static async Task<JsonHttpResult<ApiResponse>> GetAlarmLogByClassID([Required] int alarmClassID,
+		IAlarmLogService alarmLogService, ILogService logService, HttpContext httpContext)
 	{
-		List<DTOFAlarmLog> result;
-		try
-		{
-			result = await _alarmLogService.GetAllForFront();
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
-	}
-
-	/// <summary>
-	/// </summary>
-	/// <returns></returns>
-	[HttpGet]
-	[Route("{alarmClassID}")]
-	public async Task<IActionResult> GetAlarmLogByClassID([Required] int alarmClassID)
-	{
-		List<DTOFAlarmLog> result;
-		try
-		{
-			result = await _alarmLogService.GetByClassID(alarmClassID);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await alarmLogService.GetByClassID(alarmClassID), logService,
+			httpContext);
 	}
 
 	/// <summary>
 	///     Ack a list of log entries
 	/// </summary>
 	/// <param name="alarmLogIDs"></param>
+	/// <param name="alarmLogService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns></returns>
-	[HttpPost("ack")]
-	public async Task<IActionResult> AckAlarmLogs([FromBody] [Required] int[] alarmLogIDs)
+	private static async Task<JsonHttpResult<ApiResponse>> AckAlarmLogs([FromBody] [Required] int[] alarmLogIDs,
+		IAlarmLogService alarmLogService, ILogService logService, HttpContext httpContext)
 	{
-		List<DTOFAlarmLog> result;
-		try
-		{
-			result = await _alarmLogService.AckAlarmLogs(alarmLogIDs);
-		}
-		catch (Exception e)
-		{
-			return await new ControllerResponseObject().ErrorResult(_logService, ControllerContext, e);
-		}
-
-		return await new ControllerResponseObject(result).SuccessResult(_logService, ControllerContext);
+		return await GenericController(async () => await alarmLogService.AckAlarmLogs(alarmLogIDs), logService,
+			httpContext);
 	}
 }

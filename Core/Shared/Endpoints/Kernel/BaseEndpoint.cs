@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text.Json;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -13,19 +15,19 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Core.Shared.Endpoints.Kernel;
 
-public class BaseEndpoint<T, TDTO, TService>
+public class BaseEndpoint<T, TDTO, TService> : BaseController
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 	where TService : IServiceBaseEntity<T, TDTO>
 {
-	protected void MapBaseEndpoints(RouteGroupBuilder group, BaseEndpointFlags flags)
+	protected static void MapBaseEndpoints(RouteGroupBuilder group, BaseEndpointFlags flags)
 	{
 		string dtoName = typeof(TDTO).Name;
 		string tName = typeof(T).Name;
 		if ((flags & BaseEndpointFlags.Create) == BaseEndpointFlags.Create)
 		{
-			group.MapPost("", AddAll)
-				.WithSummary($"Add all the {dtoName}s in the body to the database").WithOpenApi();
+			group.MapPost("", Add)
+				.WithSummary($"Add the {dtoName} in the body to the database").WithOpenApi();
 		}
 
 		if ((flags & BaseEndpointFlags.Read) == BaseEndpointFlags.Read)
@@ -46,24 +48,24 @@ public class BaseEndpoint<T, TDTO, TService>
 
 		if ((flags & BaseEndpointFlags.Update) == BaseEndpointFlags.Update)
 		{
-			group.MapPut("update", UpdateAll)
-				.WithSummary("Update all DTOs in the body if they already exist").WithOpenApi();
+			group.MapPut("update", Update)
+				.WithSummary($"Update the {dtoName} in the body if it already exist").Accepts<TDTO>("application/json")
+				.WithOpenApi();
 		}
 
 		if ((flags & BaseEndpointFlags.Delete) == BaseEndpointFlags.Delete)
 		{
-			group.MapDelete("", RemoveAll)
-				.WithSummary("Remove all DTOs in the body").WithOpenApi();
+			group.MapDelete("", Remove)
+				.WithSummary($"Remove the {dtoName} in the body").Accepts<TDTO>("application/json").WithOpenApi();
 		}
 	}
 
 	#region Add
 
-	private static async Task<JsonHttpResult<ApiResponse>> AddAll(TService service, ILogService logService,
-		HttpContext httpContext, [FromBody] List<TDTO> dtos)
+	private static async Task<JsonHttpResult<ApiResponse>> Add(TService service, ILogService logService,
+		HttpContext httpContext, TDTO dto)
 	{
-		return await GenericController(async () => await service.AddAll(dtos.ConvertAll(dto => dto.ToModel())),
-			logService, httpContext);
+		return await GenericController(async () => await service.Add(dto.ToModel()), logService, httpContext);
 	}
 
 	#endregion
@@ -111,54 +113,53 @@ public class BaseEndpoint<T, TDTO, TService>
 
 	#region Update
 
-	private static async Task<JsonHttpResult<ApiResponse>> UpdateAll(TService service, ILogService logService,
-		HttpContext httpContext, [FromBody] List<TDTO> dtos)
+	private static async Task<JsonHttpResult<ApiResponse>> Update(TService service, ILogService logService,
+		HttpContext httpContext, TDTO dto)
 	{
-		return await GenericController(async () => await service.UpdateAll(dtos.ConvertAll(dto => dto.ToModel())),
-			logService, httpContext);
+		return await GenericController(async () => await service.Update(dto.ToModel()), logService, httpContext);
 	}
 
 	#endregion
 
 	#region Delete
 
-	private static async Task<JsonHttpResult<ApiResponse>> RemoveAll(TService service, ILogService logService,
-		HttpContext httpContext, [FromBody] List<TDTO> dtos)
+	// Here TDTO dto is NOT in the arguments as we need it from body with Custom Binding. It is therefore read in the
+	// body of the controller. DELETE needs it whereas UPDATE does not because DELETE does NOT authorize inferred
+	// types. (Thus forcing [FromBody] which does not call BindAsync)
+	private static async Task<JsonHttpResult<ApiResponse>> Remove([FromServices] TService service,
+		[FromServices] ILogService logService, HttpContext httpContext)
 	{
-		return await GenericController(async () => await service.RemoveAll(dtos.ConvertAll(dto => dto.ToModel())),
-			logService, httpContext);
+		return await GenericController(async () =>
+		{
+			TDTO dto = await ReadWithBindAsync(httpContext);
+			return await service.Remove(dto.ToModel());
+		}, logService, httpContext);
 	}
 
 	#endregion
 
-	protected static async Task<JsonHttpResult<ApiResponse>> GenericController<TReturn>(Func<Task<TReturn>> func,
-		ILogService logService, HttpContext httpContext)
+	// Use this method if custom binding is needed and you cannot have an inferred body parameter.
+	private static async ValueTask<TDTO> ReadWithBindAsync(HttpContext httpContext)
 	{
-		TReturn ans;
-		try
-		{
-			ans = await func.Invoke();
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
-		}
+		// Verifies if the type has custom binding or not by using reflection
+		bool hasCustomBinding = typeof(TDTO).GetInterfaces()
+			.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IExtensionBinder<>));
+		if (!hasCustomBinding)
+			return JsonSerializer.Deserialize<TDTO>(httpContext.Request.Body) ??
+			       throw new ArgumentException("Empty body or malformed one");
 
-		return await new ApiResponse(ans).SuccessResult(logService, httpContext.GetEndpoint());
-	}
-	
-	protected static async Task<JsonHttpResult<ApiResponse>> GenericControllerEmptyResponse(Func<Task> func,
-		ILogService logService, HttpContext httpContext)
-	{
-		try
-		{
-			await func.Invoke();
-		}
-		catch (Exception e)
-		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
-		}
+		// Then it gets the BindAsync method through reflection.
+		// Strongly inspired by:
+		// https://stackoverflow.com/questions/74501978/how-do-i-test-if-a-type-t-implements-iparsablet
+		MethodInfo? bind = typeof(TDTO).GetMethods(BindingFlags.Static | BindingFlags.Public).FirstOrDefault(c =>
+			c.Name == "BindAsync" && c.GetParameters().Length == 1 &&
+			c.GetParameters()[0].ParameterType == typeof(HttpContext));
+		if (bind == null)
+			throw new ArgumentException(
+				"Bind: Trying to bind an IExtensionBinder value which does not have a bind method");
 
-		return await new ApiResponse().SuccessResult(logService, httpContext.GetEndpoint());
+		// Invokes the function by casting its return type to an awaitable one.
+		return await (ValueTask<TDTO?>)bind.Invoke(null, new object[] { httpContext })! ??
+		       throw new ArgumentException("Empty body or binding failed");
 	}
 }

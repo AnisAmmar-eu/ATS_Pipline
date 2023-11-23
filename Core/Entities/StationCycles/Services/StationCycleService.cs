@@ -2,6 +2,7 @@ using System.Configuration;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Detections;
@@ -20,7 +21,6 @@ using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Stemmer.Cvb;
 using TwinCAT;
 using TwinCAT.Ads;
@@ -96,65 +96,61 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public async Task SendStationCycles(List<StationCycle> stationCycles, string address)
+	public async Task SendStationCycle(StationCycle stationCycle, string address)
 	{
-		if (!stationCycles.Any())
-			return;
 		using HttpClient httpClient = new();
 		StringContent content =
-			new(JsonConvert.SerializeObject(stationCycles.ConvertAll(cycle => cycle.ToDTO())), Encoding.UTF8,
-				"application/json");
+			new(JsonSerializer.Serialize(stationCycle.ToDTO()), Encoding.UTF8, "application/json");
 		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/stationCycles", content);
 		if (response.IsSuccessStatusCode)
 		{
-			if (!stationCycles.Any()) return;
-			Task imagesTask = SendStationImages(stationCycles);
+			// Send the images, marking packets as sent and then cycle as sent.
+			Task imagesTask = SendStationImages(stationCycle);
 			await AnodeUOW.StartTransaction();
-			stationCycles.ForEach(cycle =>
+			stationCycle.Status = PacketStatus.Sent;
+			if (stationCycle is S1S2Cycle s1S2Cycle)
+				_packetService.MarkPacketAsSentFromStationCycle(s1S2Cycle.AnnouncementPacket);
+			else
+				_packetService.MarkPacketAsSentFromStationCycle(stationCycle.AnnouncementPacket);
+			_packetService.MarkPacketAsSentFromStationCycle(stationCycle.DetectionPacket);
+			_packetService.MarkPacketAsSentFromStationCycle(stationCycle.ShootingPacket);
+			_packetService.MarkPacketAsSentFromStationCycle(stationCycle.AlarmListPacket);
+			if (stationCycle is S3S4Cycle s3S4Cycle)
 			{
-				cycle.Status = PacketStatus.Sent;
-				if (cycle is S1S2Cycle s1S2Cycle)
-					_packetService.MarkPacketAsSentFromStationCycle(s1S2Cycle.AnnouncementPacket);
-				else
-					_packetService.MarkPacketAsSentFromStationCycle(cycle.AnnouncementPacket);
-				_packetService.MarkPacketAsSentFromStationCycle(cycle.DetectionPacket);
-				_packetService.MarkPacketAsSentFromStationCycle(cycle.ShootingPacket);
-				_packetService.MarkPacketAsSentFromStationCycle(cycle.AlarmListPacket);
-				if (cycle is S3S4Cycle s3S4Cycle)
-				{
-					_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.InFurnacePacket);
-					_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.OutFurnacePacket);
-				}
+				_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.InFurnacePacket);
+				_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.OutFurnacePacket);
+			}
 
-				AnodeUOW.StationCycle.Update(cycle);
-			});
+			AnodeUOW.StationCycle.Update(stationCycle);
 			AnodeUOW.Commit();
 			await AnodeUOW.CommitTransaction();
 			await imagesTask;
 		}
 	}
 
-	public async Task SendStationImages(List<StationCycle> stationCycles)
+	private async Task SendStationImages(StationCycle stationCycle)
 	{
 		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
 		if (imagesPath == null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
 		MultipartFormDataContent formData = new();
 		formData.Headers.ContentType!.MediaType = "multipart/form-data";
-		foreach (StationCycle cycle in stationCycles)
-		{
-			FileInfo image1 =
-				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.StationID, imagesPath, cycle.AnodeType, 1)!;
-			if (image1.Exists)
-			{
-				StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
-				content1.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-				formData.Add(content1, image1.Name, image1.Name);
-			}
 
-			FileInfo image2 =
-				cycle.ShootingPacket?.GetImagePathFromRoot(cycle.StationID, imagesPath, cycle.AnodeType, 2)!;
-			if (!image2.Exists) continue;
+		FileInfo image1 =
+			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
+				stationCycle.AnodeType, 1)!;
+		if (image1.Exists)
+		{
+			StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
+			content1.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+			formData.Add(content1, image1.Name, image1.Name);
+		}
+
+		FileInfo image2 =
+			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
+				stationCycle.AnodeType, 2)!;
+		if (image2.Exists)
+		{
 			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
 			content2.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
 			formData.Add(content2, image2.Name, image2.Name);
@@ -172,33 +168,30 @@ public class StationCycleService : ServiceBaseEntity<IStationCycleRepository, St
 			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}
 
-	public async Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles)
+	public async Task ReceiveStationCycle(DTOStationCycle dtoStationCycle)
 	{
 		// DbContext operations should NOT be done concurrently. Hence why await in loop.
 		await AnodeUOW.StartTransaction();
-		foreach (DTOStationCycle dto in dtoStationCycles)
+		StationCycle cycle = dtoStationCycle.ToModel();
+		cycle.ID = 0;
+		if (cycle is S1S2Cycle s1S2Cycle)
+			s1S2Cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(s1S2Cycle.AnnouncementPacket);
+		else
+			cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(cycle.AnnouncementPacket);
+		cycle.DetectionID = await _packetService.AddPacketFromStationCycle(cycle.DetectionPacket);
+		cycle.ShootingID = await _packetService.AddPacketFromStationCycle(cycle.ShootingPacket);
+		cycle.AlarmListID = await _packetService.AddPacketFromStationCycle(cycle.AlarmListPacket);
+		if (cycle is S3S4Cycle s3S4Cycle)
 		{
-			StationCycle cycle = dto.ToModel();
-			cycle.ID = 0;
-			if (cycle is S1S2Cycle s1S2Cycle)
-				s1S2Cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(s1S2Cycle.AnnouncementPacket);
-			else
-				cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(cycle.AnnouncementPacket);
-			cycle.DetectionID = await _packetService.AddPacketFromStationCycle(cycle.DetectionPacket);
-			cycle.ShootingID = await _packetService.AddPacketFromStationCycle(cycle.ShootingPacket);
-			cycle.AlarmListID = await _packetService.AddPacketFromStationCycle(cycle.AlarmListPacket);
-			if (cycle is S3S4Cycle s3S4Cycle)
-			{
-				s3S4Cycle.InFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.InFurnacePacket);
-				s3S4Cycle.OutFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.OutFurnacePacket);
-			}
-
-			// Packets need to be commit before adding StationCycle
-			AnodeUOW.Commit();
-			await AnodeUOW.StationCycle.Add(cycle);
-			AnodeUOW.Commit();
-			await AssignCycleToAnode(cycle);
+			s3S4Cycle.InFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.InFurnacePacket);
+			s3S4Cycle.OutFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.OutFurnacePacket);
 		}
+
+		// Packets need to be commit before adding StationCycle
+		AnodeUOW.Commit();
+		await AnodeUOW.StationCycle.Add(cycle);
+		AnodeUOW.Commit();
+		await AssignCycleToAnode(cycle);
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();

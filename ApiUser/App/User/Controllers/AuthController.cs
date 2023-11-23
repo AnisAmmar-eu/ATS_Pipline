@@ -19,8 +19,7 @@ namespace ApiUser.App.User.Controllers;
 /// </summary>
 // TODO Remove this weird inheritance by creating a parent class to BaseEndpoint (such as BaseController?) which
 // TODO implements the generic controllers. Might even be an interface with static methods.
-public class AuthController : BaseEndpoint<BaseEntity, DTOBaseEntity, IServiceBaseEntity<BaseEntity, DTOBaseEntity>>,
-	ICarterModule
+public class AuthController : BaseController, ICarterModule
 {
 	/// <summary>
 	///	Add Routes from CarterModule

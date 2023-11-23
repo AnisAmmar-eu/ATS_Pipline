@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.System.Logs;
 using Core.Shared.Models.DTO.System.Logs;
 using Core.Shared.Repositories.System.Logs;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
-using Newtonsoft.Json;
 
 namespace Core.Shared.Services.System.Logs;
 
@@ -45,7 +45,7 @@ public class LogService : ServiceBaseEntity<ILogRepository, Log, DTOLog>, ILogSe
 			return;
 		using HttpClient httpClient = new();
 		StringContent content =
-			new(JsonConvert.SerializeObject(logs.ConvertAll(cycle => cycle.ToDTO())), Encoding.UTF8,
+			new(JsonSerializer.Serialize(logs.ConvertAll(cycle => cycle.ToDTO())), Encoding.UTF8,
 				"application/json");
 		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/logs", content);
 		if (response.IsSuccessStatusCode)

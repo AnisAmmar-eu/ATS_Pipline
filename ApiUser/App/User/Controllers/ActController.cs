@@ -17,7 +17,7 @@ namespace ApiUser.App.User.Controllers;
 /// <summary>
 ///     Acts Routes
 /// </summary>
-public class ActsController : BaseEndpoint<Act, DTOAct, IActService>, ICarterModule
+public class ActController : BaseEndpoint<Act, DTOAct, IActService>, ICarterModule
 {
 	/// <summary>
 	/// Add Routes from CarterModule
@@ -26,7 +26,7 @@ public class ActsController : BaseEndpoint<Act, DTOAct, IActService>, ICarterMod
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder
-			group = app.MapGroup("apiUser/acts").WithTags(nameof(ActsController)).RequireAuthorization();
+			group = app.MapGroup("apiUser/acts").WithTags(nameof(ActController)).RequireAuthorization();
 
 		group.MapPost("hasRights", HasRights);
 		group.MapPost("entity", GetActEntityWithRoles);

@@ -93,8 +93,8 @@ builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IActService, ActService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IRolesService, RolesService>();
-builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // System services
 builder.Services.AddScoped<ILogService, LogService>();

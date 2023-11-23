@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Entities.User.Services.Roles;
 
-public class RolesService : IRolesService
+public class RoleService : IRoleService
 {
 	private readonly IAnodeUOW _anodeUOW;
 	private readonly RoleManager<ApplicationRole> _roleManager;
 
-	public RolesService(IAnodeUOW anodeUOW, RoleManager<ApplicationRole> roleManager)
+	public RoleService(IAnodeUOW anodeUOW, RoleManager<ApplicationRole> roleManager)
 	{
 		_anodeUOW = anodeUOW;
 		_roleManager = roleManager;

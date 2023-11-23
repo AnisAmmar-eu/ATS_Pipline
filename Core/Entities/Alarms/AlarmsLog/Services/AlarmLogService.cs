@@ -1,16 +1,15 @@
 ﻿using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
-using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOF;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.SignalR.AlarmHub;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 
 namespace Core.Entities.Alarms.AlarmsLog.Services;
 
@@ -81,9 +80,9 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 		await _hubContext.Clients.All.RefreshAlarmLog();
 	}
 
-	public async Task<List<DTOFAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
+	public async Task<List<DTOAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
 	{
-		List<DTOFAlarmLog> ackAlarmLogs = new();
+		List<DTOAlarmLog> ackAlarmLogs = new();
 		await AnodeUOW.StartTransaction();
 		foreach (int idAlarmLog in idAlarmLogs)
 		{
@@ -94,7 +93,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 				});
 			alarmLogToAck.IsAck = true;
 			alarmLogToAck.TSRead = DateTime.Now;
-			ackAlarmLogs.Add(alarmLogToAck.ToDTOF());
+			ackAlarmLogs.Add(alarmLogToAck.ToDTO());
 		}
 
 		AnodeUOW.Commit();
@@ -105,18 +104,18 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 	}
 
 
-	public async Task<List<DTOFAlarmLog>> GetAllForFront()
+	public async Task<List<DTOAlarmLog>> GetAllForFront()
 	{
 		List<AlarmLog> allAlarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes();
-		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOF());
+		return allAlarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO());
 	}
 
-	public async Task<List<DTOFAlarmLog>> GetByClassID(int alarmID)
+	public async Task<List<DTOAlarmLog>> GetByClassID(int alarmID)
 	{
 		return (await AnodeUOW.AlarmLog.GetAllWithIncludes(new Expression<Func<AlarmLog, bool>>[]
 		{
 			alarmLog => alarmLog.AlarmID == alarmID
-		})).ConvertAll(alarmLog => alarmLog.ToDTOF());
+		})).ConvertAll(alarmLog => alarmLog.ToDTO());
 	}
 
 	public async Task<HttpResponseMessage> SendLogsToServer()
@@ -127,7 +126,7 @@ public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, 
 			{
 				alarmLog => !alarmLog.HasBeenSent
 			});
-		string jsonData = JsonConvert.SerializeObject(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTOS()));
+		string jsonData = JsonSerializer.Serialize(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 
 		using HttpClient httpClient = new();

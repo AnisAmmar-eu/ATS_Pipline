@@ -1,12 +1,12 @@
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Furnaces;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
-using Newtonsoft.Json;
 
 namespace Core.Entities.Packets.Models.DB.Furnaces;
 
@@ -36,7 +36,7 @@ public abstract partial class Furnace
 		if (s3S4Cycle.Status == PacketStatus.Sent)
 		{
 			using HttpClient httpClient = new();
-			StringContent content = new(JsonConvert.SerializeObject(ToDTO()), Encoding.UTF8, "application/json");
+			StringContent content = new(JsonSerializer.Serialize(ToDTO()), Encoding.UTF8, "application/json");
 			HttpResponseMessage response =
 				await httpClient.PostAsync($"{Station.ServerAddress}/apiServerReceive/furnacePackets", content);
 			if (response.IsSuccessStatusCode)

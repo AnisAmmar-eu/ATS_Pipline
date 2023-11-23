@@ -1,5 +1,4 @@
 using ApiCamera.Utils;
-using Azure;
 using Carter;
 using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.BI.BITemperatures.Services;
@@ -8,7 +7,6 @@ using Core.Entities.Packets.Dictionaries;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.Camera;
-using Core.Shared.Models.HttpResponse;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +26,9 @@ public class CameraApiController : ICarterModule
 		group.MapGet("{cameraID}/testImage", GetCameraTestImage);
 	}
 
-	private static IActionResult GetStatus()
+	private static Ok<ApiResponse> GetStatus()
 	{
-		return new ControllerResponseObject().SuccessResult();
+		return new ApiResponse().SuccessResult();
 	}
 
 	#region Acquisition
@@ -110,7 +108,7 @@ public class CameraApiController : ICarterModule
 			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 
-		httpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		httpContext.Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
 		return TypedResults.File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
 	}
 

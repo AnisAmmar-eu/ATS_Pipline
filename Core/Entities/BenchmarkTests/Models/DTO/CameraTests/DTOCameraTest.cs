@@ -11,7 +11,7 @@ public class DTOCameraTest : DTOBaseEntity, IDTO<CameraTest, DTOCameraTest>
 	public DTOCameraTest(CameraTest cameraTest)	: base(cameraTest)
 	{}
 
-	public CameraTest ToModel()
+	public override CameraTest ToModel()
 	{
 		throw new NotImplementedException();
 	}

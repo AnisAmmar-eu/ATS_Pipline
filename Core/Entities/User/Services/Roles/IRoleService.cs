@@ -2,7 +2,7 @@
 
 namespace Core.Entities.User.Services.Roles;
 
-public interface IRolesService
+public interface IRoleService
 {
 	Task<List<DTORole>> GetAll();
 	Task<DTORole> GetByRID(string rid);

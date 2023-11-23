@@ -4,7 +4,7 @@ using Core.Entities.User.Models.DTO.Users;
 
 namespace Core.Entities.User.Services.Users;
 
-public interface IUsersService
+public interface IUserService
 {
 	Task<List<DTOUser>> GetAll();
 	Task<DTOUser> GetByUsername(string username);

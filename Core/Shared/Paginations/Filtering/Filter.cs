@@ -123,7 +123,7 @@ public static class Filter
 		if (!isParsable)
 			throw new ArgumentException("Filter: Trying to parse a value which is not parsable.");
 
-		// Then it gets the Parse method through reflection still.
+		// Then it gets the Parse method through reflection.
 		// https://stackoverflow.com/questions/74501978/how-do-i-test-if-a-type-t-implements-iparsablet
 		MethodInfo? parse = type.GetMethods(BindingFlags.Static | BindingFlags.Public).FirstOrDefault(c =>
 			c.Name == "Parse" && c.GetParameters().Length == 2 &&

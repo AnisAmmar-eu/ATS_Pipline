@@ -1,8 +1,8 @@
 ﻿using System.Net;
+using System.Text.Json;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Core.Shared.Models.HttpResponse;
 
@@ -148,7 +148,7 @@ public class ControllerResponseObject
 				context.ActionDescriptor.ActionName,
 				context.ActionDescriptor.AttributeRouteInfo?.Template ?? "",
 				Status.Code,
-				JsonConvert.SerializeObject(Result)
+				JsonSerializer.Serialize(Result)
 			);
 		}
 		catch

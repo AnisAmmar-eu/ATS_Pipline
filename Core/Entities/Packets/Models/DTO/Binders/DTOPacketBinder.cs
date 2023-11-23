@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
@@ -8,7 +9,6 @@ using Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
 
 namespace Core.Entities.Packets.Models.DTO.Binders;
 
@@ -22,11 +22,11 @@ public class DTOPacketBinder : IModelBinder
 
 			string json = await new StreamReader(stream).ReadToEndAsync();
 
-			DTOPacket packet = JsonConvert.DeserializeObject<DTOPacket>(json)!;
+			DTOPacket packet = JsonSerializer.Deserialize<DTOPacket>(json)!;
 			Type dtoType = GetDTOType(packet.Type);
-			object? formatedModel = JsonConvert.DeserializeObject(json, dtoType);
+			object? formattedModel = JsonSerializer.Deserialize(json, dtoType);
 
-			bindingContext.Result = ModelBindingResult.Success(formatedModel);
+			bindingContext.Result = ModelBindingResult.Success(formattedModel);
 		}
 		catch
 		{

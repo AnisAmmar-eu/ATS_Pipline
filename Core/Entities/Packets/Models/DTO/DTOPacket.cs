@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Core.Entities.Packets.Models.DTO;
 
-[ModelBinder(typeof(DTOPacketBinder))]
-public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
+public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>, IExtensionBinder<DTOPacket>
 {
 	public string StationCycleRID { get; set; }
 	public string Status { get; set; }

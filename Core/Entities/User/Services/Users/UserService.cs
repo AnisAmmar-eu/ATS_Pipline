@@ -12,13 +12,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace Core.Entities.User.Services.Users;
 
-public class UsersService : IUsersService
+public class UserService : IUserService
 {
 	private readonly IConfiguration _configuration;
 	private readonly RoleManager<ApplicationRole> _roleManager;
 	private readonly UserManager<ApplicationUser> _userManager;
 
-	public UsersService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,
+	public UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,
 		IConfiguration configuration)
 	{
 		_userManager = userManager;

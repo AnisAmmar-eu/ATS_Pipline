@@ -1,14 +1,9 @@
 using System.Collections.Specialized;
-using System.Net;
-using System.Web;
 using Core.Entities.User.Models.DTO.Acts;
 using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
-using Core.Shared.Models.ApiResponses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 
 namespace Core.Shared.Authorize;
 

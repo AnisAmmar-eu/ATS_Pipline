@@ -1,13 +1,12 @@
 ﻿using System.Net;
 using System.Reflection;
+using System.Text.Json;
 using Core.Shared.Exceptions;
 using Core.Shared.Models.ApiResponses.ApiStatuses;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Metadata;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Newtonsoft.Json;
 
 namespace Core.Shared.Models.ApiResponses;
 
@@ -139,7 +138,7 @@ public partial class ApiResponse
 				methodInfo.Name,
 				endpoint.Metadata.GetRequiredMetadata<IRouteDiagnosticsMetadata>().Route,
 				Status.Code,
-				JsonConvert.SerializeObject(Result)
+				JsonSerializer.Serialize(Result)
 			);
 		}
 		catch

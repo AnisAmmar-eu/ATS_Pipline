@@ -1,11 +1,11 @@
 using System.Text;
+using System.Text.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Repositories;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
-using Newtonsoft.Json;
 
 namespace Core.Entities.Packets.Services;
 
@@ -31,7 +31,7 @@ public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPac
 	{
 		List<Packet> packets = await AnodeUOW.Packet.GetAll();
 		const string api2Url = "https://localhost:7207/apiServerReceive/packets";
-		string jsonData = JsonConvert.SerializeObject(packets.ConvertAll(packet => packet.ToDTO()));
+		string jsonData = JsonSerializer.Serialize(packets.ConvertAll(packet => packet.ToDTO()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 
 		using (HttpClient httpClient = new())

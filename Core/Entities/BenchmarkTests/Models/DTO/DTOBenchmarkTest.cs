@@ -8,8 +8,9 @@ namespace Core.Entities.BenchmarkTests.Models.DTO;
 
 public class DTOBenchmarkTest : DTOBaseEntity, IDTO<BenchmarkTest, DTOBenchmarkTest>
 {
-	public DTOBenchmarkTest()
+	public DTOBenchmarkTest(DTOCameraTest cameraTest)
 	{
+		CameraTest = cameraTest;
 	}
 
 	public DTOBenchmarkTest(BenchmarkTest benchmarkTest) : base(benchmarkTest)

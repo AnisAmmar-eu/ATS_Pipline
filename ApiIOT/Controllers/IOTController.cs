@@ -1,5 +1,7 @@
 using Carter;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.HttpResponse;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiIOT.Controllers;
@@ -11,8 +13,8 @@ public class IOTController : ICarterModule
 		app.MapGroup("apiIOT").WithTags(nameof(IOTController)).MapGet("status", GetStatus);
 	}
 
-	private static IActionResult GetStatus()
+	private static Ok<ApiResponse> GetStatus()
 	{
-		return new ControllerResponseObject().SuccessResult();
+		return new ApiResponse().SuccessResult();
 	}
 }

@@ -3,13 +3,12 @@ using Carter;
 using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
-using Core.Entities.Alarms.AlarmsLog.Models.DTO.DTOS;
+using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Furnaces;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DTO;
-using Core.Entities.StationCycles.Models.DTO.Binders;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
@@ -24,8 +23,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiServerReceive.Controllers.Transfer;
 
-public class ReceiveController : BaseEndpoint<BaseEntity, DTOBaseEntity, IServiceBaseEntity<BaseEntity, DTOBaseEntity>>,
-	ICarterModule
+public class ReceiveController : BaseController, ICarterModule
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
@@ -37,7 +35,8 @@ public class ReceiveController : BaseEndpoint<BaseEntity, DTOBaseEntity, IServic
 		group.MapPost("alarmsLog", ReceiveAlarmLog);
 		group.MapPost("packets", ReceivePacket);
 		group.MapPost("furnacePackets", ReceiveFurnacePacketForStationCycle);
-		group.MapPost("stationCycles", ReceiveStationCycle);
+		// This one needs more information due to CustomModelBinding requiring the removal of [FromBody]
+		group.MapPost("stationCycles", ReceiveStationCycle).Accepts<DTOStationCycle>("application/json").WithOpenApi();
 		group.MapPost("images", ReceiveImage);
 		group.MapPost("logs", ReceiveLog);
 	}
@@ -48,12 +47,12 @@ public class ReceiveController : BaseEndpoint<BaseEntity, DTOBaseEntity, IServic
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(
-		[FromBody] [Required] List<DTOSAlarmLog> dtoAlarmLogs, IAlarmCService alarmCService,
+		[FromBody] [Required] List<DTOAlarmLog> dtoAlarmLogs, IAlarmCService alarmCService,
 		IAlarmLogService alarmLogService, ILogService logService, HttpContext httpContext)
 	{
 		return await GenericControllerEmptyResponse(async () =>
 		{
-			foreach (DTOSAlarmLog alarmLog in dtoAlarmLogs)
+			foreach (DTOAlarmLog alarmLog in dtoAlarmLogs)
 			{
 				DTOAlarmC newAlarmC = await alarmCService.GetByRID(alarmLog.AlarmRID);
 
@@ -98,12 +97,11 @@ public class ReceiveController : BaseEndpoint<BaseEntity, DTOBaseEntity, IServic
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> ReceiveStationCycle(
-		[FromBody] [Required] [ModelBinder(typeof(DTOStationCycleListBinder))]
-		List<DTOStationCycle> dtoStationCycles,
+		DTOStationCycle dtoStationCycles,
 		IStationCycleService stationCycleService, ILogService logService, HttpContext httpContext)
 	{
 		return await GenericControllerEmptyResponse(
-			async () => await stationCycleService.ReceiveStationCycles(dtoStationCycles), logService, httpContext);
+			async () => await stationCycleService.ReceiveStationCycle(dtoStationCycles), logService, httpContext);
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> ReceiveImage(IStationCycleService stationCycleService,

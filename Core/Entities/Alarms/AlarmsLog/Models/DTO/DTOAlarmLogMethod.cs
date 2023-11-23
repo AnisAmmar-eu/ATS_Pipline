@@ -1,23 +1,27 @@
-﻿using Core.Entities.Alarms.AlarmsLog.Models.DB;
+﻿using Core.Entities.Alarms.AlarmsC.Models.DTO;
+using Core.Entities.Alarms.AlarmsLog.Models.DB;
 
 namespace Core.Entities.Alarms.AlarmsLog.Models.DTO;
 
 public partial class DTOAlarmLog
 {
-	public DTOAlarmLog()
+	public DTOAlarmLog(DTOAlarmC alarm)
 	{
+		Alarm = alarm;
 		TS = DateTime.Now;
 		IsAck = false;
 	}
 
 
-	public DTOAlarmLog(AlarmLog alarmLog)
+	public DTOAlarmLog(AlarmLog alarmLog) : base(alarmLog)
 	{
-		ID = alarmLog.ID;
-		TS = alarmLog.TS;
 		StationID = alarmLog.StationID;
 		IsAck = alarmLog.IsAck;
 		IsActive = alarmLog.IsActive;
+		HasBeenSent = alarmLog.HasBeenSent;
+		AlarmID = alarmLog.AlarmID;
+		AlarmRID = alarmLog.Alarm.RID;
+		Alarm = alarmLog.Alarm.ToDTO();
 		TSRaised = alarmLog.TSRaised;
 		TSClear = alarmLog.TSClear;
 		Duration = alarmLog.Duration;

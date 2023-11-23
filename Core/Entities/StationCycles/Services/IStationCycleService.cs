@@ -13,8 +13,7 @@ public interface IStationCycleService : IServiceBaseEntity<StationCycle, DTOStat
 	public Task<List<StationCycle>> GetAllReadyToSent();
 	public Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera);
 	public Task UpdateDetectionWithMeasure(StationCycle stationCycle);
-	public Task SendStationCycles(List<StationCycle> stationCycles, string address);
-	public Task SendStationImages(List<StationCycle> stationCycles);
-	public Task ReceiveStationCycles(List<DTOStationCycle> dtoStationCycles);
+	public Task SendStationCycle(StationCycle stationCycle, string address);
+	public Task ReceiveStationCycle(DTOStationCycle dtoStationCycle);
 	public Task ReceiveStationImage(IFormFileCollection formFiles);
 }

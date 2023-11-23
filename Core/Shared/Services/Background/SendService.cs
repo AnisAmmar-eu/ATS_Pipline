@@ -1,3 +1,4 @@
+using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Dictionaries;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,8 +33,11 @@ public class SendService : BackgroundService
 			{
 				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling SendStationCycle");
-				await stationCycleService.SendStationCycles(await stationCycleService.GetAllReadyToSent(),
-					Station.ServerAddress);
+				List<StationCycle> stationCycles = await stationCycleService.GetAllReadyToSent();
+				foreach (StationCycle stationCycle in stationCycles)
+				{
+					await stationCycleService.SendStationCycle(stationCycle, Station.ServerAddress);
+				}
 
 				_executionCount++;
 				_logger.LogInformation(

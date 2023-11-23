@@ -14,8 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiStationCycle.Controllers;
 
-[ApiController]
-[Route("apiStationCycle")]
 public class StationCycleController : BaseEndpoint<StationCycle, DTOStationCycle, IStationCycleService>, ICarterModule
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
@@ -62,14 +60,14 @@ public class StationCycleController : BaseEndpoint<StationCycle, DTOStationCycle
 		{
 			FileInfo imageFile = await stationCycleService.GetImagesFromIDAndCamera(id, cameraNb);
 			ts = imageFile.CreationTime;
-			image = await System.IO.File.ReadAllBytesAsync(imageFile.FullName);
+			image = await File.ReadAllBytesAsync(imageFile.FullName);
 		}
 		catch (Exception e)
 		{
 			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
 		}
 
-		httpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+		httpContext.Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
 		return TypedResults.File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
 	}
 }
