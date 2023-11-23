@@ -16,13 +16,13 @@ public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAla
 	/// <summary>
 	///     Search for an AlarmC based on its RID.
 	/// </summary>
-	/// <param name="RID"></param>
+	/// <param name="rid"></param>
 	/// <returns></returns>
-	public async Task<DTOAlarmC> GetByRID(string RID)
+	public async Task<DTOAlarmC> GetByRID(string rid)
 	{
 		return (await AnodeUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[]
 		{
-			alarm => alarm.RID == RID
+			alarm => alarm.RID == rid
 		})).ToDTO();
 	}
 }

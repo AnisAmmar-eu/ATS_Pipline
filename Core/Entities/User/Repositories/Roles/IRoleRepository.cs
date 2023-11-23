@@ -1,5 +1,3 @@
 ﻿namespace Core.Entities.User.Repositories.Roles;
 
-public interface IRoleRepository
-{
-}
+public interface IRoleRepository;

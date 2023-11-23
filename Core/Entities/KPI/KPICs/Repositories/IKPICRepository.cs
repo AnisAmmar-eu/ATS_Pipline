@@ -4,6 +4,4 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.KPI.KPICs.Repositories;
 
-public interface IKPICRepository : IRepositoryBaseEntity<KPIC, DTOKPIC>
-{
-}
+public interface IKPICRepository : IRepositoryBaseEntity<KPIC, DTOKPIC>;

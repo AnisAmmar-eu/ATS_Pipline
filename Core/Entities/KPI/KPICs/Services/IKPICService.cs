@@ -4,6 +4,4 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.KPI.KPICs.Services;
 
-public interface IKPICService : IServiceBaseEntity<KPIC, DTOKPIC>
-{
-}
+public interface IKPICService : IServiceBaseEntity<KPIC, DTOKPIC>;

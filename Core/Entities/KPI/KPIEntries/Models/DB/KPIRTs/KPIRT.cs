@@ -3,6 +3,4 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
 
-public partial class KPIRT : KPIEntry, IBaseEntity<KPIRT, DTOKPIRT>
-{
-}
+public partial class KPIRT : KPIEntry, IBaseEntity<KPIRT, DTOKPIRT>;

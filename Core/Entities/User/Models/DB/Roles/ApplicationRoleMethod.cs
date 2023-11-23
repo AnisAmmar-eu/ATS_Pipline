@@ -12,7 +12,7 @@ public partial class ApplicationRole
 	public ApplicationRole(string rid)
 	{
 		Name = rid;
-		Type = ApplicationRoleType.USER;
+		Type = ApplicationRoleType.User;
 	}
 
 	public DTORole ToDTO()

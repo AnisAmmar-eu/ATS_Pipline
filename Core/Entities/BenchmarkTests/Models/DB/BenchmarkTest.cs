@@ -35,12 +35,12 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 
 	#region NavProperties
 
-	private CameraTest? _cameraTest { get; set; }
+	private CameraTest? CameraTestSub { get; set; }
 
 	public CameraTest CameraTest
 	{
-		set => _cameraTest = value;
-		get => _cameraTest ?? throw new InvalidOperationException("Uninitialized property: " + nameof(CameraTest));
+		set => CameraTestSub = value;
+		get => CameraTestSub ?? throw new InvalidOperationException("Uninitialized property: " + nameof(CameraTest));
 	}
 
 	#endregion

@@ -10,7 +10,7 @@ public partial class ApplicationUser
 {
 	public ApplicationUser()
 	{
-		Source = SourceAuth.EKIDI;
+		Source = SourceAuth.Ekidi;
 	}
 
 	public ApplicationUser(DTORegister dto)
@@ -19,7 +19,7 @@ public partial class ApplicationUser
 		Firstname = dto.Firstname;
 		Lastname = dto.Lastname;
 		IsEkium = true;
-		Source = SourceAuth.EKIDI;
+		Source = SourceAuth.Ekidi;
 	}
 
 	[SupportedOSPlatform("windows")]

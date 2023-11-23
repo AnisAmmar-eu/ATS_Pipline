@@ -5,15 +5,15 @@ namespace Core.Shared.Models.TwinCat;
 
 public static class TwinCatConnectionManager
 {
-	private static readonly AdsClient _tcClient = new();
+	private static readonly AdsClient TcClient = new();
 
 	public static AdsClient Connect(int port)
 	{
-		if (_tcClient.IsConnected)
-			return _tcClient;
-		_tcClient.Connect(port);
-		if (!_tcClient.IsConnected)
+		if (TcClient.IsConnected)
+			return TcClient;
+		TcClient.Connect(port);
+		if (!TcClient.IsConnected)
 			throw new AdsException("Could not connect to the automaton");
-		return _tcClient;
+		return TcClient;
 	}
 }

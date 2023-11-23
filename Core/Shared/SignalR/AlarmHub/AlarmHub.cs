@@ -1,5 +1,3 @@
 namespace Core.Shared.SignalR.AlarmHub;
 
-public class AlarmHub : BaseHub<IAlarmHub>
-{
-}
+public class AlarmHub : BaseHub<IAlarmHub>;

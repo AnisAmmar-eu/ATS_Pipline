@@ -29,7 +29,7 @@ public class ActController : BaseEndpoint<Act, DTOAct, IActService>, ICarterModu
 		group.MapPost("hasRights", HasRights);
 		group.MapPost("entity", GetActEntityWithRoles);
 		group.MapPost("list", GetActEntitiesStatusFromList);
-		group.MapPut("assign", AssignActionsFromList).RequireAuthorization(ActionRID.ADMIN_GENERAL_RIGHTS);
+		group.MapPut("assign", AssignActionsFromList).RequireAuthorization(ActionRID.AdminGeneralRights);
 	}
 
 	// POST apiUser/acts/hasRights

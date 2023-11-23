@@ -7,7 +7,7 @@ public partial class DTOActEntityRole
 {
 	public DTOActEntityRole()
 	{
-		Type = ApplicationTypeRID.USER;
+		Type = ApplicationTypeRID.User;
 	}
 
 	public DTOActEntityRole(ActEntityRole actEntityRole)

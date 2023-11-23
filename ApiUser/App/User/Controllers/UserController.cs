@@ -25,7 +25,7 @@ public class UserController : BaseController, ICarterModule
 	{
 		RouteGroupBuilder group = app.MapGroup("apiUser/users").WithTags(nameof(UserController));
 
-		group.MapPut("{username}/admin", SetAdmin).RequireAuthorization(ActionRID.ADMIN_GENERAL_RIGHTS);
+		group.MapPut("{username}/admin", SetAdmin).RequireAuthorization(ActionRID.AdminGeneralRights);
 		group.MapGet("ad", GetAllFromAD);
 		group.MapGet("", GetAll);
 		group.MapGet("username/{username}", GetByUsername);

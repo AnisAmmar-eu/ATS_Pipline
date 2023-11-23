@@ -1,5 +1,3 @@
 namespace Core.Shared.SignalR.StationCycleHub;
 
-public class StationCycleHub : BaseHub<IStationCycleHub>
-{
-}
+public class StationCycleHub : BaseHub<IStationCycleHub>;

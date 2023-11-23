@@ -106,8 +106,8 @@ builder.Services.AddCarter();
 
 builder.Services.AddAuthorization(options =>
 {
-	options.AddPolicy(ActionRID.ADMIN_GENERAL_RIGHTS,
-		policy => policy.AddRequirements(new ActAuthorize(ActionRID.ADMIN_GENERAL_RIGHTS)));
+	options.AddPolicy(ActionRID.AdminGeneralRights,
+		policy => policy.AddRequirements(new ActAuthorize(ActionRID.AdminGeneralRights)));
 });
 
 builder.Services.AddScoped<IAuthorizationHandler, ActAuthorizeHandler>();

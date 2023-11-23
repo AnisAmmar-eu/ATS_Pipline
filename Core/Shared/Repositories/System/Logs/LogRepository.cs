@@ -14,12 +14,12 @@ public class LogRepository : RepositoryBaseEntity<AnodeCTX, Log, DTOLog>, ILogRe
 
 	public async Task<List<Log>> GetRange(int start, int nbItems)
 	{
-		return await _context.Log.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
+		return await Context.Log.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
 	}
 
 	public async Task DeleteAll()
 	{
-		_context.Log.RemoveRange(_context.Log);
-		await _context.SaveChangesAsync();
+		Context.Log.RemoveRange(Context.Log);
+		await Context.SaveChangesAsync();
 	}
 }

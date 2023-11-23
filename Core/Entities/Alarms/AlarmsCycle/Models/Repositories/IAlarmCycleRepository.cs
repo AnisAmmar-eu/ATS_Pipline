@@ -4,6 +4,4 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 
-public interface IAlarmCycleRepository : IRepositoryBaseEntity<AlarmCycle, DTOAlarmCycle>
-{
-}
+public interface IAlarmCycleRepository : IRepositoryBaseEntity<AlarmCycle, DTOAlarmCycle>;

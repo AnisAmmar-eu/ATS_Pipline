@@ -4,6 +4,4 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.Anodes.Services;
 
-public interface IAnodeService : IServiceBaseEntity<Anode, DTOAnode>
-{
-}
+public interface IAnodeService : IServiceBaseEntity<Anode, DTOAnode>;

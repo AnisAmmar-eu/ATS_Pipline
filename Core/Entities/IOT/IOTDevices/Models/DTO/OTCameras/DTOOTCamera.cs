@@ -3,6 +3,4 @@ using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 
-public partial class DTOOTCamera : DTOIOTDevice, IDTO<OTCamera, DTOOTCamera>
-{
-}
+public partial class DTOOTCamera : DTOIOTDevice, IDTO<OTCamera, DTOOTCamera>;

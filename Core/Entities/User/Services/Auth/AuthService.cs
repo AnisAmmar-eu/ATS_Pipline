@@ -56,9 +56,9 @@ public class AuthService : IAuthService
 			throw new EntityNotFoundException("Error during user creation.");
 
 		// Add Roles
-		if (dtoRegister.Roles != null && dtoRegister.Roles.Count > 0)
+		if (dtoRegister.Roles.Count > 0)
 		{
-			IdentityResult? roleTask = await _userManager.AddToRolesAsync(user, dtoRegister.Roles);
+			IdentityResult roleTask = await _userManager.AddToRolesAsync(user, dtoRegister.Roles);
 
 			if (roleTask.Succeeded == false)
 				throw new EntityNotFoundException("Error during roles association.");
@@ -112,7 +112,7 @@ public class AuthService : IAuthService
 		// Try register with all sources except EKIDI
 		foreach (string source in SourceAuth.GetSources())
 		{
-			if (source == SourceAuth.EKIDI)
+			if (source == SourceAuth.Ekidi)
 				continue;
 
 			ApplicationUser? user = source switch
@@ -146,7 +146,7 @@ public class AuthService : IAuthService
 
 		dynamic? confirmUser = user.Source switch
 		{
-			SourceAuth.EKIDI => await CheckCredentials(model),
+			SourceAuth.Ekidi => await CheckCredentials(model),
 			SourceAuth.AD => CheckCredentialsAD(model),
 			_ => throw new EntityNotFoundException("Source not found.")
 		};
@@ -224,7 +224,7 @@ public class AuthService : IAuthService
 			{
 				case null:
 					continue;
-				case { Type: ApplicationRoleType.SYSTEM_FIVES or ApplicationRoleType.SYSTEM_ATS }:
+				case { Type: ApplicationRoleType.SystemFives or ApplicationRoleType.SystemATS }:
 					httpContext.Items["HasAdminRole"] = true;
 					break;
 			}
@@ -273,10 +273,7 @@ public class AuthService : IAuthService
 
 		ApplicationUser user = new(userData);
 
-		IdentityResult? IdentityResult = await _userManager.CreateAsync(user);
-		if (IdentityResult.Succeeded == false)
-			return null;
-
-		return user;
+		IdentityResult identityResult = await _userManager.CreateAsync(user);
+		return identityResult.Succeeded == false ? null : user;
 	}
 }

@@ -11,14 +11,14 @@ public partial class ActEntityRole
 	{
 		RID = "";
 		ApplicationID = "";
-		ApplicationType = ApplicationTypeRID.USER;
+		ApplicationType = ApplicationTypeRID.User;
 	}
 
 	public ActEntityRole(ActEntity actEntity, ApplicationUser user)
 	{
 		RID = actEntity.RID + "." + actEntity.ID;
 		ActEntity = actEntity;
-		ApplicationType = ApplicationTypeRID.USER;
+		ApplicationType = ApplicationTypeRID.User;
 		ApplicationID = user.Id;
 	}
 
@@ -26,7 +26,7 @@ public partial class ActEntityRole
 	{
 		RID = actEntity.RID + "." + actEntity.ID;
 		ActEntity = actEntity;
-		ApplicationType = ApplicationTypeRID.ROLE;
+		ApplicationType = ApplicationTypeRID.Role;
 		ApplicationID = role.Id;
 	}
 

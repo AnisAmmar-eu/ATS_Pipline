@@ -13,19 +13,19 @@ public static class Station
 	{
 		set
 		{
-			if (_name != null)
+			if (NameSub != null)
 				throw new InvalidOperationException("Station name has already been defined.");
-			_name = value;
-			IsServer = _name == Server;
+			NameSub = value;
+			IsServer = NameSub == Server;
 			Type = StationNameToType();
 			ID = StationNameToID();
 		}
-		get => _name ?? throw new InvalidOperationException("Station name has not been defined.");
+		get => NameSub ?? throw new InvalidOperationException("Station name has not been defined.");
 	}
 
 	public static bool IsServer { get; private set; }
 
-	private static string? _name { get; set; }
+	private static string? NameSub { get; set; }
 
 	public static StationType Type { get; private set; }
 
@@ -35,14 +35,14 @@ public static class Station
 	{
 		set
 		{
-			if (_serverAddress != null)
+			if (ServerAddressSub != null)
 				throw new InvalidOperationException("Station serverAddress has already been defined.");
-			_serverAddress = value;
+			ServerAddressSub = value;
 		}
-		get => _serverAddress ?? throw new InvalidOperationException("Station serverAddress has not been defined.");
+		get => ServerAddressSub ?? throw new InvalidOperationException("Station serverAddress has not been defined.");
 	}
 
-	private static string? _serverAddress { get; set; }
+	private static string? ServerAddressSub { get; set; }
 
 
 	private static StationType StationNameToType()

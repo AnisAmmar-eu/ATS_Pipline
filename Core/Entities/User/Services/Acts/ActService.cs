@@ -97,17 +97,17 @@ public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActSe
 		else
 			switch (actEntity.SignatureType)
 			{
-				case SignatureTypeRID.EXPLICIT:
+				case SignatureTypeRID.Explicit:
 					dtoActEntityStatus.Visible = true;
 					break;
-				case SignatureTypeRID.SESSION:
+				case SignatureTypeRID.Session:
 					if (actEntity.ActEntityRoles.Count == 0)
 						dtoActEntityStatus.Visible = true;
 					else
 						dtoActEntityStatus.Visible = actEntity.ActEntityRoles.Any(aer =>
-							aer.ApplicationType == ApplicationTypeRID.ROLE
+							aer.ApplicationType == ApplicationTypeRID.Role
 								? userRolesID != null && userRolesID.Contains(aer.ApplicationID)
-								: aer.ApplicationType == ApplicationTypeRID.USER && aer.ApplicationID == userId
+								: aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId
 						);
 					break;
 				default:
@@ -149,8 +149,8 @@ public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActSe
 		{
 			string? applicationName = actEntityRole.ApplicationType switch
 			{
-				ApplicationTypeRID.ROLE => (await _rolesManager.FindByIdAsync(actEntityRole.ApplicationID))?.Name,
-				ApplicationTypeRID.USER => (await _usersManager.FindByIdAsync(actEntityRole.ApplicationID))?.UserName,
+				ApplicationTypeRID.Role => (await _rolesManager.FindByIdAsync(actEntityRole.ApplicationID))?.Name,
+				ApplicationTypeRID.User => (await _usersManager.FindByIdAsync(actEntityRole.ApplicationID))?.UserName,
 				_ => null
 			};
 
@@ -207,7 +207,7 @@ public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActSe
 
 			actEntity.SignatureType = signatureType;
 
-			if (actEntity.ActEntityRoles != null && remove)
+			if (remove)
 				actEntity.ActEntityRoles.Clear();
 
 			AnodeUOW.ActEntities.Update(actEntity);
@@ -217,13 +217,11 @@ public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActSe
 
 		switch (signatureType)
 		{
-			case SignatureTypeRID.SESSION:
-			case SignatureTypeRID.EXPLICIT:
-				if (dtoActEntity.Applications == null)
-					break;
-				if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.ROLE))
+			case SignatureTypeRID.Session:
+			case SignatureTypeRID.Explicit:
+				if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.Role))
 					foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
-						         a.Type == ApplicationTypeRID.ROLE))
+						         a.Type == ApplicationTypeRID.Role))
 					{
 						ApplicationRole? role = await _rolesManager.FindByNameAsync(application.Name ?? string.Empty);
 						if (role == null)
@@ -232,9 +230,9 @@ public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActSe
 						actEntity.ActEntityRoles?.Add(new ActEntityRole(actEntity, role));
 					}
 
-				if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.USER))
+				if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.User))
 					foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
-						         a.Type == ApplicationTypeRID.USER))
+						         a.Type == ApplicationTypeRID.User))
 					{
 						ApplicationUser? user = await _usersManager.FindByNameAsync(application.Name ?? string.Empty);
 						if (user == null)
@@ -394,39 +392,31 @@ public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActSe
 		else
 			switch (actEntity.SignatureType)
 			{
-				case SignatureTypeRID.SESSION:
+				case SignatureTypeRID.Session:
 					if (actEntity.ActEntityRoles.Count == 0)
 						authorized = true;
 					else
-						authorized = actEntity.ActEntityRoles.Any(aer => aer.ApplicationType == ApplicationTypeRID.ROLE
+						authorized = actEntity.ActEntityRoles.Any(aer => aer.ApplicationType == ApplicationTypeRID.Role
 							? userRolesID != null && userRolesID.Contains(aer.ApplicationID)
-							: aer.ApplicationType == ApplicationTypeRID.USER && aer.ApplicationID == userId
+							: aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId
 						);
 					break;
-				case SignatureTypeRID.EXPLICIT:
+				case SignatureTypeRID.Explicit:
 					// Check credentials inside DTOAct -> role match with action entity roles
-					if (dtoActEntityToValid.Login != null && dtoActEntityToValid.Login.Username != null &&
-					    dtoActEntityToValid.Login.Password != null)
+					if (dtoActEntityToValid.Login != null)
 					{
-						ApplicationUser? otherUser = await _authService.CheckCredentials(dtoActEntityToValid.Login);
-						if (otherUser != null)
-						{
-							List<string> rolesId = await _authService.GetRolesIdFromUser(otherUser, httpContext);
+						ApplicationUser otherUser = await _authService.CheckCredentials(dtoActEntityToValid.Login);
+						List<string> rolesId = await _authService.GetRolesIdFromUser(otherUser, httpContext);
 
-							if (httpContext.Items.ContainsKey("HasAdminRole") &&
-							    (bool?)httpContext.Items["HasAdminRole"] == true)
-								authorized = true;
-							else
-								authorized = actEntity.ActEntityRoles.Any(aer =>
-									(rolesId.Contains(aer.ApplicationID) &&
-									 aer.ApplicationType == ApplicationTypeRID.ROLE)
-									|| (aer.ApplicationID == otherUser.Id &&
-									    aer.ApplicationType == ApplicationTypeRID.USER));
-						}
+						if (httpContext.Items.ContainsKey("HasAdminRole") &&
+						    (bool?)httpContext.Items["HasAdminRole"] == true)
+							authorized = true;
 						else
-						{
-							authorized = false;
-						}
+							authorized = actEntity.ActEntityRoles.Any(aer =>
+								(rolesId.Contains(aer.ApplicationID) &&
+								 aer.ApplicationType == ApplicationTypeRID.Role)
+								|| (aer.ApplicationID == otherUser.Id &&
+								    aer.ApplicationType == ApplicationTypeRID.User));
 					}
 
 					break;

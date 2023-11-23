@@ -22,8 +22,8 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	where TDTO : class, IDTO<T, TDTO>
 	where TContext : DbContext
 {
-	protected TContext _context;
-	protected ICollection<Expression<Func<T, bool>>> _importFilters = new List<Expression<Func<T, bool>>>();
+	protected readonly TContext Context;
+	private readonly ICollection<Expression<Func<T, bool>>> _importFilters = new List<Expression<Func<T, bool>>>();
 
 	/// <summary>
 	///     Constructor
@@ -31,7 +31,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <param name="context"><see cref="DbContext" /> of the project</param>
 	public RepositoryBaseEntity(TContext context)
 	{
-		_context = context;
+		Context = context;
 	}
 
 	/// <summary>
@@ -150,7 +150,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 		// No tracking as this is used for back to front purposes and thus useless.
 		// First line is aggregating every include
 		IOrderedQueryable<T> query = pagination.Includes
-			.Aggregate(_context.Set<T>()
+			.Aggregate(Context.Set<T>()
 				.AsQueryable(), (current, value) => current.Include(value))
 			.AsNoTracking()
 			.FilterFromPagination<T, TDTO>(pagination, lastID).SortFromPagination<T, TDTO>(pagination);
@@ -166,7 +166,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns></returns>
 	public async Task<List<T>> Find(Expression<Func<T, bool>> expression)
 	{
-		return await _context.Set<T>().Where(expression).ToListAsync();
+		return await Context.Set<T>().Where(expression).ToListAsync();
 	}
 
 	/// <summary>
@@ -176,7 +176,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns></returns>
 	public async Task Add(T entity)
 	{
-		await _context.Set<T>().AddAsync(entity);
+		await Context.Set<T>().AddAsync(entity);
 	}
 
 	/// <summary>
@@ -186,7 +186,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns>The entity <see cref="T" /> saved in the database</returns>
 	public async Task<T> AddAndReturn(T entity)
 	{
-		await _context.Set<T>().AddAsync(entity);
+		await Context.Set<T>().AddAsync(entity);
 		return entity;
 	}
 
@@ -197,7 +197,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns></returns>
 	public async Task AddRange(IEnumerable<T> entities)
 	{
-		await _context.Set<T>().AddRangeAsync(entities);
+		await Context.Set<T>().AddRangeAsync(entities);
 	}
 
 	/// <summary>
@@ -207,7 +207,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns></returns>
 	public void Remove(T entity)
 	{
-		_context.Set<T>().Remove(entity);
+		Context.Set<T>().Remove(entity);
 	}
 
 	/// <summary>
@@ -218,13 +218,13 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns></returns>
 	public async Task Remove(int id, params string[] includes)
 	{
-		IQueryable<T> query = _context.Set<T>().AsQueryable();
+		IQueryable<T> query = Context.Set<T>().AsQueryable();
 		query = includes.Aggregate(query, (current, include) => current.Include(include));
 		T? entity = await query.FirstOrDefaultAsync(x => x.ID == id);
 		if (entity == null)
 			throw new EntityNotFoundException(typeof(T).Name, id);
 
-		_context.Set<T>().Remove(entity);
+		Context.Set<T>().Remove(entity);
 	}
 
 	/// <summary>
@@ -234,7 +234,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns></returns>
 	public void RemoveRange(IEnumerable<T> entities)
 	{
-		_context.Set<T>().RemoveRange(entities);
+		Context.Set<T>().RemoveRange(entities);
 	}
 
 	/// <summary>
@@ -244,7 +244,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	/// <returns>The updated entity <see cref="T" /></returns>
 	public T Update(T entity)
 	{
-		_context.Set<T>().Update(entity);
+		Context.Set<T>().Update(entity);
 		return entity;
 	}
 
@@ -256,7 +256,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	public T[] UpdateArray(T[] entities)
 	{
 		foreach (T entity in entities)
-			_context.Set<T>().Update(entity);
+			Context.Set<T>().Update(entity);
 		return entities;
 	}
 
@@ -285,7 +285,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 		Dictionary<string, string[]>? includes = null
 	)
 	{
-		IQueryable<T> query = _context.Set<T>().AsQueryable();
+		IQueryable<T> query = Context.Set<T>().AsQueryable();
 		if (includes != null)
 		{
 			foreach (KeyValuePair<string, string[]> include in includes)

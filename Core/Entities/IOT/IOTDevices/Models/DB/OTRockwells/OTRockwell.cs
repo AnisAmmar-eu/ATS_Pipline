@@ -3,6 +3,4 @@ using Core.Shared.Models.DB.Kernel.Interfaces;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTRockwells;
 
-public partial class OTRockwell : IOTDevice, IBaseEntity<OTRockwell, DTOOTRockwell>
-{
-}
+public partial class OTRockwell : IOTDevice, IBaseEntity<OTRockwell, DTOOTRockwell>;

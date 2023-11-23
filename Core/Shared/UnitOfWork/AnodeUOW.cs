@@ -63,7 +63,7 @@ public class AnodeUOW : IAnodeUOW
 
 		Acts = new ActRepository(_anodeCTX);
 		ActEntities = new ActEntityRepository(_anodeCTX);
-		Roles = new RoleRepository(_anodeCTX);
+		Roles = new RoleRepository();
 
 		FileSetting = new FileSettingRepository(_anodeCTX);
 	}

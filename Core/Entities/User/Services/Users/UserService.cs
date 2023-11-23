@@ -120,7 +120,7 @@ public class UserService : IUserService
 		if (user == null)
 			throw new EntityNotFoundException("User [" + username + "] does not exist");
 
-		IList<string>? rolesName = await _userManager.GetRolesAsync(user);
+		IList<string> rolesName = await _userManager.GetRolesAsync(user);
 
 		return await _roleManager.Roles
 			.Where(r => r.Name != null && rolesName.Contains(r.Name))
@@ -162,11 +162,11 @@ public class UserService : IUserService
 		await _userManager.UpdateAsync(user);
 
 		// Get all rolesName
-		IList<string>? rolesName = await _userManager.GetRolesAsync(user);
+		IList<string> rolesName = await _userManager.GetRolesAsync(user);
 
 		// Remove admin role in rolesName
 		rolesName.Remove(RoleNames.ATS);
-		rolesName.Remove(RoleNames.FIVES);
+		rolesName.Remove(RoleNames.Fives);
 
 		// Remove all roles
 		await _userManager.RemoveFromRolesAsync(user, rolesName);
@@ -194,8 +194,8 @@ public class UserService : IUserService
 			throw new EntityNotFoundException("User [" + username + "] does not exist");
 
 		bool result = toAdmin
-			? (await _userManager.AddToRoleAsync(user, RoleNames.FIVES)).Succeeded
-			: (await _userManager.RemoveFromRoleAsync(user, RoleNames.FIVES)).Succeeded;
+			? (await _userManager.AddToRoleAsync(user, RoleNames.Fives)).Succeeded
+			: (await _userManager.RemoveFromRoleAsync(user, RoleNames.Fives)).Succeeded;
 
 		return result;
 	}
@@ -235,7 +235,7 @@ public class UserService : IUserService
 		if (user == null)
 			throw new EntityNotFoundException("User [" + username + "] does not exist");
 
-		string? token = await _userManager.GeneratePasswordResetTokenAsync(user);
+		string token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
 		await _userManager.ResetPasswordAsync(user, token, newPassword);
 	}
@@ -257,7 +257,7 @@ public class UserService : IUserService
 		if (user == null)
 			throw new EntityNotFoundException("User [" + username + "] does not exist");
 
-		IdentityResult? result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+		IdentityResult result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
 		if (!result.Succeeded)
 			throw new Exception("Current password is incorrect");
@@ -277,7 +277,7 @@ public class UserService : IUserService
 
 		if (user == null) throw new EntityNotFoundException("User does not exist");
 
-		string? token = await _userManager.GeneratePasswordResetTokenAsync(user);
+		string token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
 		// Generate a random new password
 		string newPassword = Guid.NewGuid().ToString()[..8];
@@ -291,21 +291,14 @@ public class UserService : IUserService
 	[SupportedOSPlatform("windows")]
 	public List<DTOUser> GetAllFromAD()
 	{
-		List<DTOUser> dtoUsers = new();
 		PrincipalContext adContext = new(ContextType.Domain, _configuration["AdHost"],
 			"OU=Bron,OU=Utilisateurs,OU=Ekium,DC=ekium,DC=lan");
 
-		using (PrincipalSearcher searcher = new(new UserPrincipal(adContext)))
-		{
-			foreach (UserPrincipal user in searcher.FindAll().OrderBy(x => x.SamAccountName))
-				dtoUsers.Add(new DTOUser
-				{
-					Username = user.SamAccountName,
-					Firstname = user.GivenName,
-					Lastname = user.Surname
-				});
-		}
+		using PrincipalSearcher searcher = new(new UserPrincipal(adContext));
 
-		return dtoUsers;
+		return (from UserPrincipal user in searcher.FindAll().OrderBy(x => x.SamAccountName)
+				select new DTOUser
+					{ Username = user.SamAccountName, Firstname = user.GivenName, Lastname = user.Surname })
+			.ToList();
 	}
 }

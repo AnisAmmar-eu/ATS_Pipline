@@ -21,13 +21,13 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 	where TDTO : class, IDTO<T, TDTO>
 	where TService : IServiceBaseEntity<T, TDTO>
 {
-	private string[] Includes = { };
+	private string[] _includes = { };
 
 	protected void MapBaseEndpoints(RouteGroupBuilder group, BaseEndpointFlags flags, params string[] includes)
 	{
 		string dtoName = typeof(TDTO).Name;
 		string tName = typeof(T).Name;
-		Includes = includes;
+		_includes = includes;
 		if ((flags & BaseEndpointFlags.Create) == BaseEndpointFlags.Create)
 			group.MapPost("", Add)
 				.WithSummary($"Add the {dtoName} in the body to the database").WithOpenApi();
@@ -131,7 +131,7 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 	private async Task<JsonHttpResult<ApiResponse>> GetByID(TService service, ILogService logService,
 		HttpContext httpContext, [FromRoute] int id)
 	{
-		return await GenericController(async () => await service.GetByID(id, includes: Includes), logService,
+		return await GenericController(async () => await service.GetByID(id, includes: _includes), logService,
 			httpContext);
 	}
 
@@ -155,7 +155,7 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 			};
 			Pagination pagination = new()
 			{
-				Includes = Includes,
+				Includes = _includes,
 				FilterParams = new List<FilterParam> { param }
 			};
 			return await service.GetWithPagination(pagination, 0, 0);
@@ -187,7 +187,7 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 	private async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericController(async () => await service.GetAll(includes: Includes), logService,
+		return await GenericController(async () => await service.GetAll(includes: _includes), logService,
 			httpContext);
 	}
 
