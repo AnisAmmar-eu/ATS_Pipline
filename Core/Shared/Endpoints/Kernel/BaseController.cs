@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +12,14 @@ public class BaseController
 		ILogService logService, HttpContext httpContext)
 	{
 		TReturn ans;
+		//TimeSpan aa;
 		try
 		{
+			//Stopwatch watch = new();
+			//watch.Start();
 			ans = await func.Invoke();
+			//watch.Stop();
+			//aa = watch.Elapsed;
 		}
 		catch (Exception e)
 		{

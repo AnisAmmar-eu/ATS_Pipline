@@ -131,15 +131,15 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 	private async Task<JsonHttpResult<ApiResponse>> GetByID(TService service, ILogService logService,
 		HttpContext httpContext, [FromRoute] int id)
 	{
-		return await GenericController(async () => await service.GetByID(id, includes: _includes), logService,
-			httpContext);
+		return await GenericController(async () => await service.GetByID(id, withTracking: false, includes: _includes),
+			logService, httpContext);
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(TService service, ILogService logService,
 		HttpContext httpContext, [FromRoute] int id, [FromBody] string[] includes)
 	{
-		return await GenericController(async () => await service.GetByID(id, includes: includes), logService,
-			httpContext);
+		return await GenericController(async () => await service.GetByID(id, withTracking: false, includes: includes),
+			logService, httpContext);
 	}
 
 	private async Task<JsonHttpResult<ApiResponse>> GetByGeneric(TService service, ILogService logService,
@@ -187,15 +187,15 @@ public class BaseEndpoint<T, TDTO, TService> : BaseController
 	private async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericController(async () => await service.GetAll(includes: _includes), logService,
-			httpContext);
+		return await GenericController(async () => await service.GetAll(withTracking: false, includes: _includes),
+			logService, httpContext);
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(TService service, ILogService logService,
 		HttpContext httpContext, [FromBody] string[] includes)
 	{
-		return await GenericController(async () => await service.GetAll(includes: includes), logService,
-			httpContext);
+		return await GenericController(async () => await service.GetAll(withTracking: false, includes: includes),
+			logService, httpContext);
 	}
 
 	private static async Task<JsonHttpResult<ApiResponse>> GetWithPagination(TService service, ILogService logService,
