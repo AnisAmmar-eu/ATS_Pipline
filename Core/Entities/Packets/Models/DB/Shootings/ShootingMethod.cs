@@ -97,7 +97,6 @@ public partial class Shooting
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
 			}
-
 			if (thirdHole == null)
 			{
 				thirdHole = GetImageInDirectory(directory2, rid);

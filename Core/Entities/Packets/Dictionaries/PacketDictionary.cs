@@ -1,6 +1,6 @@
 namespace Core.Entities.Packets.Dictionaries;
 
-public class PacketStatus
+public static class PacketStatus
 {
 	public const string Initialized = "Initialized";
 	public const string Running = "Running";
@@ -8,7 +8,7 @@ public class PacketStatus
 	public const string Sent = "Sent";
 }
 
-public class PacketType
+public static class PacketType
 {
 	public const string Alarm = "ALARM";
 	public const string Announcement = "ANNOUNCEMENT";
@@ -19,7 +19,7 @@ public class PacketType
 	public const string OutFurnace = "OUTFURNACE";
 }
 
-public class ShootingUtils
+public static class ShootingUtils
 {
 	// Filename
 	public const string TestFilename = "TestImage.jpg";
