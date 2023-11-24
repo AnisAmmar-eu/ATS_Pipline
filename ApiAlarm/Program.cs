@@ -116,7 +116,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
 app.MapCarter();
 
 app.MapHub<AlarmHub>("/alarmsHub");

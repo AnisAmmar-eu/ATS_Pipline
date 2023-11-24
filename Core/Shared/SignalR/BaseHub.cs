@@ -1,10 +1,8 @@
 ﻿using Core.Shared.Models.SignalR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Core.Shared.SignalR;
 
-[Authorize]
 public class BaseHub<T> : Hub<T> where T : class
 {
 	/// <summary>
