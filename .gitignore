@@ -8,9 +8,10 @@ obj
 [Rr]eleases/
 .config/
 
-# Images and user specific configs.
+# Images, .zips and user specific configs.
 *.jpg
 *.user
 *.userosscache
 *.sln.docstates
 *.pubxml
+*.zip
