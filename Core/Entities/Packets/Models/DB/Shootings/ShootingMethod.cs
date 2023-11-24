@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;

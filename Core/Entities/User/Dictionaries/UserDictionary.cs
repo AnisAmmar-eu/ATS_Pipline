@@ -7,7 +7,7 @@ public static class ActionRID
 	public const string AdminGeneralRights = "ADMIN.GENERAL_RIGHTS";
 }
 
-public class ActData
+public static class ActData
 {
 	public static DTOAct AdminGeneralRights = new() { RID = ActionRID.AdminGeneralRights };
 }

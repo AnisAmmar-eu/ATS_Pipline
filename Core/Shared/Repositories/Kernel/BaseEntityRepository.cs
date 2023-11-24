@@ -22,8 +22,8 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	where TDTO : class, IDTO<T, TDTO>
 	where TContext : DbContext
 {
-	protected readonly TContext Context;
 	private readonly ICollection<Expression<Func<T, bool>>> _importFilters = new List<Expression<Func<T, bool>>>();
+	protected readonly TContext Context;
 
 	/// <summary>
 	///     Constructor
