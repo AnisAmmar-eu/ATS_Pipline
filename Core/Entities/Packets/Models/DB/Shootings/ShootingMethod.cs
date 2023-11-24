@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
@@ -97,6 +98,7 @@ public partial class Shooting
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
 			}
+
 			if (thirdHole == null)
 			{
 				thirdHole = GetImageInDirectory(directory2, rid);
@@ -148,7 +150,7 @@ public partial class Shooting
 		anodeUOW.StationCycle.Update(StationCycle);
 	}
 
-	private async Task DequeueDetectionPacket()
+	private static async Task DequeueDetectionPacket()
 	{
 		CancellationToken cancel = new();
 		AdsClient tcClient = new();
@@ -183,7 +185,7 @@ public partial class Shooting
 		return images[0];
 	}
 
-	private bool IsFileLocked(FileInfo? file)
+	private static bool IsFileLocked(FileInfo? file)
 	{
 		if (file == null) return false;
 		try
@@ -199,26 +201,20 @@ public partial class Shooting
 		return false;
 	}
 
-	private string ExtractRIDFromName(string fileName)
+	private static string ExtractRIDFromName(string fileName)
 	{
-		if (!string.IsNullOrWhiteSpace(fileName))
-		{
-			int charLocation = fileName.IndexOf("-", StringComparison.Ordinal);
-			if (charLocation > 0) return fileName.Substring(0, charLocation);
-		}
-
-		return string.Empty;
+		if (string.IsNullOrWhiteSpace(fileName)) return string.Empty;
+		// X_ is the station number
+		int charLocation = "X_".Length + AnodeFormat.RIDFormat.Length;
+		return charLocation > 0 ? fileName[..charLocation] : string.Empty;
 	}
 
-	private string ExtractTSFromName(string fileName, string? rid)
+	private static string ExtractTSFromName(string fileName, string? rid)
 	{
-		if (rid != null && !string.IsNullOrWhiteSpace(fileName))
-		{
-			int charLocation = fileName.IndexOf(".", StringComparison.Ordinal);
-			charLocation = (charLocation == 0 ? fileName.Length : charLocation) - rid.Length - 1;
-			if (charLocation > rid.Length + 1) return fileName.Substring(rid.Length + 1, charLocation);
-		}
+		if (rid == null || string.IsNullOrWhiteSpace(fileName)) return string.Empty;
 
-		return string.Empty;
+		int charLocation = fileName.IndexOf(".", StringComparison.Ordinal);
+		charLocation = (charLocation == 0 ? fileName.Length : charLocation) - rid.Length - 1;
+		return fileName.Substring(rid.Length + 1, charLocation);
 	}
 }

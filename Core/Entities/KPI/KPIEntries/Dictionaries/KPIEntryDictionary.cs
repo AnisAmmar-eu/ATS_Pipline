@@ -1,6 +1,6 @@
 namespace Core.Entities.KPI.KPIEntries.Dictionaries;
 
-public class KPIPeriod
+public static class KPIPeriod
 {
 	public const string Day = "DAY";
 	public const string Week = "WEEK";

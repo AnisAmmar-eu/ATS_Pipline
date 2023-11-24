@@ -1,12 +1,12 @@
 namespace Core.Entities.IOT.Dictionaries;
 
-public class IOTTagType
+public static class IOTTagType
 {
-	public static string String = "string";
-	public static string Int = "int";
-	public static string Double = "double";
-	public static string UShort = "ushort";
-	public static string Bool = "bool";
+	public const string String = "string";
+	public const string Int = "int";
+	public const string Double = "double";
+	public const string UShort = "ushort";
+	public const string Bool = "bool";
 }
 
 public static class IOTTagRID

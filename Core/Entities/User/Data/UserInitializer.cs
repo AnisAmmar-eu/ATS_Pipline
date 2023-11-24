@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Core.Entities.User.Data;
 
-public class UserInitializer
+public static class UserInitializer
 {
 	public static async Task Initialize(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{

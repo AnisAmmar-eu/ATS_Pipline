@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Core.Shared.Data;
 
-public class DBInitializer
+public static class DBInitializer
 {
 	public static async Task InitializeStation(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{

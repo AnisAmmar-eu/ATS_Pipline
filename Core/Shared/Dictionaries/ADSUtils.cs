@@ -1,6 +1,6 @@
 namespace Core.Shared.Dictionaries;
 
-public class ADSUtils
+public static class ADSUtils
 {
 	// AlarmNotification
 	public const string AlarmRemove = "VA_ALM.remove";
