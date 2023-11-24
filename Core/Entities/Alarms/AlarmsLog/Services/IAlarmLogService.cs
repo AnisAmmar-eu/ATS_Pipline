@@ -4,7 +4,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsLog.Services;
 
-public interface IAlarmLogService : IServiceBaseEntity<AlarmLog, DTOAlarmLog>
+public interface IAlarmLogService : IBaseEntityService<AlarmLog, DTOAlarmLog>
 {
 	Task Collect(Alarm alarm);
 	Task<List<DTOAlarmLog>> AckAlarmLogs(int[] idAlarmLogs);

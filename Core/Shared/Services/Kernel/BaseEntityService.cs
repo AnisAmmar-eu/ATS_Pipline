@@ -8,15 +8,15 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Shared.Services.Kernel;
 
-public class ServiceBaseEntity<TRepository, T, TDTO> : IServiceBaseEntity<T, TDTO>
+public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
-	where TRepository : IRepositoryBaseEntity<T, TDTO>
+	where TRepository : IBaseEntityRepository<T, TDTO>
 {
 	private readonly TRepository _repository;
 	protected readonly IAnodeUOW AnodeUOW;
 
-	public ServiceBaseEntity(IAnodeUOW anodeUOW)
+	public BaseEntityService(IAnodeUOW anodeUOW)
 	{
 		AnodeUOW = anodeUOW;
 		_repository = (TRepository?)anodeUOW.GetRepoByType(typeof(TRepository)) ??

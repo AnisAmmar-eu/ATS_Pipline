@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Core.Shared.Repositories.Kernel;
 
 /// <summary>
-///     Implements the <see cref="IRepositoryBase{T}" /> interface
+///     Implements the <see cref="IBaseEntityRepository{T,TDTO}" /> interface
 /// </summary>
 /// <typeparam name="TContext"> <see cref="DbContext" /> of the project</typeparam>
 /// <typeparam name="T">
 ///     Type that defines an table in the database and have to implement <see cref="IBaseEntity{T}" />
 /// </typeparam>
-public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, TDTO>
+public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 	where TContext : DbContext
@@ -29,7 +29,7 @@ public class RepositoryBaseEntity<TContext, T, TDTO> : IRepositoryBaseEntity<T, 
 	///     Constructor
 	/// </summary>
 	/// <param name="context"><see cref="DbContext" /> of the project</param>
-	public RepositoryBaseEntity(TContext context)
+	public BaseEntityRepository(TContext context)
 	{
 		Context = context;
 	}

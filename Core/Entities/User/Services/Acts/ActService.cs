@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Core.Entities.User.Services.Acts;
 
-public class ActService : ServiceBaseEntity<IActRepository, Act, DTOAct>, IActService
+public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActService
 {
 	private readonly IAuthService _authService;
 	private readonly IJwtService _jwtService;

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Shared.Repositories.System.Logs;
 
-public class LogRepository : RepositoryBaseEntity<AnodeCTX, Log, DTOLog>, ILogRepository
+public class LogRepository : BaseEntityRepository<AnodeCTX, Log, DTOLog>, ILogRepository
 {
 	public LogRepository(AnodeCTX context) : base(context)
 	{

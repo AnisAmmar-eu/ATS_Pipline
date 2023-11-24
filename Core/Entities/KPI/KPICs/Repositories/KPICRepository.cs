@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.KPI.KPICs.Repositories;
 
-public class KPICRepository : RepositoryBaseEntity<AnodeCTX, KPIC, DTOKPIC>, IKPICRepository
+public class KPICRepository : BaseEntityRepository<AnodeCTX, KPIC, DTOKPIC>, IKPICRepository
 {
 	public KPICRepository(AnodeCTX context) : base(context)
 	{

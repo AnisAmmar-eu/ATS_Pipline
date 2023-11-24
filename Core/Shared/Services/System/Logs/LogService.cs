@@ -10,7 +10,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Shared.Services.System.Logs;
 
-public class LogService : ServiceBaseEntity<ILogRepository, Log, DTOLog>, ILogService
+public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogService
 {
 	public LogService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

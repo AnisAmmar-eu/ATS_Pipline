@@ -6,7 +6,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.KPI.KPICs.Services;
 
-public class KPICService : ServiceBaseEntity<KPICRepository, KPIC, DTOKPIC>, IKPICService
+public class KPICService : BaseEntityService<KPICRepository, KPIC, DTOKPIC>, IKPICService
 {
 	public KPICService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

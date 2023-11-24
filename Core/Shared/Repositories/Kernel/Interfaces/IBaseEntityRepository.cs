@@ -15,7 +15,7 @@ namespace Core.Shared.Repositories.Kernel.Interfaces;
 ///     Type of the entity to manipulate, should be in the base and defined in the namespace
 ///     <see cref="Entity" />
 /// </typeparam>
-public interface IRepositoryBaseEntity<T, TDTO>
+public interface IBaseEntityRepository<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {

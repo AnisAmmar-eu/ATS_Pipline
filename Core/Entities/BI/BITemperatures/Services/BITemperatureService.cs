@@ -9,7 +9,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.BI.BITemperatures.Services;
 
-public class BITemperatureService : ServiceBaseEntity<IBITemperatureRepository, BITemperature, DTOBITemperature>,
+public class BITemperatureService : BaseEntityService<IBITemperatureRepository, BITemperature, DTOBITemperature>,
 	IBITemperatureService
 {
 	private readonly string[] _temperatureTagsRIDs = { IOTTagRID.TemperatureCam1, IOTTagRID.TemperatureCam2 };

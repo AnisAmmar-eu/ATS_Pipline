@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Repositories;
 
-public interface IStationCycleRepository : IRepositoryBaseEntity<StationCycle, DTOStationCycle>
+public interface IStationCycleRepository : IBaseEntityRepository<StationCycle, DTOStationCycle>
 {
 	public Task<List<StationCycle>> GetAllWithIncludes(
 		Expression<Func<StationCycle, bool>>[]? filters = null,

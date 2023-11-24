@@ -8,7 +8,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 
-public interface IKPIRTService : IServiceBaseEntity<KPIRT, DTOKPIRT>
+public interface IKPIRTService : IBaseEntityService<KPIRT, DTOKPIRT>
 {
 	public Task<List<DTOKPIRT>> GetByRIDsAndPeriod(string period, List<string> rids);
 	public Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave);
@@ -25,5 +25,5 @@ public interface IKPIRTService : IServiceBaseEntity<KPIRT, DTOKPIRT>
 	public Task ComputeKPIRTs<T, TDTO, TRepository, TValue>(TRepository tRepository)
 		where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
 		where TDTO : class, IDTO<T, TDTO>
-		where TRepository : class, IRepositoryBaseEntity<T, TDTO>;
+		where TRepository : class, IBaseEntityRepository<T, TDTO>;
 }

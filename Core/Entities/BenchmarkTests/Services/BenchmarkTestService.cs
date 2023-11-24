@@ -11,7 +11,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.BenchmarkTests.Services;
 
-public class BenchmarkTestService : ServiceBaseEntity<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>,
+public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>,
 	IBenchmarkTestService
 {
 	private static CameraTest? _cam1;

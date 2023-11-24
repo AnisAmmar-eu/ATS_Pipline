@@ -8,7 +8,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsRT.Services;
 
-public class AlarmRTService : ServiceBaseEntity<IAlarmRTRepository, AlarmRT, DTOAlarmRT>, IAlarmRTService
+public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTOAlarmRT>, IAlarmRTService
 {
 	public AlarmRTService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

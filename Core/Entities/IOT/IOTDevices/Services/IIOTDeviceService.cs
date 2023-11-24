@@ -5,7 +5,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.IOT.IOTDevices.Services;
 
-public interface IIOTDeviceService : IServiceBaseEntity<IOTDevice, DTOIOTDevice>
+public interface IIOTDeviceService : IBaseEntityService<IOTDevice, DTOIOTDevice>
 {
 	public Task<IOTDeviceStatus> GetStatusByRID(string rid);
 	public Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids);

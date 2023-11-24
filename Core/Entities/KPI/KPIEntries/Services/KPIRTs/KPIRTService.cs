@@ -15,7 +15,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 
-public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>, IKPIRTService
+public class KPIRTService : BaseEntityService<IKPIRTRepository, KPIRT, DTOKPIRT>, IKPIRTService
 {
 	private readonly IKPILogService _kpiLogService;
 
@@ -52,7 +52,7 @@ public class KPIRTService : ServiceBaseEntity<IKPIRTRepository, KPIRT, DTOKPIRT>
 	public async Task ComputeKPIRTs<T, TDTO, TRepository, TValue>(TRepository tRepository)
 		where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
 		where TDTO : class, IDTO<T, TDTO>
-		where TRepository : class, IRepositoryBaseEntity<T, TDTO>
+		where TRepository : class, IBaseEntityRepository<T, TDTO>
 	{
 		string[] periods = { KPIPeriod.Day, KPIPeriod.Week, KPIPeriod.Month, KPIPeriod.Year };
 		DateTimeOffset oldest = KPIPeriod.GetStartRange(KPIPeriod.Year, DateTimeOffset.Now);

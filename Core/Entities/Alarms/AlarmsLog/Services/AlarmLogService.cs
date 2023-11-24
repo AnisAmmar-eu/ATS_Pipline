@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Core.Entities.Alarms.AlarmsLog.Services;
 
-public class AlarmLogService : ServiceBaseEntity<IAlarmLogRepository, AlarmLog, DTOAlarmLog>, IAlarmLogService
+public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, DTOAlarmLog>, IAlarmLogService
 {
 	private readonly IHubContext<AlarmHub, IAlarmHub> _hubContext;
 

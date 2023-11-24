@@ -6,7 +6,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.StationCycles.Repositories;
 
-public class StationCycleRepository : RepositoryBaseEntity<AnodeCTX, StationCycle, DTOStationCycle>,
+public class StationCycleRepository : BaseEntityRepository<AnodeCTX, StationCycle, DTOStationCycle>,
 	IStationCycleRepository
 {
 	public StationCycleRepository(AnodeCTX context) : base(context)

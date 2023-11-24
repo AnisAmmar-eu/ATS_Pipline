@@ -4,4 +4,4 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.Anodes.Repositories;
 
-public interface IAnodeRepository : IRepositoryBaseEntity<Anode, DTOAnode>;
+public interface IAnodeRepository : IBaseEntityRepository<Anode, DTOAnode>;

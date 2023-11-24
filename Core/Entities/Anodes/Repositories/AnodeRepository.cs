@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.Anodes.Repositories;
 
-public class AnodeRepository : RepositoryBaseEntity<AnodeCTX, Anode, DTOAnode>, IAnodeRepository
+public class AnodeRepository : BaseEntityRepository<AnodeCTX, Anode, DTOAnode>, IAnodeRepository
 {
 	public AnodeRepository(AnodeCTX context) : base(context)
 	{

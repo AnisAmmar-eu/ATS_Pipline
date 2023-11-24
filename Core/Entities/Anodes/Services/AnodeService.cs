@@ -6,7 +6,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Anodes.Services;
 
-public class AnodeService : ServiceBaseEntity<IAnodeRepository, Anode, DTOAnode>, IAnodeService
+public class AnodeService : BaseEntityService<IAnodeRepository, Anode, DTOAnode>, IAnodeService
 {
 	public AnodeService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

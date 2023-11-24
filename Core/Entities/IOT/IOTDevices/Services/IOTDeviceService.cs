@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Core.Entities.IOT.IOTDevices.Services;
 
-public class IOTDeviceService : ServiceBaseEntity<IIOTDeviceRepository, IOTDevice, DTOIOTDevice>, IIOTDeviceService
+public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevice, DTOIOTDevice>, IIOTDeviceService
 {
 	private readonly IHubContext<IOTHub, IIOTHub> _hubContext;
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.StationCycles.Services;
 
-public interface IStationCycleService : IServiceBaseEntity<StationCycle, DTOStationCycle>
+public interface IStationCycleService : IBaseEntityService<StationCycle, DTOStationCycle>
 {
 	public Task<ReducedStationCycle?> GetMostRecentWithIncludes();
 	public Task<List<ReducedStationCycle>> GetAllRIDs();

@@ -4,4 +4,4 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.BenchmarkTests.Repositories.CameraTests;
 
-public interface ICameraTestRepository : IRepositoryBaseEntity<CameraTest, DTOCameraTest>;
+public interface ICameraTestRepository : IBaseEntityRepository<CameraTest, DTOCameraTest>;

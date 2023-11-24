@@ -5,7 +5,7 @@ using Core.Shared.Paginations;
 
 namespace Core.Shared.Services.Kernel.Interfaces;
 
-public interface IServiceBaseEntity<T, TDTO>
+public interface IBaseEntityService<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {

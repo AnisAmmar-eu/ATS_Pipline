@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.Vision.FileSettings.Services;
 
-public class FileSettingService : ServiceBaseEntity<IFileSettingRepository, FileSetting, DTOFileSetting>,
+public class FileSettingService : BaseEntityService<IFileSettingRepository, FileSetting, DTOFileSetting>,
 	IFileSettingService
 {
 	public FileSettingService(IAnodeUOW anodeUOW) : base(anodeUOW)

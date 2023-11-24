@@ -4,7 +4,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Services;
 
-public interface IPacketService : IServiceBaseEntity<Packet, DTOPacket>
+public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 {
 	public Task<DTOPacket> BuildPacket(Packet packet);
 	public Task<List<Packet>> ReceivePackets(IEnumerable<DTOPacket> packet);

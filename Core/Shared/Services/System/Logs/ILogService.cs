@@ -4,7 +4,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Shared.Services.System.Logs;
 
-public interface ILogService : IServiceBaseEntity<Log, DTOLog>
+public interface ILogService : IBaseEntityService<Log, DTOLog>
 {
 	public Task<List<DTOLog>> GetAll();
 	public Task<List<DTOLog>> GetRange(int start, int nbItems);

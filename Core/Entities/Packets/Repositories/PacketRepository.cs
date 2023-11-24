@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.Packets.Repositories;
 
-public class PacketRepository : RepositoryBaseEntity<AnodeCTX, Packet, DTOPacket>, IPacketRepository
+public class PacketRepository : BaseEntityRepository<AnodeCTX, Packet, DTOPacket>, IPacketRepository
 {
 	public PacketRepository(AnodeCTX context) : base(context)
 	{

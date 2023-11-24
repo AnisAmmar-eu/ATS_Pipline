@@ -4,4 +4,4 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.Vision.FileSettings.Repositories;
 
-public interface IFileSettingRepository : IRepositoryBaseEntity<FileSetting, DTOFileSetting>;
+public interface IFileSettingRepository : IBaseEntityRepository<FileSetting, DTOFileSetting>;

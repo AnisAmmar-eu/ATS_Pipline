@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.IOT.IOTTags.Repositories;
 
-public class IOTTagRepository : RepositoryBaseEntity<AnodeCTX, IOTTag, DTOIOTTag>, IIOTTagRepository
+public class IOTTagRepository : BaseEntityRepository<AnodeCTX, IOTTag, DTOIOTTag>, IIOTTagRepository
 {
 	public IOTTagRepository(AnodeCTX context) : base(context)
 	{

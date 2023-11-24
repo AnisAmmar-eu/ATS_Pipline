@@ -4,7 +4,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsC.Services;
 
-public interface IAlarmCService : IServiceBaseEntity<AlarmC, DTOAlarmC>
+public interface IAlarmCService : IBaseEntityService<AlarmC, DTOAlarmC>
 {
 	public Task<DTOAlarmC> GetByRID(string rid);
 }

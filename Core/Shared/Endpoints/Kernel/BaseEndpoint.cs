@@ -19,7 +19,7 @@ namespace Core.Shared.Endpoints.Kernel;
 public class BaseEndpoint<T, TDTO, TService> : BaseController
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
-	where TService : IServiceBaseEntity<T, TDTO>
+	where TService : IBaseEntityService<T, TDTO>
 {
 	private string[] _includes = { };
 

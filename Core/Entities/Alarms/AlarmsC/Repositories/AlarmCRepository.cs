@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.Alarms.AlarmsC.Repositories;
 
-public class AlarmCRepository : RepositoryBaseEntity<AnodeCTX, AlarmC, DTOAlarmC>, IAlarmCRepository
+public class AlarmCRepository : BaseEntityRepository<AnodeCTX, AlarmC, DTOAlarmC>, IAlarmCRepository
 {
 	public AlarmCRepository(AnodeCTX context) : base(context)
 	{

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.Vision.FileSettings.Services;
 
-public interface IFileSettingService : IServiceBaseEntity<FileSetting, DTOFileSetting>
+public interface IFileSettingService : IBaseEntityService<FileSetting, DTOFileSetting>
 {
 	public Task<DTOFileSetting> ReceiveFile(UploadFileSetting uploadFileSetting, IFormFile file);
 }

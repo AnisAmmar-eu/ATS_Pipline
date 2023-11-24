@@ -6,7 +6,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.KPI.KPIEntries.Services.KPILogs;
 
-public class KPILogService : ServiceBaseEntity<IKPILogRepository, KPILog, DTOKPILog>, IKPILogService
+public class KPILogService : BaseEntityService<IKPILogRepository, KPILog, DTOKPILog>, IKPILogService
 {
 	public KPILogService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

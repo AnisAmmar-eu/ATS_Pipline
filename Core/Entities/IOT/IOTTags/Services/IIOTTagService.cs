@@ -5,7 +5,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.IOT.IOTTags.Services;
 
-public interface IIOTTagService : IServiceBaseEntity<IOTTag, DTOIOTTag>
+public interface IIOTTagService : IBaseEntityService<IOTTag, DTOIOTTag>
 {
 	public Task<List<DTOIOTTag>> GetByArrayRID(IEnumerable<string> rids);
 	public Task<bool> IsTestModeOn();

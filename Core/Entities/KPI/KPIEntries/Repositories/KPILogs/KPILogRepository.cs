@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 
-public class KPILogRepository : RepositoryBaseEntity<AnodeCTX, KPILog, DTOKPILog>, IKPILogRepository
+public class KPILogRepository : BaseEntityRepository<AnodeCTX, KPILog, DTOKPILog>, IKPILogRepository
 {
 	public KPILogRepository(AnodeCTX context) : base(context)
 	{

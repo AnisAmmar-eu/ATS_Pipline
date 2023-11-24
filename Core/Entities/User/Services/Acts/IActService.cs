@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.User.Services.Acts;
 
-public interface IActService : IServiceBaseEntity<Act, DTOAct>
+public interface IActService : IBaseEntityService<Act, DTOAct>
 {
 	Task<List<DTOActEntityStatus>> ActionsFromList(HttpContext httpContext,
 		List<DTOActEntityStatus> dtoActEntitiesStatus);

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Entities.IOT.IOTDevices.Repositories;
 
-public class IOTDeviceRepository : RepositoryBaseEntity<AnodeCTX, IOTDevice, DTOIOTDevice>, IIOTDeviceRepository
+public class IOTDeviceRepository : BaseEntityRepository<AnodeCTX, IOTDevice, DTOIOTDevice>, IIOTDeviceRepository
 {
 	public IOTDeviceRepository(AnodeCTX context) : base(context)
 	{

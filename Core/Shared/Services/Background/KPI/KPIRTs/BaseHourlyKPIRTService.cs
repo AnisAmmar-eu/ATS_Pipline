@@ -12,7 +12,7 @@ namespace Core.Shared.Services.Background.KPI.KPIRTs;
 public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundService
 	where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
 	where TDTO : class, IDTO<T, TDTO>
-	where TRepository : class, IRepositoryBaseEntity<T, TDTO>
+	where TRepository : class, IBaseEntityRepository<T, TDTO>
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<BaseHourlyKPIRTService<T, TDTO, TRepository, TValue>> _logger;

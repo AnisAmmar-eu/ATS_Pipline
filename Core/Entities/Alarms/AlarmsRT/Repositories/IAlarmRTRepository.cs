@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsRT.Repositories;
 
-public interface IAlarmRTRepository : IRepositoryBaseEntity<AlarmRT, DTOAlarmRT>
+public interface IAlarmRTRepository : IBaseEntityRepository<AlarmRT, DTOAlarmRT>
 {
 	public Task<List<AlarmRT>> GetAllWithInclude(
 		Expression<Func<AlarmRT, bool>>[]? filters = null,

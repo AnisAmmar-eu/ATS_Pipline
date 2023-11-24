@@ -7,7 +7,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Packets.Services;
 
-public class PacketService : ServiceBaseEntity<IPacketRepository, Packet, DTOPacket>, IPacketService
+public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPacket>, IPacketService
 {
 	public PacketService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

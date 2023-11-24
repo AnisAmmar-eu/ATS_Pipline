@@ -4,7 +4,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.BI.BITemperatures.Services;
 
-public interface IBITemperatureService : IServiceBaseEntity<BITemperature, DTOBITemperature>
+public interface IBITemperatureService : IBaseEntityService<BITemperature, DTOBITemperature>
 {
 	public Task LogNewValues();
 	public Task PurgeByTimestamp(TimeSpan lifespan);

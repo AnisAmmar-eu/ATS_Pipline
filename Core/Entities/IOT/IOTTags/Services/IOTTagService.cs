@@ -9,7 +9,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.IOT.IOTTags.Services;
 
-public class IOTTagService : ServiceBaseEntity<IIOTTagRepository, IOTTag, DTOIOTTag>, IIOTTagService
+public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOTTag>, IIOTTagService
 {
 	private static int? _testModeID;
 

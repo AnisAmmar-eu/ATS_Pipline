@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.Vision.FileSettings.Repositories;
 
-public class FileSettingRepository : RepositoryBaseEntity<AnodeCTX, FileSetting, DTOFileSetting>, IFileSettingRepository
+public class FileSettingRepository : BaseEntityRepository<AnodeCTX, FileSetting, DTOFileSetting>, IFileSettingRepository
 {
 	public FileSettingRepository(AnodeCTX context) : base(context)
 	{

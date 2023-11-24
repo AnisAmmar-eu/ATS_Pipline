@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsLog.Repositories;
 
-public interface IAlarmLogRepository : IRepositoryBaseEntity<AlarmLog, DTOAlarmLog>
+public interface IAlarmLogRepository : IBaseEntityRepository<AlarmLog, DTOAlarmLog>
 {
 	public Task<AlarmLog> GetByIdWithIncludes(int id, Expression<Func<AlarmLog, bool>>[]? filters = null,
 		bool withTracking = true);

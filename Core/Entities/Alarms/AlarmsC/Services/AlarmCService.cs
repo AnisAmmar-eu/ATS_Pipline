@@ -7,7 +7,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsC.Services;
 
-public class AlarmCService : ServiceBaseEntity<IAlarmCRepository, AlarmC, DTOAlarmC>, IAlarmCService
+public class AlarmCService : BaseEntityService<IAlarmCRepository, AlarmC, DTOAlarmC>, IAlarmCService
 {
 	public AlarmCService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{

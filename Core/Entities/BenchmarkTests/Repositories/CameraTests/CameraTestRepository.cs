@@ -5,7 +5,7 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.BenchmarkTests.Repositories.CameraTests;
 
-public class CameraTestRepository : RepositoryBaseEntity<AnodeCTX, CameraTest, DTOCameraTest>, ICameraTestRepository
+public class CameraTestRepository : BaseEntityRepository<AnodeCTX, CameraTest, DTOCameraTest>, ICameraTestRepository
 {
 	public CameraTestRepository(AnodeCTX context) : base(context)
 	{

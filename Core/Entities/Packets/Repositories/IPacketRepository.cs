@@ -4,4 +4,4 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Entities.Packets.Repositories;
 
-public interface IPacketRepository : IRepositoryBaseEntity<Packet, DTOPacket>;
+public interface IPacketRepository : IBaseEntityRepository<Packet, DTOPacket>;

@@ -4,7 +4,7 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Entities.Alarms.AlarmsRT.Services;
 
-public interface IAlarmRTService : IServiceBaseEntity<AlarmRT, DTOAlarmRT>
+public interface IAlarmRTService : IBaseEntityService<AlarmRT, DTOAlarmRT>
 {
 	/// <summary>
 	///     This function returns the statistics of AlarmRT. The result will always be an array of length 3.
