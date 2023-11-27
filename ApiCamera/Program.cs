@@ -61,6 +61,15 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+string? clientHost = builder.Configuration["ClientHost"];
+if (clientHost == null)
+	throw new ConfigurationErrorsException("Missing ClientHost");
+
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
+	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+	.AllowAnyHeader()
+	.AllowCredentials());
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
