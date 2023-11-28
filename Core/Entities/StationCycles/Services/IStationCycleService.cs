@@ -4,7 +4,6 @@ using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.AspNetCore.Http;
-using TwinCAT.Ads;
 
 namespace Core.Entities.StationCycles.Services;
 

@@ -78,7 +78,7 @@ public partial class Shooting
 		FileInfo? thirdHole = null;
 		DateTimeOffset? tsFirstImage = null;
 		DateTimeOffset startAssign = DateTimeOffset.Now;
-		while ((firstHole == null || thirdHole == null) && (DateTimeOffset.Now - startAssign <= TimeSpan.FromSeconds(30)))
+		while ((firstHole == null || thirdHole == null) && DateTimeOffset.Now - startAssign <= TimeSpan.FromSeconds(30))
 		{
 			if (firstHole == null)
 			{

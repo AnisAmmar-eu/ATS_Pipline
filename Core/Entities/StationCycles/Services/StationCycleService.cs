@@ -135,10 +135,8 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			PropertyInfo[] properties =
 				stationCycle.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 			foreach (PropertyInfo propertyInfo in properties)
-			{
 				if (propertyInfo.GetValue(stationCycle) is Packet packet)
 					_packetService.MarkPacketAsSentFromStationCycle(packet);
-			}
 
 			AnodeUOW.StationCycle.Update(stationCycle);
 			AnodeUOW.Commit();
@@ -159,7 +157,8 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		foreach (PropertyInfo propertyInfo in properties)
 		{
 			string propertyName = propertyInfo.Name;
-			string fkName = $"{propertyName[..^"Packet".Length]}ID";
+			// It will get the corresponding foreign key with the following rule :
+			// [...]Packet => [...]ID
 			PropertyInfo foreignKey =
 				cycle.GetType().GetProperty($"{propertyName[..^"Packet".Length]}ID") ??
 				throw new InvalidOperationException($"No foreign key found for {propertyName}");
@@ -167,21 +166,6 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			propertyInfo.SetValue(cycle, newPacket);
 			foreignKey.SetValue(cycle, newPacket?.ID);
 		}
-
-		/*
-		if (cycle is S1S2Cycle s1S2Cycle)
-			s1S2Cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(s1S2Cycle.AnnouncementPacket);
-		else
-			cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(cycle.AnnouncementPacket);
-		cycle.DetectionID = await _packetService.AddPacketFromStationCycle(cycle.DetectionPacket);
-		cycle.ShootingID = await _packetService.AddPacketFromStationCycle(cycle.ShootingPacket);
-		cycle.AlarmListID = await _packetService.AddPacketFromStationCycle(cycle.AlarmListPacket);
-		if (cycle is S3S4Cycle s3S4Cycle)
-		{
-			s3S4Cycle.InFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.InFurnacePacket);
-			s3S4Cycle.OutFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.OutFurnacePacket);
-		}
-		*/
 
 		// Packets need to be commit before adding StationCycle
 		AnodeUOW.Commit();

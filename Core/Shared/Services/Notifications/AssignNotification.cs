@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Shared.Services.Notifications;
 
-public class AssignNotification: BaseNotification<Detection, DetectionStruct>
+public class AssignNotification : BaseNotification<Detection, DetectionStruct>
 {
 	public static string? ImagesPath { get; set; }
 	public static string? ThumbnailsPath { get; set; }
-	
+
 	public static async Task<AssignNotification> Create(dynamic ads)
 	{
 		return await CreateSub<AssignNotification>(ads, ADSUtils.DetectionRemove, ADSUtils.CloseCycle,

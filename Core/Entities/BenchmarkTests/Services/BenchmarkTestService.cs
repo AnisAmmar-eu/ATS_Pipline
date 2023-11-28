@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Core.Entities.BenchmarkTests.Models.DB;
-using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Shared.Dictionaries;
@@ -50,7 +49,7 @@ public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, 
 
 		return watch.Elapsed;
 	}
-	
+
 	public async Task<List<TimeSpan>> StartTest(int nbItems)
 	{
 		Stopwatch watch = new();

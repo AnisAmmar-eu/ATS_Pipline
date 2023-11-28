@@ -30,7 +30,7 @@ public class ADSService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		using PeriodicTimer timer = new(_period);
 		CancellationToken cancel = CancellationToken.None;
-		
+
 		// Assign configuration
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
@@ -41,7 +41,7 @@ public class ADSService : BackgroundService
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 		AssignNotification.ImagesPath = imagesPath;
 		AssignNotification.ThumbnailsPath = thumbnailsPath;
-		
+
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try

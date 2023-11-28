@@ -81,7 +81,8 @@ public partial class ApiResponse
 		return TypedResults.Json(this, JsonOptions);
 	}
 
-	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(ILogService logService, HttpContext httpContext, Exception e)
+	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(ILogService logService, HttpContext httpContext,
+		Exception e)
 	{
 		switch (e)
 		{
