@@ -16,6 +16,7 @@ public interface ILogService : IBaseEntityService<Log, DTOLog>
 	Task Create(
 		DateTimeOffset date,
 		string server,
+		string username,
 		string api,
 		string controller,
 		string function,

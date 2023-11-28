@@ -1,14 +1,11 @@
 using System.Globalization;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
-using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
 using Stemmer.Cvb;
-using TwinCAT.Ads;
 
 namespace Core.Entities.Packets.Models.DB.Shootings;
 
@@ -80,19 +77,17 @@ public partial class Shooting
 		FileInfo? firstHole = null;
 		FileInfo? thirdHole = null;
 		DateTimeOffset? tsFirstImage = null;
-		string rid = string.Empty;
-		while ((firstHole == null || thirdHole == null)
-		       && (tsFirstImage == null || DateTimeOffset.Now - tsFirstImage <= TimeSpan.FromSeconds(30)))
+		DateTimeOffset startAssign = DateTimeOffset.Now;
+		while ((firstHole == null || thirdHole == null) && (DateTimeOffset.Now - startAssign <= TimeSpan.FromSeconds(30)))
 		{
 			if (firstHole == null)
 			{
-				firstHole = GetImageInDirectory(directory1, rid);
+				firstHole = GetImageInDirectory(directory1, StationCycleRID);
 				if (firstHole != null)
 				{
-					if (thirdHole == null)
-						rid = ExtractRIDFromName(firstHole.Name);
 					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, rid), AnodeFormat.RIDFormat,
+						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, StationCycleRID),
+							AnodeFormat.RIDFormat,
 							CultureInfo.InvariantCulture.DateTimeFormat);
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
@@ -100,13 +95,12 @@ public partial class Shooting
 
 			if (thirdHole == null)
 			{
-				thirdHole = GetImageInDirectory(directory2, rid);
+				thirdHole = GetImageInDirectory(directory2, StationCycleRID);
 				if (thirdHole != null)
 				{
-					if (firstHole == null)
-						rid = ExtractRIDFromName(thirdHole.Name);
 					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(thirdHole.Name, rid), AnodeFormat.RIDFormat, null);
+						DateTimeOffset.ParseExact(ExtractTSFromName(thirdHole.Name, StationCycleRID),
+							AnodeFormat.RIDFormat, null);
 					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
 				}
 			}
@@ -115,20 +109,18 @@ public partial class Shooting
 		if (tsFirstImage == null)
 			throw new Exception("tsFirstImage should NOT be null");
 
-		Task task1 = UpdatePacketAndStationCycle(anodeUOW, firstHole, thirdHole, rid, tsFirstImage.Value);
-		Task task2 = DequeueDetectionPacket();
-		await task1;
-		await task2;
+		await UpdatePacketAndStationCycle(anodeUOW, firstHole, thirdHole, tsFirstImage.Value);
+		// DetectionPacket is now dequeued by the ADS Notification service.
+		// Task task2 = DequeueDetectionPacket();
+		// await task2;
 	}
 
-	private async Task UpdatePacketAndStationCycle(IAnodeUOW anodeUOW, FileInfo? firstHole, FileInfo? thirdHole,
-		string rid, DateTimeOffset tsFirstImage)
+	private Task UpdatePacketAndStationCycle(IAnodeUOW anodeUOW, FileInfo? firstHole, FileInfo? thirdHole,
+		DateTimeOffset tsFirstImage)
 	{
-		StationCycle = await anodeUOW.StationCycle.GetBy(
-			new Expression<Func<StationCycle, bool>>[]
-			{
-				stationCycle => stationCycle.RID == rid
-			}, withTracking: false);
+		// StationCycle is already set
+		if (StationCycle == null)
+			throw new ArgumentException("Station Cycle should NOT be null when building a ShootingPacket");
 		StationCycle.ShootingPacket = this;
 		StationCycle.ShootingID = ID;
 		// ?. => If firstHole not null then...
@@ -144,20 +136,20 @@ public partial class Shooting
 		Status = PacketStatus.Completed;
 		ShootingTS = tsFirstImage;
 		HasError = firstHole == null || thirdHole == null;
-		StationCycleRID = rid;
 		StationCycle.ShootingStatus = Status;
 		anodeUOW.StationCycle.Update(StationCycle);
+		return Task.CompletedTask;
 	}
 
+	/*
 	private static async Task DequeueDetectionPacket()
 	{
 		CancellationToken cancel = new();
-		AdsClient tcClient = new();
-		tcClient.Connect(851);
-		if (!tcClient.IsConnected) throw new Exception("Could not connect to tcClient");
+		AdsClient tcClient = TwinCatConnectionManager.Connect(ADSUtils.AdsPort);
 		uint removeHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionRemove);
 		await tcClient.WriteAnyAsync(removeHandle, true, cancel);
 	}
+	*/
 
 	private static void SaveImageAndThumbnail(FileInfo file, string imageRoot, string thumbnailRoot, string anodeType,
 		DateTimeOffset date, int camera)
@@ -174,14 +166,12 @@ public partial class Shooting
 		image.Save($@"{thumbnailPath}\{filename}", 0.2);
 	}
 
-	private FileInfo? GetImageInDirectory(DirectoryInfo directory, string rid)
+	private static FileInfo? GetImageInDirectory(DirectoryInfo directory, string rid)
 	{
 		List<FileInfo> images = directory.EnumerateFiles().ToList()
 			.FindAll(fileInfo => rid == string.Empty || ExtractRIDFromName(fileInfo.Name) == rid);
 		images.Sort((x, y) => DateTime.Compare(x.CreationTime, y.CreationTime));
-		if (images.Count == 0)
-			return null;
-		return images[0];
+		return images.Count == 0 ? null : images[0];
 	}
 
 	private static bool IsFileLocked(FileInfo? file)

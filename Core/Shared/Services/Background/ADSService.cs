@@ -1,8 +1,10 @@
+using System.Configuration;
 using System.Dynamic;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.Services.Notifications;
 using Core.Shared.Services.Notifications.PacketNotifications;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -25,9 +27,21 @@ public class ADSService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		using PeriodicTimer timer = new(_period);
 		CancellationToken cancel = CancellationToken.None;
+		
+		// Assign configuration
+		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
+		if (imagesPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+		string? thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
+		if (thumbnailsPath == null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
+		AssignNotification.ImagesPath = imagesPath;
+		AssignNotification.ThumbnailsPath = thumbnailsPath;
+		
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try
@@ -65,6 +79,8 @@ public class ADSService : BackgroundService
 			await AnnouncementNotification.Create(ads);
 			await DetectionNotification.Create(ads);
 			await AlarmNotification.Create(ads);
+
+			await AssignNotification.Create(ads);
 			if (Station.Type == StationType.S3S4)
 			{
 				await InFurnaceNotification.Create(ads);

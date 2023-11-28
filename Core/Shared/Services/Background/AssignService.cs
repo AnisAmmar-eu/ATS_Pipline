@@ -1,13 +1,12 @@
 using System.Configuration;
-using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.AlarmLists;
-using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Dictionaries;
+using Core.Shared.Models.TwinCat;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
 
@@ -27,7 +26,6 @@ public class AssignService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IPacketService packetService = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
 		IStationCycleService stationCycleService =
 			asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -38,32 +36,24 @@ public class AssignService : BackgroundService
 		string? thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
 		if (thumbnailsPath == null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
+
+		AdsClient tcClient = TwinCatConnectionManager.Connect(851);
+		uint closeCycleHandle = tcClient.CreateVariableHandle(ADSUtils.CloseCycle);
+		uint detectionHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionToRead);
 		while (!stoppingToken.IsCancellationRequested
 		       && await timer.WaitForNextTickAsync(stoppingToken))
 			try
 			{
+				if (!(await tcClient.ReadAnyAsync<bool>(closeCycleHandle, stoppingToken)).Value)
+					continue;
+
 				_logger.LogInformation("AssignService running at: {time}", DateTimeOffset.Now);
 
-				_logger.LogInformation("AssignService calling Assign");
-				Packet shooting = new Shooting(imagesPath, thumbnailsPath);
-				await packetService.BuildPacket(shooting);
-				_logger.LogInformation("AssignService assigned shooting packet to AnodeRID: {anodeRID}",
-					shooting.StationCycleRID);
+				_logger.LogInformation("AssignService calling AssignStationCycle");
 
-				_logger.LogInformation("AssignService calling UpdateDetection");
-				if (shooting.StationCycle == null)
-					throw new Exception("Shooting packet did not find a stationCycle for RID: " +
-					                    shooting.StationCycleRID);
-				await stationCycleService.UpdateDetectionWithMeasure(shooting.StationCycle);
+				//await stationCycleService.AssignStationCycle(tcClient, detectionHandle, imagesPath, thumbnailsPath);
 
-				_logger.LogInformation("AssignService calling AlarmList");
-				Packet alarmList = new AlarmList();
-				alarmList.StationCycleRID = shooting.StationCycleRID;
-				alarmList.StationCycle = shooting.StationCycle;
-				await packetService.BuildPacket(alarmList);
-				_logger.LogInformation("AssignService assigned alarmList packet to AnodeRID: {anodeRID}",
-					alarmList.StationCycleRID);
-
+				await tcClient.WriteAnyAsync(closeCycleHandle, false, stoppingToken);
 				_executionCount++;
 				_logger.LogInformation(
 					"Executed PeriodicAssignService - Count: {count}", _executionCount);

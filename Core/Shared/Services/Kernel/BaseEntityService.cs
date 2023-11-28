@@ -96,27 +96,29 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 		return result;
 	}
 
-	public async Task<TDTO> Remove(T entity)
+	public async Task Remove(T entity)
 	{
 		await AnodeUOW.StartTransaction();
 		_repository.Remove(entity);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
-		return entity.ToDTO();
 	}
 
-	public async Task<List<TDTO>> RemoveAll(IEnumerable<T> entities)
+	public async Task Remove(int id, params string[] includes)
 	{
 		await AnodeUOW.StartTransaction();
-		List<TDTO> result = new();
+		await _repository.Remove(id, includes);
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+	}
+
+	public async Task RemoveAll(IEnumerable<T> entities)
+	{
+		await AnodeUOW.StartTransaction();
 		foreach (T entity in entities)
-		{
 			_repository.Remove(entity);
-			result.Add(entity.ToDTO());
-		}
 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
-		return result;
 	}
 }

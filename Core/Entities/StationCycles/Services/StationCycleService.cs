@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.Json;
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
+using Core.Entities.Packets.Models.DB;
+using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.Structs;
@@ -72,6 +74,26 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 		return stationCycle.ShootingPacket.GetImagePathFromRoot(stationCycle.StationID, thumbnailsPath,
 			stationCycle.AnodeType, camera);
+	}
+
+	public async Task AssignStationCycle(Detection detection, string imagesPath, string thumbnailsPath)
+	{
+		string rid = detection.StationCycleRID;
+		StationCycle cycle = await AnodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]
+		{
+			cycle => cycle.RID == rid
+		}, withTracking: false);
+		await UpdateDetectionWithMeasure(cycle);
+
+		Packet shooting = new Shooting(imagesPath, thumbnailsPath);
+		shooting.StationCycle = cycle;
+		shooting.StationCycleRID = rid;
+		await _packetService.BuildPacket(shooting);
+
+		Packet alarmList = new AlarmList();
+		alarmList.StationCycleRID = shooting.StationCycleRID;
+		alarmList.StationCycle = shooting.StationCycle;
+		await _packetService.BuildPacket(alarmList);
 	}
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)

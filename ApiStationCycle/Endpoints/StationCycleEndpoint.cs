@@ -65,7 +65,7 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
+			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
 		httpContext.Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");

@@ -35,4 +35,7 @@ public static class ADSUtils
 
 	// MeasureNotification	
 	public const string MeasurementVariable = "VA_PXX.P04_In";
+
+	// Close cycle
+	public const string CloseCycle = "";
 }

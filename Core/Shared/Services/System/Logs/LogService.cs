@@ -86,6 +86,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 	public async Task Create(
 		DateTimeOffset date,
 		string server,
+		string username,
 		string api,
 		string controller,
 		string function,
@@ -94,7 +95,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		string value
 	)
 	{
-		await AnodeUOW.Log.Add(new Log(server, api, controller, function, endpoint, code, value, Station.ID));
+		await AnodeUOW.Log.Add(new Log(server, username, api, controller, function, endpoint, code, value, Station.ID));
 		AnodeUOW.Commit();
 	}
 }

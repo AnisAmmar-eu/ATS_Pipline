@@ -10,11 +10,12 @@ public partial class Log
 		HasBeenSent = Station.IsServer;
 	}
 
-	public Log(string server, string api, string controller, string function, string endpoint, int code, string value,
-		int stationID)
+	public Log(string server, string username, string api, string controller, string function, string endpoint,
+		int code, string value, int stationID)
 	{
 		HasBeenSent = Station.IsServer;
 		Server = server;
+		Username = username;
 		Api = api;
 		Controller = controller;
 		Function = function;
@@ -27,6 +28,7 @@ public partial class Log
 	public Log(DTOLog dto)
 	{
 		Server = dto.Server;
+		Username = dto.Username;
 		Api = dto.Api;
 		Controller = dto.Controller;
 		Function = dto.Function;

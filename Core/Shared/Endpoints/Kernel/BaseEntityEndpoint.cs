@@ -59,8 +59,8 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				.WithOpenApi();
 
 		if ((flags & BaseEndpointFlags.Delete) == BaseEndpointFlags.Delete)
-			group.MapDelete("", Remove)
-				.WithSummary($"Remove the {dtoName} in the body").Accepts<TDTO>("application/json").WithOpenApi();
+			group.MapDelete("{id}", Remove)
+				.WithSummary($"Remove the {dtoName} by its ID").WithOpenApi();
 	}
 
 	#region Create
@@ -73,60 +73,21 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 
 	#endregion
 
-	#region Update
-
-	private static async Task<JsonHttpResult<ApiResponse>> Update(TService service, ILogService logService,
-		HttpContext httpContext, TDTO dto)
-	{
-		return await GenericEndpoint(async () => await service.Update(dto.ToModel()), logService, httpContext);
-	}
-
-	#endregion
-
-	#region Delete
-
-	// Here TDTO dto is NOT in the arguments as we need it from body with Custom Binding. It is therefore read in the
-	// body of the controller. DELETE needs it whereas UPDATE does not because DELETE does NOT authorize inferred
-	// types. (Thus forcing [FromBody] which does not call BindAsync)
-	private static async Task<JsonHttpResult<ApiResponse>> Remove([FromServices] TService service,
-		[FromServices] ILogService logService, HttpContext httpContext)
-	{
-		return await GenericEndpoint(async () =>
-		{
-			TDTO dto = await ReadWithBindAsync(httpContext);
-			return await service.Remove(dto.ToModel());
-		}, logService, httpContext);
-	}
-
-	#endregion
-
-
-	// Use this method if custom binding is needed and you cannot have an inferred body parameter.
-	private static async ValueTask<TDTO> ReadWithBindAsync(HttpContext httpContext)
-	{
-		// Verifies if the type has custom binding or not by using reflection
-		bool hasCustomBinding = typeof(TDTO).GetInterfaces()
-			.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IExtensionBinder<>));
-		if (!hasCustomBinding)
-			return JsonSerializer.Deserialize<TDTO>(httpContext.Request.Body) ??
-			       throw new ArgumentException("Empty body or malformed one");
-
-		// Then it gets the BindAsync method through reflection.
-		// Strongly inspired by:
-		// https://stackoverflow.com/questions/74501978/how-do-i-test-if-a-type-t-implements-iparsablet
-		MethodInfo? bind = typeof(TDTO).GetMethods(BindingFlags.Static | BindingFlags.Public).FirstOrDefault(c =>
-			c.Name == "BindAsync" && c.GetParameters().Length == 1 &&
-			c.GetParameters()[0].ParameterType == typeof(HttpContext));
-		if (bind == null)
-			throw new ArgumentException(
-				"Bind: Trying to bind an IExtensionBinder value which does not have a bind method");
-
-		// Invokes the function by casting its return type to an awaitable one.
-		return await (ValueTask<TDTO?>)bind.Invoke(null, new object[] { httpContext })! ??
-		       throw new ArgumentException("Empty body or binding failed");
-	}
-
 	#region Read
+
+	private async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
+		HttpContext httpContext)
+	{
+		return await GenericEndpoint(async () => await service.GetAll(withTracking: false, includes: _includes),
+			logService, httpContext);
+	}
+
+	private static async Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(TService service, ILogService logService,
+		HttpContext httpContext, [FromBody] string[] includes)
+	{
+		return await GenericEndpoint(async () => await service.GetAll(withTracking: false, includes: includes),
+			logService, httpContext);
+	}
 
 	private async Task<JsonHttpResult<ApiResponse>> GetByID(TService service, ILogService logService,
 		HttpContext httpContext, [FromRoute] int id)
@@ -184,20 +145,6 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		}, logService, httpContext);
 	}
 
-	private async Task<JsonHttpResult<ApiResponse>> GetAll(TService service, ILogService logService,
-		HttpContext httpContext)
-	{
-		return await GenericEndpoint(async () => await service.GetAll(withTracking: false, includes: _includes),
-			logService, httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(TService service, ILogService logService,
-		HttpContext httpContext, [FromBody] string[] includes)
-	{
-		return await GenericEndpoint(async () => await service.GetAll(withTracking: false, includes: includes),
-			logService, httpContext);
-	}
-
 	private static async Task<JsonHttpResult<ApiResponse>> GetWithPagination(TService service, ILogService logService,
 		HttpContext httpContext, [FromRoute] int nbItems, [FromRoute] int lastID,
 		[FromBody] Pagination pagination)
@@ -208,4 +155,51 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 	}
 
 	#endregion
+
+	#region Update
+
+	private static async Task<JsonHttpResult<ApiResponse>> Update(TService service, ILogService logService,
+		HttpContext httpContext, TDTO dto)
+	{
+		return await GenericEndpoint(async () => await service.Update(dto.ToModel()), logService, httpContext);
+	}
+
+	#endregion
+
+	#region Delete
+
+	private async Task<JsonHttpResult<ApiResponse>> Remove([FromServices] TService service,
+		[FromServices] ILogService logService, HttpContext httpContext, [FromRoute] int id)
+	{
+		return await GenericEndpointEmptyResponse(async () => await service.Remove(id, _includes), logService, httpContext);
+	}
+
+	#endregion
+
+
+	// Use this method if custom binding is needed and you cannot have an inferred body parameter.
+	// Now unused but left there in case.
+	private static async ValueTask<TDTO> ReadWithBindAsync(HttpContext httpContext)
+	{
+		// Verifies if the type has custom binding or not by using reflection
+		bool hasCustomBinding = typeof(TDTO).GetInterfaces()
+			.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IExtensionBinder<>));
+		if (!hasCustomBinding)
+			return JsonSerializer.Deserialize<TDTO>(httpContext.Request.Body) ??
+			       throw new ArgumentException("Empty body or malformed one");
+
+		// Then it gets the BindAsync method through reflection.
+		// Strongly inspired by:
+		// https://stackoverflow.com/questions/74501978/how-do-i-test-if-a-type-t-implements-iparsablet
+		MethodInfo? bind = typeof(TDTO).GetMethods(BindingFlags.Static | BindingFlags.Public).FirstOrDefault(c =>
+			c.Name == "BindAsync" && c.GetParameters().Length == 1 &&
+			c.GetParameters()[0].ParameterType == typeof(HttpContext));
+		if (bind == null)
+			throw new ArgumentException(
+				"Bind: Trying to bind an IExtensionBinder value which does not have a bind method");
+
+		// Invokes the function by casting its return type to an awaitable one.
+		return await (ValueTask<TDTO?>)bind.Invoke(null, new object[] { httpContext })! ??
+		       throw new ArgumentException("Empty body or binding failed");
+	}
 }

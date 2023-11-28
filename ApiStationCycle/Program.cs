@@ -75,7 +75,7 @@ builder.Services.AddAuthentication(options =>
 	});
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), o => o.CommandTimeout(100000000)));
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 	.AddEntityFrameworkStores<AnodeCTX>()

@@ -71,26 +71,26 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 			try
 			{
 				result = await authService.RegisterSource(dtoLogin);
-				return await new ApiResponse(result).SuccessResult(logService, httpContext.GetEndpoint());
+				return await new ApiResponse(result).SuccessResult(logService, httpContext);
 			}
 			catch (EntityNotFoundException e2)
 			{
-				return await new ApiResponse(e2.Message).ErrorResult(logService, httpContext.GetEndpoint(), e2);
+				return await new ApiResponse(e2.Message).ErrorResult(logService, httpContext, e2);
 			}
 			catch (Exception e2)
 			{
 				if (e2 is UnauthorizedAccessException)
-					return await new ApiResponse(e2.Message).ErrorResult(logService, httpContext.GetEndpoint(), e2);
+					return await new ApiResponse(e2.Message).ErrorResult(logService, httpContext, e2);
 
 				return await new ApiResponse("An undefined error happened.").ErrorResult(logService,
-					httpContext.GetEndpoint(), e2);
+					httpContext, e2);
 			}
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
+			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		return await new ApiResponse(result).SuccessResult(logService, httpContext.GetEndpoint());
+		return await new ApiResponse(result).SuccessResult(logService, httpContext);
 	}
 }

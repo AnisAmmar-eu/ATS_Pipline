@@ -7,6 +7,7 @@ namespace Core.Shared.Models.DTO.System.Logs;
 public partial class DTOLog : DTOBaseEntity, IDTO<Log, DTOLog>
 {
 	public string? Server { get; set; }
+	public string? Username { get; set; }
 	public string? Api { get; set; }
 	public string? Controller { get; set; }
 	public string? Function { get; set; }

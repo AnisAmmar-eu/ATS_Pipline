@@ -26,6 +26,7 @@ public interface IBaseEntityService<T, TDTO>
 	public Task<List<TDTO>> AddAll(IEnumerable<T> entities);
 	public Task<TDTO> Update(T entity);
 	public Task<List<TDTO>> UpdateAll(IEnumerable<T> entities);
-	public Task<TDTO> Remove(T entity);
-	public Task<List<TDTO>> RemoveAll(IEnumerable<T> entities);
+	public Task Remove(T entity);
+	public Task Remove(int id, params string[] includes);
+	public Task RemoveAll(IEnumerable<T> entities);
 }

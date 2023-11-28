@@ -17,10 +17,10 @@ public class BaseEndpoint
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
+			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		return await new ApiResponse(ans).SuccessResult(logService, httpContext.GetEndpoint());
+		return await new ApiResponse(ans).SuccessResult(logService, httpContext);
 	}
 
 	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpointEmptyResponse(Func<Task> func,
@@ -32,9 +32,9 @@ public class BaseEndpoint
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext.GetEndpoint(), e);
+			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		return await new ApiResponse().SuccessResult(logService, httpContext.GetEndpoint());
+		return await new ApiResponse().SuccessResult(logService, httpContext);
 	}
 }

@@ -220,6 +220,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	{
 		IQueryable<T> query = Context.Set<T>().AsQueryable();
 		query = includes.Aggregate(query, (current, include) => current.Include(include));
+		if (includes.Any()) query = query.AsNoTracking();
 		T? entity = await query.FirstOrDefaultAsync(x => x.ID == id);
 		if (entity == null)
 			throw new EntityNotFoundException(typeof(T).Name, id);

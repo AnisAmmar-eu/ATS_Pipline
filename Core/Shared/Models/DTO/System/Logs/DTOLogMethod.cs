@@ -15,6 +15,7 @@ public partial class DTOLog
 		ID = log.ID;
 		TS = log.TS;
 		Server = log.Server;
+		Username = log.Username;
 		Api = log.Api;
 		Controller = log.Controller;
 		Function = log.Function;

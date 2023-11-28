@@ -134,7 +134,7 @@ public interface IBaseEntityRepository<T, TDTO>
 	void Remove(T entity);
 
 	/// <summary>
-	///     Remove an entitiy in the table of <typeref name="T" /> with the given ID
+	///     Remove an entity in the table of <typeref name="T" /> with the given ID
 	/// </summary>
 	/// <param name="id">ID of the entity to remove</param>
 	/// <param name="includes"></param>

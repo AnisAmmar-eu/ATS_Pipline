@@ -75,13 +75,13 @@ public partial class ApiResponse
 		return TypedResults.Json(this, statusCode: Status.Code, options: JsonOptions);
 	}
 
-	public async Task<JsonHttpResult<ApiResponse>> SuccessResult(ILogService logService, Endpoint? endpoint)
+	public async Task<JsonHttpResult<ApiResponse>> SuccessResult(ILogService logService, HttpContext httpContext)
 	{
-		await CreateLog(logService, endpoint);
+		await CreateLog(logService, httpContext);
 		return TypedResults.Json(this, JsonOptions);
 	}
 
-	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(ILogService logService, Endpoint? endpoint, Exception e)
+	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(ILogService logService, HttpContext httpContext, Exception e)
 	{
 		switch (e)
 		{
@@ -115,13 +115,14 @@ public partial class ApiResponse
 				break;
 		}
 
-		await CreateLog(logService, endpoint);
+		await CreateLog(logService, httpContext);
 
 		return TypedResults.Json(this, statusCode: Status.Code, options: JsonOptions);
 	}
 
-	private async Task CreateLog(ILogService logService, Endpoint? endpoint)
+	private async Task CreateLog(ILogService logService, HttpContext httpContext)
 	{
+		Endpoint? endpoint = httpContext.GetEndpoint();
 		if (endpoint == null)
 			throw new ArgumentException("Logs creation, endpoint is null");
 		MethodInfo methodInfo = endpoint.Metadata.GetRequiredMetadata<MethodInfo>();
@@ -130,6 +131,7 @@ public partial class ApiResponse
 			await logService.Create(
 				DateTimeOffset.Now,
 				Dns.GetHostName(),
+				httpContext.User.Identity?.Name ?? string.Empty,
 				methodInfo.Module.Name,
 				methodInfo.ReflectedType?.Name ?? string.Empty,
 				methodInfo.Name,

@@ -924,6 +924,9 @@ namespace Core.Migrations
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
