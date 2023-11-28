@@ -14,14 +14,43 @@ namespace Core.Entities.BenchmarkTests.Services;
 public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>,
 	IBenchmarkTestService
 {
-	private static CameraTest? _cam1;
-	private static CameraTest? _cam2;
 	private readonly Random _random = new();
 
 	public BenchmarkTestService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
 
+	public async Task<TimeSpan> GenerateRows(int nbItems)
+	{
+		Stopwatch watch = new();
+		if (nbItems < 10)
+			throw new ArgumentException("Not enough items");
+		int nbRows = AnodeUOW.BenchmarkTest.GetCount();
+		if (nbRows < nbItems)
+		{
+			watch.Start();
+			nbItems -= nbRows;
+			DateTimeOffset now = DateTimeOffset.Now;
+			await AnodeUOW.StartTransaction();
+			for (int i = 0; i < nbItems - 10; ++i)
+				await AnodeUOW.BenchmarkTest.Add(await GenerateTest(now, i));
+			for (int i = 0; i < 10; ++i)
+				await AnodeUOW.BenchmarkTest.Add(await GenerateTest(now, i, status: 4));
+			// BenchmarkTest test = GenerateTest(now, 0, "RandomRID");
+			// await AnodeUOW.BenchmarkTest.Add(test);
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
+			watch.Stop();
+		}
+		else if (nbRows > nbItems)
+		{
+			int toRemove = nbRows - nbItems;
+			AnodeUOW.BenchmarkTest.RemoveRange(await AnodeUOW.BenchmarkTest.OldGetRange(nbRows - toRemove, toRemove));
+		}
+
+		return watch.Elapsed;
+	}
+	
 	public async Task<List<TimeSpan>> StartTest(int nbItems)
 	{
 		Stopwatch watch = new();
@@ -52,25 +81,25 @@ public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, 
 		await AnodeUOW.BenchmarkTest.GetAll(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.StationID == 3
-		}, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
+		}, withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
 		await AnodeUOW.BenchmarkTest.GetAll(new Expression<Func<BenchmarkTest, bool>>[]
 		{
-			b => b.AnodeType == AnodeTypeDict.D20
-		}, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
+			b => b.AnodeType == 1
+		}, withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
 		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetBy(new Expression<Func<BenchmarkTest, bool>>[]
 		{
 			b => b.RID == "RandomRID"
-		}, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
+		}, withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		await AnodeUOW.BenchmarkTest.GetById(test.ID, withTracking: false, includes: nameof(BenchmarkTest.CameraTest));
+		await AnodeUOW.BenchmarkTest.GetById(test.ID, withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 
@@ -84,33 +113,23 @@ public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, 
 			b.ToDTO());
 	}
 
-	private async Task<BenchmarkTest> GenerateTest(DateTimeOffset now, int index, string? rid = null)
+	private Task<BenchmarkTest> GenerateTest(DateTimeOffset now, int index, string? rid = null, int? status = null)
 	{
 		int stationID = _random.Next(1, 6);
 		int cameraID = _random.Next(1, 3);
-		CameraTest cam;
-		if (cameraID == 1)
-		{
-			_cam1 ??= await AnodeUOW.CameraTest.GetById(1);
-			cam = _cam1;
-		}
-		else
-		{
-			_cam2 ??= await AnodeUOW.CameraTest.GetById(2);
-			cam = _cam2;
-		}
+		status ??= _random.Next(1, 4);
 
-		string anodeType = _random.Next(1, 3) == 1 ? AnodeTypeDict.D20 : AnodeTypeDict.DX;
+		int anodeType = _random.Next(1, 3);
 		DateTimeOffset ts = now.Subtract(TimeSpan.FromMinutes(index));
 		rid ??= $"{ts.ToString(AnodeFormat.RIDFormat)}_{stationID}_{cameraID}_{anodeType}";
-		return new BenchmarkTest
+		return Task.FromResult(new BenchmarkTest
 		{
 			TS = ts,
 			StationID = stationID,
 			CameraID = cameraID,
-			CameraTest = cam,
+			Status = status.Value,
 			AnodeType = anodeType,
 			RID = rid
-		};
+		});
 	}
 }

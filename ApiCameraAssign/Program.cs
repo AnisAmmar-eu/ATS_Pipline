@@ -34,8 +34,8 @@ builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
-builder.Services.AddSingleton<AssignService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<AssignService>());
+//builder.Services.AddSingleton<AssignService>();
+//builder.Services.AddHostedService(provider => provider.GetRequiredService<AssignService>());
 
 builder.Services.AddCarter();
 

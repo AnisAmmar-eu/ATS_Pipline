@@ -7,7 +7,5 @@ namespace Core.Entities.BenchmarkTests.Services;
 
 public interface IBenchmarkTestService : IBaseEntityService<BenchmarkTest, DTOBenchmarkTest>
 {
-	public Task<List<TimeSpan>> StartTest(int nbItems);
-
-	public Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID, Pagination pagination);
+	public Task<TimeSpan> GenerateRows(int nbItems);
 }

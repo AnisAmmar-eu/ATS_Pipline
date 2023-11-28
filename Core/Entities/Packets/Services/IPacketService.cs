@@ -8,6 +8,6 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 {
 	public Task<DTOPacket> BuildPacket(Packet packet);
 	public Task<List<Packet>> ReceivePackets(IEnumerable<DTOPacket> packet);
-	public Task<int?> AddPacketFromStationCycle(Packet? packet);
+	public Task<Packet?> AddPacketFromStationCycle(Packet? packet);
 	public void MarkPacketAsSentFromStationCycle(Packet? packet);
 }

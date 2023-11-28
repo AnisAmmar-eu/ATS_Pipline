@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128081801_AddedUsersToLogs")]
+    partial class AddedUsersToLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -277,8 +280,10 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("AnodeType")
-                        .HasColumnType("int");
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<int>("CameraID")
                         .HasColumnType("int");
@@ -290,13 +295,12 @@ namespace Core.Migrations
                     b.Property<int>("StationID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CameraID");
 
                     b.HasIndex("RID");
 
@@ -1368,6 +1372,17 @@ namespace Core.Migrations
                     b.Navigation("S3S4Cycle");
                 });
 
+            modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.BenchmarkTest", b =>
+                {
+                    b.HasOne("Core.Entities.BenchmarkTests.Models.DB.CameraTests.CameraTest", "CameraTest")
+                        .WithMany("BenchmarkTests")
+                        .HasForeignKey("CameraID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CameraTest");
+                });
+
             modelBuilder.Entity("Core.Entities.IOT.IOTTags.Models.DB.IOTTag", b =>
                 {
                     b.HasOne("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", "IOTDevice")
@@ -1538,6 +1553,11 @@ namespace Core.Migrations
 
                     b.Navigation("AlarmRT")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.CameraTests.CameraTest", b =>
+                {
+                    b.Navigation("BenchmarkTests");
                 });
 
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>

@@ -211,11 +211,5 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithOne(cycle => cycle.Anode)
 			.HasForeignKey<AnodeDX>(anode => anode.S5CycleID)
 			.OnDelete(DeleteBehavior.NoAction);
-
-		modelBuilder.Entity<BenchmarkTest>().Property<string>(b => b.AnodeType).HasMaxLength(16);
-		modelBuilder.Entity<CameraTest>()
-			.HasMany(c => c.BenchmarkTests)
-			.WithOne(b => b.CameraTest)
-			.HasForeignKey(b => b.CameraID);
 	}
 }

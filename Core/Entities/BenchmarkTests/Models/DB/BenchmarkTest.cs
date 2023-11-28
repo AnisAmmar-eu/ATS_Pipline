@@ -18,30 +18,19 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 	{
 		RID = dtoBenchmarkTest.RID;
 		CameraID = dtoBenchmarkTest.CameraID;
-		CameraTest = dtoBenchmarkTest.CameraTest.ToModel();
 		StationID = dtoBenchmarkTest.StationID;
+		Status = dtoBenchmarkTest.Status;
 		AnodeType = dtoBenchmarkTest.AnodeType;
 	}
 
 	public string RID { get; set; } = string.Empty;
 	public int CameraID { get; set; }
 	public int StationID { get; set; }
-	public string AnodeType { get; set; } = AnodeTypeDict.Undefined;
+	public int Status { get; set; }
+	public int AnodeType { get; set; }
 
 	public override DTOBenchmarkTest ToDTO()
 	{
 		return new DTOBenchmarkTest(this);
 	}
-
-	#region NavProperties
-
-	private CameraTest? CameraTestSub { get; set; }
-
-	public CameraTest CameraTest
-	{
-		set => CameraTestSub = value;
-		get => CameraTestSub ?? throw new InvalidOperationException("Uninitialized property: " + nameof(CameraTest));
-	}
-
-	#endregion
 }

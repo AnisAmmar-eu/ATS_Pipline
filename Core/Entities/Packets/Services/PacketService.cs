@@ -45,14 +45,14 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		return packets;
 	}
 
-	public async Task<int?> AddPacketFromStationCycle(Packet? packet)
+	public async Task<Packet?> AddPacketFromStationCycle(Packet? packet)
 	{
 		if (packet == null)
 			return null;
 		packet.ID = 0;
 		await AnodeUOW.Packet.Add(packet);
 		AnodeUOW.Commit();
-		return packet.ID;
+		return packet;
 	}
 
 	public void MarkPacketAsSentFromStationCycle(Packet? packet)

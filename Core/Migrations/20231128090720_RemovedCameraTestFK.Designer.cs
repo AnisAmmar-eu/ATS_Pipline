@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128090720_RemovedCameraTestFK")]
+    partial class RemovedCameraTestFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,6 +286,9 @@ namespace Core.Migrations
                     b.Property<int>("CameraID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CameraTestID")
+                        .HasColumnType("int");
+
                     b.Property<string>("RID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -297,6 +303,8 @@ namespace Core.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CameraTestID");
 
                     b.HasIndex("RID");
 
@@ -1368,6 +1376,13 @@ namespace Core.Migrations
                     b.Navigation("S3S4Cycle");
                 });
 
+            modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.BenchmarkTest", b =>
+                {
+                    b.HasOne("Core.Entities.BenchmarkTests.Models.DB.CameraTests.CameraTest", null)
+                        .WithMany("BenchmarkTests")
+                        .HasForeignKey("CameraTestID");
+                });
+
             modelBuilder.Entity("Core.Entities.IOT.IOTTags.Models.DB.IOTTag", b =>
                 {
                     b.HasOne("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", "IOTDevice")
@@ -1538,6 +1553,11 @@ namespace Core.Migrations
 
                     b.Navigation("AlarmRT")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.CameraTests.CameraTest", b =>
+                {
+                    b.Navigation("BenchmarkTests");
                 });
 
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>

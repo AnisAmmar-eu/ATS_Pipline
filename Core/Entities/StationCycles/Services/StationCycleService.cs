@@ -1,6 +1,7 @@
 using System.Configuration;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Core.Entities.Anodes.Models.DB;
@@ -12,7 +13,6 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
@@ -128,21 +128,16 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/stationCycles", content);
 		if (response.IsSuccessStatusCode)
 		{
-			// Send the images, marking packets as sent and then cycle as sent.
-			Task imagesTask = SendStationImages(stationCycle);
 			await AnodeUOW.StartTransaction();
 			stationCycle.Status = PacketStatus.Sent;
-			if (stationCycle is S1S2Cycle s1S2Cycle)
-				_packetService.MarkPacketAsSentFromStationCycle(s1S2Cycle.AnnouncementPacket);
-			else
-				_packetService.MarkPacketAsSentFromStationCycle(stationCycle.AnnouncementPacket);
-			_packetService.MarkPacketAsSentFromStationCycle(stationCycle.DetectionPacket);
-			_packetService.MarkPacketAsSentFromStationCycle(stationCycle.ShootingPacket);
-			_packetService.MarkPacketAsSentFromStationCycle(stationCycle.AlarmListPacket);
-			if (stationCycle is S3S4Cycle s3S4Cycle)
+			Task imagesTask = SendStationImages(stationCycle);
+			// Send the images, marking packets as sent and then cycle as sent.
+			PropertyInfo[] properties =
+				stationCycle.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			foreach (PropertyInfo propertyInfo in properties)
 			{
-				_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.InFurnacePacket);
-				_packetService.MarkPacketAsSentFromStationCycle(s3S4Cycle.OutFurnacePacket);
+				if (propertyInfo.GetValue(stationCycle) is Packet packet)
+					_packetService.MarkPacketAsSentFromStationCycle(packet);
 			}
 
 			AnodeUOW.StationCycle.Update(stationCycle);
@@ -158,6 +153,22 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		await AnodeUOW.StartTransaction();
 		StationCycle cycle = dtoStationCycle.ToModel();
 		cycle.ID = 0;
+		IEnumerable<PropertyInfo> properties = cycle.GetType()
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.Where(propertyInfo => propertyInfo.GetValue(cycle) is Packet);
+		foreach (PropertyInfo propertyInfo in properties)
+		{
+			string propertyName = propertyInfo.Name;
+			string fkName = $"{propertyName[..^"Packet".Length]}ID";
+			PropertyInfo foreignKey =
+				cycle.GetType().GetProperty($"{propertyName[..^"Packet".Length]}ID") ??
+				throw new InvalidOperationException($"No foreign key found for {propertyName}");
+			Packet? newPacket = await _packetService.AddPacketFromStationCycle(propertyInfo.GetValue(cycle) as Packet);
+			propertyInfo.SetValue(cycle, newPacket);
+			foreignKey.SetValue(cycle, newPacket?.ID);
+		}
+
+		/*
 		if (cycle is S1S2Cycle s1S2Cycle)
 			s1S2Cycle.AnnouncementID = await _packetService.AddPacketFromStationCycle(s1S2Cycle.AnnouncementPacket);
 		else
@@ -170,6 +181,7 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			s3S4Cycle.InFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.InFurnacePacket);
 			s3S4Cycle.OutFurnaceID = await _packetService.AddPacketFromStationCycle(s3S4Cycle.OutFurnacePacket);
 		}
+		*/
 
 		// Packets need to be commit before adding StationCycle
 		AnodeUOW.Commit();
