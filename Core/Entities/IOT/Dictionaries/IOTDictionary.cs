@@ -22,30 +22,26 @@ public static class ITApisDict
 	public const string CameraAddress = "https://localhost:7277"; // 5244
 	public const string CameraPath = "/apiCamera/status";
 
-	public const string CameraAssignRID = "ApiCameraAssign";
-	public const string CameraAssignAddress = "https://localhost:7278"; // 5245
-	public const string CameraAssignPath = "/apiCameraAssign/status";
-
 	public const string IOTRID = "ApiIOT";
-	public const string IOTAddress = "https://localhost:7279"; // 5246
+	public const string IOTAddress = "https://localhost:7278"; // 5245
 	public const string IOTPath = "/apiIOT/status";
 
 	public const string KPIRID = "ApiKPI";
-	public const string KPIAddress = "https://localhost:7280"; // 5247
+	public const string KPIAddress = "https://localhost:7279"; // 5246
 	public const string KPIPath = "/apiKPI/status";
 
-	// 7281 & 5248 is taken by ApiServerReceive
+	// 7280 & 5247 is taken by ApiServerReceive
 
 	public const string StationCycleRID = "ApiStationCycle";
-	public const string StationCycleAddress = "https://localhost:7282"; // 5249
+	public const string StationCycleAddress = "https://localhost:7281"; // 5248
 	public const string StationCyclePath = "/apiStationCycle/status";
 
 	public const string UserRID = "ApiUser";
-	public const string UserAddress = "https://localhost:7283"; // 5250
+	public const string UserAddress = "https://localhost:7282"; // 5249
 	public const string UserPath = "/apiUser/status";
 
 	public const string VisionRID = "ApiVision";
-	public const string VisionAddress = "https://localhost:7284"; // 5251
+	public const string VisionAddress = "https://localhost:7283"; // 5250
 	public const string VisionPath = "/apiVision/status";
 }
 
