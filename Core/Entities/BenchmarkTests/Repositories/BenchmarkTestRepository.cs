@@ -1,9 +1,6 @@
 using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Shared.Data;
-using Core.Shared.Paginations;
-using Core.Shared.Paginations.Filtering;
-using Core.Shared.Paginations.Sorting;
 using Core.Shared.Repositories.Kernel;
 using Microsoft.EntityFrameworkCore;
 

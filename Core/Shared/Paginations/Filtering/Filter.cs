@@ -15,16 +15,16 @@ public static class Filter
 		where TDTO : class, IDTO<T, TDTO>
 	{
 		SortOption sortOption = (pagination.SortParam is null)
-            ? SortOption.None
+			? SortOption.None
 			: SortOptionMap.Get(pagination.SortParam.SortOptionName);
 		if (sortOption == SortOption.Ascending)
-        {
-            return source.Where(t => pagination.LastID == 0 || t.ID > pagination.LastID)
-                .Where(FiltersToWhereClause<T>(pagination.FilterParams));
-        }
+		{
+			return source.Where(t => pagination.LastID == 0 || t.ID > pagination.LastID)
+				.Where(FiltersToWhereClause<T>(pagination.FilterParams));
+		}
 
-        return source.Where(t => pagination.LastID == 0 || t.ID < pagination.LastID)
-               .Where(FiltersToWhereClause<T>(pagination.FilterParams));
+		return source.Where(t => pagination.LastID == 0 || t.ID < pagination.LastID)
+			.Where(FiltersToWhereClause<T>(pagination.FilterParams));
 	}
 
 	private static Expression<Func<T, bool>> FiltersToWhereClause<T>(IEnumerable<FilterParam>? filterParams)

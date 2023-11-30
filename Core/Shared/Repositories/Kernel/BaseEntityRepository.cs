@@ -174,10 +174,8 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			.AsNoTracking()
 			.FilterFromPagination<T, TDTO>(pagination)
 			.SortFromPagination<T, TDTO>(pagination);
-		if (nbItems == 0)
-			return query.ToListAsync();
 
-		return query.Take(nbItems).ToListAsync();
+		return (nbItems == 0) ? query.ToListAsync() : query.Take(nbItems).ToListAsync();
 	}
 
 	/// <summary>
