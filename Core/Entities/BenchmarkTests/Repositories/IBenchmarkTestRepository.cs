@@ -8,7 +8,6 @@ namespace Core.Entities.BenchmarkTests.Repositories;
 public interface IBenchmarkTestRepository : IBaseEntityRepository<BenchmarkTest, DTOBenchmarkTest>
 {
 	public Task<List<BenchmarkTest>> OldGetRange(int start, int nbItems);
-	public Task<List<BenchmarkTest>> GetRangeForPagination(int nbItems, int lastID, Pagination pagination);
 	public Task RemoveAll();
 	public int GetCount();
 }

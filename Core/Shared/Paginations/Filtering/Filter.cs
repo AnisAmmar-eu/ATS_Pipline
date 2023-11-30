@@ -10,19 +10,20 @@ public static class Filter
 {
 	public static IQueryable<T> FilterFromPagination<T, TDTO>(
 		this IQueryable<T> source,
-		Pagination pagination,
-		int lastID)
+		Pagination pagination)
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>
 	{
-		SortOption sortOption = SortOptionMap.Get(pagination.SortParam.SortOptionName);
+		SortOption sortOption = (pagination.SortParam is null)
+            ? SortOption.None
+			: SortOptionMap.Get(pagination.SortParam.SortOptionName);
 		if (sortOption == SortOption.Ascending)
         {
-            return source.Where(t => lastID == 0 || t.ID > lastID)
+            return source.Where(t => pagination.LastID == 0 || t.ID > pagination.LastID)
                 .Where(FiltersToWhereClause<T>(pagination.FilterParams));
         }
 
-        return source.Where(t => lastID == 0 || t.ID < lastID)
+        return source.Where(t => pagination.LastID == 0 || t.ID < pagination.LastID)
                .Where(FiltersToWhereClause<T>(pagination.FilterParams));
 	}
 

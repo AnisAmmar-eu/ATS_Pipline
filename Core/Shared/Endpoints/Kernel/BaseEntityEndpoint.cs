@@ -56,7 +56,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				.WithSummary($"Get a {tName} by a filterValue in columnName with includes")
 				.WithOpenApi();
 
-			group.MapPut("pagination/{nbItems}/{lastID}", GetWithPagination)
+			group.MapPut("pagination/{nbItems}", GetWithPagination)
 				.WithSummary($"Get a {tName} by paging, sorting and filtering with includes")
 				.WithOpenApi();
 		}
@@ -229,7 +229,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 					Includes = _includes,
 					FilterParams = [param],
 				};
-				return service.GetWithPagination(pagination, 0, 0);
+				return service.GetWithPagination(pagination, 0);
 			},
 			logService,
 			httpContext,
@@ -256,7 +256,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 					Includes = includes,
 					FilterParams = [param],
 				};
-				return service.GetWithPagination(pagination, 0, 0);
+				return service.GetWithPagination(pagination, 0);
 			},
 			logService,
 			httpContext,
@@ -268,11 +268,10 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		ILogService logService,
 		HttpContext httpContext,
 		[FromRoute] int nbItems,
-		[FromRoute] int lastID,
 		[FromBody] Pagination pagination)
 	{
 		return GenericEndpoint(
-			() => service.GetWithPagination(pagination, nbItems, lastID),
+			() => service.GetWithPagination(pagination, nbItems),
 			logService,
 			httpContext,
 			_isLogged);

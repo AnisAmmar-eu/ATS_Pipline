@@ -161,7 +161,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		return Query(filters, orderBy, withTracking, maxCount, includes).ToListAsync();
 	}
 
-	public Task<List<T>> GetWithPagination(Pagination pagination, int nbItems, int lastID)
+	public Task<List<T>> GetWithPagination(Pagination pagination, int nbItems)
 	{
 		// No split query because we are using .Take();
 		// No tracking as this is used for back to front purposes and thus useless.
@@ -172,7 +172,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 					.AsQueryable(),
 				(current, value) => current.Include(value))
 			.AsNoTracking()
-			.FilterFromPagination<T, TDTO>(pagination, lastID)
+			.FilterFromPagination<T, TDTO>(pagination)
 			.SortFromPagination<T, TDTO>(pagination);
 		if (nbItems == 0)
 			return query.ToListAsync();

@@ -101,7 +101,12 @@ public interface IBaseEntityRepository<T, TDTO>
 		Dictionary<string, string[]>? includes = null
 		);
 
-	Task<List<T>> GetWithPagination(Pagination pagination, int nbItems, int lastID);
+	/// <summary>
+	///		Get a list of entities using pagination, filtering and sorting.
+	/// </summary>
+	/// <param name="pagination"></param>
+	/// <param name="nbItems"></param>
+	Task<List<T>> GetWithPagination(Pagination pagination, int nbItems);
 
 	/// <summary>
 	///     Find entities by a predicate

@@ -4,7 +4,6 @@ using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Shared.Dictionaries;
-using Core.Shared.Paginations;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -102,13 +101,6 @@ public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, 
 		ans.Add(watch.Elapsed);
 
 		return ans;
-	}
-
-	public async Task<List<DTOBenchmarkTest>> GetRange(int nbItems, int lastID, Pagination pagination)
-
-	{
-		return (await AnodeUOW.BenchmarkTest.GetRangeForPagination(nbItems, lastID, pagination)).ConvertAll(b =>
-			b.ToDTO());
 	}
 
 	private Task<BenchmarkTest> GenerateTest(DateTimeOffset now, int index, string? rid = null, int? status = null)

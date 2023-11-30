@@ -43,10 +43,10 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 			entity.ToDTO());
 	}
 
-	public async Task<List<TDTO>> GetWithPagination(Pagination pagination, int nbItems, int lastID)
+	public async Task<List<TDTO>> GetWithPagination(Pagination pagination, int nbItems)
 
 	{
-		return (await _repository.GetWithPagination(pagination, nbItems, lastID)).ConvertAll(entity =>
+		return (await _repository.GetWithPagination(pagination, nbItems)).ConvertAll(entity =>
 			entity.ToDTO());
 	}
 
