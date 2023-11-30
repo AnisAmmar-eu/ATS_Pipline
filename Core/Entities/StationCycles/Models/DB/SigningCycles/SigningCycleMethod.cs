@@ -4,16 +4,16 @@ namespace Core.Entities.StationCycles.Models.DB.SigningCycles;
 
 public abstract partial class SigningCycle
 {
-	public SigningCycle()
+	protected SigningCycle()
 	{
 	}
 
-	public SigningCycle(DTOSigningCycle dtoSigningCycle) : base(dtoSigningCycle)
+	protected SigningCycle(DTOSigningCycle dtoSigningCycle) : base(dtoSigningCycle)
 	{
 	}
 
 	public override DTOSigningCycle ToDTO()
 	{
-		return new DTOSigningCycle(this);
+		return new(this);
 	}
 }

@@ -29,6 +29,6 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 
 	public override DTOBenchmarkTest ToDTO()
 	{
-		return new DTOBenchmarkTest(this);
+		return new(this);
 	}
 }

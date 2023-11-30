@@ -16,12 +16,12 @@ public partial class KPIRT
 
 	public override DTOKPIRT ToDTO()
 	{
-		return new DTOKPIRT(this);
+		return new(this);
 	}
 
 	public KPILog ToLog(KPIC kpiC)
 	{
 		// ID is set to 0 so it may be added into another table.
-		return new KPILog(this, kpiC);
+		return new(this, kpiC);
 	}
 }

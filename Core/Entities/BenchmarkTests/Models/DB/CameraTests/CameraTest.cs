@@ -8,6 +8,6 @@ public class CameraTest : BaseEntity, IBaseEntity<CameraTest, DTOCameraTest>
 {
 	public override DTOCameraTest ToDTO()
 	{
-		return new DTOCameraTest(this);
+		return new(this);
 	}
 }

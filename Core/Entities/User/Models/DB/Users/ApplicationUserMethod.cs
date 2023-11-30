@@ -33,6 +33,6 @@ public partial class ApplicationUser
 
 	public DTOUser ToDTO()
 	{
-		return new DTOUser(this);
+		return new(this);
 	}
 }

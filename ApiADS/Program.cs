@@ -23,12 +23,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName == null)
+if (stationName is null)
 	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (connectionString == null)
+if (connectionString is null)
 	throw new ConfigurationErrorsException("Missing DefaultConnection");
 
 builder.Services.AddDbContext<AnodeCTX>(options =>

@@ -13,12 +13,16 @@ public class ActEntityRepository : BaseEntityRepository<AnodeCTX, ActEntity, DTO
 	{
 	}
 
-	public async Task<List<ActEntity>> GetAllByActWithIncludes(Act act, int? entityID, int? parentID,
-		bool withTracking = true, int? maxCount = null)
+	public Task<List<ActEntity>> GetAllByActWithIncludes(
+		Act act,
+		int? entityID,
+		int? parentID,
+		bool withTracking = true,
+		int? maxCount = null)
 	{
 		Expression<Func<ActEntity, bool>>[] filters = QueryFilters(act, entityID, parentID);
 
-		return await GetAll(
+		return GetAll(
 			filters,
 			null,
 			withTracking,
@@ -29,11 +33,11 @@ public class ActEntityRepository : BaseEntityRepository<AnodeCTX, ActEntity, DTO
 		);
 	}
 
-	public async Task<ActEntity> GetByActWithIncludes(Act act, int? entityID, int? parentID, bool withTracking = true)
+	public Task<ActEntity> GetByActWithIncludes(Act act, int? entityID, int? parentID, bool withTracking = true)
 	{
 		Expression<Func<ActEntity, bool>>[] filters = QueryFilters(act, entityID, parentID);
 
-		return await GetBy(
+		return GetBy(
 			filters,
 			null,
 			withTracking,
@@ -43,14 +47,13 @@ public class ActEntityRepository : BaseEntityRepository<AnodeCTX, ActEntity, DTO
 
 	private static Expression<Func<ActEntity, bool>>[] QueryFilters(Act act, int? entityID = null, int? parentID = null)
 	{
-		IEnumerable<Expression<Func<ActEntity, bool>>> filters = new Expression<Func<ActEntity, bool>>[]
-		{
+		IEnumerable<Expression<Func<ActEntity, bool>>> filters = new Expression<Func<ActEntity, bool>>[] {
 			ae =>
 				ae.Act.RID == act.RID
-				&& ae.Act.EntityType == act.EntityType
-				&& ae.Act.ParentType == act.ParentType
-				&& ae.EntityID == entityID
-				&& ae.ParentID == parentID
+					&& ae.Act.EntityType == act.EntityType
+					&& ae.Act.ParentType == act.ParentType
+					&& ae.EntityID == entityID
+					&& ae.ParentID == parentID,
 		};
 
 		return filters.ToArray();

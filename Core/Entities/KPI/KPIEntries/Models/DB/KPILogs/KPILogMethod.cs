@@ -20,6 +20,6 @@ public partial class KPILog
 
 	public override DTOKPILog ToDTO()
 	{
-		return new DTOKPILog(this);
+		return new(this);
 	}
 }

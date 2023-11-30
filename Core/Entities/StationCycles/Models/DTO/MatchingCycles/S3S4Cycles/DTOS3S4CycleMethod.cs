@@ -28,6 +28,6 @@ public partial class DTOS3S4Cycle
 
 	public override S3S4Cycle ToModel()
 	{
-		return new S3S4Cycle(this);
+		return new(this);
 	}
 }

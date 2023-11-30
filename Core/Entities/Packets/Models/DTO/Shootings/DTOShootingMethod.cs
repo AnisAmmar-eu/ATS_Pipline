@@ -22,6 +22,6 @@ public partial class DTOShooting
 
 	public override Shooting ToModel()
 	{
-		return new Shooting(this);
+		return new(this);
 	}
 }

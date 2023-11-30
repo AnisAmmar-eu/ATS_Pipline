@@ -6,6 +6,6 @@ public partial class DTORegister
 {
 	public ApplicationUser ToUser()
 	{
-		return new ApplicationUser(this);
+		return new(this);
 	}
 }

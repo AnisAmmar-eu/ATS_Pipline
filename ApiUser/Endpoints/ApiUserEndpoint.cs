@@ -21,7 +21,6 @@ public class ApiUserEndpoint : ICarterModule
 	/// <summary>
 	///     Returns 200. Useful to know if the API is down or not.
 	/// </summary>
-	/// <returns></returns>
 	private static JsonHttpResult<ApiResponse> GetStatus()
 	{
 		return new ApiResponse().SuccessResult();

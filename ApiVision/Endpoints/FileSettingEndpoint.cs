@@ -18,18 +18,26 @@ public class FileSettingEndpoint : BaseEntityEndpoint<FileSetting, DTOFileSettin
 	{
 		if (!Station.IsServer)
 			return;
-		app.MapGroup("apiVision/fileSettings").WithTags(nameof(FileSettingEndpoint)).MapPut("", UploadFileSetting);
+
+		app.MapGroup("apiVision/fileSettings").WithTags(nameof(FileSettingEndpoint))
+			.MapPut(string.Empty, UploadFileSetting);
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> UploadFileSetting(
-		[FromForm] UploadFileSetting uploadFileSetting, IFileSettingService fileSettingService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> UploadFileSetting(
+		[FromForm] UploadFileSetting uploadFileSetting,
+		IFileSettingService fileSettingService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			if (uploadFileSetting.File == null)
-				throw new BadHttpRequestException("No file was given");
-			return await fileSettingService.ReceiveFile(uploadFileSetting, uploadFileSetting.File);
-		}, logService, httpContext);
+		return GenericEndpoint(
+			() =>
+			{
+				if (uploadFileSetting.File is null)
+					throw new BadHttpRequestException("No file was given");
+
+				return fileSettingService.ReceiveFile(uploadFileSetting, uploadFileSetting.File);
+			},
+			logService,
+			httpContext);
 	}
 }

@@ -41,14 +41,20 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The action token as string</returns>
-	private static async Task<JsonHttpResult<ApiResponse>> HasRights([FromBody] DTOActEntityToValid dtoActEntityToValid,
-		IActService actService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> HasRights(
+		[FromBody] DTOActEntityToValid dtoActEntityToValid,
+		IActService actService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			string actionToken = await actService.HasRights(httpContext, dtoActEntityToValid);
-			return new { actionToken };
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				string actionToken = await actService.HasRights(httpContext, dtoActEntityToValid);
+				return new { actionToken };
+			},
+			logService,
+			httpContext);
 	}
 
 	// POST apiUser/acts/entity
@@ -60,28 +66,37 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="DTOActEntity" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetActEntityWithRoles([FromBody] DTOActEntity dtoActEntity,
-		IActService actService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetActEntityWithRoles(
+		[FromBody] DTOActEntity dtoActEntity,
+		IActService actService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await actService.GetActionEntityRoles(dtoActEntity), logService,
+		return GenericEndpoint(
+			() => actService.GetActionEntityRoles(dtoActEntity),
+			logService,
 			httpContext);
 	}
 
 	// POST apiUser/acts/list
 	/// <summary>
-	///     Retreive all actEntities status from a given list
+	///     Retrieve all actEntities status from a given list
 	/// </summary>
 	/// <param name="dtoActEntitiesStatus"></param>
 	/// <param name="actService"></param>
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="List{DTOActEntityStatus}" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetActEntitiesStatusFromList(
-		[FromBody] List<DTOActEntityStatus> dtoActEntitiesStatus, IActService actService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> GetActEntitiesStatusFromList(
+		[FromBody] List<DTOActEntityStatus> dtoActEntitiesStatus,
+		IActService actService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await actService.ActionsFromList(httpContext, dtoActEntitiesStatus),
-			logService, httpContext);
+		return GenericEndpoint(
+			() => actService.ActionsFromList(httpContext, dtoActEntitiesStatus),
+			logService,
+			httpContext);
 	}
 
 	// PUT apiUser/acts/assign
@@ -92,17 +107,20 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 	/// <param name="actService"></param>
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
-	/// <returns></returns>
 	/// <exception cref="UnauthorizedAccessException"></exception>
-	private static async Task<JsonHttpResult<ApiResponse>> AssignActionsFromList(
-		[FromBody] List<DTOActEntity> dtoActEntities, IActService actService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> AssignActionsFromList(
+		[FromBody] List<DTOActEntity> dtoActEntities,
+		IActService actService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpointEmptyResponse(async () =>
-		{
-			foreach (DTOActEntity dtoActEntity in dtoActEntities.Where(dto =>
-				         dto.Act != null && dto.Act.RID.StartsWith("MANAGE.")))
-				await actService.AssignAction(dtoActEntity);
-		}, logService, httpContext);
+		return GenericEndpointEmptyResponse(
+			async () =>
+			{
+				foreach (DTOActEntity dtoActEntity in dtoActEntities.Where(dto => dto.Act?.RID.StartsWith("MANAGE.") == true))
+                    await actService.AssignAction(dtoActEntity);
+            },
+			logService,
+			httpContext);
 	}
 }

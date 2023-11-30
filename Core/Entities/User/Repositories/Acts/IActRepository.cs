@@ -6,6 +6,5 @@ namespace Core.Entities.User.Repositories.Acts;
 
 public interface IActRepository : IBaseEntityRepository<Act, DTOAct>
 {
-	Task<Act> GetByRIDAndTypeWithIncludes(string? rid, string? entityType, string? parentType,
-		bool withTracking = true);
+	Task<Act> GetByRIDAndTypeWithIncludes(string? rid, string? entityType, string? parentType, bool withTracking = true);
 }

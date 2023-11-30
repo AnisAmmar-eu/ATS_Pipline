@@ -11,6 +11,6 @@ public partial class DTOS3S4Shooting
 
 	public override S3S4Shooting ToModel()
 	{
-		return new S3S4Shooting(this);
+		return new(this);
 	}
 }

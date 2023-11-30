@@ -22,6 +22,6 @@ public partial class DTOOutFurnace
 
 	public override OutFurnace ToModel()
 	{
-		return new OutFurnace(this);
+		return new(this);
 	}
 }

@@ -45,13 +45,11 @@ public partial class DTOStationCycle
 		AlarmListPacket = stationCycle.AlarmListPacket?.ToDTO();
 	}
 
-
 	public override StationCycle ToModel()
 	{
-		return new StationCycle(this);
+		return new(this);
 	}
 
-	// Binding
 	public static async ValueTask<DTOStationCycle?> BindAsync(HttpContext httpContext)
 	{
 		try
@@ -73,15 +71,14 @@ public partial class DTOStationCycle
 
 	private static Type GetDTOType(string? type)
 	{
-		if (type == null)
+		if (type is null)
 			throw new EntityNotFoundException("DTOStationCycle type is null");
 
-		return type switch
-		{
+		return type switch {
 			CycleTypes.S1S2 => typeof(DTOS1S2Cycle),
 			CycleTypes.S3S4 => typeof(DTOS3S4Cycle),
 			CycleTypes.S5 => typeof(DTOS5Cycle),
-			_ => typeof(DTOStationCycle)
+			_ => typeof(DTOStationCycle),
 		};
 	}
 }

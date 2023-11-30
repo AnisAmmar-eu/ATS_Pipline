@@ -82,26 +82,21 @@ public class AnodeUOW : IAnodeUOW
 	public IPacketRepository Packet { get; }
 	public IAlarmCycleRepository AlarmCycle { get; }
 
-	// StationCycle
 	public IStationCycleRepository StationCycle { get; }
 
-	// KPI
 	public IKPICRepository KPIC { get; }
 	public IKPILogRepository KPILog { get; }
 	public IKPIRTRepository KPIRT { get; }
 	public IBITemperatureRepository BITemperature { get; }
 
-	// IOT
 	public IIOTDeviceRepository IOTDevice { get; }
 	public IIOTTagRepository IOTTag { get; }
 
-	// Vision
 	public IFileSettingRepository FileSetting { get; }
 
 	public object? GetRepoByType(Type repo)
 	{
-		return repo switch
-		{
+		return repo switch {
 			_ when repo == typeof(IBenchmarkTestRepository) => BenchmarkTest,
 
 			_ when repo == typeof(IAlarmCRepository) => AlarmC,
@@ -130,7 +125,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IFileSettingRepository) => FileSetting,
 
 			_ when repo == typeof(ILogRepository) => Log,
-			_ => null
+			_ => null,
 		};
 	}
 
@@ -138,7 +133,8 @@ public class AnodeUOW : IAnodeUOW
 	{
 		// There is a while true bc in case of concurrency exception, we have to retry SaveChangesAsync().
 		while (true)
-			try
+        {
+            try
 			{
 				// return _anodeCTX.SaveChangesAsync().Result;
 				return _anodeCTX.SaveChanges();
@@ -146,7 +142,8 @@ public class AnodeUOW : IAnodeUOW
 			catch (DbUpdateConcurrencyException e)
 			{
 				foreach (EntityEntry entry in e.Entries)
-					if (entry.Entity is IOTTag)
+                {
+                    if (entry.Entity is IOTTag)
 					{
 						PropertyValues proposedValues = entry.CurrentValues;
 						PropertyValues databaseValues = entry.GetDatabaseValues()!;
@@ -167,44 +164,49 @@ public class AnodeUOW : IAnodeUOW
 					{
 						throw;
 					}
-			}
+                }
+            }
 			catch (Exception e)
 			{
-				if (_transaction != null)
+				if (_transaction is not null)
 				{
 					_transaction.Rollback();
 					_transaction = null;
 				}
 
-				throw new Exception("An error happened during SaveChanges", e);
+				throw new("An error happened during SaveChanges", e);
 			}
-	}
+        }
+    }
 
 	/// <summary>
 	///     Transaction is necessary in order to do a rollback after multiple saves in case an error is encountered
 	/// </summary>
-	/// <returns></returns>
 	/// <exception cref="Exception"></exception>
 	public async Task StartTransaction()
 	{
 		_transactionCount += 1;
-		if (_transaction == null)
-			try
-			{
-				_transaction = await _anodeCTX.Database.BeginTransactionAsync();
-			}
-			catch (Exception e)
-			{
-				if (e is not InvalidOperationException) throw new Exception(e.Message, e);
+		if (_transaction is not null)
+			return;
 
-				throw new Exception("An error happened when starting the transaction", e);
-			}
+		try
+		{
+			_transaction = await _anodeCTX.Database.BeginTransactionAsync();
+		}
+		catch (Exception e)
+		{
+			if (e is not InvalidOperationException)
+				throw new(e.Message, e);
+
+			throw new("An error happened when starting the transaction", e);
+		}
 	}
 
 	public async Task CommitTransaction()
 	{
-		if (_transaction != null && _transactionCount == 1)
-			try
+		if (_transaction is not null && _transactionCount == 1)
+        {
+            try
 			{
 				await _transaction.CommitAsync();
 				_transaction = null;
@@ -213,15 +215,17 @@ public class AnodeUOW : IAnodeUOW
 			{
 				_transaction?.Rollback();
 				_transaction = null;
-				throw new Exception("An error happened when commiting transaction", e);
+				throw new("An error happened when commiting transaction", e);
 			}
+        }
 
-		_transactionCount -= 1;
+        _transactionCount -= 1;
 	}
 
 	public void Dispose()
 	{
 		_anodeCTX.Dispose();
+		GC.SuppressFinalize(this);
 	}
 
 	#region Users

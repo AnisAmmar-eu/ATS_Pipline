@@ -19,6 +19,6 @@ public partial class DTOAnnouncement
 
 	public override Announcement ToModel()
 	{
-		return new Announcement(this);
+		return new(this);
 	}
 }

@@ -8,7 +8,7 @@ namespace Core.Entities.User.Services.Auth;
 
 public interface IAuthService
 {
-	Task Register(DTORegister model);
+	Task Register(DTORegister dtoRegister);
 	Task<ApplicationUser> CheckCredentials(DTOLogin dtoLogin);
 	UserPrincipal? CheckCredentialsAD(DTOLogin dtoLogin);
 	Task<DTOLoginResponse> RegisterSource(DTOLogin model);

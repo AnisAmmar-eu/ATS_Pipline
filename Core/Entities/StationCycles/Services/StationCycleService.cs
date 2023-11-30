@@ -45,47 +45,60 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 	public async Task<ReducedStationCycle?> GetMostRecentWithIncludes()
 	{
 		return (await AnodeUOW.StationCycle.GetAllWithIncludes(orderBy: query =>
-			query.OrderByDescending(cycle => cycle.TS))).FirstOrDefault()?.Reduce();
+			query.OrderByDescending(cycle => cycle.TS)))
+			.FirstOrDefault()
+			?.Reduce();
 	}
 
 	public async Task<List<ReducedStationCycle>> GetAllRIDs()
 	{
-		return (await AnodeUOW.StationCycle.GetAll(withTracking: false,
-				includes: new[] { nameof(StationCycle.DetectionPacket), nameof(StationCycle.ShootingPacket) }))
+		return (await AnodeUOW.StationCycle.GetAll(
+			withTracking: false,
+			includes: new[] { nameof(StationCycle.DetectionPacket), nameof(StationCycle.ShootingPacket) }))
 			.ConvertAll(cycle => cycle.Reduce());
 	}
 
-	public async Task<List<StationCycle>> GetAllReadyToSent()
+	public Task<List<StationCycle>> GetAllReadyToSent()
 	{
-		return await AnodeUOW.StationCycle.GetAllWithIncludes(new Expression<Func<StationCycle, bool>>[]
-		{
-			cycle => cycle.Status == PacketStatus.Completed
-		}, withTracking: false);
+		return AnodeUOW.StationCycle.GetAllWithIncludes(
+			new Expression<Func<StationCycle, bool>>[]
+				{
+					cycle => cycle.Status == PacketStatus.Completed
+				},
+			withTracking: false);
 	}
 
 	public async Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera)
 	{
-		StationCycle stationCycle =
-			await AnodeUOW.StationCycle.GetById(id, includes: nameof(StationCycle.ShootingPacket));
-		if (stationCycle.ShootingPacket == null)
+		StationCycle stationCycle
+			= await AnodeUOW.StationCycle.GetById(
+				id,
+				includes: nameof(StationCycle.ShootingPacket));
+		if (stationCycle.ShootingPacket is null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
+
 		string? thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		if (thumbnailsPath == null)
+		if (thumbnailsPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
-		return stationCycle.ShootingPacket.GetImagePathFromRoot(stationCycle.StationID, thumbnailsPath,
-			stationCycle.AnodeType, camera);
+
+		return stationCycle.ShootingPacket
+			.GetImagePathFromRoot( stationCycle.StationID, thumbnailsPath, stationCycle.AnodeType, camera);
 	}
 
 	public async Task AssignStationCycle(Detection detection, string imagesPath, string thumbnailsPath)
 	{
 		string rid = detection.StationCycleRID;
-		StationCycle cycle = await AnodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]
-		{
-			cycle => cycle.RID == rid
-		}, withTracking: false);
+		StationCycle cycle = await AnodeUOW.StationCycle.GetBy(
+			new Expression<Func<StationCycle, bool>>[]
+				{
+					cycle => cycle.RID == rid
+				},
+			withTracking: false);
 		await UpdateDetectionWithMeasure(cycle);
 
-		Packet shooting = new Shooting(imagesPath, thumbnailsPath);
+		Packet shooting = new Shooting(
+			imagesPath,
+			thumbnailsPath);
 		shooting.StationCycle = cycle;
 		shooting.StationCycleRID = rid;
 		await _packetService.BuildPacket(shooting);
@@ -98,18 +111,22 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 
 	public async Task UpdateDetectionWithMeasure(StationCycle stationCycle)
 	{
-		if (stationCycle.DetectionID == null)
-			throw new InvalidOperationException("Station cycle with RID: " + stationCycle.RID +
-			                                    " does not have a detection packet for measurement");
+		if (stationCycle.DetectionID is null)
+		{
+			throw new InvalidOperationException(
+				$"Station cycle with RID: {stationCycle.RID} does not have a detection packet for measurement");
+		}
+
 		Detection detection = (await AnodeUOW.Packet.GetById(stationCycle.DetectionID.Value) as Detection)!;
 		AdsClient tcClient = new();
 		tcClient.Connect(ADSUtils.AdsPort);
 		if (!tcClient.IsConnected)
 			throw new AdsException("Could not connect to TwinCat");
+
 		uint handle = tcClient.CreateVariableHandle(ADSUtils.MeasurementVariable);
 		MeasureStruct measure = tcClient.ReadAny<MeasureStruct>(handle);
 		detection.AnodeSize = measure.AnodeSize;
-		detection.MeasuredType = measure.AnodeType == 1 ? AnodeTypeDict.DX : AnodeTypeDict.D20;
+		detection.MeasuredType = (measure.AnodeType == 1) ? AnodeTypeDict.DX : AnodeTypeDict.D20;
 		detection.IsSameType = measure.IsSameType;
 		stationCycle.AnodeType = detection.MeasuredType;
 		detection.Status = PacketStatus.Completed;
@@ -123,26 +140,30 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 	public async Task SendStationCycle(StationCycle stationCycle, string address)
 	{
 		using HttpClient httpClient = new();
-		StringContent content =
-			new(JsonSerializer.Serialize(stationCycle.ToDTO()), Encoding.UTF8, "application/json");
-		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/stationCycles", content);
-		if (response.IsSuccessStatusCode)
-		{
-			await AnodeUOW.StartTransaction();
-			stationCycle.Status = PacketStatus.Sent;
-			Task imagesTask = SendStationImages(stationCycle);
-			// Send the images, marking packets as sent and then cycle as sent.
-			PropertyInfo[] properties =
-				stationCycle.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-			foreach (PropertyInfo propertyInfo in properties)
-				if (propertyInfo.GetValue(stationCycle) is Packet packet)
-					_packetService.MarkPacketAsSentFromStationCycle(packet);
+		StringContent content
+			= new(
+				JsonSerializer.Serialize(stationCycle.ToDTO()),
+				Encoding.UTF8,
+				"application/json");
+		HttpResponseMessage response = await httpClient.PostAsync( $"{address}/apiServerReceive/stationCycles", content);
+		if (!response.IsSuccessStatusCode)
+			return;
 
-			AnodeUOW.StationCycle.Update(stationCycle);
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
-			await imagesTask;
+		await AnodeUOW.StartTransaction();
+		stationCycle.Status = PacketStatus.Sent;
+		Task imagesTask = SendStationImages(stationCycle);
+		// Send the images, marking packets as sent and then cycle as sent.
+		foreach (PropertyInfo propertyInfo in stationCycle.GetType()
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+		{
+			if (propertyInfo.GetValue(stationCycle) is Packet packet)
+				_packetService.MarkPacketAsSentFromStationCycle(packet);
 		}
+
+		AnodeUOW.StationCycle.Update(stationCycle);
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+		await imagesTask;
 	}
 
 	public async Task ReceiveStationCycle(DTOStationCycle dtoStationCycle)
@@ -159,12 +180,12 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			string propertyName = propertyInfo.Name;
 			// It will get the corresponding foreign key with the following rule :
 			// [...]Packet => [...]ID
-			PropertyInfo foreignKey =
-				cycle.GetType().GetProperty($"{propertyName[..^"Packet".Length]}ID") ??
-				throw new InvalidOperationException($"No foreign key found for {propertyName}");
+			PropertyInfo foreignKey
+				= cycle.GetType().GetProperty($"{propertyName[..^"Packet".Length]}ID") ??
+					throw new InvalidOperationException($"No foreign key found for {propertyName}");
 			Packet? newPacket = await _packetService.AddPacketFromStationCycle(propertyInfo.GetValue(cycle) as Packet);
-			propertyInfo.SetValue(cycle, newPacket);
-			foreignKey.SetValue(cycle, newPacket?.ID);
+			propertyInfo.SetValue( cycle, newPacket);
+			foreignKey.SetValue( cycle, newPacket?.ID);
 		}
 
 		// Packets need to be commit before adding StationCycle
@@ -177,54 +198,55 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public async Task ReceiveStationImage(IFormFileCollection formFiles)
+	public Task ReceiveStationImage(IFormFileCollection formFiles)
 	{
 		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath == null)
+		if (imagesPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+
 		string? thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		if (thumbnailsPath == null)
+		if (thumbnailsPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
+
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{
-			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
-			FileInfo thumbnail = Shooting.GetImagePathFromFilename(thumbnailsPath, formFile.Name);
+			FileInfo image = Shooting.GetImagePathFromFilename( imagesPath, formFile.Name);
+			FileInfo thumbnail = Shooting.GetImagePathFromFilename( thumbnailsPath, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);
 			Directory.CreateDirectory(thumbnail.DirectoryName!);
-			await using FileStream imageStream = new(image.FullName, FileMode.Create);
+			await using FileStream imageStream = new( image.FullName, FileMode.Create);
 			await formFile.CopyToAsync(imageStream);
 			Image savedImage = Image.FromFile(image.FullName);
-			savedImage.Save(thumbnail.FullName, 0.2);
+			savedImage.Save( thumbnail.FullName, 0.2);
 		});
-		await Task.WhenAll(tasks);
+		return Task.WhenAll(tasks);
 	}
 
 	private async Task SendStationImages(StationCycle stationCycle)
 	{
 		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath == null)
+		if (imagesPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+
 		MultipartFormDataContent formData = new();
 		formData.Headers.ContentType!.MediaType = "multipart/form-data";
 
-		FileInfo image1 =
-			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
-				stationCycle.AnodeType, 1)!;
+		FileInfo image1
+			= stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath, stationCycle.AnodeType, 1)!;
 		if (image1.Exists)
 		{
-			StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
-			content1.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-			formData.Add(content1, image1.Name, image1.Name);
+			StreamContent content1 = new(File.Open( image1.FullName, FileMode.Open));
+			content1.Headers.ContentType = new("image/jpeg");
+			formData.Add( content1, image1.Name, image1.Name);
 		}
 
-		FileInfo image2 =
-			stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath,
-				stationCycle.AnodeType, 2)!;
+		FileInfo image2
+			= stationCycle.ShootingPacket?.GetImagePathFromRoot( stationCycle.StationID, imagesPath, stationCycle.AnodeType, 2)!;
 		if (image2.Exists)
 		{
-			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
-			content2.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-			formData.Add(content2, image2.Name, image2.Name);
+			StreamContent content2 = new(File.Open( image2.FullName, FileMode.Open));
+			content2.Headers.ContentType = new("image/jpeg");
+			formData.Add( content2, image2.Name, image2.Name);
 		}
 
 		if (!formData.Any())
@@ -233,19 +255,19 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		using HttpClient httpClient = new();
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
 
-		HttpResponseMessage response =
-			await httpClient.PostAsync("https://localhost:7280/apiServerReceive/images", formData);
+		HttpResponseMessage response
+			= await httpClient.PostAsync( "https://localhost:7280/apiServerReceive/images", formData);
 		if (!response.IsSuccessStatusCode)
 			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}
 
 	private async Task AssignCycleToAnode(StationCycle cycle)
-	{
-		if (cycle is S1S2Cycle s1S2Cycle)
-		{
-			Anode anode = Anode.Create(s1S2Cycle);
-			await AnodeUOW.Anode.Add(anode);
-		}
-		// TODO Vision
-	}
+    {
+        if (cycle is not S1S2Cycle s1S2Cycle)
+            return;
+
+        Anode anode = Anode.Create(s1S2Cycle);
+        await AnodeUOW.Anode.Add(anode);
+        // TODO Vision
+    }
 }

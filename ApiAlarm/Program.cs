@@ -27,19 +27,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName == null)
+if (stationName is null)
 	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 string? address = builder.Configuration.GetValue<string>("ServerConfig:Address");
-if (address == null)
+if (address is null)
 	throw new ConfigurationErrorsException("Missing ServerConfig:Address");
 Station.ServerAddress = address;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(
+	options =>
 	{
 		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -51,18 +52,17 @@ builder.Services.AddAuthentication(options =>
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
 		string? jwtSecret = builder.Configuration["JWT:Secret"];
-		if (jwtSecret == null)
+		if (jwtSecret is null)
 			throw new ConfigurationErrorsException("Missing JWT Secret");
-		options.TokenValidationParameters = new TokenValidationParameters
-		{
+
+		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidAudience = builder.Configuration["JWT:ValidAudience"],
 			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
-		options.Events = new JwtBearerEvents
-		{
+		options.Events = new() {
 			OnMessageReceived = context =>
 			{
 				if (context.Request.Query.TryGetValue("access_token", out StringValues token)
@@ -71,7 +71,7 @@ builder.Services.AddAuthentication(options =>
 
 				return Task.CompletedTask;
 			},
-			OnAuthenticationFailed = _ => Task.CompletedTask
+			OnAuthenticationFailed = _ => Task.CompletedTask,
 		};
 	});
 
@@ -101,7 +101,7 @@ app.UseSwaggerUI();
 //}
 
 string? clientHost = builder.Configuration["ClientHost"];
-if (clientHost == null)
+if (clientHost is null)
 	throw new ConfigurationErrorsException("Missing ClientHost");
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)

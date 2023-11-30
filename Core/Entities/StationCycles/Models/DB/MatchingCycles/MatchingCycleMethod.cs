@@ -4,11 +4,11 @@ namespace Core.Entities.StationCycles.Models.DB.MatchingCycles;
 
 public abstract partial class MatchingCycle
 {
-	public MatchingCycle()
+	protected MatchingCycle()
 	{
 	}
 
-	public MatchingCycle(DTOMatchingCycle dtoMatchingCycle) : base(dtoMatchingCycle)
+	protected MatchingCycle(DTOMatchingCycle dtoMatchingCycle) : base(dtoMatchingCycle)
 	{
 		MatchingCamera1 = dtoMatchingCycle.MatchingCamera1;
 		MatchingCamera2 = dtoMatchingCycle.MatchingCamera2;
@@ -16,6 +16,6 @@ public abstract partial class MatchingCycle
 
 	public override DTOMatchingCycle ToDTO()
 	{
-		return new DTOMatchingCycle(this);
+		return new(this);
 	}
 }

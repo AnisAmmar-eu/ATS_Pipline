@@ -30,6 +30,6 @@ public partial class BITemperature
 
 	public override DTOBITemperature ToDTO()
 	{
-		return new DTOBITemperature(this);
+		return new(this);
 	}
 }

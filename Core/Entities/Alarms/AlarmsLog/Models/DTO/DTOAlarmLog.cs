@@ -9,7 +9,7 @@ namespace Core.Entities.Alarms.AlarmsLog.Models.DTO;
 public partial class DTOAlarmLog : DTOBaseEntity, IDTO<AlarmLog, DTOAlarmLog>
 {
 	public int StationID { get; set; } = Station.ID;
-	public bool IsAck { get; set; } // Ack = Acknowledge
+	public bool IsAck { get; set; }
 	public bool IsActive { get; set; }
 	public bool HasBeenSent { get; set; }
 	public int AlarmID { get; set; }

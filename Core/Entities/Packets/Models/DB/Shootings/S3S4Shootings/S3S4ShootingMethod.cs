@@ -20,6 +20,6 @@ public partial class S3S4Shooting
 
 	public override DTOS3S4Shooting ToDTO()
 	{
-		return new DTOS3S4Shooting(this);
+		return new(this);
 	}
 }

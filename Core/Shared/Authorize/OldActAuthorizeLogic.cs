@@ -1,6 +1,5 @@
 ﻿using System.Collections.Specialized;
 using System.Web;
-using Core.Entities.User.Models.DTO.Acts;
 using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +17,13 @@ public class OldActAuthorizeLogic : IAuthorizationFilter
 	private readonly string? _parentType;
 	private readonly string _rid;
 
-	public OldActAuthorizeLogic(IActService actService, string rid, string? entityType = null,
-		string? entityProperty = null, string? parentType = null, string? parentProperty = null)
+	public OldActAuthorizeLogic(
+		IActService actService,
+		string rid,
+		string? entityType = null,
+		string? entityProperty = null,
+		string? parentType = null,
+		string? parentProperty = null)
 	{
 		_rid = rid;
 		_entityType = entityType;
@@ -35,41 +39,32 @@ public class OldActAuthorizeLogic : IAuthorizationFilter
 			return;
 
 		RouteValueDictionary routeData = context.HttpContext.Request.RouteValues;
-		NameValueCollection queryString =
-			HttpUtility.ParseQueryString(context.HttpContext.Request.QueryString.ToString());
+		NameValueCollection queryString
+			= HttpUtility.ParseQueryString(context.HttpContext.Request.QueryString.ToString());
 
 		int? entityID = null;
 		int? parentID = null;
 
-		if (_entityProperty != null)
+		if (_entityProperty is not null)
 		{
-			entityID = int.TryParse((string?)routeData.GetValueOrDefault(_entityProperty), out int tmp) ? tmp : null;
-			entityID ??= int.TryParse(queryString.Get(_entityProperty), out tmp) ? tmp : null;
+			entityID = (int.TryParse((string?)routeData.GetValueOrDefault(_entityProperty), out int tmp)) ? tmp : null;
+			entityID ??= (int.TryParse(queryString.Get(_entityProperty), out tmp)) ? tmp : null;
 		}
 
-		if (_parentProperty != null)
+		if (_parentProperty is not null)
 		{
-			parentID = int.TryParse((string?)routeData.GetValueOrDefault(_parentProperty), out int tmp) ? tmp : null;
-			parentID ??= int.TryParse(queryString.Get(_parentProperty), out tmp) ? tmp : null;
+			parentID = (int.TryParse((string?)routeData.GetValueOrDefault(_parentProperty), out int tmp)) ? tmp : null;
+			parentID ??= (int.TryParse(queryString.Get(_parentProperty), out tmp)) ? tmp : null;
 		}
 
-		bool result = _actService.ValidActionToken(context.HttpContext,
-			new List<DTOActEntityToValid>
-			{
-				new()
-				{
-					Act = new DTOAct
-					{
-						RID = _rid,
-						EntityType = _entityType,
-						ParentType = _parentType
-					},
-					EntityID = entityID,
-					ParentID = parentID
-				}
-			}
-		);
+		bool result = _actService.ValidActionToken(
+			context.HttpContext,
+			new List<DTOActEntityToValid> { new() {
+				Act = new() { RID = _rid, EntityType = _entityType, ParentType = _parentType },
+				EntityID = entityID,
+				ParentID = parentID, }, } );
 		context.HttpContext.Items["IsActionTokenValid"] = result;
-		if (!result) context.Result = new UnauthorizedResult();
-	}
+		if (!result)
+            context.Result = new UnauthorizedResult();
+    }
 }

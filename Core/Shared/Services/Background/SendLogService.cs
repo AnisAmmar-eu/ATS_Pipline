@@ -23,12 +23,13 @@ public class SendLogService : BackgroundService
 	{
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		ILogService logService =
-			asyncScope.ServiceProvider.GetRequiredService<ILogService>();
+		ILogService logService
+			= asyncScope.ServiceProvider.GetRequiredService<ILogService>();
 
 		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken))
-			try
+			&& await timer.WaitForNextTickAsync(stoppingToken))
+        {
+            try
 			{
 				_logger.LogInformation("SendLogService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling SendLog");
@@ -44,5 +45,6 @@ public class SendLogService : BackgroundService
 					"Failed to execute PeriodicSendLogService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-	}
+        }
+    }
 }

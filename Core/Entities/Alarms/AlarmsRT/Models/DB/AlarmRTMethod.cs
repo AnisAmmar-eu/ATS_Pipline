@@ -30,6 +30,6 @@ public partial class AlarmRT
 
 	public override DTOAlarmRT ToDTO()
 	{
-		return new DTOAlarmRT(this);
+		return new(this);
 	}
 }

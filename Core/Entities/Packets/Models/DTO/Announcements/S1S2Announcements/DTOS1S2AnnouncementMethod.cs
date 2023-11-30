@@ -19,6 +19,6 @@ public partial class DTOS1S2Announcement
 
 	public override S1S2Announcement ToModel()
 	{
-		return new S1S2Announcement(this);
+		return new(this);
 	}
 }

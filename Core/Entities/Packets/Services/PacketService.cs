@@ -38,17 +38,19 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			packets.Add(packet);
 		}
 
-		if (!packets.Any()) return packets;
+		if (packets.Count == 0)
+            return packets;
 
-		AnodeUOW.Commit();
+        AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		return packets;
 	}
 
 	public async Task<Packet?> AddPacketFromStationCycle(Packet? packet)
 	{
-		if (packet == null)
+		if (packet is null)
 			return null;
+
 		packet.ID = 0;
 		await AnodeUOW.Packet.Add(packet);
 		AnodeUOW.Commit();
@@ -57,8 +59,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public void MarkPacketAsSentFromStationCycle(Packet? packet)
 	{
-		if (packet == null)
+		if (packet is null)
 			return;
+
 		packet.Status = PacketStatus.Sent;
 		AnodeUOW.Packet.Update(packet);
 	}

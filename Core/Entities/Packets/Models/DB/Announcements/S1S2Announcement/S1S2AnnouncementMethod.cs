@@ -23,6 +23,6 @@ public partial class S1S2Announcement
 
 	public override DTOS1S2Announcement ToDTO()
 	{
-		return new DTOS1S2Announcement(this);
+		return new(this);
 	}
 }

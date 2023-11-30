@@ -6,5 +6,5 @@ namespace Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
 
 public partial class S1S2Cycle : SigningCycle, IBaseEntity<S1S2Cycle, DTOS1S2Cycle>
 {
-	public new S1S2Announcement? AnnouncementPacket { get; set; }
+	new public S1S2Announcement? AnnouncementPacket { get; set; }
 }

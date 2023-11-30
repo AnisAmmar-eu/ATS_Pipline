@@ -42,27 +42,31 @@ public partial class Shooting
 
 	public override DTOShooting ToDTO()
 	{
-		return new DTOShooting(this);
+		return new(this);
 	}
 
 	public FileInfo GetImagePathFromRoot(int stationID, string root, string anodeType, int camera)
 	{
-		string filename =
-			$"S{stationID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(AnodeFormat.RIDFormat)}.jpg";
-		string path =
-			$@"S{stationID:00}\T{anodeType}\Y{ShootingTS.Year}\M{ShootingTS.Month:00}\D{ShootingTS.Day:00}\C{camera:00}\";
-		return new FileInfo($@"{root}\{path}\{filename}");
+		string filename
+			= $"S{stationID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(AnodeFormat.RIDFormat)}.jpg";
+		string path
+			= $@"S{stationID:00}\T{anodeType}\Y{ShootingTS.Year.ToString()}\M{ShootingTS.Month:00}\D{
+				ShootingTS.Day:00}\C{camera:00}\";
+		return new($@"{root}\{path}\{filename}");
 	}
 
 	public static FileInfo GetImagePathFromFilename(string root, string filename)
 	{
-		Regex regex = new("S(?<stationID>[0-9]{2})T(?<anodeType>.*)C(?<camera>[0-9]{2})T(?<TS>.*).jpg");
+		Regex regex = MyRegex();
 		GroupCollection groups = regex.Match(filename).Groups;
-		DateTimeOffset date = DateTimeOffset.ParseExact(groups["TS"].Value, AnodeFormat.RIDFormat,
+		DateTimeOffset date = DateTimeOffset.ParseExact(
+			groups["TS"].Value,
+			AnodeFormat.RIDFormat,
 			CultureInfo.InvariantCulture.DateTimeFormat);
-		string path =
-			$@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year}\M{date.Month:00}\D{date.Day:00}\C{groups["camera"]}\";
-		return new FileInfo($@"{root}\{path}\{filename}");
+		string path
+			= $@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year.ToString()}\M{date.Month:00}\D{
+				date.Day:00}\C{groups["camera"]}\";
+		return new($@"{root}\{path}\{filename}");
 	}
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
@@ -78,36 +82,39 @@ public partial class Shooting
 		FileInfo? thirdHole = null;
 		DateTimeOffset? tsFirstImage = null;
 		DateTimeOffset startAssign = DateTimeOffset.Now;
-		while ((firstHole == null || thirdHole == null) && DateTimeOffset.Now - startAssign <= TimeSpan.FromSeconds(30))
+		while ((firstHole is null || thirdHole is null) && DateTimeOffset.Now - startAssign <= TimeSpan.FromSeconds(30))
 		{
-			if (firstHole == null)
+			if (firstHole is null)
 			{
 				firstHole = GetImageInDirectory(directory1, StationCycleRID);
-				if (firstHole != null)
+				if (firstHole is not null)
 				{
-					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(firstHole.Name, StationCycleRID),
+					DateTimeOffset tsHoleImage
+						= DateTimeOffset.ParseExact(
+							ExtractTSFromName(firstHole.Name, StationCycleRID),
 							AnodeFormat.RIDFormat,
 							CultureInfo.InvariantCulture.DateTimeFormat);
-					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
+					tsFirstImage = (tsFirstImage is null || tsHoleImage < tsFirstImage) ? tsHoleImage : tsFirstImage;
 				}
 			}
 
-			if (thirdHole == null)
+			if (thirdHole is null)
 			{
 				thirdHole = GetImageInDirectory(directory2, StationCycleRID);
-				if (thirdHole != null)
+				if (thirdHole is not null)
 				{
-					DateTimeOffset tsHoleImage =
-						DateTimeOffset.ParseExact(ExtractTSFromName(thirdHole.Name, StationCycleRID),
-							AnodeFormat.RIDFormat, null);
-					tsFirstImage = tsFirstImage == null || tsHoleImage < tsFirstImage ? tsHoleImage : tsFirstImage;
+					DateTimeOffset tsHoleImage
+						= DateTimeOffset.ParseExact(
+							ExtractTSFromName(thirdHole.Name, StationCycleRID),
+							AnodeFormat.RIDFormat,
+							null);
+					tsFirstImage = (tsFirstImage is null || tsHoleImage < tsFirstImage) ? tsHoleImage : tsFirstImage;
 				}
 			}
 		}
 
-		if (tsFirstImage == null)
-			throw new Exception("tsFirstImage should NOT be null");
+		if (tsFirstImage is null)
+			throw new("tsFirstImage should NOT be null");
 
 		await UpdatePacketAndStationCycle(anodeUOW, firstHole, thirdHole, tsFirstImage.Value);
 		// DetectionPacket is now dequeued by the ADS Notification service.
@@ -115,12 +122,16 @@ public partial class Shooting
 		// await task2;
 	}
 
-	private Task UpdatePacketAndStationCycle(IAnodeUOW anodeUOW, FileInfo? firstHole, FileInfo? thirdHole,
+	private Task UpdatePacketAndStationCycle(
+		IAnodeUOW anodeUOW,
+		FileInfo? firstHole,
+		FileInfo? thirdHole,
 		DateTimeOffset tsFirstImage)
 	{
 		// StationCycle is already set
-		if (StationCycle == null)
+		if (StationCycle is null)
 			throw new ArgumentException("Station Cycle should NOT be null when building a ShootingPacket");
+
 		StationCycle.ShootingPacket = this;
 		StationCycle.ShootingID = ID;
 		// ?. => If firstHole not null then...
@@ -128,14 +139,15 @@ public partial class Shooting
 		{
 		}
 
-		if (firstHole != null)
+		if (firstHole is not null)
 			SaveImageAndThumbnail(firstHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage, 1);
-		if (thirdHole != null)
+
+		if (thirdHole is not null)
 			SaveImageAndThumbnail(thirdHole, ImagePath, ThumbnailPath, StationCycle.AnodeType, tsFirstImage, 2);
 
 		Status = PacketStatus.Completed;
 		ShootingTS = tsFirstImage;
-		HasError = firstHole == null || thirdHole == null;
+		HasError = firstHole is null || thirdHole is null;
 		StationCycle.ShootingStatus = Status;
 		anodeUOW.StationCycle.Update(StationCycle);
 		return Task.CompletedTask;
@@ -151,12 +163,17 @@ public partial class Shooting
 	}
 	*/
 
-	private static void SaveImageAndThumbnail(FileInfo file, string imageRoot, string thumbnailRoot, string anodeType,
-		DateTimeOffset date, int camera)
+	private static void SaveImageAndThumbnail(
+		FileInfo file,
+		string imageRoot,
+		string thumbnailRoot,
+		string anodeType,
+		DateTimeOffset date,
+		int camera)
 	{
 		string filename = $"S{Station.ID:00}T{anodeType}C{camera:00}T{date.ToString(AnodeFormat.RIDFormat)}.jpg";
-		string path =
-			$@"S{Station.ID:00}\T{anodeType}\Y{date.Year}\M{date.Month:00}\D{date.Day:00}\C{camera:00}\";
+		string path
+			= $@"S{Station.ID:00}\T{anodeType}\Y{date.Year.ToString()}\M{date.Month:00}\D{date.Day:00}\C{camera:00}\";
 		string imagePath = $@"{imageRoot}\{path}";
 		string thumbnailPath = $@"{thumbnailRoot}\{path}";
 		Directory.CreateDirectory(imagePath);
@@ -169,15 +186,17 @@ public partial class Shooting
 	private static FileInfo? GetImageInDirectory(DirectoryInfo directory, string rid)
 	{
 		List<FileInfo> images = directory.EnumerateFiles().ToList()
-			.FindAll(fileInfo => rid == string.Empty || ExtractRIDFromName(fileInfo.Name) == rid);
+			.FindAll(fileInfo => rid.Length == 0 || ExtractRIDFromName(fileInfo.Name) == rid);
 		images.Sort((x, y) => DateTime.Compare(x.CreationTime, y.CreationTime));
-		return images.Count == 0 ? null : images[0];
+		return (images.Count == 0) ? null : images[0];
 	}
 
 	private static bool IsFileLocked(FileInfo? file)
 	{
-		if (file == null) return false;
-		try
+		if (file is null)
+            return false;
+
+        try
 		{
 			using FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
 			stream.Close();
@@ -192,18 +211,23 @@ public partial class Shooting
 
 	private static string ExtractRIDFromName(string fileName)
 	{
-		if (string.IsNullOrWhiteSpace(fileName)) return string.Empty;
-		// X_ is the station number
-		int charLocation = "X_".Length + AnodeFormat.RIDFormat.Length;
-		return charLocation > 0 ? fileName[..charLocation] : string.Empty;
+		if (string.IsNullOrWhiteSpace(fileName))
+            return string.Empty;
+        // X_ is the station number
+        int charLocation = "X_".Length + AnodeFormat.RIDFormat.Length;
+		return (charLocation > 0) ? fileName[..charLocation] : string.Empty;
 	}
 
 	private static string ExtractTSFromName(string fileName, string? rid)
 	{
-		if (rid == null || string.IsNullOrWhiteSpace(fileName)) return string.Empty;
+		if (rid is null || string.IsNullOrWhiteSpace(fileName))
+            return string.Empty;
 
-		int charLocation = fileName.IndexOf(".", StringComparison.Ordinal);
-		charLocation = (charLocation == 0 ? fileName.Length : charLocation) - rid.Length - 1;
+        int charLocation = fileName.IndexOf('.');
+		charLocation = ((charLocation == 0) ? fileName.Length : charLocation) - rid.Length - 1;
 		return fileName.Substring(rid.Length + 1, charLocation);
 	}
+
+    [GeneratedRegex("S(?<stationID>[0-9]{2})T(?<anodeType>.*)C(?<camera>[0-9]{2})T(?<TS>.*).jpg")]
+    private static partial Regex MyRegex();
 }

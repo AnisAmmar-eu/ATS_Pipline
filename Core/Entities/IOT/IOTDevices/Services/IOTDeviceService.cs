@@ -22,18 +22,16 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 	public async Task<IOTDeviceStatus> GetStatusByRID(string rid)
 	{
-		return new IOTDeviceStatus(await AnodeUOW.IOTDevice.GetBy(new Expression<Func<IOTDevice, bool>>[]
-		{
-			device => device.RID == rid
-		}, withTracking: false));
+		return new IOTDeviceStatus(await AnodeUOW.IOTDevice
+			.GetBy( new Expression<Func<IOTDevice, bool>>[] { device => device.RID == rid }, withTracking: false));
 	}
 
 	public async Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids)
 	{
-		return (await AnodeUOW.IOTDevice.GetAll(new Expression<Func<IOTDevice, bool>>[]
-		{
-			device => rids.Contains(device.RID)
-		}, withTracking: false)).ConvertAll(device => new IOTDeviceStatus(device));
+		return (await AnodeUOW.IOTDevice.GetAll(
+			new Expression<Func<IOTDevice, bool>>[] { device => rids.Contains(device.RID) },
+			withTracking: false))
+			.ConvertAll(device => new IOTDeviceStatus(device));
 	}
 
 	public async Task CheckAllConnectionsAndApplyTags(string[] rids)
@@ -46,7 +44,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		IEnumerable<Task<List<IOTTag>>> tasks = devices.Select(async device =>
 		{
 			List<IOTTag> updatedTags = await device.ApplyTags(AnodeUOW);
-			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Any();
+			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Count != 0;
 			return updatedTags;
 		});
 		List<IOTTag>[] updatedTags = await Task.WhenAll(tasks);
@@ -67,29 +65,33 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 	/// <summary>
 	///     Will verify the connection on each device and will return the ones which are connected.
 	/// </summary>
+	/// <param name="rids"></param>
 	/// <returns>
 	///     IOTDevice with IsConnected set as True.
 	/// </returns>
 	private async Task<List<IOTDevice>> CheckAllConnections(string[] rids)
 	{
-		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(new Expression<Func<IOTDevice, bool>>[]
-		{
-			device => rids.Contains(device.RID)
-		}, withTracking: true, includes: nameof(IOTDevice.IOTTags));
-		List<IOTDevice> connectedDevices = new();
-		List<IOTDevice> disconnectedDevices = new();
+		List<IOTDevice> devices = await AnodeUOW.IOTDevice.GetAll(
+			new Expression<Func<IOTDevice, bool>>[] { device => rids.Contains(device.RID) },
+			withTracking: true,
+			includes: nameof(IOTDevice.IOTTags));
+        List<IOTDevice> connectedDevices = new();
+        List<IOTDevice> disconnectedDevices = new();
 		IEnumerable<Task<IOTDevice>> task = devices.Select(async device =>
 		{
 			device.IsConnected = await device.CheckConnection();
 			if (device.IsConnected)
 				connectedDevices.Add(device);
-			else disconnectedDevices.Add(device);
+			else
+				disconnectedDevices.Add(device);
+
 			return device;
 		});
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
 		disconnectedDevices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
-		if (!updatedDevices.Any()) return connectedDevices;
+		if (updatedDevices.Length == 0)
+			return connectedDevices;
 
 		await AnodeUOW.StartTransaction();
 		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);

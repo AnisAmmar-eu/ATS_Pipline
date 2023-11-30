@@ -31,7 +31,7 @@ public partial class OutFurnace
 
 	public override DTOOutFurnace ToDTO()
 	{
-		return new DTOOutFurnace(this);
+		return new(this);
 	}
 
 	protected override void FurnaceAssign(S3S4Cycle cycle)

@@ -17,12 +17,11 @@ public class SwaggerActionHeader : IOperationFilter
 	{
 		operation.Parameters ??= new List<OpenApiParameter>();
 
-		operation.Parameters.Add(new OpenApiParameter
-		{
+		operation.Parameters.Add(new OpenApiParameter {
 			Name = "x-action-token",
 			In = ParameterLocation.Header,
 			Description = "Action token",
-			Required = false
+			Required = false,
 		});
 	}
 }

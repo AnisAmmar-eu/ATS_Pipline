@@ -40,14 +40,12 @@ public abstract partial class Anode
 		S1S2CycleRID = cycle.RID;
 	}
 
-
 	public override DTOAnode ToDTO()
 	{
-		return this switch
-		{
+		return this switch {
 			AnodeD20 anodeD20 => anodeD20.ToDTO(),
 			AnodeDX anodeDX => anodeDX.ToDTO(),
-			_ => throw new InvalidCastException("Trying to convert an abstract class to DTO")
+			_ => throw new InvalidCastException("Trying to convert an abstract class to DTO"),
 		};
 	}
 
@@ -63,13 +61,14 @@ public abstract partial class Anode
 
 	public Func<List<Anode>, string[]> GetComputedValues()
 	{
-		return anodes => { return new[] { anodes.Count.ToString() }; };
+		return anodes => new[] { anodes.Count.ToString() };
 	}
 
 	public static Anode Create(S1S2Cycle cycle)
 	{
 		if (cycle.AnodeType == AnodeTypeDict.D20)
 			return new AnodeD20(cycle);
+
 		return new AnodeDX(cycle);
 	}
 

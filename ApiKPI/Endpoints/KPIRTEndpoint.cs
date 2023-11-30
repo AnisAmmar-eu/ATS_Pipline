@@ -18,17 +18,22 @@ public class KPIRTEndpoint : BaseEntityEndpoint<KPIRT, DTOKPIRT, IKPIRTService>,
 	{
 		if (!Station.IsServer)
 			return;
+
 		RouteGroupBuilder group = app.MapGroup("apiKPIRT").WithTags(nameof(KPIRTEndpoint));
 		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(KPIRT.KPIC));
 
 		group.MapPut("{timePeriod}", GetByTimePeriodAndRIDs)
-			.WithSummary("Get KPIRT within a single time period by RIDs").WithOpenApi();
+			.WithSummary("Get KPIRT within a single time period by RIDs")
+			.WithOpenApi();
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> GetByTimePeriodAndRIDs([FromRoute] string timePeriod,
-		[FromBody] List<string> rids, IKPIRTService kpirtService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetByTimePeriodAndRIDs(
+		[FromRoute] string timePeriod,
+		[FromBody] List<string> rids,
+		IKPIRTService kpirtService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await kpirtService.GetByRIDsAndPeriod(timePeriod, rids), logService,
-			httpContext);
+		return GenericEndpoint(() => kpirtService.GetByRIDsAndPeriod(timePeriod, rids), logService, httpContext);
 	}
 }

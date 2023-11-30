@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Text.Json;
 using Core.Shared.Exceptions;
-using Core.Shared.Models.ApiResponses.ApiStatuses;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -12,55 +11,52 @@ namespace Core.Shared.Models.ApiResponses;
 
 public partial class ApiResponse
 {
-	private static readonly JsonSerializerOptions JsonOptions = new()
-	{
+	private static readonly JsonSerializerOptions JsonOptions = new() {
 		PropertyNamingPolicy = null
-	};
+		};
 
-	// With default statusCode
 	public ApiResponse()
 	{
-		Status = new ApiStatus { Code = 200 };
+		Status = new() { Code = 200 };
 	}
 
 	public ApiResponse(object? result)
 	{
 		Result = result;
-		Status = new ApiStatus { Code = 200 };
+		Status = new() { Code = 200 };
 	}
 
 	public ApiResponse(string message)
 	{
-		Status = new ApiStatus { Code = 200, Message = message };
+		Status = new() { Code = 200, Message = message };
 	}
 
 	public ApiResponse(string message, object? result)
 	{
 		Result = result;
-		Status = new ApiStatus { Code = 200, Message = message };
+		Status = new() { Code = 200, Message = message };
 	}
 
-	// With statusCode
 	public ApiResponse(int code)
 	{
-		Status = new ApiStatus { Code = code };
+		Status = new() { Code = code };
 	}
 
 	public ApiResponse(int code, object? result)
 	{
 		Result = result;
-		Status = new ApiStatus { Code = code };
+		Status = new() { Code = code };
 	}
 
 	public ApiResponse(int code, string message)
 	{
-		Status = new ApiStatus { Code = code, Message = message };
+		Status = new() { Code = code, Message = message };
 	}
 
 	public ApiResponse(int code, string message, object? result)
 	{
 		Result = result;
-		Status = new ApiStatus { Code = code, Message = message };
+		Status = new() { Code = code, Message = message };
 	}
 
 	public JsonHttpResult<ApiResponse> SuccessResult()
@@ -69,10 +65,9 @@ public partial class ApiResponse
 		return TypedResults.Json(this, JsonOptions);
 	}
 
-
 	public JsonHttpResult<ApiResponse> ErrorResult()
 	{
-		return TypedResults.Json(this, statusCode: Status.Code, options: JsonOptions);
+		return TypedResults.Json(this, JsonOptions, statusCode: Status.Code);
 	}
 
 	public async Task<JsonHttpResult<ApiResponse>> SuccessResult(ILogService logService, HttpContext httpContext)
@@ -81,7 +76,9 @@ public partial class ApiResponse
 		return TypedResults.Json(this, JsonOptions);
 	}
 
-	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(ILogService logService, HttpContext httpContext,
+	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(
+		ILogService logService,
+		HttpContext httpContext,
 		Exception e)
 	{
 		switch (e)
@@ -118,14 +115,15 @@ public partial class ApiResponse
 
 		await CreateLog(logService, httpContext);
 
-		return TypedResults.Json(this, statusCode: Status.Code, options: JsonOptions);
+		return TypedResults.Json(this, JsonOptions, statusCode: Status.Code);
 	}
 
 	private async Task CreateLog(ILogService logService, HttpContext httpContext)
 	{
 		Endpoint? endpoint = httpContext.GetEndpoint();
-		if (endpoint == null)
+		if (endpoint is null)
 			throw new ArgumentException("Logs creation, endpoint is null");
+
 		MethodInfo methodInfo = endpoint.Metadata.GetRequiredMetadata<MethodInfo>();
 		try
 		{
@@ -139,7 +137,7 @@ public partial class ApiResponse
 				endpoint.Metadata.GetRequiredMetadata<IRouteDiagnosticsMetadata>().Route,
 				Status.Code,
 				JsonSerializer.Serialize(Result)
-			);
+				);
 		}
 		catch
 		{

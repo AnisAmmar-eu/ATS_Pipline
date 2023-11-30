@@ -9,12 +9,13 @@ public class SignalRService : ISignalRService
 		where THub : Hub<T>
 		where T : class
 	{
-		if (httpContext == null)
+		if (httpContext is null)
 			return hubContext.Clients.All;
 
 		string? connectionsId = httpContext.Request.Headers["x-connections-signalr"];
-		if (connectionsId == null)
+		if (connectionsId is null)
 			return hubContext.Clients.All;
+
 		string[] callerConnections = connectionsId.Split(',');
 		return hubContext.Clients.AllExcept(callerConnections);
 	}

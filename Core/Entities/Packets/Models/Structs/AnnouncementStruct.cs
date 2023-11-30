@@ -21,6 +21,6 @@ public struct AnnouncementStruct : IBaseADS<Packet>
 
 	public Packet ToModel()
 	{
-		return Station.Type == StationType.S1S2 ? new S1S2Announcement(this) : new Announcement(this);
+		return (Station.Type == StationType.S1S2) ? new S1S2Announcement(this) : new Announcement(this);
 	}
 }

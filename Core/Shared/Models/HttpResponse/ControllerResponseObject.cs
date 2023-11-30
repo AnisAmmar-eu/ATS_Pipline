@@ -8,50 +8,48 @@ namespace Core.Shared.Models.HttpResponse;
 
 public class ControllerResponseObject
 {
-	// With default statusCode
 	public ControllerResponseObject()
 	{
-		Status = new ControllerStatusObject { Code = 200 };
+		Status = new() { Code = 200 };
 	}
 
 	public ControllerResponseObject(object? result)
 	{
 		Result = result;
-		Status = new ControllerStatusObject { Code = 200 };
+		Status = new() { Code = 200 };
 	}
 
 	public ControllerResponseObject(string message)
 	{
-		Status = new ControllerStatusObject { Code = 200, Message = message };
+		Status = new() { Code = 200, Message = message };
 	}
 
 	public ControllerResponseObject(string message, object? result)
 	{
 		Result = result;
-		Status = new ControllerStatusObject { Code = 200, Message = message };
+		Status = new() { Code = 200, Message = message };
 	}
 
-	// With statusCode
 	public ControllerResponseObject(int code)
 	{
-		Status = new ControllerStatusObject { Code = code };
+		Status = new() { Code = code };
 	}
 
 	public ControllerResponseObject(int code, object? result)
 	{
 		Result = result;
-		Status = new ControllerStatusObject { Code = code };
+		Status = new() { Code = code };
 	}
 
 	public ControllerResponseObject(int code, string message)
 	{
-		Status = new ControllerStatusObject { Code = code, Message = message };
+		Status = new() { Code = code, Message = message };
 	}
 
 	public ControllerResponseObject(int code, string message, object? result)
 	{
 		Result = result;
-		Status = new ControllerStatusObject { Code = code, Message = message };
+		Status = new() { Code = code, Message = message };
 	}
 
 	public object? Result { get; set; }
@@ -67,24 +65,18 @@ public class ControllerResponseObject
 	public ObjectResult SuccessResult()
 	{
 		Status.Code = 200;
-		return new ObjectResult(this)
-		{
-			StatusCode = Status.Code
-		};
+		return new(this) { StatusCode = Status.Code };
 	}
 
 	public BadRequestObjectResult BadRequestResult()
 	{
 		Status.Code = 400;
-		return new BadRequestObjectResult(this);
+		return new(this);
 	}
 
 	public ObjectResult ErrorResult()
 	{
-		return new ObjectResult(this)
-		{
-			StatusCode = Status.Code
-		};
+		return new(this) { StatusCode = Status.Code };
 	}
 
 	public async Task<JsonResult> SuccessResult(ILogService logService, ControllerContext context)
@@ -130,10 +122,7 @@ public class ControllerResponseObject
 
 		await CreateLog(logService, context);
 
-		return new ObjectResult(Result)
-		{
-			StatusCode = Status.Code
-		};
+		return new ObjectResult(Result) { StatusCode = Status.Code };
 	}
 
 	private async Task CreateLog(ILogService logService, ControllerContext context)
@@ -143,14 +132,14 @@ public class ControllerResponseObject
 			await logService.Create(
 				DateTimeOffset.Now,
 				Dns.GetHostName(),
-				"",
+				string.Empty,
 				context.ActionDescriptor.ControllerTypeInfo.Assembly.ManifestModule.Name,
 				context.ActionDescriptor.ControllerTypeInfo.Name,
 				context.ActionDescriptor.ActionName,
-				context.ActionDescriptor.AttributeRouteInfo?.Template ?? "",
+				context.ActionDescriptor.AttributeRouteInfo?.Template ?? string.Empty,
 				Status.Code,
 				JsonSerializer.Serialize(Result)
-			);
+				);
 		}
 		catch
 		{

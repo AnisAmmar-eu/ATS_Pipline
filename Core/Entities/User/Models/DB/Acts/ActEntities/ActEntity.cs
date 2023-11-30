@@ -21,7 +21,7 @@ public partial class ActEntity : BaseEntity, IBaseEntity<ActEntity, DTOActEntity
 	{
 		set => _act = value;
 		get => _act
-		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Act));
+			?? throw new InvalidOperationException("Uninitialized property: " + nameof(Act));
 	}
 
 	public ICollection<ActEntityRole> ActEntityRoles { get; set; } = new List<ActEntityRole>();

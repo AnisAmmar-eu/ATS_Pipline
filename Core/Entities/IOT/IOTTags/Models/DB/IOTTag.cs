@@ -20,7 +20,8 @@ public partial class IOTTag : BaseEntity, IBaseEntity<IOTTag, DTOIOTTag>
 
 	public IOTDevice? IOTDevice { get; set; }
 
-	[Timestamp] public byte[] Version { get; set; } = Array.Empty<byte>();
+	[Timestamp]
+	public byte[] Version { get; set; } = Array.Empty<byte>();
 
 	/*
 	#region Nav Properties

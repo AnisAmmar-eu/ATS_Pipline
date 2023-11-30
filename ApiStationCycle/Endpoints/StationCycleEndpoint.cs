@@ -33,27 +33,38 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 		return new ApiResponse().SuccessResult();
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> GetAllRIDs(IStationCycleService stationCycleService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetAllRIDs(
+		IStationCycleService stationCycleService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await stationCycleService.GetAllRIDs(), logService, httpContext);
+		return GenericEndpoint(() => stationCycleService.GetAllRIDs(), logService, httpContext);
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> GetMostRecent(IStationCycleService stationCycleService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetMostRecent(
+		IStationCycleService stationCycleService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			ReducedStationCycle? result = await stationCycleService.GetMostRecentWithIncludes();
-			if (result == null)
-				throw new NoDataException("There is no station cycles yet.");
-			return result;
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				ReducedStationCycle? result = await stationCycleService.GetMostRecentWithIncludes();
+				if (result is null)
+					throw new NoDataException("There is no station cycles yet.");
+
+				return result;
+			},
+			logService,
+			httpContext);
 	}
 
 	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetImageByIdAndCamera(
-		[Required] [FromRoute] int id, [Required] [FromRoute] int cameraNb, IStationCycleService stationCycleService,
-		ILogService logService, HttpContext httpContext)
+		[Required] [FromRoute] int id,
+		[Required] [FromRoute] int cameraNb,
+		IStationCycleService stationCycleService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
 		byte[] image;
 		DateTimeOffset ts;

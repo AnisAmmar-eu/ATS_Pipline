@@ -16,6 +16,6 @@ public partial class S5Cycle
 
 	public override DTOS5Cycle ToDTO()
 	{
-		return new DTOS5Cycle(this);
+		return new(this);
 	}
 }

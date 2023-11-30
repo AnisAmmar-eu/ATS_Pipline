@@ -11,6 +11,7 @@ public class KPICEndpoint : ICarterModule
 	{
 		if (!Station.IsServer)
 			return;
+
 		app.MapGroup("apiKPI").WithTags(nameof(KPICEndpoint)).MapGet("status", GetStatus);
 	}
 

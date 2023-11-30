@@ -20,6 +20,6 @@ public partial class IOTTag
 
 	public override DTOIOTTag ToDTO()
 	{
-		return new DTOIOTTag(this);
+		return new(this);
 	}
 }

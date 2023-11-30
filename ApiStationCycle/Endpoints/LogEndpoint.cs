@@ -19,9 +19,8 @@ public class LogEndpoint : BaseEntityEndpoint<Log, DTOLog, ILogService>, ICarter
 		group.MapDelete("all", DeleteAll);
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> DeleteAll(ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> DeleteAll(ILogService logService, HttpContext httpContext)
 	{
-		return await GenericEndpointEmptyResponse(async () => await logService.DeleteAllLogs(), logService,
-			httpContext);
+		return GenericEndpointEmptyResponse(logService.DeleteAllLogs, logService, httpContext);
 	}
 }

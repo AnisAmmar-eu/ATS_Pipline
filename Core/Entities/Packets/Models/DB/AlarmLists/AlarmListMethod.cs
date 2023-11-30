@@ -27,7 +27,7 @@ public partial class AlarmList
 
 	public override DTOAlarmList ToDTO()
 	{
-		return new DTOAlarmList(this);
+		return new(this);
 	}
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
@@ -42,17 +42,20 @@ public partial class AlarmList
 			AlarmCycles.Add(alarmCycle);
 		}
 
-		if (AlarmCycles.Any())
+		if (AlarmCycles.Count != 0)
 			anodeUOW.Commit();
 
 		// StationCycleRID should already be present
-		if (StationCycle == null)
-			StationCycle = await anodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]
-			{
-				stationCycle => stationCycle.RID == StationCycleRID
-			}, withTracking: false);
+		if (StationCycle is null)
+        {
+            StationCycle = await anodeUOW.StationCycle.GetBy(
+                new Expression<Func<StationCycle, bool>>[] {
+                    stationCycle => stationCycle.RID == StationCycleRID
+					},
+                withTracking: false);
+        }
 
-		StationCycle.AlarmListPacket = this;
+        StationCycle.AlarmListPacket = this;
 		StationCycle.AlarmListID = ID;
 		Status = PacketStatus.Completed;
 		StationCycle.AlarmListStatus = Status;

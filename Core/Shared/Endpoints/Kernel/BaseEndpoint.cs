@@ -7,8 +7,10 @@ namespace Core.Shared.Endpoints.Kernel;
 
 public class BaseEndpoint
 {
-	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpoint<TReturn>(Func<Task<TReturn>> func,
-		ILogService logService, HttpContext httpContext)
+	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpoint<TReturn>(
+		Func<Task<TReturn>> func,
+		ILogService logService,
+		HttpContext httpContext)
 	{
 		TReturn ans;
 		try
@@ -23,8 +25,10 @@ public class BaseEndpoint
 		return await new ApiResponse(ans).SuccessResult(logService, httpContext);
 	}
 
-	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpointEmptyResponse(Func<Task> func,
-		ILogService logService, HttpContext httpContext)
+	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpointEmptyResponse(
+		Func<Task> func,
+		ILogService logService,
+		HttpContext httpContext)
 	{
 		try
 		{

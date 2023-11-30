@@ -1,5 +1,4 @@
 using System.Configuration;
-using Core.Entities.StationCycles.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.TwinCat;
 using Microsoft.Extensions.Configuration;
@@ -26,23 +25,22 @@ public class AssignService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IStationCycleService stationCycleService =
-			asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		using PeriodicTimer timer = new(_period);
 		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath == null)
+		if (imagesPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+
 		string? thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		if (thumbnailsPath == null)
+		if (thumbnailsPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 
 		AdsClient tcClient = TwinCatConnectionManager.Connect(851);
 		uint closeCycleHandle = tcClient.CreateVariableHandle(ADSUtils.CloseCycle);
-		uint detectionHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionToRead);
 		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken))
-			try
+			&& await timer.WaitForNextTickAsync(stoppingToken))
+        {
+            try
 			{
 				if (!(await tcClient.ReadAnyAsync<bool>(closeCycleHandle, stoppingToken)).Value)
 					continue;
@@ -52,7 +50,6 @@ public class AssignService : BackgroundService
 				_logger.LogInformation("AssignService calling AssignStationCycle");
 
 				//await stationCycleService.AssignStationCycle(tcClient, detectionHandle, imagesPath, thumbnailsPath);
-
 				await tcClient.WriteAnyAsync(closeCycleHandle, false, stoppingToken);
 				_executionCount++;
 				_logger.LogInformation(
@@ -64,5 +61,6 @@ public class AssignService : BackgroundService
 					"Failed to execute PeriodicAssignService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-	}
+        }
+    }
 }

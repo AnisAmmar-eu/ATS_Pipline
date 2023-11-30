@@ -23,5 +23,5 @@ public interface ILogService : IBaseEntityService<Log, DTOLog>
 		string endpoint,
 		int code,
 		string value
-	);
+		);
 }

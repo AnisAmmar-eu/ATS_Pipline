@@ -24,12 +24,12 @@ public partial class IOTDevice
 
 	public override DTOIOTDevice ToDTO()
 	{
-		return new DTOIOTDevice(this);
+		return new(this);
 	}
 
-	public virtual async Task<bool> CheckConnection()
+	public virtual Task<bool> CheckConnection()
 	{
-		return await Task.FromResult(true);
+		return Task.FromResult(true);
 	}
 
 	/// <summary>
@@ -37,8 +37,8 @@ public partial class IOTDevice
 	/// </summary>
 	/// <param name="anodeUOW"></param>
 	/// <returns>True if at least one tag is applied. False otherwise.</returns>
-	public virtual async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
+	public virtual Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
-		return await Task.FromResult(new List<IOTTag>());
+		return Task.FromResult(new List<IOTTag>());
 	}
 }

@@ -11,7 +11,6 @@ public partial class ActEntityRole : BaseEntity
 	public string ApplicationID { get; set; }
 	public string ApplicationType { get; set; }
 
-
 	#region Nav Properties
 
 	private ActEntity? _actEntity;
@@ -20,7 +19,7 @@ public partial class ActEntityRole : BaseEntity
 	{
 		set => _actEntity = value;
 		get => _actEntity
-		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(ActEntity));
+			?? throw new InvalidOperationException("Uninitialized property: " + nameof(ActEntity));
 	}
 
 	#endregion

@@ -12,11 +12,11 @@ public class AlarmRTRepository : BaseEntityRepository<AnodeCTX, AlarmRT, DTOAlar
 	{
 	}
 
-	public async Task<List<AlarmRT>> GetAllWithInclude(
+	public Task<List<AlarmRT>> GetAllWithInclude(
 		Expression<Func<AlarmRT, bool>>[]? filters = null,
 		Func<IQueryable<AlarmRT>, IOrderedQueryable<AlarmRT>>? orderBy = null,
 		bool withTracking = true)
 	{
-		return await GetAll(filters, orderBy, withTracking, includes: nameof(AlarmRT.Alarm));
+		return GetAll(filters, orderBy, withTracking, includes: nameof(AlarmRT.Alarm));
 	}
 }

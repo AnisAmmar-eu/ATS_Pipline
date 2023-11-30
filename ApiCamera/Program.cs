@@ -24,7 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName == null)
+if (stationName is null)
 	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
@@ -62,7 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 
 string? clientHost = builder.Configuration["ClientHost"];
-if (clientHost == null)
+if (clientHost is null)
 	throw new ConfigurationErrorsException("Missing ClientHost");
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)

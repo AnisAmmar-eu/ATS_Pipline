@@ -27,7 +27,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 
 		group.MapPut("{username}/admin", SetAdmin).RequireAuthorization(ActionRID.AdminGeneralRights);
 		group.MapGet("ad", GetAllFromAD);
-		group.MapGet("", GetAll);
+		group.MapGet(string.Empty, GetAll);
 		group.MapGet("username/{username}", GetByUsername);
 		group.MapGet("id/{id}", GetById);
 		group.MapPut("{username}", Update);
@@ -49,10 +49,16 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>True/False</returns>
-	private static async Task<JsonHttpResult<ApiResponse>> SetAdmin(string username, [FromBody] bool toAdmin,
-		IUserService userService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> SetAdmin(
+		string username,
+		[FromBody] bool toAdmin,
+		IUserService userService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await userService.SetAdmin(username, toAdmin), logService,
+		return GenericEndpoint(
+			() => userService.SetAdmin(username, toAdmin),
+			logService,
 			httpContext);
 	}
 
@@ -64,12 +70,15 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <summary>
 	///     Get all users from the Active Directory
 	/// </summary>
-	/// <returns></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetAllFromAD(IUserService userService,
+	/// <param name="userService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
+	private static Task<JsonHttpResult<ApiResponse>> GetAllFromAD(
+		IUserService userService,
 		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(() => Task.FromResult(userService.GetAllFromAD()), logService, httpContext);
+		return GenericEndpoint(() => Task.FromResult(userService.GetAllFromAD()), logService, httpContext);
 	}
 
 	#endregion
@@ -80,11 +89,16 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <summary>
 	///     Get all users
 	/// </summary>
+	/// <param name="userService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="List{DTOUser}" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetAll(IUserService userService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> GetAll(
+		IUserService userService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await userService.GetAll(), logService, httpContext);
+		return GenericEndpoint(userService.GetAll, logService, httpContext);
 	}
 
 	// GET apiUser/users/{username}
@@ -96,10 +110,13 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="DTOUser" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetByUsername([Required] string username,
-		IUserService userService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetByUsername(
+		[Required] string username,
+		IUserService userService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await userService.GetByUsername(username), logService, httpContext);
+		return GenericEndpoint(() => userService.GetByUsername(username), logService, httpContext);
 	}
 
 	// GET apiUser/users/{id}
@@ -111,10 +128,13 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="DTOUser" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetById([Required] string id, IUserService userService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetById(
+		[Required] string id,
+		IUserService userService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await userService.GetById(id), logService, httpContext);
+		return GenericEndpoint(() => userService.GetById(id), logService, httpContext);
 	}
 
 	// PUT apiUser/users/{username}
@@ -127,10 +147,16 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The updated <see cref="DTOUser" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> Update([Required] string username,
-		[FromBody] DTOUser dtoUser, IUserService userService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> Update(
+		[Required] string username,
+		[FromBody] DTOUser dtoUser,
+		IUserService userService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await userService.Update(username, dtoUser), logService,
+		return GenericEndpoint(
+			() => userService.Update(username, dtoUser),
+			logService,
 			httpContext);
 	}
 
@@ -143,14 +169,20 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="string" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> Delete(string username, IUserService userService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> Delete(
+		string username,
+		IUserService userService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			await userService.Delete(username);
-			return $"User {{{username}}} has been deleted.";
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				await userService.Delete(username);
+				return $"User {{{username}}} has been deleted.";
+			},
+			logService,
+			httpContext);
 	}
 
 	#endregion
@@ -167,14 +199,21 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="string" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> UpdatePasswordByAdmin(string username,
-		[FromBody] string newPassword, IUserService userService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> UpdatePasswordByAdmin(
+		string username,
+		[FromBody] string newPassword,
+		IUserService userService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			await userService.UpdatePasswordByAdmin(username, newPassword);
-			return "The password has been updated.";
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				await userService.UpdatePasswordByAdmin(username, newPassword);
+				return "The password has been updated.";
+			},
+			logService,
+			httpContext);
 	}
 
 	// PUT apiUser/users/{username}/password/user
@@ -187,17 +226,23 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="string" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> UpdatePasswordByUser(string username,
-		[FromBody] Dictionary<string, string> data, IUserService userService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> UpdatePasswordByUser(
+		string username,
+		[FromBody] Dictionary<string, string> data,
+		IUserService userService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			string oldPassword = data["oldPassword"];
-			string newPassword = data["newPassword"];
-			await userService.UpdatePasswordByUser(username, oldPassword, newPassword);
-			return "The password has been updated.";
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				string oldPassword = data["oldPassword"];
+				string newPassword = data["newPassword"];
+				await userService.UpdatePasswordByUser(username, oldPassword, newPassword);
+				return "The password has been updated.";
+			},
+			logService,
+			httpContext);
 	}
 
 	// POST apiUser/users/{username}/password/reset
@@ -208,15 +253,20 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="userService"></param>
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
-	/// <returns></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> ResetPassword(string username, IUserService userService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> ResetPassword(
+		string username,
+		IUserService userService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			await userService.ResetPassword(username);
-			return "The password has been reset.";
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				await userService.ResetPassword(username);
+				return "The password has been reset.";
+			},
+			logService,
+			httpContext);
 	}
 
 	#endregion

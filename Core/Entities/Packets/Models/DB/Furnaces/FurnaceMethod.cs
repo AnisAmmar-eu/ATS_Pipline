@@ -22,23 +22,22 @@ public abstract partial class Furnace
 
 	public override DTOFurnace ToDTO()
 	{
-		return new DTOFurnace(this);
+		return new(this);
 	}
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
-		StationCycle = await anodeUOW.StationCycle.GetBy(new Expression<Func<StationCycle, bool>>[]
-		{
-			cycle => cycle.RID == StationCycleRID
-		}, withTracking: false);
+		StationCycle = await anodeUOW.StationCycle
+			.GetBy( new Expression<Func<StationCycle, bool>>[] { cycle => cycle.RID == StationCycleRID }, withTracking: false);
 		if (StationCycle is not S3S4Cycle s3S4Cycle)
 			throw new InvalidOperationException("Furnace packet associated with a non S3S4Cycle");
+
 		if (s3S4Cycle.Status == PacketStatus.Sent)
 		{
 			using HttpClient httpClient = new();
 			StringContent content = new(JsonSerializer.Serialize(ToDTO()), Encoding.UTF8, "application/json");
-			HttpResponseMessage response =
-				await httpClient.PostAsync($"{Station.ServerAddress}/apiServerReceive/furnacePackets", content);
+			HttpResponseMessage response
+				= await httpClient.PostAsync($"{Station.ServerAddress}/apiServerReceive/furnacePackets", content);
 			if (response.IsSuccessStatusCode)
 				Status = PacketStatus.Sent;
 		}

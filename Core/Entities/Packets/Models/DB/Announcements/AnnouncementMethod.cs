@@ -24,18 +24,17 @@ public partial class Announcement
 	public Announcement(AnnouncementStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.RID.ToRID();
-		AnodeType = adsStruct.AnodeType switch
-		{
+		AnodeType = adsStruct.AnodeType switch {
 			1 => AnodeTypeDict.DX,
 			2 => AnodeTypeDict.D20,
-			_ => AnodeTypeDict.Undefined
+			_ => AnodeTypeDict.Undefined,
 		};
 		AnnounceID = adsStruct.AnnounceID.ToRID();
 	}
 
 	public override DTOAnnouncement ToDTO()
 	{
-		return new DTOAnnouncement(this);
+		return new(this);
 	}
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
@@ -49,6 +48,7 @@ public partial class Announcement
 		stationCycle.AnnouncementPacket = this;
 		if (stationCycle is S3S4Cycle s3S4Cycle)
 			s3S4Cycle.AnnounceID = AnnounceID;
+
 		await anodeUOW.StationCycle.Add(stationCycle);
 		Status = PacketStatus.Completed;
 		StationCycle = stationCycle;

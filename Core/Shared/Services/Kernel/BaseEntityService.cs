@@ -9,9 +9,9 @@ using Core.Shared.UnitOfWork.Interfaces;
 namespace Core.Shared.Services.Kernel;
 
 public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDTO>
+	where TRepository : IBaseEntityRepository<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
-	where TRepository : IBaseEntityRepository<T, TDTO>
 {
 	private readonly TRepository _repository;
 	protected readonly IAnodeUOW AnodeUOW;
@@ -20,10 +20,11 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 	{
 		AnodeUOW = anodeUOW;
 		_repository = (TRepository?)anodeUOW.GetRepoByType(typeof(TRepository)) ??
-		              throw new InvalidOperationException("Repo is null");
+			throw new InvalidOperationException("Repo is null");
 	}
 
-	public async Task<TDTO> GetByID(int id,
+	public async Task<TDTO> GetByID(
+		int id,
 		Expression<Func<T, bool>>[]? filters = null,
 		bool withTracking = true,
 		params string[] includes)
@@ -31,7 +32,8 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 		return (await _repository.GetById(id, filters, withTracking, includes)).ToDTO();
 	}
 
-	public async Task<List<TDTO>> GetAll(Expression<Func<T, bool>>[]? filters = null,
+	public async Task<List<TDTO>> GetAll(
+		Expression<Func<T, bool>>[]? filters = null,
 		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 		bool withTracking = true,
 		int? maxCount = null,

@@ -1,6 +1,4 @@
-﻿using Core.Entities.User.Models.DTO.Acts;
-
-namespace Core.Entities.User.Dictionaries;
+﻿namespace Core.Entities.User.Dictionaries;
 
 public static class ActionRID
 {
@@ -9,7 +7,7 @@ public static class ActionRID
 
 public static class ActData
 {
-	public static DTOAct AdminGeneralRights = new() { RID = ActionRID.AdminGeneralRights };
+	// public static DTOAct AdminGeneralRights = new() { RID = ActionRID.AdminGeneralRights };
 }
 
 public static class ApplicationTypeRID
@@ -50,10 +48,9 @@ public static class SourceAuth
 
 	public static string[] GetSources()
 	{
-		return new[]
-		{
+		return new[] {
 			//AD,
-			Ekidi
+			Ekidi,
 		};
 	}
 }

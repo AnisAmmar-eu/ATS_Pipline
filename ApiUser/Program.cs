@@ -31,14 +31,15 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName == null)
+if (stationName is null)
 	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
+	options =>
 	{
 		options.Password.RequiredLength = 1;
 		options.Password.RequireLowercase = false;
@@ -49,7 +50,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 	.AddEntityFrameworkStores<AnodeCTX>()
 	.AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(
+	options =>
 	{
 		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,18 +63,17 @@ builder.Services.AddAuthentication(options =>
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
 		string? jwtSecret = builder.Configuration["JWT:Secret"];
-		if (jwtSecret == null)
+		if (jwtSecret is null)
 			throw new ConfigurationErrorsException("Missing JWT Secret");
-		options.TokenValidationParameters = new TokenValidationParameters
-		{
+
+		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidAudience = builder.Configuration["JWT:ValidAudience"],
 			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
-		options.Events = new JwtBearerEvents
-		{
+		options.Events = new() {
 			OnMessageReceived = context =>
 			{
 				if (context.Request.Query.TryGetValue("access_token", out StringValues token)
@@ -81,10 +82,9 @@ builder.Services.AddAuthentication(options =>
 
 				return Task.CompletedTask;
 			},
-			OnAuthenticationFailed = _ => Task.CompletedTask
+			OnAuthenticationFailed = _ => Task.CompletedTask,
 		};
 	});
-
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -104,60 +104,61 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
 
-builder.Services.AddAuthorization(options =>
-{
-	options.AddPolicy(ActionRID.AdminGeneralRights,
-		policy => policy.AddRequirements(new ActAuthorize(ActionRID.AdminGeneralRights)));
-});
+builder.Services.AddAuthorization(
+	options =>
+	{
+		options.AddPolicy(
+			ActionRID.AdminGeneralRights,
+			policy => policy.AddRequirements(new ActAuthorize(ActionRID.AdminGeneralRights)));
+	});
 
 builder.Services.AddScoped<IAuthorizationHandler, ActAuthorizeHandler>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-	options.SwaggerDoc("v1", new OpenApiInfo
+builder.Services.AddSwaggerGen(
+	options =>
 	{
-		Version = "v1",
-		Title = "ApiUser",
-		Description = "An Api to manage user actions"
-	});
-	// using System.Reflection;
-	string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-	options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+		options.SwaggerDoc(
+			"v1",
+			new OpenApiInfo {
+				Version = "v1",
+				Title = "ApiUser",
+				Description = "An Api to manage user actions",
+			});
+		// using System.Reflection;
+		string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+		options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
-	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-	{
-		Name = "Authorization",
-		Type = SecuritySchemeType.ApiKey,
-		Scheme = "Bearer",
-		BearerFormat = "JWT",
-		In = ParameterLocation.Header,
-		Description
-			= "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\""
-	});
-	options.AddSecurityRequirement(new OpenApiSecurityRequirement
-	{
-		{
-			new OpenApiSecurityScheme
+		options.AddSecurityDefinition(
+			"Bearer",
+			new OpenApiSecurityScheme {
+				Name = "Authorization",
+				Type = SecuritySchemeType.ApiKey,
+				Scheme = "Bearer",
+				BearerFormat = "JWT",
+				In = ParameterLocation.Header,
+				Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your"
+					+ " token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+			});
+		options.AddSecurityRequirement(new OpenApiSecurityRequirement {
 			{
-				Reference = new OpenApiReference
-				{
-					Type = ReferenceType.SecurityScheme,
-					Id = "Bearer"
-				}
+				new OpenApiSecurityScheme {
+					Reference = new() {
+						Id = "Bearer",
+						Type = ReferenceType.SecurityScheme,
+					},
+				},
+				Array.Empty<string>()
 			},
-			new string[] { }
-		}
+		});
+		options.OperationFilter<SwaggerActionHeader>();
 	});
-	options.OperationFilter<SwaggerActionHeader>();
-});
-
 
 WebApplication app = builder.Build();
 
 string? clientHost = builder.Configuration["ClientHost"];
-if (clientHost == null)
+if (clientHost is null)
 	throw new ConfigurationErrorsException("Missing ClientHost");
 app.UseCors(policyBuilder => policyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")

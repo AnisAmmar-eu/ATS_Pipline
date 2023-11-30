@@ -13,13 +13,22 @@ public class StationCycleRepository : BaseEntityRepository<AnodeCTX, StationCycl
 	{
 	}
 
-	public async Task<List<StationCycle>> GetAllWithIncludes(
+	public Task<List<StationCycle>> GetAllWithIncludes(
 		Expression<Func<StationCycle, bool>>[]? filters = null,
 		Func<IQueryable<StationCycle>, IOrderedQueryable<StationCycle>>? orderBy = null,
 		bool withTracking = true,
 		int? maxCount = null)
 	{
-		return await GetAll(filters, orderBy, withTracking, maxCount, "AnnouncementPacket", "DetectionPacket",
-			"ShootingPacket", "AlarmListPacket", "InFurnacePacket", "OutFurnacePacket");
+		return GetAll(
+			filters,
+			orderBy,
+			withTracking,
+			maxCount,
+			"AnnouncementPacket",
+			"DetectionPacket",
+			"ShootingPacket",
+			"AlarmListPacket",
+			"InFurnacePacket",
+			"OutFurnacePacket");
 	}
 }

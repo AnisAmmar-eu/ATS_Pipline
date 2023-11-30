@@ -14,6 +14,6 @@ public partial class DTOKPIEntry
 
 	public override KPIEntry ToModel()
 	{
-		return new KPIEntry(this);
+		return new(this);
 	}
 }

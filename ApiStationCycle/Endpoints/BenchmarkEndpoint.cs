@@ -18,16 +18,19 @@ public class BenchmarkEndpoint : BaseEntityEndpoint<BenchmarkTest, DTOBenchmarkT
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle/benchmark2")
 			.WithTags(nameof(BenchmarkEndpoint));
-		MapBaseEndpoints(group,
+		MapBaseEndpoints(
+			group,
 			BaseEndpointFlags.Create | BaseEndpointFlags.Read | BaseEndpointFlags.Update | BaseEndpointFlags.Delete);
 
 		group.MapPost("generate/{nbItems}", GenerateRows);
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> GenerateRows([FromRoute] int nbItems,
-		IBenchmarkTestService benchmarkTestService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GenerateRows(
+		[FromRoute] int nbItems,
+		IBenchmarkTestService benchmarkTestService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await benchmarkTestService.GenerateRows(nbItems), logService,
-			httpContext);
+		return GenericEndpoint( () => benchmarkTestService.GenerateRows(nbItems), logService, httpContext);
 	}
 }

@@ -18,10 +18,9 @@ public class FileSettingService : BaseEntityService<IFileSettingRepository, File
 
 	public async Task<DTOFileSetting> ReceiveFile(UploadFileSetting uploadFileSetting, IFormFile file)
 	{
-		FileSetting fileSetting = await AnodeUOW.FileSetting.GetBy(new Expression<Func<FileSetting, bool>>[]
-		{
-			setting => setting.RID == uploadFileSetting.RID
-		}, withTracking: false);
+		FileSetting fileSetting = await AnodeUOW.FileSetting.GetBy(
+			new Expression<Func<FileSetting, bool>>[] { setting => setting.RID == uploadFileSetting.RID },
+			withTracking: false);
 
 		fileSetting.LastUsername = uploadFileSetting.Username;
 		fileSetting.LastComment = uploadFileSetting.Comment;

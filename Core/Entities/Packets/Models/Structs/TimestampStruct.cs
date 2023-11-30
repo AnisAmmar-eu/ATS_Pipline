@@ -16,7 +16,14 @@ public struct TimestampStruct
 
 	public DateTimeOffset GetTimestamp()
 	{
-		return new DateTimeOffset(Year, Month, Day, Hour, Minutes, Sec, MS,
+		return new(
+			Year,
+			Month,
+			Day,
+			Hour,
+			Minutes,
+			Sec,
+			MS,
 			new GregorianCalendar(GregorianCalendarTypes.Localized),
 			TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow));
 	}

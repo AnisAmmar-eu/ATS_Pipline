@@ -20,6 +20,6 @@ public partial class DTOFileSetting
 
 	public override FileSetting ToModel()
 	{
-		return new FileSetting(this);
+		return new(this);
 	}
 }

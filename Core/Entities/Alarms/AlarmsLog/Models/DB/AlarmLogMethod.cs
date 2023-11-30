@@ -37,6 +37,6 @@ public partial class AlarmLog
 
 	public override DTOAlarmLog ToDTO()
 	{
-		return new DTOAlarmLog(this);
+		return new(this);
 	}
 }

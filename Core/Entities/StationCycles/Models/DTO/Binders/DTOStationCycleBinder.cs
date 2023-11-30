@@ -32,15 +32,14 @@ public class DTOStationCycleBinder : IModelBinder
 
 	private static Type GetDTOType(string? type)
 	{
-		if (type == null)
+		if (type is null)
 			throw new EntityNotFoundException("StationCycle type is null");
 
-		return type switch
-		{
+		return type switch {
 			CycleTypes.S1S2 => typeof(DTOS1S2Cycle),
 			CycleTypes.S3S4 => typeof(DTOS3S4Cycle),
 			CycleTypes.S5 => typeof(DTOS5Cycle),
-			_ => typeof(DTOStationCycle)
+			_ => typeof(DTOStationCycle),
 		};
 	}
 }

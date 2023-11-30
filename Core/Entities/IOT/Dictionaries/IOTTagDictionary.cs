@@ -11,7 +11,6 @@ public static class IOTTagType
 
 public static class IOTTagRID
 {
-	// Reserved & special cases
 	public const string TestMode = "__TestMode";
 
 	#region Camera

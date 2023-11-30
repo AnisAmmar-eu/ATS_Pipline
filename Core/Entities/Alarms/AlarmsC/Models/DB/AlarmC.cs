@@ -22,7 +22,7 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 	{
 		set => _alarmRT = value;
 		get => _alarmRT
-		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(AlarmRT));
+			?? throw new InvalidOperationException("Uninitialized property: " + nameof(AlarmRT));
 	}
 
 	public virtual ICollection<AlarmLog> AlarmLogs { get; set; } = new List<AlarmLog>();

@@ -9,6 +9,5 @@ public class DTOActEntityToValid
 
 	public int? ParentID { get; set; }
 
-	// public int Priority { get; set; }
 	public DTOLogin? Login { get; set; }
 }

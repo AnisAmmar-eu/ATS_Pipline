@@ -21,15 +21,15 @@ public class TemperatureService : BackgroundService
 	private static TimeSpan TimeToWaitUntilNextQuarterHour()
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
-		return TimeSpan.FromMinutes(15 - now.Minute % 15);
+		return TimeSpan.FromMinutes(15 - (now.Minute % 15));
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await Task.Delay(TimeToWaitUntilNextQuarterHour(), stoppingToken);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IBITemperatureService biTemperatureService =
-			asyncScope.ServiceProvider.GetRequiredService<IBITemperatureService>();
+		IBITemperatureService biTemperatureService
+			= asyncScope.ServiceProvider.GetRequiredService<IBITemperatureService>();
 		using PeriodicTimer timer = new(_period);
 		do
 		{
@@ -54,6 +54,6 @@ public class TemperatureService : BackgroundService
 					ex.Message);
 			}
 		} while (!stoppingToken.IsCancellationRequested
-		         && await timer.WaitForNextTickAsync(stoppingToken));
+			&& await timer.WaitForNextTickAsync(stoppingToken));
 	}
 }

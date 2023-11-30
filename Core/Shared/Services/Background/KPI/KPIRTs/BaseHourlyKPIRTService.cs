@@ -19,7 +19,8 @@ public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundSe
 	private readonly TimeSpan _period = TimeSpan.FromHours(1);
 	private int _executionCount;
 
-	public BaseHourlyKPIRTService(IServiceScopeFactory factory,
+	public BaseHourlyKPIRTService(
+		IServiceScopeFactory factory,
 		ILogger<BaseHourlyKPIRTService<T, TDTO, TRepository, TValue>> logger)
 	{
 		_factory = factory;
@@ -43,10 +44,8 @@ public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundSe
 				_logger.LogInformation("BaseKPIRTService running at: {time}", DateTimeOffset.Now);
 
 				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-				IAnodeUOW anodeUOW =
-					asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-				IKPIRTService kpirtService =
-					asyncScope.ServiceProvider.GetRequiredService<IKPIRTService>();
+				IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+				IKPIRTService kpirtService = asyncScope.ServiceProvider.GetRequiredService<IKPIRTService>();
 
 				_logger.LogInformation("Calling ComputeKPIRTs");
 				await kpirtService.ComputeKPIRTs<T, TDTO, TRepository, TValue>(
@@ -62,6 +61,6 @@ public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundSe
 					ex.Message);
 			}
 		} while (!stoppingToken.IsCancellationRequested
-		         && await timer.WaitForNextTickAsync(stoppingToken));
+			&& await timer.WaitForNextTickAsync(stoppingToken));
 	}
 }

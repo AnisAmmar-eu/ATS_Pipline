@@ -15,6 +15,6 @@ public partial class DTOOTTagTwinCat
 
 	public override OTTagTwinCat ToModel()
 	{
-		return new OTTagTwinCat(this);
+		return new(this);
 	}
 }

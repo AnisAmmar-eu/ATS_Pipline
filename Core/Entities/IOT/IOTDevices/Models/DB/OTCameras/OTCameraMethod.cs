@@ -22,7 +22,7 @@ public partial class OTCamera
 
 	public override DTOOTCamera ToDTO()
 	{
-		return new DTOOTCamera(this);
+		return new(this);
 	}
 
 	public override async Task<bool> CheckConnection()
@@ -32,12 +32,13 @@ public partial class OTCamera
 			Device device = CameraConnectionManager.Connect(int.Parse(Address));
 			if (device.ConnectionState != ConnectionState.Connected)
 				return false;
+
 			NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
 			double temperature = (nodeMap["DeviceTemperature"] as FloatNode)!.Value;
 			using HttpClient httpClient = new();
-			string tempRID = RID == DeviceRID.Camera1 ? IOTTagRID.TemperatureCam1 : IOTTagRID.TemperatureCam2;
+			string tempRID = (RID == DeviceRID.Camera1) ? IOTTagRID.TemperatureCam1 : IOTTagRID.TemperatureCam2;
 			await httpClient.PutAsync(
-				$"{ITApisDict.IOTAddress}/apiIOT/iotTags/{tempRID}/{temperature}", null);
+				$"{ITApisDict.IOTAddress}/apiIOT/iotTags/{tempRID}/{temperature.ToString(CultureInfo.InvariantCulture)}", null);
 			return true;
 		}
 		catch (Exception)
@@ -71,8 +72,8 @@ public partial class OTCamera
 						enumerationNode.Value = tag.NewValue;
 						break;
 					default:
-						throw new InvalidOperationException("Camera tag with path " + tag.Path +
-						                                    " has a path towards unsupported data type.");
+						throw new InvalidOperationException(
+							$"Camera tag with path {tag.Path} has a path towards unsupported data type.");
 				}
 
 				tag.HasNewValue = false;
@@ -84,18 +85,18 @@ public partial class OTCamera
 				hasBeenUpdated = true;
 			}
 
-			string readValue = nodeMap[tag.Path] switch
-			{
+			string readValue = nodeMap[tag.Path] switch {
 				IntegerNode integerNode => integerNode.Value.ToString(),
 				FloatNode floatNode => floatNode.Value.ToString(CultureInfo.InvariantCulture),
 				BooleanNode booleanNode => booleanNode.Value.ToString(),
 				EnumerationNode enumerationNode => enumerationNode.Value,
-				_ => throw new InvalidOperationException("Camera tag with path " + tag.Path +
-				                                         " has a path towards unsupported data type.")
+				_ => throw new InvalidOperationException(
+					$"Camera tag with path {tag.Path} has a path towards unsupported data type."),
 			};
 			hasBeenUpdated = hasBeenUpdated || tag.CurrentValue != readValue;
 			if (hasBeenUpdated)
 				updatedTags.Add(tag);
+
 			tag.CurrentValue = readValue;
 		}
 

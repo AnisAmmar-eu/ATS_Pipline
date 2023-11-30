@@ -12,7 +12,6 @@ public partial class DTOAlarmLog
 		IsAck = false;
 	}
 
-
 	public DTOAlarmLog(AlarmLog alarmLog) : base(alarmLog)
 	{
 		StationID = alarmLog.StationID;
@@ -31,6 +30,6 @@ public partial class DTOAlarmLog
 
 	public override AlarmLog ToModel()
 	{
-		return new AlarmLog(this);
+		return new(this);
 	}
 }

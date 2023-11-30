@@ -16,14 +16,14 @@ public class BenchmarkTestRepository : BaseEntityRepository<AnodeCTX, BenchmarkT
 	{
 	}
 
-	public async Task<List<BenchmarkTest>> OldGetRange(int start, int nbItems)
+	public Task<List<BenchmarkTest>> OldGetRange(int start, int nbItems)
 	{
-		return await Context.BenchmarkTest.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
+		return Context.BenchmarkTest.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
 	}
 
-	public async Task<List<BenchmarkTest>> GetRangeForPagination(int nbItems, int lastID, Pagination pagination)
+	public Task<List<BenchmarkTest>> GetRangeForPagination(int nbItems, int lastID, Pagination pagination)
 	{
-		return await Context.BenchmarkTest.Include("CameraTest").AsNoTracking()
+		return Context.BenchmarkTest.Include("CameraTest").AsNoTracking()
 			.FilterFromPagination<BenchmarkTest, DTOBenchmarkTest>(pagination, lastID) // Custom function in filter.
 			.SortFromPagination<BenchmarkTest, DTOBenchmarkTest>(pagination) // Custom function in Sort.
 			.Take(nbItems)

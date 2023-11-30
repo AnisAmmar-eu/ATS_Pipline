@@ -15,7 +15,7 @@ public partial class ITApi
 
 	public override DTOITApi ToDTO()
 	{
-		return new DTOITApi(this);
+		return new(this);
 	}
 
 	public override async Task<bool> CheckConnection()

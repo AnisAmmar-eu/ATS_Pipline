@@ -19,6 +19,6 @@ public partial class DTOS5Cycle
 
 	public override S5Cycle ToModel()
 	{
-		return new S5Cycle(this);
+		return new(this);
 	}
 }

@@ -7,7 +7,7 @@ public partial class DTOActEntity
 {
 	public DTOActEntity()
 	{
-		RID = "";
+		RID = string.Empty;
 	}
 
 	public DTOActEntity(ActEntity actEntity)
@@ -26,19 +26,19 @@ public partial class DTOActEntity
 
 	public override ActEntity ToModel()
 	{
-		return new ActEntity(this);
+		return new(this);
 	}
 
 	public ActEntity ToModel(Act act, string signatureType)
 	{
-		return new ActEntity(this, act, signatureType);
+		return new(this, act, signatureType);
 	}
 
 	public void AssociateEntity(string entityType, int entityID, string? parentType = null, int? parentID = null)
 	{
 		ParentID = parentID;
 		EntityID = entityID;
-		Act ??= new DTOAct();
+		Act ??= new();
 		Act.ParentType = parentType;
 		Act.EntityType = entityType;
 	}

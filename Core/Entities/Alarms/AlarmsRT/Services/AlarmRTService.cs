@@ -14,8 +14,10 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 	{
 	}
 
-	public new async Task<List<DTOAlarmRT>> GetAll(Expression<Func<AlarmRT, bool>>[]? filters = null,
-		Func<IQueryable<AlarmRT>, IOrderedQueryable<AlarmRT>>? orderBy = null, bool withTracking = true,
+	new public async Task<List<DTOAlarmRT>> GetAll(
+		Expression<Func<AlarmRT, bool>>[]? filters = null,
+		Func<IQueryable<AlarmRT>, IOrderedQueryable<AlarmRT>>? orderBy = null,
+		bool withTracking = true,
 		int? maxCount = null,
 		params string[] includes)
 	{

@@ -21,10 +21,8 @@ public static class PacketType
 
 public static class ShootingUtils
 {
-	// Filename
 	public const string TestFilename = "TestImage.jpg";
 
-	// Directories
 	public const string Camera1 = @"..\ApiCamera\Camera1\";
 	public const string Camera2 = @"..\ApiCamera\Camera2\";
 	public const string CameraTest1 = @"CameraTest1\";

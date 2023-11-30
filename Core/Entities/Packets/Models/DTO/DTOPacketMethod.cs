@@ -17,14 +17,14 @@ public partial class DTOPacket
 {
 	public DTOPacket()
 	{
-		StationCycleRID = "";
-		Type = "";
-		Status = "";
+		StationCycleRID = string.Empty;
+		Type = string.Empty;
+		Status = string.Empty;
 	}
 
 	public DTOPacket(Packet detection)
 	{
-		Type = "";
+		Type = string.Empty;
 		ID = detection.ID;
 		TS = detection.TS;
 		StationCycleRID = detection.StationCycleRID;
@@ -34,7 +34,7 @@ public partial class DTOPacket
 
 	public override Packet ToModel()
 	{
-		return new Packet(this);
+		return new(this);
 	}
 
 	public static async ValueTask<DTOPacket?> BindAsync(HttpContext httpContext)
@@ -58,11 +58,10 @@ public partial class DTOPacket
 
 	private static Type GetDTOType(string? type)
 	{
-		if (type == null)
+		if (type is null)
 			throw new EntityNotFoundException("Packet type is null");
 
-		return type switch
-		{
+		return type switch {
 			PacketType.Alarm => typeof(DTOAlarmList),
 			PacketType.Announcement => typeof(DTOAnnouncement),
 			PacketType.S1S2Announcement => typeof(S1S2Announcement),
@@ -70,7 +69,7 @@ public partial class DTOPacket
 			PacketType.Shooting => typeof(DTOShooting),
 			PacketType.InFurnace => typeof(DTOInFurnace),
 			PacketType.OutFurnace => typeof(DTOOutFurnace),
-			_ => typeof(DTOPacket)
+			_ => typeof(DTOPacket),
 		};
 	}
 }

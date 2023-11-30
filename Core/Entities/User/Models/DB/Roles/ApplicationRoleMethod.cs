@@ -17,6 +17,6 @@ public partial class ApplicationRole
 
 	public DTORole ToDTO()
 	{
-		return new DTORole(this);
+		return new(this);
 	}
 }

@@ -13,6 +13,6 @@ public partial class DTOAnodeDX
 
 	public override AnodeDX ToModel()
 	{
-		return new AnodeDX(this);
+		return new(this);
 	}
 }

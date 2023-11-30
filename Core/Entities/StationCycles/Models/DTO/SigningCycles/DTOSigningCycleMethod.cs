@@ -17,6 +17,7 @@ public partial class DTOSigningCycle
 	{
 		if (this is DTOS1S2Cycle dtoS1S2Cycle)
 			return dtoS1S2Cycle.ToModel();
+
 		throw new InvalidCastException("Trying to convert an abstract class to model");
 	}
 }

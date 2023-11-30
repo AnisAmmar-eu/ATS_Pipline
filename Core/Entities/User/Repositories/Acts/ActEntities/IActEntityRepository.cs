@@ -7,7 +7,11 @@ namespace Core.Entities.User.Repositories.Acts.ActEntities;
 
 public interface IActEntityRepository : IBaseEntityRepository<ActEntity, DTOActEntity>
 {
-	Task<List<ActEntity>> GetAllByActWithIncludes(Act act, int? entityID, int? parentID, bool withTracking = true,
+	Task<List<ActEntity>> GetAllByActWithIncludes(
+		Act act,
+		int? entityID,
+		int? parentID,
+		bool withTracking = true,
 		int? maxCount = null);
 
 	Task<ActEntity> GetByActWithIncludes(Act act, int? entityID, int? parentID, bool withTracking = true);

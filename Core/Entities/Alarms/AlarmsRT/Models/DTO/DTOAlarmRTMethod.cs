@@ -19,6 +19,6 @@ public partial class DTOAlarmRT
 
 	public override AlarmRT ToModel()
 	{
-		return new AlarmRT(this);
+		return new(this);
 	}
 }

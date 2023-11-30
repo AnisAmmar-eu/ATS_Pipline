@@ -8,14 +8,17 @@ namespace Core.Entities.User.Services.Acts;
 
 public interface IActService : IBaseEntityService<Act, DTOAct>
 {
-	Task<List<DTOActEntityStatus>> ActionsFromList(HttpContext httpContext,
-		List<DTOActEntityStatus> dtoActEntitiesStatus);
+	Task<List<DTOActEntityStatus>> ActionsFromList(HttpContext httpContext, List<DTOActEntityStatus> dtoActEntitiesStatus);
 
 	Task<DTOActEntityStatus> GetAction(HttpContext httpContext, DTOActEntityStatus dtoActEntityStatus);
 	Task<DTOActEntity> GetActionEntityRoles(DTOActEntity dtoActEntity);
 	Task AssignAction(DTOActEntity dtoActEntity, bool remove = true);
 
-	Task DeleteActionEntity(string actRID, string? entityType = null, int? entityID = null, string? parentType = null,
+	Task DeleteActionEntity(
+		string actRID,
+		string? entityType = null,
+		int? entityID = null,
+		string? parentType = null,
 		int? parentID = null);
 
 	Task<bool> DuplicateActionEntities(DTOActEntityToValid dtoActToDuplicate, DTOActEntityToValid dtoAct);

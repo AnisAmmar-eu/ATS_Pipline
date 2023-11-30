@@ -20,6 +20,6 @@ public partial class DTODetection
 
 	public override Detection ToModel()
 	{
-		return new Detection(this);
+		return new(this);
 	}
 }

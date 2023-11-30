@@ -15,13 +15,14 @@ public partial class DTOS1S2Cycle
 	{
 		CycleType = CycleTypes.S1S2;
 		// Query will set the announce in the parent attribute instead of the overriden one.
-		if (s1S2Cycle.AnnouncementPacket == null && base.AnnouncementPacket != null)
+		if (s1S2Cycle.AnnouncementPacket is null && base.AnnouncementPacket is not null)
 			AnnouncementPacket = (DTOS1S2Announcement?)base.AnnouncementPacket;
-		else AnnouncementPacket = s1S2Cycle.AnnouncementPacket?.ToDTO();
-	}
+		else
+            AnnouncementPacket = s1S2Cycle.AnnouncementPacket?.ToDTO();
+    }
 
 	public override S1S2Cycle ToModel()
 	{
-		return new S1S2Cycle(this);
+		return new(this);
 	}
 }

@@ -24,12 +24,13 @@ public class SendService : BackgroundService
 	{
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IStationCycleService stationCycleService =
-			asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
+		IStationCycleService stationCycleService
+			= asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
 
 		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken))
-			try
+			&& await timer.WaitForNextTickAsync(stoppingToken))
+        {
+            try
 			{
 				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling SendStationCycle");
@@ -47,5 +48,6 @@ public class SendService : BackgroundService
 					"Failed to execute PeriodicSendService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-	}
+        }
+    }
 }

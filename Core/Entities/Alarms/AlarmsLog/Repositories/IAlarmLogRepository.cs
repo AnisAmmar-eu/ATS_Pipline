@@ -7,7 +7,9 @@ namespace Core.Entities.Alarms.AlarmsLog.Repositories;
 
 public interface IAlarmLogRepository : IBaseEntityRepository<AlarmLog, DTOAlarmLog>
 {
-	public Task<AlarmLog> GetByIdWithIncludes(int id, Expression<Func<AlarmLog, bool>>[]? filters = null,
+	public Task<AlarmLog> GetByIdWithIncludes(
+		int id,
+		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		bool withTracking = true);
 
 	public Task<AlarmLog> GetByWithIncludes(

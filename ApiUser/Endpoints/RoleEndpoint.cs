@@ -24,9 +24,9 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	{
 		RouteGroupBuilder group = app.MapGroup("apiUser/roles").WithTags(nameof(RoleEndpoint));
 
-		group.MapGet("", GetAll);
+		group.MapGet(string.Empty, GetAll);
 		group.MapGet("{rid}", GetByRID);
-		group.MapPost("", Create);
+		group.MapPost(string.Empty, Create);
 		group.MapPut("{rid}", Update);
 		group.MapDelete("{rid}", Delete);
 	}
@@ -35,11 +35,16 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// <summary>
 	///     Get all roles
 	/// </summary>
+	/// <param name="roleService"></param>
+	/// <param name="logService"></param>
+	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="List{DTORole}" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetAll(IRoleService roleService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> GetAll(
+		IRoleService roleService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await roleService.GetAll(), logService, httpContext);
+		return GenericEndpoint(roleService.GetAll, logService, httpContext);
 	}
 
 	// GET apiUser/roles/{rid}
@@ -51,10 +56,13 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The selected <see cref="DTORole" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> GetByRID([Required] string rid, IRoleService roleService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetByRID(
+		[Required] string rid,
+		IRoleService roleService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await roleService.GetByRID(rid), logService, httpContext);
+		return GenericEndpoint(() => roleService.GetByRID(rid), logService, httpContext);
 	}
 
 	// POST apiUser/roles
@@ -66,10 +74,13 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The create <see cref="DTORole" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> Create([FromBody] DTORole dtoRole, IRoleService roleService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> Create(
+		[FromBody] DTORole dtoRole,
+		IRoleService roleService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await roleService.Create(dtoRole), logService, httpContext);
+		return GenericEndpoint(() => roleService.Create(dtoRole), logService, httpContext);
 	}
 
 	// PUT apiUser/roles/{rid}
@@ -82,10 +93,14 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The updated <see cref="DTORole" /></returns>
-	private static async Task<JsonHttpResult<ApiResponse>> Update([Required] string rid, [FromBody] DTORole dtoRole,
-		IRoleService roleService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> Update(
+		[Required] string rid,
+		[FromBody] DTORole dtoRole,
+		IRoleService roleService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await roleService.Update(rid, dtoRole), logService, httpContext);
+		return GenericEndpoint(() => roleService.Update(rid, dtoRole), logService, httpContext);
 	}
 
 	// DELETE apiUser/roles/{rid}
@@ -97,13 +112,19 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A string</returns>
-	private static async Task<JsonHttpResult<ApiResponse>> Delete([Required] string rid, IRoleService roleService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> Delete(
+		[Required] string rid,
+		IRoleService roleService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			await roleService.Delete(rid);
-			return $"The role with RID {{{rid}}} has been successfully deleted.";
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				await roleService.Delete(rid);
+				return $"The role with RID {{{rid}}} has been successfully deleted.";
+			},
+			logService,
+			httpContext);
 	}
 }

@@ -29,6 +29,6 @@ public partial class DTOInFurnace
 
 	public override InFurnace ToModel()
 	{
-		return new InFurnace(this);
+		return new(this);
 	}
 }

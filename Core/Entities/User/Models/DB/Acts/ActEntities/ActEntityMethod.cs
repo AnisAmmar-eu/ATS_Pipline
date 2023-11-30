@@ -6,19 +6,19 @@ public partial class ActEntity
 {
 	public ActEntity()
 	{
-		RID = "";
+		RID = string.Empty;
 	}
 
 	public ActEntity(DTOActEntity dto)
 	{
-		RID = dto.RID == "" ? dto.Act?.RID + '.' + dto.EntityID : dto.RID;
+		RID = (dto.RID.Length == 0) ? dto.Act?.RID + '.' + dto.EntityID : dto.RID;
 		ParentID = dto.ParentID;
 		EntityID = dto.EntityID;
 	}
 
 	public ActEntity(DTOActEntity dto, Act act, string signatureType)
 	{
-		RID = dto.RID == "" ? act.RID + '.' + dto.EntityID : dto.RID;
+		RID = (dto.RID.Length == 0) ? act.RID + '.' + dto.EntityID : dto.RID;
 		ParentID = dto.ParentID;
 		EntityID = dto.EntityID;
 		SignatureType = signatureType;
@@ -27,6 +27,6 @@ public partial class ActEntity
 
 	public override DTOActEntity ToDTO()
 	{
-		return new DTOActEntity(this);
+		return new(this);
 	}
 }

@@ -27,12 +27,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName == null)
+if (stationName is null)
 	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
 Station.Name = stationName;
 
 if (!Station.IsServer)
-	throw new Exception("¨This API can only run on the server. Please update appsettings.json");
+	throw new("¨This API can only run on the server. Please update appsettings.json");
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -65,22 +65,23 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
 
-builder.Services.AddCors(options =>
-{
-	options.AddPolicy("AllowOrigin", policyBuilder =>
+builder.Services.AddCors(
+	options =>
 	{
-		policyBuilder.AllowAnyOrigin()
-			.AllowAnyMethod()
-			.AllowAnyHeader();
+		options.AddPolicy(
+			"AllowOrigin",
+			policyBuilder =>
+			{
+				policyBuilder.AllowAnyOrigin()
+					.AllowAnyMethod()
+					.AllowAnyHeader();
+			});
 	});
-});
-
 
 WebApplication app = builder.Build();
 
-
 string? dbInitialize = builder.Configuration["DbInitialize"];
-if (dbInitialize == null)
+if (dbInitialize is null)
 	throw new ConfigurationErrorsException("Missing DbInitialize");
 if (bool.Parse(dbInitialize))
 {
@@ -91,7 +92,6 @@ if (bool.Parse(dbInitialize))
 }
 
 app.UseCors("AllowOrigin");
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

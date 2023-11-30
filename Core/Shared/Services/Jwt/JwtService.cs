@@ -25,18 +25,19 @@ public class JwtService : IJwtService
 	public string GenerateToken(List<Claim> claims, int time = 120)
 	{
 		string? jwtSecret = _configuration["JWT:Secret"];
-		if (jwtSecret == null)
+		if (jwtSecret is null)
 			throw new ConfigurationErrorsException("Missing JWT:Secret");
+
 		SymmetricSecurityKey authSigningKey = new(Encoding.UTF8.GetBytes(jwtSecret));
 
 		// Generate token with claims and secret key
 		JwtSecurityToken token = new(
 			_configuration["JWT:ValidIssuer"],
 			_configuration["JWT:ValidAudience"],
+			claims,
 			expires: DateTime.Now.AddMinutes(time),
-			claims: claims,
 			signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-		);
+			);
 
 		return new JwtSecurityTokenHandler().WriteToken(token);
 	}
@@ -47,17 +48,20 @@ public class JwtService : IJwtService
 		{
 			JwtSecurityTokenHandler tokenHandler = new();
 			string? jwtSecret = _configuration["JWT:Secret"];
-			if (jwtSecret == null)
+			if (jwtSecret is null)
 				throw new ConfigurationErrorsException("Missing JWT:Secret");
+
 			byte[] key = Encoding.UTF8.GetBytes(jwtSecret);
-			tokenHandler.ValidateToken(token, new TokenValidationParameters
-			{
-				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = new SymmetricSecurityKey(key),
-				ValidateIssuer = false, //bool.Parse(_configuration["JWT:ValidateIssuer"]),
-				ValidateAudience = false, //bool.Parse(_configuration["JWT:ValidateAudience"]),
-				ClockSkew = TimeSpan.Zero
-			}, out SecurityToken validatedToken);
+			tokenHandler.ValidateToken(
+				token,
+				new TokenValidationParameters {
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(key),
+					ValidateIssuer = false, //bool.Parse(_configuration["JWT:ValidateIssuer"]),
+					ValidateAudience = false, //bool.Parse(_configuration["JWT:ValidateAudience"]),
+					ClockSkew = TimeSpan.Zero,
+				},
+				out SecurityToken validatedToken);
 
 			return (JwtSecurityToken)validatedToken;
 		}

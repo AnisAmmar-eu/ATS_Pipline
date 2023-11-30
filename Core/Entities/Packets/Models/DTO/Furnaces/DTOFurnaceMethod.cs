@@ -16,11 +16,10 @@ public partial class DTOFurnace
 
 	public override Furnace ToModel()
 	{
-		return this switch
-		{
+		return this switch {
 			DTOInFurnace dtoInFurnace => dtoInFurnace.ToModel(),
 			DTOOutFurnace dtoOutFurnace => dtoOutFurnace.ToModel(),
-			_ => throw new InvalidCastException("Trying to convert an abstract class to model")
+			_ => throw new InvalidCastException("Trying to convert an abstract class to model"),
 		};
 	}
 }

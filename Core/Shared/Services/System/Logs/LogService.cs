@@ -19,11 +19,11 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 	public async Task<List<DTOLog>> GetAll()
 	{
 		return (await AnodeUOW.Log.GetAll(
-				withTracking: false,
-				orderBy: query => query.OrderByDescending(l => l.TS))
+			orderBy: query => query.OrderByDescending(l => l.TS),
+			withTracking: false)
 			)
-			.Select(l => l.ToDTO())
-			.ToList();
+			.ConvertAll(l => l.ToDTO())
+			;
 	}
 
 	public async Task<List<DTOLog>> GetRange(int start, int nbItems)
@@ -31,35 +31,41 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		return (await AnodeUOW.Log.GetRange(start, nbItems)).ConvertAll(log => log.ToDTO());
 	}
 
-	public async Task<List<Log>> GetAllUnsent()
+	public Task<List<Log>> GetAllUnsent()
 	{
-		return await AnodeUOW.Log.GetAll(new Expression<Func<Log, bool>>[]
-		{
-			log => !log.HasBeenSent
-		}, withTracking: false);
+		return AnodeUOW.Log.GetAll(
+			new Expression<Func<Log, bool>>[] {
+				log => !log.HasBeenSent
+				},
+			withTracking: false);
 	}
 
 	public async Task SendLogs(List<Log> logs, string address)
 	{
-		if (!logs.Any())
+		if (logs.Count == 0)
 			return;
+
 		using HttpClient httpClient = new();
-		StringContent content =
-			new(JsonSerializer.Serialize(logs.ConvertAll(cycle => cycle.ToDTO())), Encoding.UTF8,
+		StringContent content
+			= new(
+				JsonSerializer.Serialize(logs.ConvertAll(cycle => cycle.ToDTO())),
+				Encoding.UTF8,
 				"application/json");
 		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/logs", content);
-		if (response.IsSuccessStatusCode)
+		if (!response.IsSuccessStatusCode)
+			return;
+
+		if (logs.Count == 0)
+			return;
+
+		await AnodeUOW.StartTransaction();
+		logs.ForEach(log =>
 		{
-			if (!logs.Any()) return;
-			await AnodeUOW.StartTransaction();
-			logs.ForEach(log =>
-			{
-				log.HasBeenSent = true;
-				AnodeUOW.Log.Update(log);
-			});
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
-		}
+			log.HasBeenSent = true;
+			AnodeUOW.Log.Update(log);
+		});
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 	}
 
 	public async Task ReceiveLogs(List<DTOLog> dtoLogs)
@@ -93,7 +99,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		string endpoint,
 		int code,
 		string value
-	)
+		)
 	{
 		await AnodeUOW.Log.Add(new Log(server, username, api, controller, function, endpoint, code, value, Station.ID));
 		AnodeUOW.Commit();

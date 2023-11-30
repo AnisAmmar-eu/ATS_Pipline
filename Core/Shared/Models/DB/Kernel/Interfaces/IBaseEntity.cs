@@ -3,7 +3,7 @@
 namespace Core.Shared.Models.DB.Kernel.Interfaces;
 
 /// <summary>
-///     Inteface defining the basic properties of an entity in the <see cref="EkidiDbContext" />.
+///     Interface defining the basic properties of an entity in the <see cref="AnodeCTX" />.
 /// </summary>
 /// <typeparam name="T"> The entity of the model</typeparam>
 /// <typeparam name="TDTO"> The DTO of the entity. The DTO is used to communicate about an entity with the front end </typeparam>
@@ -17,7 +17,6 @@ public interface IBaseEntity<T, TDTO>
 	/// <summary>
 	///     Returns the <see cref="IDTO{T,DTO}" /> of the entity T.
 	/// </summary>
-	/// <returns></returns>
 	public IDTO<T, TDTO> ToIDTO()
 	{
 		return ToDTO();

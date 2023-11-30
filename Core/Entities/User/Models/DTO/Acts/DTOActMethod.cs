@@ -6,7 +6,7 @@ public partial class DTOAct
 {
 	public DTOAct()
 	{
-		RID = "";
+		RID = string.Empty;
 	}
 
 	public DTOAct(Act act)
@@ -20,6 +20,6 @@ public partial class DTOAct
 
 	public override Act ToModel()
 	{
-		return new Act(this);
+		return new(this);
 	}
 }

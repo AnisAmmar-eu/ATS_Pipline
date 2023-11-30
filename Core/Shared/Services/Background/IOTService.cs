@@ -24,15 +24,17 @@ public class IOTService : BackgroundService
 	{
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IIOTDeviceService iotDeviceService =
-			asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
+		IIOTDeviceService iotDeviceService
+			= asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		string[]? rids = configuration.GetSection("Devices").Get<string[]>();
-		if (rids == null)
+		if (rids is null)
 			throw new ConfigurationErrorsException("Missing Devices");
+
 		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken))
-			try
+			&& await timer.WaitForNextTickAsync(stoppingToken))
+        {
+            try
 			{
 				_logger.LogInformation("IOTService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling CheckAllConnectionsAndApplyTags");
@@ -48,5 +50,6 @@ public class IOTService : BackgroundService
 					"Failed to execute PeriodicIOTService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-	}
+        }
+    }
 }

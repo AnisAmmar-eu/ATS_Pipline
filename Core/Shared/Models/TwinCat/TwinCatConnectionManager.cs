@@ -11,9 +11,11 @@ public static class TwinCatConnectionManager
 	{
 		if (TcClient.IsConnected)
 			return TcClient;
+
 		TcClient.Connect(port);
 		if (!TcClient.IsConnected)
 			throw new AdsException("Could not connect to the automaton");
+
 		return TcClient;
 	}
 }

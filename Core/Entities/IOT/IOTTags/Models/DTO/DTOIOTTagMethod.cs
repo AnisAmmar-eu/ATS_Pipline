@@ -20,6 +20,6 @@ public partial class DTOIOTTag
 
 	public override IOTTag ToModel()
 	{
-		return new IOTTag(this);
+		return new(this);
 	}
 }

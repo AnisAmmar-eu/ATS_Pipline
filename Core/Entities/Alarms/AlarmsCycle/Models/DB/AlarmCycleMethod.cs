@@ -7,7 +7,7 @@ public partial class AlarmCycle
 {
 	public AlarmCycle()
 	{
-		AlarmRID = "";
+		AlarmRID = string.Empty;
 	}
 
 	public AlarmCycle(AlarmRT alarmRT)
@@ -27,6 +27,6 @@ public partial class AlarmCycle
 
 	public override DTOAlarmCycle ToDTO()
 	{
-		return new DTOAlarmCycle(this);
+		return new(this);
 	}
 }

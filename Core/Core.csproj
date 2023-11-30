@@ -1,22 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <NoWarn>AD0001</NoWarn>
     </PropertyGroup>
-
     <ItemGroup>
         <Folder Include="Entities\BI\"/>
-        <Folder Include="Migrations\"/>
         <Folder Include="Shared\Models\DB\System\"/>
         <Folder Include="Shared\Models\DTO\System\"/>
         <Folder Include="Shared\Repositories\System\"/>
         <Folder Include="Shared\Services\Background\BI\"/>
         <Folder Include="Shared\Services\System\"/>
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Beckhoff.TwinCAT.Ads" Version="6.1.86"/>
         <PackageReference Include="Carter" Version="7.2.0"/>
@@ -50,7 +47,6 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
         <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0"/>
     </ItemGroup>
-
     <ItemGroup>
         <Reference Include="Stemmer.Cvb">
             <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.dll</HintPath>
@@ -86,5 +82,8 @@
             <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Wpf.dll</HintPath>
         </Reference>
     </ItemGroup>
-
+    <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
+        <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High"/>
+        <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory=".."/>
+    </Target>
 </Project>

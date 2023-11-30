@@ -22,6 +22,6 @@ public partial class DTOIOTDevice
 
 	public override IOTDevice ToModel()
 	{
-		return new IOTDevice(this);
+		return new(this);
 	}
 }

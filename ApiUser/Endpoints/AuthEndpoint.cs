@@ -38,14 +38,20 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A string</returns>
-	private static async Task<JsonHttpResult<ApiResponse>> Register([FromBody] DTORegister dtoRegister,
-		IAuthService authService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> Register(
+		[FromBody] DTORegister dtoRegister,
+		IAuthService authService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () =>
-		{
-			await authService.Register(dtoRegister);
-			return $"User {{{dtoRegister.Username}}} has been successfully created.";
-		}, logService, httpContext);
+		return GenericEndpoint(
+			async () =>
+			{
+				await authService.Register(dtoRegister);
+				return $"User {{{dtoRegister.Username}}} has been successfully created.";
+			},
+			logService,
+			httpContext);
 	}
 
 	// POST apiUser/auth/login
@@ -82,8 +88,7 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 				if (e2 is UnauthorizedAccessException)
 					return await new ApiResponse(e2.Message).ErrorResult(logService, httpContext, e2);
 
-				return await new ApiResponse("An undefined error happened.").ErrorResult(logService,
-					httpContext, e2);
+				return await new ApiResponse("An undefined error happened.").ErrorResult(logService, httpContext, e2);
 			}
 		}
 		catch (Exception e)

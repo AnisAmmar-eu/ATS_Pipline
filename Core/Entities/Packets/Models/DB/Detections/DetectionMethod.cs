@@ -21,7 +21,6 @@ public partial class Detection
 		MeasuredType = dtoDetection.MeasuredType;
 	}
 
-
 	public Detection(DetectionStruct detectionStruct)
 	{
 		StationCycleRID = detectionStruct.StationCycleRID.ToRID();
@@ -31,7 +30,7 @@ public partial class Detection
 
 	public override DTODetection ToDTO()
 	{
-		return new DTODetection(this);
+		return new(this);
 	}
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
@@ -40,10 +39,10 @@ public partial class Detection
 		try
 		{
 			stationCycle = await anodeUOW.StationCycle.GetBy(
-				new Expression<Func<StationCycle, bool>>[]
-				{
+				new Expression<Func<StationCycle, bool>>[] {
 					cycle => cycle.RID == StationCycleRID
-				}, withTracking: false);
+					},
+				withTracking: false);
 			stationCycle.DetectionStatus = PacketStatus.Initialized;
 			stationCycle.DetectionID = ID;
 			stationCycle.DetectionPacket = this;

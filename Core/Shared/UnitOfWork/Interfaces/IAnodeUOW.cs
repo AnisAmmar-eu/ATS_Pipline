@@ -36,23 +36,19 @@ public interface IAnodeUOW : IDisposable
 
 	IAnodeRepository Anode { get; }
 
-	// StationCycle
 	IStationCycleRepository StationCycle { get; }
 
-	// KPI
 	IKPICRepository KPIC { get; }
 	IKPILogRepository KPILog { get; }
 	IKPIRTRepository KPIRT { get; }
 	IBITemperatureRepository BITemperature { get; }
 
-	// IOT
 	IIOTDeviceRepository IOTDevice { get; }
 	IIOTTagRepository IOTTag { get; }
 
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
 
-	// Vision
 	IFileSettingRepository FileSetting { get; }
 
 	public object? GetRepoByType(Type repo);
@@ -60,7 +56,7 @@ public interface IAnodeUOW : IDisposable
 	/// <summary>
 	///     Saves changes made in this context to the underlying database.
 	/// </summary>
-	/// <returns></returns>
+	/// <param name="isNewValue"></param>
 	int Commit(bool isNewValue = false);
 
 	Task StartTransaction();

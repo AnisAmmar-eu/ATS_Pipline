@@ -45,7 +45,7 @@ public partial class InFurnace
 
 	public override DTOInFurnace ToDTO()
 	{
-		return new DTOInFurnace(this);
+		return new(this);
 	}
 
 	protected override void FurnaceAssign(S3S4Cycle cycle)

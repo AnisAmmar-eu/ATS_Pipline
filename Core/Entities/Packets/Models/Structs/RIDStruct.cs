@@ -11,6 +11,6 @@ public struct RIDStruct
 
 	public string ToRID()
 	{
-		return $"{StationID}_{TS.GetTimestamp().ToString(AnodeFormat.RIDFormat)}";
+		return $"{StationID.ToString()}_{TS.GetTimestamp().ToString(AnodeFormat.RIDFormat)}";
 	}
 }

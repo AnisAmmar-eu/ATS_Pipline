@@ -7,7 +7,10 @@ public class ShootingNotification : PacketNotification<ShootingStruct>
 {
 	public static async Task<ShootingNotification?> Create(dynamic ads)
 	{
-		return await CreateSub<ShootingNotification>(ads, ADSUtils.ShootingAcquitMsg, ADSUtils.ShootingNewMsg,
+		return await CreateSub<ShootingNotification>(
+			ads,
+			ADSUtils.ShootingAcquitMsg,
+			ADSUtils.ShootingNewMsg,
 			ADSUtils.ShootingToRead) as ShootingNotification;
 	}
 }

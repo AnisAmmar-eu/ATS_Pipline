@@ -10,6 +10,6 @@ public partial class DTOKPIRT
 
 	public override KPIRT ToModel()
 	{
-		return new KPIRT(this);
+		return new(this);
 	}
 }

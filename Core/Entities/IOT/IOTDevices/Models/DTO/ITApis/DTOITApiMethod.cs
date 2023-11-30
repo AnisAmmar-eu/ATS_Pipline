@@ -14,6 +14,6 @@ public partial class DTOITApi
 
 	public override ITApi ToModel()
 	{
-		return new ITApi(this);
+		return new(this);
 	}
 }

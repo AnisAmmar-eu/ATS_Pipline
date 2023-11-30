@@ -12,7 +12,7 @@ public struct InFurnaceStruct : IBaseADS<Packet>
 	public RIDStruct AnnounceID;
 
 	public ushort OriginID;
-	public ushort PackPosition; // AnodePositionInThePackOf7
+	public ushort PackPosition;
 	public ushort PalletSide;
 	public ushort PitNumber;
 	public ushort PitSectionNumber;

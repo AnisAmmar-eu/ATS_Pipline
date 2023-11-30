@@ -13,6 +13,6 @@ public partial class DTOKPIC
 
 	public override KPIC ToModel()
 	{
-		return new KPIC(this);
+		return new(this);
 	}
 }

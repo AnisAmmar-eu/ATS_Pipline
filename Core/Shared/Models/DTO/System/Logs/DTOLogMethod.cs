@@ -28,6 +28,6 @@ public partial class DTOLog
 
 	public override Log ToModel()
 	{
-		return new Log(this);
+		return new(this);
 	}
 }

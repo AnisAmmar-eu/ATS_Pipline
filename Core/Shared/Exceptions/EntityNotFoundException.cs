@@ -11,12 +11,10 @@ public class EntityNotFoundException : Exception
 	{
 	}
 
-
 	public EntityNotFoundException(string message, Exception inner)
 		: base(message, inner)
 	{
 	}
-
 
 	public EntityNotFoundException(string entity, string rid)
 		: base("Could not find a '" + entity + "' with rid{" + rid + "}.")

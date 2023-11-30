@@ -13,15 +13,19 @@ public class AssignNotification : BaseNotification<Detection, DetectionStruct>
 
 	public static async Task<AssignNotification> Create(dynamic ads)
 	{
-		return await CreateSub<AssignNotification>(ads, ADSUtils.DetectionRemove, ADSUtils.CloseCycle,
+		return await CreateSub<AssignNotification>(
+			ads,
+			ADSUtils.DetectionRemove,
+			ADSUtils.CloseCycle,
 			ADSUtils.DetectionToRead);
 	}
 
-	protected override async Task AddElement(IServiceProvider services, Detection detection)
+	protected override Task AddElement(IServiceProvider services, Detection entity)
 	{
 		IStationCycleService stationCycleService = services.GetRequiredService<IStationCycleService>();
-		if (ImagesPath == null || ThumbnailsPath == null)
+		if (ImagesPath is null || ThumbnailsPath is null)
 			throw new ArgumentException("ImagesPath or ThumbnailsPath have NOT been initialised");
-		await stationCycleService.AssignStationCycle(detection, ImagesPath, ThumbnailsPath);
+
+		return stationCycleService.AssignStationCycle(entity, ImagesPath, ThumbnailsPath);
 	}
 }

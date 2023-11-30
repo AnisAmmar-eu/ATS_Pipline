@@ -1,3 +1,7 @@
+root = true
+
+[*.cs]
+
 # Analyzers
 
 # Add blank line after embedded statement
@@ -38,7 +42,7 @@ dotnet_diagnostic.rcs0012.severity = none
 dotnet_diagnostic.rcs0013.severity = none
 
 # Add blank line between switch sections
-dotnet_diagnostic.rcs0014.severity = error
+dotnet_diagnostic.rcs0014.severity = none
 roslynator_blank_line_between_closing_brace_and_switch_section = false
 
 # Add/remove blank line between using directives
@@ -233,7 +237,6 @@ dotnet_diagnostic.rcs1034.severity = error
 
 # Remove unnecessary blank line
 dotnet_diagnostic.rcs1036.severity = error
-roslynator_blank_line_between_closing_brace_and_switch_section = false
 
 # Remove trailing white-space
 dotnet_diagnostic.rcs1037.severity = error
@@ -315,7 +318,7 @@ dotnet_diagnostic.rcs1075.severity = error
 # Optimize LINQ method call
 dotnet_diagnostic.rcs1077.severity = error
 
-# Use "" or 'string.Empty'
+# Use string.Empty or 'string.Empty'
 dotnet_diagnostic.rcs1078.severity = error
 roslynator_empty_string_style = field
 
@@ -382,7 +385,7 @@ dotnet_diagnostic.rcs1108.severity = error
 dotnet_diagnostic.rcs1110.severity = error
 
 # Add braces to switch section with multiple statements
-dotnet_diagnostic.rcs1111.severity = error
+dotnet_diagnostic.rcs1111.severity = none
 
 # Combine 'Enumerable.Where' method chain
 dotnet_diagnostic.rcs1112.severity = error
@@ -578,7 +581,7 @@ dotnet_diagnostic.rcs1197.severity = none
 dotnet_diagnostic.rcs1198.severity = error
 
 # Unnecessary null check
-dotnet_diagnostic.rcs1199.severity = true
+dotnet_diagnostic.rcs1199.severity = error
 
 # Call 'Enumerable.ThenBy' instead of 'Enumerable.OrderBy'
 dotnet_diagnostic.rcs1200.severity = error
@@ -983,7 +986,7 @@ roslynator_refactoring.use_lambda_instead_of_anonymous_method.enabled = true
 roslynator_refactoring.use_list_instead_of_yield.enabled = true
 roslynator_refactoring.use_object_initializer.enabled = true
 roslynator_refactoring.use_readonly_field_instead_of_constant.enabled = true
-roslynator_refactoring.use_string_empty_instead_of_empty_string_literal.enabled = false
+roslynator_refactoring.use_string_empty_instead_of_empty_string_literal.enabled = true
 roslynator_refactoring.use_stringbuilder_instead_of_concatenation.enabled = true
 roslynator_refactoring.wrap_arguments.enabled = true
 roslynator_refactoring.wrap_binary_expression.enabled = true

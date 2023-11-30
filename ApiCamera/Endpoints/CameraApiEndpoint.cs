@@ -33,41 +33,63 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 
 	#region Acquisition
 
-	private static async Task<JsonHttpResult<ApiResponse>> AcquisitionAsync(IConfiguration configuration,
-		IIOTTagService iotTagService, ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> AcquisitionAsync(
+		IConfiguration configuration,
+		IIOTTagService iotTagService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpointEmptyResponse(async () =>
-		{
-			int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
-			int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
-			Device device1 = CameraConnectionManager.Connect(port1);
-			if (Station.Type != StationType.S5)
+		return GenericEndpointEmptyResponse(
+			async () =>
 			{
-				// Create an instance of the camera
-				Device device2 = CameraConnectionManager.Connect(port2);
-				Task task1 = CameraUtils.RunAcquisition(iotTagService, device1, "jpg", ShootingUtils.Camera1,
-					ShootingUtils.CameraTest1);
-				Task task2 = CameraUtils.RunAcquisition(iotTagService, device2, "jpg", ShootingUtils.Camera2,
-					ShootingUtils.CameraTest2);
-				await task1;
-				await task2;
-			}
-			else
-			{
-				await CameraUtils.RunAcquisition(iotTagService, device1, "jpg", ShootingUtils.Camera1,
-					ShootingUtils.CameraTest1, ShootingUtils.Camera2, ShootingUtils.CameraTest2);
-			}
-		}, logService, httpContext);
+				int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
+				int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
+				Device device1 = CameraConnectionManager.Connect(port1);
+				if (Station.Type != StationType.S5)
+				{
+					// Create an instance of the camera
+					Device device2 = CameraConnectionManager.Connect(port2);
+					Task task1 = CameraUtils.RunAcquisition(
+						iotTagService,
+						device1,
+						"jpg",
+						ShootingUtils.Camera1,
+						ShootingUtils.CameraTest1);
+					Task task2 = CameraUtils.RunAcquisition(
+						iotTagService,
+						device2,
+						"jpg",
+						ShootingUtils.Camera2,
+						ShootingUtils.CameraTest2);
+					await task1;
+					await task2;
+				}
+				else
+				{
+					await CameraUtils.RunAcquisition(
+						iotTagService,
+						device1,
+						"jpg",
+						ShootingUtils.Camera1,
+						ShootingUtils.CameraTest1,
+						ShootingUtils.Camera2,
+						ShootingUtils.CameraTest2);
+				}
+			},
+			logService,
+			httpContext);
 	}
 
 	#endregion
 
 	#region Get Temperature
 
-	private static async Task<JsonHttpResult<ApiResponse>> GetTemperatures(IBITemperatureService biTemperatureService,
-		ILogService logService, HttpContext httpContext)
+	private static Task<JsonHttpResult<ApiResponse>> GetTemperatures(
+		IBITemperatureService biTemperatureService,
+		ILogService logService,
+		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await biTemperatureService.GetAll(), logService, httpContext);
+		return GenericEndpoint(() => biTemperatureService.GetAll(), logService, httpContext);
 	}
 
 	#endregion
@@ -75,14 +97,15 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 	#region Get TestImages
 
 	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetCameraTestImage(
-		[FromRoute] int cameraID, ILogService logService,
+		[FromRoute] int cameraID,
+		ILogService logService,
 		HttpContext httpContext)
 	{
 		byte[] image;
 		DateTimeOffset ts;
 		try
 		{
-			string cameraTestPath = cameraID == 1 ? ShootingUtils.CameraTest1 : ShootingUtils.CameraTest2;
+			string cameraTestPath = (cameraID == 1) ? ShootingUtils.CameraTest1 : ShootingUtils.CameraTest2;
 			FileInfo imageFile = new(cameraTestPath + ShootingUtils.TestFilename);
 			ts = imageFile.CreationTime;
 			image = await File.ReadAllBytesAsync(imageFile.FullName);

@@ -6,5 +6,5 @@ namespace Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles;
 
 public partial class S5Cycle : MatchingCycle, IBaseEntity<S5Cycle, DTOS5Cycle>
 {
-	public new AnodeDX? Anode { get; set; }
+	new public AnodeDX? Anode { get; set; }
 }

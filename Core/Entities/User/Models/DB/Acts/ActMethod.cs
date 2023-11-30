@@ -6,7 +6,7 @@ public partial class Act
 {
 	public Act()
 	{
-		RID = "";
+		RID = string.Empty;
 	}
 
 	public Act(string rid, string? entityType = null, string? parentType = null)
@@ -25,6 +25,6 @@ public partial class Act
 
 	public override DTOAct ToDTO()
 	{
-		return new DTOAct(this);
+		return new(this);
 	}
 }

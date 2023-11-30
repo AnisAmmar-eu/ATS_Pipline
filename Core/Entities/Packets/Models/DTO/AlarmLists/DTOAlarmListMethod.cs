@@ -20,6 +20,6 @@ public partial class DTOAlarmList
 
 	public override AlarmList ToModel()
 	{
-		return new AlarmList(this);
+		return new(this);
 	}
 }

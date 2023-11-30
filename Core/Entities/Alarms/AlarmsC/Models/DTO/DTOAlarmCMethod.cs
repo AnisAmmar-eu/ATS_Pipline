@@ -19,6 +19,6 @@ public partial class DTOAlarmC
 
 	public override AlarmC ToModel()
 	{
-		return new AlarmC(this);
+		return new(this);
 	}
 }

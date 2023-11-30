@@ -12,25 +12,27 @@ public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAl
 	{
 	}
 
-	public async Task<AlarmLog> GetByIdWithIncludes(int id, Expression<Func<AlarmLog, bool>>[]? filters = null,
+	public Task<AlarmLog> GetByIdWithIncludes(
+		int id,
+		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		bool withTracking = true)
 	{
-		return await GetById(id, filters, withTracking, "Alarm");
+		return GetById(id, filters, withTracking, "Alarm");
 	}
 
-	public async Task<AlarmLog> GetByWithIncludes(
+	public Task<AlarmLog> GetByWithIncludes(
 		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
 		bool withTracking = true)
 	{
-		return await GetBy(filters, orderBy, withTracking, "Alarm");
+		return GetBy(filters, orderBy, withTracking, "Alarm");
 	}
 
-	public async Task<List<AlarmLog>> GetAllWithIncludes(
+	public Task<List<AlarmLog>> GetAllWithIncludes(
 		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
 		bool withTracking = true)
 	{
-		return await GetAll(filters, orderBy, withTracking, includes: nameof(AlarmLog.Alarm));
+		return GetAll(filters, orderBy, withTracking, includes: nameof(AlarmLog.Alarm));
 	}
 }

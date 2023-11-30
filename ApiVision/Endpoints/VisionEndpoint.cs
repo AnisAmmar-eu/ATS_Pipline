@@ -11,6 +11,7 @@ public class VisionEndpoint : ICarterModule
 	{
 		if (!Station.IsServer)
 			return;
+
 		app.MapGroup("apiVision").WithTags(nameof(VisionEndpoint)).MapGet("status", GetStatus);
 	}
 

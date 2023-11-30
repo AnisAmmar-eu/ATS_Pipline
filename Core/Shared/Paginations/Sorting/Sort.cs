@@ -13,12 +13,11 @@ public static class Sort
 		SortParam sortParam = pagination.SortParam;
 		SortOption sortOption = SortOptionMap.Get(sortParam.SortOptionName);
 		ParameterExpression param = Expression.Parameter(typeof(T));
-		return sortOption switch
-		{
+		return sortOption switch {
 			SortOption.None => source.OrderByDescending(t => t.ID),
 			SortOption.Ascending => source.OrderBy(GetOrderByExpression<T>(sortParam, param)),
 			SortOption.Descending => source.OrderByDescending(GetOrderByExpression<T>(sortParam, param)),
-			_ => throw new ArgumentOutOfRangeException()
+			_ => throw new ArgumentOutOfRangeException(nameof(pagination)),
 		};
 	}
 

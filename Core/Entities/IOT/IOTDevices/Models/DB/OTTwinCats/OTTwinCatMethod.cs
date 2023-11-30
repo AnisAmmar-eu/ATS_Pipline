@@ -21,7 +21,7 @@ public partial class OTTwinCat
 
 	public override DTOOTTwinCat ToDTO()
 	{
-		return new DTOOTTwinCat(this);
+		return new(this);
 	}
 
 	public override async Task<bool> CheckConnection()
@@ -33,7 +33,7 @@ public partial class OTTwinCat
 			uint varHandle = tcClient.CreateVariableHandle(ConnectionPath);
 			ResultValue<int> resultRead = await tcClient.ReadAnyAsync<int>(varHandle, cancel);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
-				throw new Exception();
+				throw new();
 		}
 		catch (Exception)
 		{
@@ -62,55 +62,60 @@ public partial class OTTwinCat
 			bool hasBeenUpdated = false;
 			if (iotTag is not OTTagTwinCat otTagTwinCat)
 				continue;
+
 			uint varHandle = tcClient.CreateVariableHandle(iotTag.Path);
 			if (iotTag is { IsReadOnly: false, HasNewValue: true })
 			{
-				ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, cancel, otTagTwinCat);
+				ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, otTagTwinCat, cancel);
 				if (resultWrite.ErrorCode != AdsErrorCode.NoError)
 					return new List<IOTTag>(); // Same as above
+
 				iotTag.HasNewValue = false;
 				hasBeenUpdated = true;
 			}
 
 			// Else updates the current value bc it might have changed since.
-			ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, cancel, otTagTwinCat);
+			ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, otTagTwinCat, cancel);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
 				return new List<IOTTag>(); // Same as above
+
 			hasBeenUpdated = hasBeenUpdated || iotTag.CurrentValue != resultRead.Value?.ToString();
 			if (hasBeenUpdated)
 				updatedTags.Add(iotTag);
+
 			iotTag.CurrentValue = resultRead.Value?.ToString()!;
 		}
 
 		return updatedTags;
 	}
 
-	private async Task<ResultValue<object>> ReadFromType(AdsClient tcClient, uint varHandle, CancellationToken cancel,
-		OTTagTwinCat tag)
+	private async Task<ResultValue<object>> ReadFromType(
+		AdsClient tcClient,
+		uint varHandle,
+		OTTagTwinCat tag,
+		CancellationToken cancel)
 	{
-		return new ResultValue<object>(tag.ValueType switch
-		{
-			_ when tag.ValueType == IOTTagType.Int => await tcClient.ReadAnyAsync<int>(varHandle, cancel),
-			_ when tag.ValueType == IOTTagType.UShort => await tcClient.ReadAnyAsync<ushort>(varHandle, cancel),
-			_ when tag.ValueType == IOTTagType.String => await tcClient.ReadAnyAsync<string>(varHandle, cancel),
-			_ when tag.ValueType == IOTTagType.Bool => await tcClient.ReadAnyAsync<bool>(varHandle, cancel),
-			_ => throw new InvalidOperationException(Name + " tag has an invalid type for TwinCat")
+		return new ResultValue<object>(tag.ValueType switch {
+			IOTTagType.Int => await tcClient.ReadAnyAsync<int>(varHandle, cancel),
+			IOTTagType.UShort => await tcClient.ReadAnyAsync<ushort>(varHandle, cancel),
+			IOTTagType.String => await tcClient.ReadAnyAsync<string>(varHandle, cancel),
+			IOTTagType.Bool => await tcClient.ReadAnyAsync<bool>(varHandle, cancel),
+			_ => throw new InvalidOperationException(Name + " tag has an invalid type for TwinCat"),
 		});
 	}
 
-	private async Task<ResultWrite> WriteFromType(AdsClient tcClient, uint varHandle, CancellationToken cancel,
-		OTTagTwinCat tag)
+	private async Task<ResultWrite> WriteFromType(
+		AdsClient tcClient,
+		uint varHandle,
+		OTTagTwinCat tag,
+		CancellationToken cancel)
 	{
-		return tag.ValueType switch
-		{
-			_ when tag.ValueType == IOTTagType.Int => await tcClient.WriteAnyAsync(varHandle, int.Parse(tag.NewValue),
-				cancel),
-			_ when tag.ValueType == IOTTagType.UShort => await tcClient.WriteAnyAsync(varHandle,
-				ushort.Parse(tag.NewValue), cancel),
-			_ when tag.ValueType == IOTTagType.String => await tcClient.WriteAnyAsync(varHandle, tag.NewValue, cancel),
-			_ when tag.ValueType == IOTTagType.Bool => await tcClient.WriteAnyAsync(varHandle, bool.Parse(tag.NewValue),
-				cancel),
-			_ => throw new InvalidOperationException(Name + " tag has an invalid tag.ValueType for TwinCat")
+		return tag.ValueType switch {
+			IOTTagType.Int => await tcClient.WriteAnyAsync(varHandle, int.Parse(tag.NewValue), cancel),
+			IOTTagType.UShort => await tcClient.WriteAnyAsync( varHandle, ushort.Parse(tag.NewValue), cancel),
+			IOTTagType.String => await tcClient.WriteAnyAsync(varHandle, tag.NewValue, cancel),
+			IOTTagType.Bool => await tcClient.WriteAnyAsync(varHandle, bool.Parse(tag.NewValue), cancel),
+			_ => throw new InvalidOperationException(Name + " tag has an invalid tag.ValueType for TwinCat"),
 		};
 	}
 }

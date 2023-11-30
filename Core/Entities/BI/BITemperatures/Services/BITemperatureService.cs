@@ -20,12 +20,12 @@ public class BITemperatureService : BaseEntityService<IBITemperatureRepository, 
 
 	public async Task LogNewValues()
 	{
-		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag.GetAll(new Expression<Func<IOTTag, bool>>[]
-		{
-			tag => _temperatureTagsRIDs.Contains(tag.RID)
-		}, withTracking: false);
-		if (!temperatureTags.Any())
+		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag.GetAll(
+			new Expression<Func<IOTTag, bool>>[] { tag => _temperatureTagsRIDs.Contains(tag.RID) },
+			withTracking: false);
+		if (temperatureTags.Count == 0)
 			return;
+
 		await AnodeUOW.StartTransaction();
 		foreach (IOTTag tag in temperatureTags)
 			await AnodeUOW.BITemperature.Add(new BITemperature(tag));
@@ -38,13 +38,12 @@ public class BITemperatureService : BaseEntityService<IBITemperatureRepository, 
 	{
 		DateTimeOffset threshold = DateTimeOffset.Now.Subtract(lifespan);
 		List<BITemperature> toPurge = await AnodeUOW.BITemperature.GetAll(
-			new Expression<Func<BITemperature, bool>>[]
-			{
-				kpiTemperature => kpiTemperature.TS < threshold
-			}, withTracking: false);
+			new Expression<Func<BITemperature, bool>>[] { kpiTemperature => kpiTemperature.TS < threshold },
+			withTracking: false);
 		await AnodeUOW.StartTransaction();
 		foreach (BITemperature kpiTemperature in toPurge)
 			AnodeUOW.BITemperature.Remove(kpiTemperature);
+
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 	}

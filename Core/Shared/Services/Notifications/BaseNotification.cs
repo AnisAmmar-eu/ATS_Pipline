@@ -26,8 +26,11 @@ public class
 	{
 	}
 
-	protected static async Task<BaseNotification<T, TStruct>> CreateSub<TNotification>(dynamic ads,
-		string removeSymbol, string newMsgSymbol, string oldEntrySymbol)
+	protected static async Task<BaseNotification<T, TStruct>> CreateSub<TNotification>(
+		dynamic ads,
+		string removeSymbol,
+		string newMsgSymbol,
+		string oldEntrySymbol)
 		where TNotification : BaseNotification<T, TStruct>, new()
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
@@ -37,15 +40,18 @@ public class
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
 		const int size = sizeof(bool);
-		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(newMsgSymbol, size,
-			new NotificationSettings(AdsTransMode.OnChange, 0, 0), ads, ads.cancel);
-		TNotification notification =
-			new()
-			{
+		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(
+			newMsgSymbol,
+			size,
+			new NotificationSettings(AdsTransMode.OnChange, 0, 0),
+			ads,
+			ads.cancel);
+		TNotification notification
+			= new() {
 				_remove = remove,
 				_newMsg = newMsg,
 				_oldEntry = oldEntry,
-				_resultHandle = resultHandle
+				_resultHandle = resultHandle,
 			};
 		tcClient.AdsNotification += notification.GetElement;
 		// No need to verify if the queue has already an element, a notification is automatically sent when pairing.
@@ -55,12 +61,12 @@ public class
 	private void GetElement(object? sender, AdsNotificationEventArgs e)
 	{
 		bool newMsg = BitConverter.ToBoolean(e.Data.Span);
-		if (e.Handle == _resultHandle.Handle && newMsg)
-		{
-			Console.WriteLine("Notif msgNew");
-			// UserData is our data passed in parameter
-			GetElementSub(e.UserData as dynamic);
-		}
+		if (e.Handle != _resultHandle.Handle || !newMsg)
+			return;
+
+		Console.WriteLine("Notif msgNew");
+		// UserData is our data passed in parameter
+		GetElementSub(e.UserData as dynamic);
 	}
 
 	private async void GetElementSub(dynamic dynamicObject)
@@ -77,7 +83,8 @@ public class
 		try
 		{
 			await AddElement(services, entity);
-			if (ToDequeue) tcClient.WriteAny(_remove, true);
+			if (ToDequeue)
+				tcClient.WriteAny(_remove, true);
 		}
 		catch
 		{
@@ -86,7 +93,7 @@ public class
 		}
 	}
 
-	protected virtual Task AddElement(IServiceProvider services, T alarm)
+	protected virtual Task AddElement(IServiceProvider services, T entity)
 	{
 		return Task.CompletedTask;
 	}

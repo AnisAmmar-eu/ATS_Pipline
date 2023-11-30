@@ -8,11 +8,11 @@ namespace Core.Entities.Packets.Models.Structs;
 public struct DetectionStruct : IBaseADS<Detection>
 {
 	public RIDStruct StationCycleRID;
-	public ushort AnodeHigh; // This is LaserAnodeSize
+	public ushort AnodeHigh;
 	public bool AnodeNotAnnounced;
 
 	public Detection ToModel()
 	{
-		return new Detection(this);
+		return new(this);
 	}
 }

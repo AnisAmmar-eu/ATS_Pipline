@@ -45,7 +45,7 @@ public partial class StationCycle
 
 	public override DTOStationCycle ToDTO()
 	{
-		return new DTOStationCycle(this);
+		return new(this);
 	}
 
 	public StationCycle GetValue()
@@ -55,19 +55,20 @@ public partial class StationCycle
 
 	public static string[] GetKPICRID()
 	{
-		List<string> signMatchRIDs = new()
-		{
-			KPICRID.StationCycleMatched, KPICRID.StationCycleSigned, KPICRID.StationCycleNotSigned,
-			KPICRID.StationCycleMatchingCam1
-		};
+		List<string> signMatchRIDs = [
+			KPICRID.StationCycleMatched,
+			KPICRID.StationCycleSigned,
+			KPICRID.StationCycleNotSigned,
+			KPICRID.StationCycleMatchingCam1,
+		];
 		List<string> ans = new();
 		// RIDS of the server and every station are added in the following order: rids, rids1, rids2...
 		for (int i = 0; i <= 5; ++i)
-			ans.AddRange(signMatchRIDs.Select(rid => rid + (i == 0 ? "" : i.ToString())));
+			ans.AddRange(signMatchRIDs.Select(rid => rid + ((i == 0) ? string.Empty : i.ToString())));
 
 		ans.AddRange(new[] { KPICRID.D20Anodes, KPICRID.DXAnodes });
 		for (int i = 1; i <= 5; ++i)
-			ans.Add($"{KPICRID.AnodesStation}{i}");
+			ans.Add($"{KPICRID.AnodesStation}{i.ToString()}");
 
 		return ans.ToArray();
 	}
@@ -89,13 +90,16 @@ public partial class StationCycle
 			stationCycles.ForEach(cycle =>
 			{
 				nbAnodes[cycle.StationID - 1]++;
-				if (cycle.AnodeType == AnodeTypeDict.D20) nbD20++;
-				else if (cycle.AnodeType == AnodeTypeDict.DX) nbDX++;
-				if (cycle.SignStatus1 == SignMatchStatus.Ok || cycle.SignStatus2 == SignMatchStatus.Ok)
+				if (cycle.AnodeType == AnodeTypeDict.D20)
+                    nbD20++;
+                else if (cycle.AnodeType == AnodeTypeDict.DX)
+                    nbDX++;
+
+                if (cycle.SignStatus1 == SignMatchStatus.Ok || cycle.SignStatus2 == SignMatchStatus.Ok)
 				{
-					if (cycle is MatchingCycle matchingCycle &&
-					    (matchingCycle.MatchingCamera1 == SignMatchStatus.Ok ||
-					     matchingCycle.MatchingCamera2 == SignMatchStatus.Ok))
+					if (cycle is MatchingCycle matchingCycle
+						&& (matchingCycle.MatchingCamera1 == SignMatchStatus.Ok
+							|| matchingCycle.MatchingCamera2 == SignMatchStatus.Ok))
 					{
 						AddAtIndex(signMatchValues, cycle.StationID, nbSignedAndMatchedIndex);
 						AddAtIndex(signMatchValues, cycle.StationID, nbTotalMatchIndex);
@@ -118,9 +122,10 @@ public partial class StationCycle
 			{
 				for (int j = 0; j < 3; ++j)
 					ans.Add(signMatchValues[i, j].ToString());
+
 				int nbMatchCam1 = signMatchValues[i, nbMatchCam1Index];
 				int nbTotalMatch = signMatchValues[i, nbTotalMatchIndex];
-				int percentageCam1 = nbTotalMatch == 0 ? 0 : (int)((double)nbMatchCam1 / nbTotalMatch * 100);
+				int percentageCam1 = (nbTotalMatch == 0) ? 0 : (int)((double)nbMatchCam1 / nbTotalMatch * 100);
 				ans.Add(percentageCam1.ToString());
 			}
 
@@ -136,20 +141,22 @@ public partial class StationCycle
 	{
 		if (Station.Type == StationType.S1S2)
 			return new S1S2Cycle();
+
 		if (Station.Type == StationType.S3S4)
 			return new S3S4Cycle();
+
 		return new S5Cycle();
 	}
 
 	public ReducedStationCycle Reduce()
 	{
-		return new ReducedStationCycle
-		{
-			ID = ID,
-			RID = RID,
-			AnodeSize = DetectionPacket?.AnodeSize,
-			AnodeType = AnodeType,
-			ShootingTS = ShootingPacket?.ShootingTS
+		return new()
+        {
+         ID = ID,
+         RID = RID,
+         AnodeSize = DetectionPacket?.AnodeSize,
+         AnodeType = AnodeType,
+         ShootingTS = ShootingPacket?.ShootingTS,
 		};
 	}
 

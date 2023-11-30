@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TwinCAT;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
@@ -34,35 +35,42 @@ public class ADSService : BackgroundService
 		// Assign configuration
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath == null)
+		if (imagesPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+
 		string? thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		if (thumbnailsPath == null)
+		if (thumbnailsPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
+
 		AssignNotification.ImagesPath = imagesPath;
 		AssignNotification.ThumbnailsPath = thumbnailsPath;
 
 		while (!stoppingToken.IsCancellationRequested
-		       && await timer.WaitForNextTickAsync(stoppingToken))
-			try
+			&& await timer.WaitForNextTickAsync(stoppingToken))
+        {
+            try
 			{
 				AdsClient tcClient = await InitializeConnection(asyncScope, cancel);
 				// If the TC disconnects, it will loop back to the top
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
 				while (true)
-					if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
-						throw new Exception("Error while reading variable");
-			}
+                {
+                    if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
+						throw new AdsException("Error while reading variable");
+                }
+            }
 			catch (Exception e)
 			{
-				_logger.LogInformation("PeriodicADSService lost connection to the TwinCat with error message: {error}",
+				_logger.LogInformation(
+					"PeriodicADSService lost connection to the TwinCat with error message: {error}",
 					e);
 
 				_executionCount++;
 				_logger.LogInformation(
 					"Executed PeriodicADSService - Count: {count}", _executionCount);
 			}
-	}
+        }
+    }
 
 	private async Task<AdsClient> InitializeConnection(AsyncServiceScope asyncScope, CancellationToken cancel)
 	{

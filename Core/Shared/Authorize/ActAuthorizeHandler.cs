@@ -1,4 +1,3 @@
-using Core.Entities.User.Models.DTO.Acts;
 using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
 using Microsoft.AspNetCore.Authorization;
@@ -20,30 +19,21 @@ public class ActAuthorizeHandler : AuthorizationHandler<ActAuthorize>
 	protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ActAuthorize requirement)
 	{
 		HttpContext? httpContext = _httpContextAccessor.HttpContext;
-		if (httpContext == null)
+		if (httpContext is null)
 		{
 			context.Fail(new AuthorizationFailureReason(this, "No httpContext"));
 			return Task.CompletedTask;
 		}
 
-		bool result = _actService.ValidActionToken(httpContext,
-			new List<DTOActEntityToValid>
-			{
-				new()
-				{
-					Act = new DTOAct
-					{
-						RID = requirement.RID
-					},
-					EntityID = null,
-					ParentID = null
-				}
-			}
-		);
+		bool result = _actService.ValidActionToken(
+			httpContext,
+			new List<DTOActEntityToValid> {
+				new() { Act = new() { RID = requirement.RID }, EntityID = null, ParentID = null } } );
 		if (!result)
 			context.Fail(new AuthorizationFailureReason(this, "Access denied"));
-		else context.Succeed(requirement);
+		else
+            context.Succeed(requirement);
 
-		return Task.CompletedTask;
+        return Task.CompletedTask;
 	}
 }

@@ -19,6 +19,6 @@ public partial class AlarmC
 
 	public override DTOAlarmC ToDTO()
 	{
-		return new DTOAlarmC(this);
+		return new(this);
 	}
 }

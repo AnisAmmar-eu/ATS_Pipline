@@ -10,16 +10,14 @@ public class BaseHub<T> : Hub<T> where T : class
 	/// </summary>
 	public static readonly UserConnectionManager<string> Connections = new();
 
-
 	/// <summary>
 	///     Connect to the hub
 	/// </summary>
-	/// <returns></returns>
 	public override Task OnConnectedAsync()
 	{
 		string? id = Context.User?.Claims.Where(x => x.Type == "Id").Select(c => c.Value).FirstOrDefault();
 
-		if (id == null)
+		if (id is null)
 			return Task.CompletedTask;
 
 		Connections.Add(id, Context.ConnectionId);
@@ -33,12 +31,11 @@ public class BaseHub<T> : Hub<T> where T : class
 	///     Disconnect from the hub
 	/// </summary>
 	/// <param name="exception"></param>
-	/// <returns></returns>
 	public override Task OnDisconnectedAsync(Exception? exception)
 	{
 		string? id = Context.User?.Claims.Where(x => x.Type == "Id").Select(c => c.Value).FirstOrDefault();
 
-		if (id == null)
+		if (id is null)
 			return Task.CompletedTask;
 
 		Connections.Remove(id, Context.ConnectionId);

@@ -21,18 +21,25 @@ namespace Core.Entities.Alarms;
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct Alarm : IBaseADS<Alarm>
 {
-	// Type must be 'blittable' to the corresponding PLC Struct Type
-	// See MSDN for MarshalAs and Default Marshalling.
-	[MarshalAs(UnmanagedType.I1)] public bool Value;
-	[MarshalAs(UnmanagedType.I1)] public bool OneShot;
+	/// <summary>
+	///     Type must be 'blittable' to the corresponding PLC Struct Type
+	///     See MSDN for MarshalAs and Default Marshalling.
+	/// </summary>
+	[MarshalAs(UnmanagedType.I1)]
+	public bool Value;
+
+	[MarshalAs(UnmanagedType.I1)]
+	public bool OneShot;
 
 	public TimestampStruct TimeStamp;
 
 	[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
 	public string RID;
 
-	// This is tricky but other notifications are supposed to be converted to something before being processed.
-	// This one does not but we pretend that we do something.
+	/// <summary>
+	///     This is tricky but other notifications are supposed to be converted to something before being processed.
+	///     This one does not but we pretend that we do something.
+	/// </summary>
 	public Alarm ToModel()
 	{
 		return this;

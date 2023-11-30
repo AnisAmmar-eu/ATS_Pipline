@@ -29,6 +29,6 @@ public partial class KPIEntry
 
 	public override DTOKPIEntry ToDTO()
 	{
-		return new DTOKPIEntry(this);
+		return new(this);
 	}
 }

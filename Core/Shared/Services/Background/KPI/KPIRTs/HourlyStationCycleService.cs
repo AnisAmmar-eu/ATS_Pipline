@@ -9,7 +9,8 @@ namespace Core.Shared.Services.Background.KPI.KPIRTs;
 public class HourlyStationCycleService : BaseHourlyKPIRTService<StationCycle, DTOStationCycle, IStationCycleRepository,
 	StationCycle>
 {
-	public HourlyStationCycleService(IServiceScopeFactory factory,
+	public HourlyStationCycleService(
+		IServiceScopeFactory factory,
 		ILogger<BaseHourlyKPIRTService<StationCycle, DTOStationCycle, IStationCycleRepository, StationCycle>> logger) :
 		base(factory, logger)
 	{

@@ -8,7 +8,7 @@ public partial class Packet
 {
 	public Packet()
 	{
-		StationCycleRID = "";
+		StationCycleRID = string.Empty;
 		Status = PacketStatus.Initialized;
 	}
 
@@ -21,7 +21,7 @@ public partial class Packet
 
 	public override DTOPacket ToDTO()
 	{
-		return new DTOPacket(this);
+		return new(this);
 	}
 
 	public virtual async Task Create(IAnodeUOW anodeUOW)

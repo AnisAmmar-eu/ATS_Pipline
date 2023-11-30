@@ -19,26 +19,30 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<List<DTOIOTTag>> GetByArrayRID(IEnumerable<string> rids)
 	{
-		return (await AnodeUOW.IOTTag.GetAll(new Expression<Func<IOTTag, bool>>[]
-		{
-			tag => rids.Contains(tag.RID)
-		}, withTracking: false)).ConvertAll(tag => tag.ToDTO());
+		return (await AnodeUOW.IOTTag.GetAll(
+			new Expression<Func<IOTTag, bool>>[] { tag => rids.Contains(tag.RID) },
+			withTracking: false))
+			.ConvertAll(tag => tag.ToDTO());
 	}
 
 	public async Task<bool> IsTestModeOn()
 	{
 		IOTTag testModeTag;
-		if (_testModeID == null)
+		if (_testModeID is null)
 		{
-			testModeTag = await AnodeUOW.IOTTag.GetBy(new Expression<Func<IOTTag, bool>>[]
-			{
-				tag => tag.RID == IOTTagRID.TestMode
-			}, withTracking: false);
+			testModeTag = await AnodeUOW.IOTTag.GetBy(
+				new Expression<Func<IOTTag, bool>>[]
+					{
+						tag => tag.RID == IOTTagRID.TestMode
+					},
+				withTracking: false);
 			_testModeID = testModeTag.ID;
 		}
 		else
 		{
-			testModeTag = await AnodeUOW.IOTTag.GetById(_testModeID.Value, withTracking: false);
+			testModeTag = await AnodeUOW.IOTTag.GetById(
+				_testModeID.Value,
+				withTracking: false);
 		}
 
 		return bool.Parse(testModeTag.CurrentValue);
@@ -46,13 +50,18 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<DTOIOTTag> UpdateTagByRID(string rid, string value)
 	{
-		IOTTag tag = await AnodeUOW.IOTTag.GetBy(new Expression<Func<IOTTag, bool>>[]
-		{
-			tag => tag.RID == rid
-		}, withTracking: false);
+		IOTTag tag = await AnodeUOW.IOTTag.GetBy(
+			new Expression<Func<IOTTag, bool>>[]
+				{
+					tag => tag.RID == rid
+				},
+			withTracking: false);
 		if (tag.IsReadOnly)
+		{
 			throw new InvalidOperationException(
 				"Trying to write a ReadOnly tag. Other changes have been discarded.");
+		}
+
 		tag.HasNewValue = true;
 		tag.NewValue = value;
 		await AnodeUOW.StartTransaction();
@@ -69,10 +78,15 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 		foreach (PatchIOTTag patchTag in updateList)
 		{
 			// await in loop bc we cannot use context concurrently.
-			IOTTag tag = await AnodeUOW.IOTTag.GetById(patchTag.ID, withTracking: false);
+			IOTTag tag = await AnodeUOW.IOTTag.GetById(
+				patchTag.ID,
+				withTracking: false);
 			if (tag.IsReadOnly)
+			{
 				throw new InvalidOperationException(
 					"Trying to write a ReadOnly tag. Other changes have been discarded.");
+			}
+
 			tag.NewValue = patchTag.NewValue;
 			tag.HasNewValue = tag.NewValue != tag.CurrentValue;
 			updatedTags.Add(tag);
@@ -80,8 +94,9 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 			//AnodeUOW.IOTDevice.StopTracking(tag.IOTDevice);
 		}
 
-		if (!updatedTags.Any())
+		if (updatedTags.Count == 0)
 			return new List<DTOIOTTag>();
+
 		AnodeUOW.Commit(true);
 		await AnodeUOW.CommitTransaction();
 		return updatedTags.ToList().ConvertAll(tag => tag.ToDTO());

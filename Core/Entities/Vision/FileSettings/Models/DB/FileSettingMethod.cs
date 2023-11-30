@@ -20,6 +20,6 @@ public partial class FileSetting
 
 	public override DTOFileSetting ToDTO()
 	{
-		return new DTOFileSetting(this);
+		return new(this);
 	}
 }

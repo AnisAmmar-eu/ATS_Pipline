@@ -5,6 +5,5 @@ public interface IStationCycleHub : IBaseHub
 	/// <summary>
 	///     Refreshes StationCycles
 	/// </summary>
-	/// <returns></returns>
 	Task RefreshStationCycle();
 }

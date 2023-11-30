@@ -36,11 +36,10 @@ public class DTOPacketBinder : IModelBinder
 
 	private static Type GetDTOType(string? type)
 	{
-		if (type == null)
+		if (type is null)
 			throw new EntityNotFoundException("Packet type is null");
 
-		return type switch
-		{
+		return type switch {
 			PacketType.Alarm => typeof(DTOAlarmList),
 			PacketType.Announcement => typeof(DTOAnnouncement),
 			PacketType.S1S2Announcement => typeof(S1S2Announcement),
@@ -48,7 +47,7 @@ public class DTOPacketBinder : IModelBinder
 			PacketType.Shooting => typeof(DTOShooting),
 			PacketType.InFurnace => typeof(DTOInFurnace),
 			PacketType.OutFurnace => typeof(DTOOutFurnace),
-			_ => typeof(DTOPacket)
+			_ => typeof(DTOPacket),
 		};
 	}
 }

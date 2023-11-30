@@ -25,6 +25,6 @@ public partial class S3S4Cycle
 
 	public override DTOS3S4Cycle ToDTO()
 	{
-		return new DTOS3S4Cycle(this);
+		return new(this);
 	}
 }

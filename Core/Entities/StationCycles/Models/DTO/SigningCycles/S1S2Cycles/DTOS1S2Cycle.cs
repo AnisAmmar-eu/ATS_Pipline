@@ -6,5 +6,5 @@ namespace Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 
 public partial class DTOS1S2Cycle : DTOSigningCycle, IDTO<S1S2Cycle, DTOS1S2Cycle>
 {
-	public new DTOS1S2Announcement? AnnouncementPacket { get; set; }
+	new public DTOS1S2Announcement? AnnouncementPacket { get; set; }
 }

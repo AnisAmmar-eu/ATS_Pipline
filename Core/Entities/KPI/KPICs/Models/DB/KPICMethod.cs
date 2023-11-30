@@ -24,6 +24,6 @@ public partial class KPIC
 
 	public override DTOKPIC ToDTO()
 	{
-		return new DTOKPIC(this);
+		return new(this);
 	}
 }

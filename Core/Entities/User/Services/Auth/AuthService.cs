@@ -22,8 +22,11 @@ public class AuthService : IAuthService
 	private readonly RoleManager<ApplicationRole> _roleManager;
 	private readonly UserManager<ApplicationUser> _userManager;
 
-	public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,
-		IConfiguration configuration, IJwtService jwtService)
+	public AuthService(
+		UserManager<ApplicationUser> userManager,
+		RoleManager<ApplicationRole> roleManager,
+		IConfiguration configuration,
+		IJwtService jwtService)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
@@ -31,50 +34,50 @@ public class AuthService : IAuthService
 		_jwtService = jwtService;
 	}
 
-	/// <summary>
-	///     Create a User and add Roles to him
-	/// </summary>
-	/// <param name="model"></param>
-	/// <returns></returns>
-	/// <exception cref="EntityNotFoundException"></exception>
-	public async Task Register(DTORegister dtoRegister)
-	{
-		if (dtoRegister.Username == null)
-			throw new EntityNotFoundException("Empty values.");
+    /// <summary>
+    ///     Create a User and add Roles to him
+    /// </summary>
+    /// <param name="dtoRegister"></param>
+    /// <exception cref="EntityNotFoundException"></exception>
+    public async Task Register(DTORegister dtoRegister)
+    {
+        if (dtoRegister.Username is null)
+            throw new EntityNotFoundException("Empty values.");
 
-		ApplicationUser? user = await _userManager.FindByNameAsync(dtoRegister.Username);
-		if (user != null)
-			throw new EntityNotFoundException("Username already used.");
+        ApplicationUser? user = await _userManager.FindByNameAsync(dtoRegister.Username);
+        if (user is not null)
+            throw new EntityNotFoundException("Username already used.");
 
-		// Create User
-		user = dtoRegister.ToUser();
+        // Create User
+        user = dtoRegister.ToUser();
 
-		if (dtoRegister.Password == null)
-			throw new NoDataException("No password has been given.");
-		IdentityResult identityResult = await _userManager.CreateAsync(user, dtoRegister.Password);
-		if (identityResult.Succeeded == false)
-			throw new EntityNotFoundException("Error during user creation.");
+        if (dtoRegister.Password is null)
+            throw new NoDataException("No password has been given.");
 
-		// Add Roles
-		if (dtoRegister.Roles.Count > 0)
-		{
-			IdentityResult roleTask = await _userManager.AddToRolesAsync(user, dtoRegister.Roles);
+        IdentityResult identityResult = await _userManager.CreateAsync(user, dtoRegister.Password);
+        if (!identityResult.Succeeded)
+            throw new EntityNotFoundException("Error during user creation.");
 
-			if (roleTask.Succeeded == false)
-				throw new EntityNotFoundException("Error during roles association.");
-		}
-	}
+        // Add Roles
+        if (dtoRegister.Roles.Count == 0)
+            return;
 
-	/// <summary>
-	///     Check credentials (username + password)
-	/// </summary>
-	/// <param name="dtoLogin"></param>
-	/// <returns>The user</returns>
-	/// <exception cref="UnauthorizedAccessException"></exception>
-	public async Task<ApplicationUser> CheckCredentials(DTOLogin dtoLogin)
+        IdentityResult roleTask = await _userManager.AddToRolesAsync(user, dtoRegister.Roles);
+
+        if (!roleTask.Succeeded)
+            throw new EntityNotFoundException("Error during roles association.");
+    }
+
+    /// <summary>
+    ///     Check credentials (username + password)
+    /// </summary>
+    /// <param name="dtoLogin"></param>
+    /// <returns>The user</returns>
+    /// <exception cref="UnauthorizedAccessException"></exception>
+    public async Task<ApplicationUser> CheckCredentials(DTOLogin dtoLogin)
 	{
 		ApplicationUser? user = await _userManager.FindByNameAsync(dtoLogin.Username);
-		if (user == null)
+		if (user is null)
 			throw new UnauthorizedAccessException("Invalid credentials");
 
 		bool isValid = await _userManager.CheckPasswordAsync(user, dtoLogin.Password);
@@ -90,12 +93,7 @@ public class AuthService : IAuthService
 		PrincipalContext adContext = new(ContextType.Domain, _configuration["AdHost"]);
 
 		bool res = adContext.ValidateCredentials(dtoLogin.Username, dtoLogin.Password);
-		if (!res)
-			return null;
-
-		UserPrincipal? userData = UserPrincipal.FindByIdentity(adContext, dtoLogin.Username);
-
-		return userData;
+		return (!res) ? null : UserPrincipal.FindByIdentity(adContext, dtoLogin.Username);
 	}
 
 	/// <summary>
@@ -107,21 +105,21 @@ public class AuthService : IAuthService
 	[SupportedOSPlatform("windows")]
 	public async Task<DTOLoginResponse> RegisterSource(DTOLogin model)
 	{
-		if (model == null) throw new UnauthorizedAccessException("Invalid credentials");
+		if (model is null)
+            throw new UnauthorizedAccessException("Invalid credentials");
 
-		// Try register with all sources except EKIDI
-		foreach (string source in SourceAuth.GetSources())
+        // Try register with all sources except EKIDI
+        foreach (string source in SourceAuth.GetSources())
 		{
 			if (source == SourceAuth.Ekidi)
 				continue;
 
-			ApplicationUser? user = source switch
-			{
+			ApplicationUser? user = source switch {
 				SourceAuth.AD => await RegisterAD(model),
-				_ => null
+				_ => null,
 			};
 
-			if (user == null)
+			if (user is null)
 				continue;
 
 			return ClaimsToken(user);
@@ -134,24 +132,22 @@ public class AuthService : IAuthService
 	///     Verify password + generate a token valid for 3 hours
 	/// </summary>
 	/// <param name="model"></param>
-	/// <returns></returns>
 	/// <exception cref="UnauthorizedAccessException"></exception>
 	/// <exception cref="EntityNotFoundException"></exception>
 	[SupportedOSPlatform("windows")]
 	public async Task<DTOLoginResponse> Login(DTOLogin model)
 	{
 		ApplicationUser? user = await _userManager.FindByNameAsync(model.Username);
-		if (user == null)
+		if (user is null)
 			throw new UnauthorizedAccessException("Invalid credentials");
 
-		dynamic? confirmUser = user.Source switch
-		{
+		dynamic? confirmUser = user.Source switch {
 			SourceAuth.Ekidi => await CheckCredentials(model),
 			SourceAuth.AD => CheckCredentialsAD(model),
-			_ => throw new EntityNotFoundException("Source not found.")
+			_ => throw new EntityNotFoundException("Source not found."),
 		};
 
-		if (confirmUser == null)
+		if (confirmUser is null)
 			throw new EntityNotFoundException("Invalid credentials");
 
 		return ClaimsToken(user);
@@ -162,9 +158,9 @@ public class AuthService : IAuthService
 	/// </summary>
 	/// <param name="user"></param>
 	/// <returns>A list of roles</returns>
-	public async Task<IList<string>> GetRoles(ApplicationUser user)
+	public Task<IList<string>> GetRoles(ApplicationUser user)
 	{
-		return await _userManager.GetRolesAsync(user);
+		return _userManager.GetRolesAsync(user);
 	}
 
 	/// <summary>
@@ -182,17 +178,16 @@ public class AuthService : IAuthService
 	///     Set httpContext items with user values
 	/// </summary>
 	/// <param name="httpContext"></param>
-	/// <returns></returns>
 	/// <exception cref="UnauthorizedAccessException"></exception>
 	public async Task SetContextWithUser(HttpContext httpContext)
 	{
 		string? userId = httpContext.User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).FirstOrDefault();
-		if (userId == null)
+		if (userId is null)
 			throw new UnauthorizedAccessException("Invalid user.");
 
 		ApplicationUser? user = await _userManager.FindByIdAsync(userId);
 
-		if (user == null)
+		if (user is null)
 			throw new UnauthorizedAccessException("Invalid user.");
 
 		httpContext.Items["UserId"] = userId;
@@ -235,32 +230,32 @@ public class AuthService : IAuthService
 		return userRolesID;
 	}
 
-	/// <summary>
-	///     Verify password + generate a token valid for 3 hours
-	/// </summary>
-	/// <param name="model"></param>
-	/// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>
-	private DTOLoginResponse ClaimsToken(ApplicationUser user)
+    /// <summary>
+    ///     Verify password + generate a token valid for 3 hours
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns>A <see cref="DTOLoginResponse" /> with the token</returns>
+    private DTOLoginResponse ClaimsToken(ApplicationUser user)
 	{
 		// Set claims list to add in the token
-		List<Claim> authClaims = new()
-		{
-			new Claim("Id", user.Id),
-			new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
-			new Claim("Username", user.UserName ?? string.Empty),
-			new Claim("Firstname", user.Firstname ?? string.Empty),
-			new Claim("Lastname", user.Lastname ?? string.Empty),
-			new Claim("IsEkium", user.IsEkium.ToString()),
-			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+		List<Claim> authClaims = new() {
+			new("Id", user.Id),
+			new(ClaimTypes.Name, user.UserName ?? string.Empty),
+			new("Username", user.UserName ?? string.Empty),
+			new ("Firstname", user.Firstname ?? string.Empty),
+			new ("Lastname", user.Lastname ?? string.Empty),
+			new ("IsEkium", user.IsEkium.ToString()),
+			new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 		};
 
 		// Check if in dev mode
 		int time = 180;
-		if (_configuration["ASPNETCORE_ENVIRONMENT"] == "Development") time = 999999;
+		if (_configuration["ASPNETCORE_ENVIRONMENT"] == "Development")
+            time = 999999;
 
-		string token = _jwtService.GenerateToken(authClaims, time);
+        string token = _jwtService.GenerateToken(authClaims, time);
 
-		return new DTOLoginResponse(token);
+		return new(token);
 	}
 
 	[SupportedOSPlatform("windows")]
@@ -268,12 +263,12 @@ public class AuthService : IAuthService
 	{
 		UserPrincipal? userData = CheckCredentialsAD(model);
 
-		if (userData == null)
+		if (userData is null)
 			return null;
 
 		ApplicationUser user = new(userData);
 
 		IdentityResult identityResult = await _userManager.CreateAsync(user);
-		return identityResult.Succeeded == false ? null : user;
+		return (!identityResult.Succeeded) ? null : user;
 	}
 }

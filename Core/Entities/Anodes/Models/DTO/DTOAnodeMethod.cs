@@ -6,7 +6,7 @@ namespace Core.Entities.Anodes.Models.DTO;
 
 public abstract partial class DTOAnode
 {
-	public DTOAnode(Anode anode)
+	protected DTOAnode(Anode anode)
 	{
 		S1S2CycleRID = anode.S1S2CycleRID;
 		Status = anode.Status;
@@ -25,11 +25,10 @@ public abstract partial class DTOAnode
 
 	public override Anode ToModel()
 	{
-		return this switch
-		{
+		return this switch {
 			DTOAnodeD20 anodeD20 => anodeD20.ToModel(),
 			DTOAnodeDX anodeDX => anodeDX.ToModel(),
-			_ => throw new InvalidCastException("Trying to convert an abstract class to model")
+			_ => throw new InvalidCastException("Trying to convert an abstract class to model"),
 		};
 	}
 }

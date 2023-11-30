@@ -10,6 +10,6 @@ public partial class DTOKPILog
 
 	public override KPILog ToModel()
 	{
-		return new KPILog(this);
+		return new(this);
 	}
 }

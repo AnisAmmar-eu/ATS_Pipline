@@ -9,7 +9,7 @@ public static class CycleTypes
 
 public enum SignMatchStatus
 {
-	NA,
-	Ok,
-	NotOk
+	NA = 0,
+	Ok = 1,
+	NotOk = 2,
 }

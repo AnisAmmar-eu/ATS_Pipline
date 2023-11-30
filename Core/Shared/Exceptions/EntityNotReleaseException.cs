@@ -11,7 +11,6 @@ public class EntityNotReleaseException : Exception
 	{
 	}
 
-
 	public EntityNotReleaseException(string message, Exception inner)
 		: base(message, inner)
 	{

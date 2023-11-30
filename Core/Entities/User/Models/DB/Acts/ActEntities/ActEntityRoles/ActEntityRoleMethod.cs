@@ -9,8 +9,8 @@ public partial class ActEntityRole
 {
 	public ActEntityRole()
 	{
-		RID = "";
-		ApplicationID = "";
+		RID = string.Empty;
+		ApplicationID = string.Empty;
 		ApplicationType = ApplicationTypeRID.User;
 	}
 
@@ -30,13 +30,13 @@ public partial class ActEntityRole
 		ApplicationID = role.Id;
 	}
 
-	public new DTOActEntityRole ToDTO()
+	new public DTOActEntityRole ToDTO()
 	{
-		return new DTOActEntityRole(this);
+		return new(this);
 	}
 
 	public DTOActEntityRole ToDTO(string? applicationName)
 	{
-		return new DTOActEntityRole(this, applicationName);
+		return new(this, applicationName);
 	}
 }

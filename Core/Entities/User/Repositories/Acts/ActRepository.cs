@@ -13,30 +13,33 @@ public class ActRepository : BaseEntityRepository<AnodeCTX, Act, DTOAct>, IActRe
 	{
 	}
 
-
-	public async Task<Act> GetByRIDAndTypeWithIncludes(string? rid, string? entityType, string? parentType,
+	public Task<Act> GetByRIDAndTypeWithIncludes(
+		string? rid,
+		string? entityType,
+		string? parentType,
 		bool withTracking = true)
 	{
-		if (rid == null)
+		if (rid is null)
 			throw new EntityNotFoundException("Can't find an action with no RID.");
 
 		Expression<Func<Act, bool>>[] filters = QueryFilters(rid, entityType, parentType);
 
-		return await GetBy(
+		return GetBy(
 			filters,
 			withTracking: withTracking
 		);
 	}
 
-	private static Expression<Func<Act, bool>>[] QueryFilters(string rid, string? entityType = null,
+	private static Expression<Func<Act, bool>>[] QueryFilters(
+		string rid,
+		string? entityType = null,
 		string? parentType = null)
 	{
-		IEnumerable<Expression<Func<Act, bool>>> filters = new Expression<Func<Act, bool>>[]
-		{
+		IEnumerable<Expression<Func<Act, bool>>> filters = new Expression<Func<Act, bool>>[] {
 			a =>
 				a.RID == rid
-				&& a.EntityType == entityType
-				&& a.ParentType == parentType
+					&& a.EntityType == entityType
+					&& a.ParentType == parentType,
 		};
 
 		return filters.ToArray();

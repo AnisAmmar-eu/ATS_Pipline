@@ -7,7 +7,10 @@ public class InFurnaceNotification : PacketNotification<InFurnaceStruct>
 {
 	public static async Task<InFurnaceNotification> Create(dynamic ads)
 	{
-		return (await CreateSub<InFurnaceNotification>(ads, ADSUtils.InFurnaceRemove,
-			ADSUtils.InFurnaceNewMsg, ADSUtils.InFurnaceToRead) as InFurnaceNotification)!;
+		return (await CreateSub<InFurnaceNotification>(
+			ads,
+			ADSUtils.InFurnaceRemove,
+			ADSUtils.InFurnaceNewMsg,
+			ADSUtils.InFurnaceToRead) as InFurnaceNotification)!;
 	}
 }

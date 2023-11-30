@@ -10,6 +10,7 @@ public static class VisionInitializer
 	{
 		if (anodeCTX.FileSetting.Any())
 			return;
+
 		InitializeFileSetting(anodeCTX, FileSettingRID.S1SignCam1DXStatic, FileSettingPath.S1SignCam1DXStatic);
 		InitializeFileSetting(anodeCTX, FileSettingRID.S1SignCam1D20Static, FileSettingPath.S1SignCam1D20Static);
 		anodeCTX.SaveChanges();
@@ -17,14 +18,13 @@ public static class VisionInitializer
 
 	private static void InitializeFileSetting(AnodeCTX anodeCTX, string rid, string filePath)
 	{
-		anodeCTX.FileSetting.Add(new FileSetting
-		{
+		anodeCTX.FileSetting.Add(new FileSetting {
 			RID = rid,
 			FilePath = filePath,
 			LastModification = DateTimeOffset.Now,
 			LastUsername = "init",
-			LastUploadName = "",
-			LastComment = "init"
+			LastUploadName = string.Empty,
+			LastComment = "init",
 		});
 	}
 }

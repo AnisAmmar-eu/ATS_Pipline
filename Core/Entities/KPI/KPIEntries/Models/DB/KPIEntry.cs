@@ -19,7 +19,7 @@ public partial class KPIEntry : BaseEntity, IBaseEntity<KPIEntry, DTOKPIEntry>
 	{
 		set => _kpic = value;
 		get => _kpic
-		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPIC));
+			?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPIC));
 	}
 
 	#endregion

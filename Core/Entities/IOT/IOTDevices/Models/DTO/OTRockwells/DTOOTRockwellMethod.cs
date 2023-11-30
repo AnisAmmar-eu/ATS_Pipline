@@ -14,6 +14,6 @@ public partial class DTOOTRockwell
 
 	public override OTRockwell ToModel()
 	{
-		return new OTRockwell(this);
+		return new(this);
 	}
 }

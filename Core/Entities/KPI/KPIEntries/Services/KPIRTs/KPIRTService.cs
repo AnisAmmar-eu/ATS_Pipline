@@ -27,18 +27,23 @@ public class KPIRTService : BaseEntityService<IKPIRTRepository, KPIRT, DTOKPIRT>
 	public async Task<List<DTOKPIRT>> GetByRIDsAndPeriod(string period, List<string> rids)
 	{
 		period = period.ToUpper();
-		return (await AnodeUOW.KPIRT.GetAll(new Expression<Func<KPIRT, bool>>[]
-		{
-			kpiRT => kpiRT.Period == period && rids.Contains(kpiRT.KPIC.RID)
-		}, withTracking: false, includes: nameof(KPIRT.KPIC))).ConvertAll(kpiRT => kpiRT.ToDTO());
+		return (await AnodeUOW.KPIRT.GetAll(
+			new Expression<Func<KPIRT, bool>>[] {
+				kpiRT => kpiRT.Period == period && rids.Contains(kpiRT.KPIC.RID)
+				},
+			withTracking: false,
+			includes: nameof(KPIRT.KPIC)))
+			.ConvertAll(kpiRT => kpiRT.ToDTO());
 	}
 
 	public async Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave)
 	{
-		List<KPIRT> kpiRTs = await AnodeUOW.KPIRT.GetAll(new Expression<Func<KPIRT, bool>>[]
-		{
-			kpiRT => periodsToSave.Contains(kpiRT.Period)
-		}, null, false);
+		List<KPIRT> kpiRTs = await AnodeUOW.KPIRT.GetAll(
+			new Expression<Func<KPIRT, bool>>[] {
+				kpiRT => periodsToSave.Contains(kpiRT.Period)
+				},
+			null,
+			false);
 		List<KPILog> kpiLogs = new();
 		foreach (KPIRT kpiRT in kpiRTs)
 			kpiLogs.Add(kpiRT.ToLog(await AnodeUOW.KPIC.GetById(kpiRT.KPICID)));
@@ -48,7 +53,14 @@ public class KPIRTService : BaseEntityService<IKPIRTRepository, KPIRT, DTOKPIRT>
 
 	#region KPIRT computing
 
-	// See summary in interface
+	/// <summary>
+	/// See summary in interface
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TDTO"></typeparam>
+	/// <typeparam name="TRepository"></typeparam>
+	/// <typeparam name="TValue"></typeparam>
+	/// <param name="tRepository"></param>
 	public async Task ComputeKPIRTs<T, TDTO, TRepository, TValue>(TRepository tRepository)
 		where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
 		where TDTO : class, IDTO<T, TDTO>
@@ -57,12 +69,14 @@ public class KPIRTService : BaseEntityService<IKPIRTRepository, KPIRT, DTOKPIRT>
 		string[] periods = { KPIPeriod.Day, KPIPeriod.Week, KPIPeriod.Month, KPIPeriod.Year };
 		DateTimeOffset oldest = KPIPeriod.GetStartRange(KPIPeriod.Year, DateTimeOffset.Now);
 		// Logic -> GetAll of T, get its KPICRIDs (create KPIRT if necessary) and make the computations on it.
-		List<T> entities = await tRepository.GetAll(new Expression<Func<T, bool>>[]
-		{
-			entity => entity.TS >= oldest
-		}, withTracking: false);
+		List<T> entities = await tRepository.GetAll(
+			new Expression<Func<T, bool>>[] {
+				entity => entity.TS >= oldest
+				},
+			withTracking: false);
 		if (entities.Count == 0)
 			return;
+
 		string[] kpiCRIDs = T.GetKPICRID();
 
 		List<List<KPIRT>> kpiRTs = await GetKPIRTsFromKPICsAndPeriods(kpiCRIDs, periods);
@@ -108,27 +122,28 @@ public class KPIRTService : BaseEntityService<IKPIRTRepository, KPIRT, DTOKPIRT>
 		await AnodeUOW.StartTransaction();
 		foreach (string kpiCRID in kpiCRIDs)
 		{
-			KPIC kpiC = await AnodeUOW.KPIC.GetBy(new Expression<Func<KPIC, bool>>[]
-			{
-				kpiC => kpiC.RID == kpiCRID
-			}, withTracking: true);
+			KPIC kpiC = await AnodeUOW.KPIC.GetBy(
+				new Expression<Func<KPIC, bool>>[] {
+					kpiC => kpiC.RID == kpiCRID
+					},
+				withTracking: true);
 			List<KPIRT> localKPIRTs = new(periods.Length);
 			List<KPIRT> availableKPIRTs = await AnodeUOW.KPIRT.GetAll(
-				new Expression<Func<KPIRT, bool>>[]
-				{
+				new Expression<Func<KPIRT, bool>>[] {
 					kpiRT => kpiRT.KPICID == kpiC.ID
-				}, withTracking: false);
+					},
+				withTracking: false);
 			for (int i = 0; i < periods.Length; ++i)
 			{
-				KPIRT? kpiRT = availableKPIRTs.FirstOrDefault(kpiRT => kpiRT.Period == periods[i]);
-				if (kpiRT == null)
+				KPIRT? kpiRT = availableKPIRTs.Find(kpiRT => kpiRT.Period == periods[i]);
+				if (kpiRT is null)
 				{
-					kpiRT = new KPIRT
-					{
-						KPICID = kpiC.ID,
-						Value = "",
-						Period = periods[i],
-						KPIC = kpiC
+					kpiRT = new()
+                    {
+                     KPICID = kpiC.ID,
+                     Value = string.Empty,
+                     Period = periods[i],
+                     KPIC = kpiC,
 					};
 					await AnodeUOW.KPIRT.Add(kpiRT);
 				}
@@ -160,7 +175,7 @@ public class KPIRTService : BaseEntityService<IKPIRTRepository, KPIRT, DTOKPIRT>
 	///     A list of list of TValues, first level split those lists depending on time frames,
 	///     second level is a collection of all values of all tDTOs in corresponding time frame.
 	/// </returns>
-	private List<List<TValue>> GetValuesFromPeriods<T, TDTO, TValue>(List<T> entities, string[] periods)
+	private static List<List<TValue>> GetValuesFromPeriods<T, TDTO, TValue>(List<T> entities, string[] periods)
 		where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
 		where TDTO : class, IDTO<T, TDTO>
 	{
@@ -174,11 +189,15 @@ public class KPIRTService : BaseEntityService<IKPIRTRepository, KPIRT, DTOKPIRT>
 		}
 
 		foreach (T entity in entities)
-			for (int i = 0; i < periods.Length; ++i)
-				if (entity.TS >= periodsStartRange[i])
+        {
+            for (int i = 0; i < periods.Length; ++i)
+            {
+                if (entity.TS >= periodsStartRange[i])
 					tValuesPerPeriods[i].Add(entity.GetValue());
+            }
+        }
 
-		return tValuesPerPeriods;
+        return tValuesPerPeriods;
 	}
 
 	#endregion

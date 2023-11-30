@@ -18,11 +18,10 @@ public partial class DTOMatchingCycle
 
 	public override MatchingCycle ToModel()
 	{
-		return this switch
-		{
+		return this switch {
 			DTOS3S4Cycle dtoS1S2Cycle => dtoS1S2Cycle.ToModel(),
 			DTOS5Cycle dtos5Cycle => dtos5Cycle.ToModel(),
-			_ => throw new InvalidCastException("Trying to convert an abstract class to model")
+			_ => throw new InvalidCastException("Trying to convert an abstract class to model"),
 		};
 	}
 }

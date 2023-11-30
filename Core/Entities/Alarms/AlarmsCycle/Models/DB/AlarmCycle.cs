@@ -21,7 +21,7 @@ public partial class AlarmCycle : BaseEntity, IBaseEntity<AlarmCycle, DTOAlarmCy
 	{
 		set => _alarmListPacket = value;
 		get => _alarmListPacket
-		       ?? throw new InvalidOperationException("Uninitialized property: " + nameof(AlarmList));
+			?? throw new InvalidOperationException("Uninitialized property: " + nameof(AlarmList));
 	}
 
 	#endregion

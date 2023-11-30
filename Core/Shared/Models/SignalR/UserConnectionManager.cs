@@ -22,20 +22,19 @@ public class UserConnectionManager<T>
 	/// <exception cref="ArgumentNullException">The key or connectionId parameter is null.</exception>
 	public void Add(T key, string connectionId)
 	{
-		if (key == null || connectionId == null) throw new ArgumentNullException();
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(connectionId);
 
-		lock (_connections)
+        lock (_connections)
 		{
 			if (_connections.TryGetValue(key, out HashSet<string>? connections))
 			{
 				lock (connections)
-				{
-					connections.Add(connectionId);
-				}
-			}
+                    connections.Add(connectionId);
+            }
 			else
 			{
-				connections = new HashSet<string> { connectionId };
+				connections = new() { connectionId };
 				_connections.TryAdd(key, connections);
 			}
 		}
@@ -49,10 +48,10 @@ public class UserConnectionManager<T>
 	/// <exception cref="ArgumentNullException">The key parameter is null.</exception>
 	public IEnumerable<string> GetConnections(T key)
 	{
-		if (key == null) throw new ArgumentNullException();
+		ArgumentNullException.ThrowIfNull(key);
 
-		return _connections.TryGetValue(key, out HashSet<string>? connections)
-			? connections
+		return (_connections.TryGetValue(key, out HashSet<string>? connections))
+            ? connections
 			: Enumerable.Empty<string>();
 	}
 
@@ -60,13 +59,9 @@ public class UserConnectionManager<T>
 	///     Get the count of all connections.
 	/// </summary>
 	/// <return>A count</return>
-	/// <returns></returns>
 	public int GetConnectionsCount()
 	{
-		int count = 0;
-
-		foreach (HashSet<string> values in _connections.Values) count += values.Count;
-		return count;
+		return _connections.Values.Sum(values => values.Count);
 	}
 
 	/// <summary>
@@ -77,17 +72,21 @@ public class UserConnectionManager<T>
 	/// <exception cref="ArgumentNullException">The key or connectionId parameter is null.</exception>
 	public void Remove(T key, string connectionId)
 	{
-		if (key == null || connectionId == null) throw new ArgumentNullException();
+		ArgumentNullException.ThrowIfNull(key);
+		ArgumentNullException.ThrowIfNull(connectionId);
 
 		lock (_connections)
 		{
 			if (_connections.TryGetValue(key, out HashSet<string>? connections))
-				lock (connections)
+            {
+                lock (connections)
 				{
 					connections.Remove(connectionId);
 
-					if (connections.Count == 0) _connections.Remove(key);
+					if (connections.Count == 0)
+						_connections.Remove(key);
 				}
-		}
+            }
+        }
 	}
 }

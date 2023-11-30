@@ -13,16 +13,24 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	public bool HasBeenSent { get; set; }
 	public int AlarmID { get; set; }
 	public int StationID { get; set; } = Station.ID;
-	public bool IsAck { get; set; } // Ack = Acknowledge
+
+	/// <summary>
+	///     Ack = Acknowledge
+	/// </summary>
+	public bool IsAck { get; set; }
+
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }
 	public DateTimeOffset? TSClear { get; set; }
 	public TimeSpan? Duration { get; set; }
 	public DateTimeOffset? TSRead { get; set; }
-	public DateTimeOffset? TSGet { get; set; } // Useful? TSGet == TS ?
+	public DateTimeOffset? TSGet { get; set; }
 
-	// Only used in Collect() as AlarmC is not yet known.
-	[NotMapped] public string? RID { get; set; }
+	/// <summary>
+	///     Only used in Collect() as AlarmC is not yet known.
+	/// </summary>
+	[NotMapped]
+	public string? RID { get; set; } = string.Empty;
 
 	public AlarmC Alarm
 	{

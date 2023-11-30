@@ -26,24 +26,31 @@ public class IOTTagEndpoint : BaseEntityEndpoint<IOTTag, DTOIOTTag, IIOTTagServi
 		group.MapPut("setValue", SetTagsValues).WithSummary("Set tags values").WithOpenApi();
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> GetTagValueByArrayRID(
-		[FromBody] [Required] IEnumerable<string> rids, IIOTTagService iotTagService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> GetTagValueByArrayRID(
+		[FromBody] [Required] IEnumerable<string> rids,
+		IIOTTagService iotTagService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await iotTagService.GetByArrayRID(rids), logService, httpContext);
+		return GenericEndpoint(() => iotTagService.GetByArrayRID(rids), logService, httpContext);
 	}
 
-	private static async Task<JsonHttpResult<ApiResponse>> SetTagValueByRID([FromRoute] string rid,
-		[FromRoute] string value, IIOTTagService iotTagService, ILogService logService, HttpContext httpContext)
-	{
-		return await GenericEndpoint(async () => await iotTagService.UpdateTagByRID(rid, value), logService,
-			httpContext);
-	}
-
-	private static async Task<JsonHttpResult<ApiResponse>> SetTagsValues(
-		[FromBody] [Required] List<PatchIOTTag> toUpdate, IIOTTagService iotTagService, ILogService logService,
+	private static Task<JsonHttpResult<ApiResponse>> SetTagValueByRID(
+		[FromRoute] string rid,
+		[FromRoute] string value,
+		IIOTTagService iotTagService,
+		ILogService logService,
 		HttpContext httpContext)
 	{
-		return await GenericEndpoint(async () => await iotTagService.UpdateTags(toUpdate), logService, httpContext);
+		return GenericEndpoint(() => iotTagService.UpdateTagByRID(rid, value), logService, httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> SetTagsValues(
+		[FromBody] [Required] List<PatchIOTTag> toUpdate,
+		IIOTTagService iotTagService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(() => iotTagService.UpdateTags(toUpdate), logService, httpContext);
 	}
 }

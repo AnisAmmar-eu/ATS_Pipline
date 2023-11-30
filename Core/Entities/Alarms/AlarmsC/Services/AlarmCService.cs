@@ -17,12 +17,8 @@ public class AlarmCService : BaseEntityService<IAlarmCRepository, AlarmC, DTOAla
 	///     Search for an AlarmC based on its RID.
 	/// </summary>
 	/// <param name="rid"></param>
-	/// <returns></returns>
 	public async Task<DTOAlarmC> GetByRID(string rid)
 	{
-		return (await AnodeUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[]
-		{
-			alarm => alarm.RID == rid
-		})).ToDTO();
+		return (await AnodeUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[] { alarm => alarm.RID == rid })) .ToDTO();
 	}
 }

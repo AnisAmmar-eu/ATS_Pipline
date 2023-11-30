@@ -2,11 +2,10 @@ namespace Core.Shared.Paginations.Sorting;
 
 public static class SortOptionMap
 {
-	private static readonly Dictionary<string, SortOption> Map = new()
-	{
+	private static readonly Dictionary<string, SortOption> Map = new() {
 		{ string.Empty, SortOption.None },
 		{ "Ascending", SortOption.Ascending },
-		{ "Descending", SortOption.Descending }
+		{ "Descending", SortOption.Descending },
 	};
 
 	public static SortOption Get(string key)
@@ -17,7 +16,7 @@ public static class SortOptionMap
 
 public enum SortOption
 {
-	None,
-	Ascending,
-	Descending
+	None = 0,
+	Ascending = 1,
+	Descending = 2,
 }
