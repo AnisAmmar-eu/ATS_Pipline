@@ -4,7 +4,6 @@ public static class FilterOptionMap
 {
 	private static readonly Dictionary<string, FilterOption> Map = new() {
 		{ string.Empty, FilterOption.Nothing },
-		{ "Contains", FilterOption.Contains },
 		{ "Greater", FilterOption.IsGreaterThan },
 		{ "GreaterEqual", FilterOption.IsGreaterThanOrEqualTo },
 		{ "Less", FilterOption.IsLessThan },
@@ -22,11 +21,10 @@ public static class FilterOptionMap
 public enum FilterOption
 {
 	Nothing = 0,
-	Contains = 1,
-	IsGreaterThan = 2,
-	IsGreaterThanOrEqualTo = 3,
-	IsLessThan = 4,
-	IsLessThanOrEqualTo = 5,
-	IsEqualTo = 6,
-	IsNotEqualTo = 7,
+	IsGreaterThan = 1,
+	IsGreaterThanOrEqualTo = 2,
+	IsLessThan = 3,
+	IsLessThanOrEqualTo = 4,
+	IsEqualTo = 5,
+	IsNotEqualTo = 6,
 }

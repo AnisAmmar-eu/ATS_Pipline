@@ -5,6 +5,7 @@ using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Paginations;
 using Core.Shared.Paginations.Filtering;
 using Core.Shared.Paginations.Sorting;
+using Core.Shared.Paginations.TextSearches;
 using Core.Shared.Repositories.Kernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -173,6 +174,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 				(current, value) => current.Include(value))
 			.AsNoTracking()
 			.FilterFromPagination<T, TDTO>(pagination)
+			.TextSearchFromPagination<T, TDTO>(pagination)
 			.SortFromPagination<T, TDTO>(pagination);
 
 		return (nbItems == 0) ? query.ToListAsync() : query.Take(nbItems).ToListAsync();

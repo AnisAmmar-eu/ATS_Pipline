@@ -8,9 +8,7 @@ namespace Core.Shared.Paginations.Filtering;
 
 public static class Filter
 {
-	public static IQueryable<T> FilterFromPagination<T, TDTO>(
-		this IQueryable<T> source,
-		Pagination pagination)
+	public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>
 	{
@@ -51,37 +49,19 @@ public static class Filter
 	{
 		// Gets the property of the class from its column name.
 		FilterOption filterOption = FilterOptionMap.Get(filterParam.FilterOptionName);
-		switch (filterOption)
-		{
-			case FilterOption.Nothing:
-				return Expression.Constant(true);
-			case FilterOption.Contains:
-				return Expression.Equal(
-					Expression.Call(
-						Expression.Property(param, filterParam.ColumnName),
-						Array.Find(typeof(string).GetMethods(), method => method.Name == "Contains")!,
-						Expression.Constant(filterParam.FilterValue, typeof(string))),
-					Expression.Constant(true));
-			case FilterOption.IsGreaterThan:
-			case FilterOption.IsGreaterThanOrEqualTo:
-			case FilterOption.IsLessThan:
-			case FilterOption.IsLessThanOrEqualTo:
-			case FilterOption.IsEqualTo:
-			case FilterOption.IsNotEqualTo:
-				string[] names = filterParam.ColumnName.Split('.');
-				PropertyInfo filterColumn = GetColumnProperty<T>(names);
+		string[] names = filterParam.ColumnName.Split('.');
+		PropertyInfo filterColumn = GetColumnProperty<T>(names);
+		if (filterOption == FilterOption.Nothing)
+			return Expression.Constant(true);
 
-				IComparable? refValue = ParseComparable(filterColumn.PropertyType, filterParam.FilterValue);
-				if (refValue is null)
-					throw new ArgumentException("Error happened during parsing of filterValue");
+		IComparable? refValue = ParseComparable(filterColumn.PropertyType, filterParam.FilterValue);
+		if (refValue is null)
+			throw new ArgumentException("Error happened during parsing of filterValue");
 
-				return GetExpressionBody(
-					filterOption,
-					GetPropertyExpression(param, names),
-					Expression.Constant(refValue, refValue.GetType()));
-			default:
-				throw new ArgumentOutOfRangeException(nameof(filterParam));
-		}
+		return GetExpressionBody(
+			filterOption,
+			GetPropertyExpression(param, names),
+			Expression.Constant(refValue, refValue.GetType()));
 	}
 
 	private static BinaryExpression GetExpressionBody(FilterOption filterOption, Expression left, Expression right)
