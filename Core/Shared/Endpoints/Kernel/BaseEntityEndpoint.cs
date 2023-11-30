@@ -22,12 +22,14 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 	where TService : IBaseEntityService<T, TDTO>
 {
 	private string[] _includes = Array.Empty<string>();
+	private bool _isLogged;
 
 	protected void MapBaseEndpoints(RouteGroupBuilder group, BaseEndpointFlags flags, params string[] includes)
 	{
 		string dtoName = typeof(TDTO).Name;
 		string tName = typeof(T).Name;
 		_includes = includes;
+		_isLogged = !flags.HasFlag(BaseEndpointFlags.NoLogs);
 		if (flags.HasFlag(BaseEndpointFlags.Create))
 			group.MapPost(string.Empty, Add).WithSummary($"Add the {dtoName} in the body to the database") .WithOpenApi();
 
@@ -77,26 +79,26 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 
 	#region Create
 
-	private static Task<JsonHttpResult<ApiResponse>> Add(
+	private Task<JsonHttpResult<ApiResponse>> Add(
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
 		TDTO dto)
 	{
-		return GenericEndpoint(() => service.Add(dto.ToModel()), logService, httpContext);
+		return GenericEndpoint(() => service.Add(dto.ToModel()), logService, httpContext, _isLogged);
 	}
 
 	#endregion
 
 	#region Update
 
-	private static Task<JsonHttpResult<ApiResponse>> Update(
+	private Task<JsonHttpResult<ApiResponse>> Update(
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
 		TDTO dto)
 	{
-		return GenericEndpoint(() => service.Update(dto.ToModel()), logService, httpContext);
+		return GenericEndpoint(() => service.Update(dto.ToModel()), logService, httpContext, _isLogged);
 	}
 
 	#endregion
@@ -112,7 +114,8 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpointEmptyResponse(
 			() => service.Remove(id, _includes),
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
 	#endregion
@@ -163,10 +166,11 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint(
 			() => service.GetAll(withTracking: false, includes: _includes),
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
-	private static Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(
+	private Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
@@ -175,7 +179,8 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint(
 			() => service.GetAll(withTracking: false, includes: includes),
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
 	private Task<JsonHttpResult<ApiResponse>> GetByID(
@@ -187,10 +192,11 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint(
 			() => service.GetByID(id, withTracking: false, includes: _includes),
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
-	private static Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(
+	private Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
@@ -200,7 +206,8 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint(
 			() => service.GetByID(id, withTracking: false, includes: includes),
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
 	private Task<JsonHttpResult<ApiResponse>> GetByGeneric(
@@ -225,10 +232,11 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				return service.GetWithPagination(pagination, 0, 0);
 			},
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
-	private static Task<JsonHttpResult<ApiResponse>> GetByGenericWithIncludes(
+	private Task<JsonHttpResult<ApiResponse>> GetByGenericWithIncludes(
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
@@ -251,10 +259,11 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				return service.GetWithPagination(pagination, 0, 0);
 			},
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
-	private static Task<JsonHttpResult<ApiResponse>> GetWithPagination(
+	private Task<JsonHttpResult<ApiResponse>> GetWithPagination(
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
@@ -265,7 +274,8 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint(
 			() => service.GetWithPagination(pagination, nbItems, lastID),
 			logService,
-			httpContext);
+			httpContext,
+			_isLogged);
 	}
 
 	#endregion

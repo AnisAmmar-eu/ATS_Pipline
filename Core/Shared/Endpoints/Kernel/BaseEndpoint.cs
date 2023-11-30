@@ -10,7 +10,8 @@ public class BaseEndpoint
 	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpoint<TReturn>(
 		Func<Task<TReturn>> func,
 		ILogService logService,
-		HttpContext httpContext)
+		HttpContext httpContext,
+		bool isLogged = true)
 	{
 		TReturn ans;
 		try
@@ -22,13 +23,17 @@ public class BaseEndpoint
 			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		return await new ApiResponse(ans).SuccessResult(logService, httpContext);
+		if (isLogged)
+			return await new ApiResponse(ans).SuccessResult(logService, httpContext);
+
+		return new ApiResponse(ans).SuccessResult();
 	}
 
 	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpointEmptyResponse(
 		Func<Task> func,
 		ILogService logService,
-		HttpContext httpContext)
+		HttpContext httpContext,
+		bool isLogged = true)
 	{
 		try
 		{
@@ -39,6 +44,9 @@ public class BaseEndpoint
 			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		return await new ApiResponse().SuccessResult(logService, httpContext);
+		if (isLogged)
+			return await new ApiResponse().SuccessResult(logService, httpContext);
+
+		return new ApiResponse().SuccessResult();
 	}
 }
