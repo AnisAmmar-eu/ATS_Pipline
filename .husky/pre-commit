@@ -22,7 +22,7 @@
 STAGED_FILES=($(git diff --cached --name-only --diff-filter=ACM | grep ".cs$" || true))
 
 if [[ "${STAGED_FILES}" == "" ]]; then
-  printf "\nNo files were committed."
+  printf "\nNo cs files were committed so no analyse.\n"
   exit 0
 fi
 
