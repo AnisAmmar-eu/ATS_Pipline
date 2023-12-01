@@ -136,7 +136,7 @@ public partial class ApiResponse
 				methodInfo.Name,
 				endpoint.Metadata.GetRequiredMetadata<IRouteDiagnosticsMetadata>().Route,
 				Status.Code,
-				JsonSerializer.Serialize(Result)
+				JsonSerializer.Serialize(Result)[50..]
 				);
 		}
 		catch
