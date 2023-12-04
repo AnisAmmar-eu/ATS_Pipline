@@ -23,10 +23,10 @@ public static class ShootingUtils
 {
 	public const string TestFilename = "TestImage.jpg";
 
-	public const string Camera1 = @"..\ApiCamera\Camera1\";
-	public const string Camera2 = @"..\ApiCamera\Camera2\";
-	public const string CameraTest1 = @"CameraTest1\";
-	public const string CameraTest2 = @"CameraTest2\";
-	public const string Archive1 = @"Archives1\";
-	public const string Archive2 = @"Archives2\";
+	public const string Camera1 = @"C:\.ats\ApiCamera\Camera1\";
+	public const string Camera2 = @"C:\.ats\ApiCamera\Camera2\";
+	public const string CameraTest1 = @"C:\.ats\CameraTest1\";
+	public const string CameraTest2 = @"C:\.ats\CameraTest2\";
+	public const string Archive1 = @"C:\.ats\Archives1\";
+	public const string Archive2 = @"C:\.ats\Archives2\";
 }

@@ -12,26 +12,37 @@ public static class Filter
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>
 	{
-		SortOption sortOption = (pagination.SortParam is null)
-			? SortOption.None
-			: SortOptionMap.Get(pagination.SortParam.SortOptionName);
-		if (sortOption == SortOption.Ascending)
-		{
-			return source.Where(t => pagination.LastID == 0 || t.ID > pagination.LastID)
-				.Where(FiltersToWhereClause<T>(pagination.FilterParams));
-		}
+		ParameterExpression param = Expression.Parameter(typeof(T));
+		source = (pagination.SortParam.LastValue.Length == 0)
+            ? source
+			: source.Where(GetLastValueWhereClause<T>(pagination.SortParam, param));
 
-		return source.Where(t => pagination.LastID == 0 || t.ID < pagination.LastID)
-			.Where(FiltersToWhereClause<T>(pagination.FilterParams));
+		return source .Where(FiltersToWhereClause<T>(pagination.FilterParams, param));
 	}
 
-	private static Expression<Func<T, bool>> FiltersToWhereClause<T>(IEnumerable<FilterParam>? filterParams)
+	private static Expression<Func<T, bool>> GetLastValueWhereClause<T>(SortParam sortParam, ParameterExpression param)
+	{
+		SortOption sortOption = SortOptionMap.Get(sortParam.SortOptionName);
+		string[] names = sortParam.ColumnName.Split('.');
+		PropertyInfo filterColumn = GetColumnProperty<T>(names);
+		IComparable? lastValue = ParseComparable(filterColumn.PropertyType, sortParam.LastValue);
+		if (lastValue is null)
+			throw new ArgumentException($"Error happened during parsing of {nameof(lastValue)}");
+
+		Expression left = GetPropertyExpression(param, names);
+		Expression right = Expression.Constant(lastValue, lastValue.GetType());
+		BinaryExpression comparison = (sortOption == SortOption.Ascending)
+			? Expression.GreaterThan(left, right)
+			: Expression.LessThan(left, right);
+		return Expression.Lambda<Func<T, bool>>(comparison, param);
+	}
+
+	private static Expression<Func<T, bool>> FiltersToWhereClause<T>(
+		IEnumerable<FilterParam>? filterParams,
+		ParameterExpression param)
 	{
 		if (filterParams is null)
 			return _ => true;
-
-		ParameterExpression param = Expression.Parameter(typeof(T));
-
 		// Maps the filterParams into a list of Expression<Func<T, bool>> with the FilterToExpression list.
 		List<Expression> filters
 			= filterParams.Select(filterParam => FilterToExpression<T>(filterParam, param)).ToList();

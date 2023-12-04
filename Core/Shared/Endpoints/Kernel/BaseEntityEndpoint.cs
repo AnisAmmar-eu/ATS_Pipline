@@ -56,8 +56,11 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				.WithSummary($"Get a {tName} by a filterValue in columnName with includes")
 				.WithOpenApi();
 
+			group.MapPut("pagination", CountWithPagination)
+				.WithSummary($"Get the number of {tName}s available in the filter and search with includes required")
+				.WithOpenApi();
 			group.MapPut("pagination/{nbItems}", GetWithPagination)
-				.WithSummary($"Get a {tName} by paging, sorting and filtering with includes")
+				.WithSummary($"Get {tName}s by paging, sorting, text search and filtering with includes")
 				.WithOpenApi();
 		}
 
@@ -270,11 +273,16 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		[FromRoute] int nbItems,
 		[FromBody] Pagination pagination)
 	{
-		return GenericEndpoint(
-			() => service.GetWithPagination(pagination, nbItems),
-			logService,
-			httpContext,
-			_isLogged);
+		return GenericEndpoint( () => service.GetWithPagination(pagination, nbItems), logService, httpContext, _isLogged);
+	}
+
+	private Task<JsonHttpResult<ApiResponse>> CountWithPagination(
+		TService service,
+		ILogService logService,
+		HttpContext httpContext,
+		[FromBody] Pagination pagination)
+	{
+		return GenericEndpoint( () => service.CountWithPagination(pagination), logService, httpContext, _isLogged);
 	}
 
 	#endregion

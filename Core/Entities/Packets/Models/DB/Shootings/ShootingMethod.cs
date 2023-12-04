@@ -55,9 +55,12 @@ public partial class Shooting
 		return new($@"{root}\{path}\{filename}");
 	}
 
+	[GeneratedRegex("S(?<stationID>[0-9]{2})T(?<anodeType>.*)C(?<camera>[0-9]{2})T(?<TS>.*).jpg")]
+	private static partial Regex FilenameRegex();
+
 	public static FileInfo GetImagePathFromFilename(string root, string filename)
 	{
-		Regex regex = MyRegex();
+		Regex regex = FilenameRegex();
 		GroupCollection groups = regex.Match(filename).Groups;
 		DateTimeOffset date = DateTimeOffset.ParseExact(
 			groups["TS"].Value,
@@ -69,7 +72,7 @@ public partial class Shooting
 		return new($@"{root}\{path}\{filename}");
 	}
 
-	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
+	protected override Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
 		DirectoryInfo directory1 = new(ShootingUtils.Camera1);
 		DirectoryInfo directory2 = new(ShootingUtils.Camera2);
@@ -77,7 +80,7 @@ public partial class Shooting
 		DirectoryInfo archive2 = new(ShootingUtils.Archive2);
 		if (!directory1.Exists || !directory2.Exists || !archive1.Exists || !archive2.Exists)
 			throw new IOException("One or more ShootingFolders do not exist");
-		// First and Third hole because second hole isn't taken into account.
+		// First and Third hole because second hole isn't accounted for
 		FileInfo? firstHole = null;
 		FileInfo? thirdHole = null;
 		DateTimeOffset? tsFirstImage = null;
@@ -107,7 +110,7 @@ public partial class Shooting
 						= DateTimeOffset.ParseExact(
 							ExtractTSFromName(thirdHole.Name, StationCycleRID),
 							AnodeFormat.RIDFormat,
-							null);
+							CultureInfo.InvariantCulture.DateTimeFormat);
 					tsFirstImage = (tsFirstImage is null || tsHoleImage < tsFirstImage) ? tsHoleImage : tsFirstImage;
 				}
 			}
@@ -116,13 +119,14 @@ public partial class Shooting
 		if (tsFirstImage is null)
 			throw new("tsFirstImage should NOT be null");
 
-		await UpdatePacketAndStationCycle(anodeUOW, firstHole, thirdHole, tsFirstImage.Value);
+		UpdatePacketAndStationCycle(anodeUOW, firstHole, thirdHole, tsFirstImage.Value);
+		return Task.CompletedTask;
 		// DetectionPacket is now dequeued by the ADS Notification service.
 		// Task task2 = DequeueDetectionPacket();
 		// await task2;
 	}
 
-	private Task UpdatePacketAndStationCycle(
+	private void UpdatePacketAndStationCycle(
 		IAnodeUOW anodeUOW,
 		FileInfo? firstHole,
 		FileInfo? thirdHole,
@@ -150,18 +154,7 @@ public partial class Shooting
 		HasError = firstHole is null || thirdHole is null;
 		StationCycle.ShootingStatus = Status;
 		anodeUOW.StationCycle.Update(StationCycle);
-		return Task.CompletedTask;
 	}
-
-	/*
-	private static async Task DequeueDetectionPacket()
-	{
-		CancellationToken cancel = new();
-		AdsClient tcClient = TwinCatConnectionManager.Connect(ADSUtils.AdsPort);
-		uint removeHandle = tcClient.CreateVariableHandle(ADSUtils.DetectionRemove);
-		await tcClient.WriteAnyAsync(removeHandle, true, cancel);
-	}
-	*/
 
 	private static void SaveImageAndThumbnail(
 		FileInfo file,
@@ -194,9 +187,9 @@ public partial class Shooting
 	private static bool IsFileLocked(FileInfo? file)
 	{
 		if (file is null)
-            return false;
+			return false;
 
-        try
+		try
 		{
 			using FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
 			stream.Close();
@@ -212,22 +205,19 @@ public partial class Shooting
 	private static string ExtractRIDFromName(string fileName)
 	{
 		if (string.IsNullOrWhiteSpace(fileName))
-            return string.Empty;
-        // X_ is the station number
-        int charLocation = "X_".Length + AnodeFormat.RIDFormat.Length;
+			return string.Empty;
+		// X_ is the station number
+		int charLocation = "X_".Length + AnodeFormat.RIDFormat.Length;
 		return (charLocation > 0) ? fileName[..charLocation] : string.Empty;
 	}
 
 	private static string ExtractTSFromName(string fileName, string? rid)
 	{
 		if (rid is null || string.IsNullOrWhiteSpace(fileName))
-            return string.Empty;
+			return string.Empty;
 
-        int charLocation = fileName.IndexOf('.');
+		int charLocation = fileName.IndexOf('.');
 		charLocation = ((charLocation == 0) ? fileName.Length : charLocation) - rid.Length - 1;
 		return fileName.Substring(rid.Length + 1, charLocation);
 	}
-
-    [GeneratedRegex("S(?<stationID>[0-9]{2})T(?<anodeType>.*)C(?<camera>[0-9]{2})T(?<TS>.*).jpg")]
-    private static partial Regex MyRegex();
 }

@@ -166,6 +166,14 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithOne(cycle => cycle.Anode)
 			.HasForeignKey<AnodeDX>(anode => anode.S5CycleID)
 			.OnDelete(DeleteBehavior.NoAction);
+
+		builder.Entity<BenchmarkTest>()
+			.HasIndex(b => b.TSIndex);
+
+		builder.Entity<CameraTest>()
+			.HasMany(c => c.BenchmarkTests)
+			.WithOne(b => b.CameraTest)
+			.HasForeignKey(b => b.CameraID);
 	}
 
 	#region Alarms

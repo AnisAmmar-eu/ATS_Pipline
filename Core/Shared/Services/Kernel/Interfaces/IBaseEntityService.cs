@@ -23,6 +23,7 @@ public interface IBaseEntityService<T, TDTO>
 		params string[] includes);
 
 	Task<List<TDTO>> GetWithPagination(Pagination pagination, int nbItems);
+	Task<int> CountWithPagination(Pagination pagination);
 
 	public Task<TDTO> Add(T entity);
 	public Task<List<TDTO>> AddAll(IEnumerable<T> entities);

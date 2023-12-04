@@ -1,3 +1,4 @@
+using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
@@ -27,7 +28,16 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 	public int Status { get; set; }
 	public int AnodeType { get; set; }
 
-	public override DTOBenchmarkTest ToDTO()
+	public DateTimeOffset TSIndex { get; set; }
+    private CameraTest? CameraTestSub { get; set; }
+
+    public CameraTest CameraTest
+    {
+	    set => CameraTestSub = value;
+	    get => CameraTestSub ?? throw new ArgumentException("rip bozo");
+    }
+
+    public override DTOBenchmarkTest ToDTO()
 	{
 		return new(this);
 	}

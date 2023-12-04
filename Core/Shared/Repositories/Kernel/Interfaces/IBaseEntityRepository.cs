@@ -109,6 +109,12 @@ public interface IBaseEntityRepository<T, TDTO>
 	Task<List<T>> GetWithPagination(Pagination pagination, int nbItems);
 
 	/// <summary>
+	///		Returns the number of entities which are eligible to the filter and textSearch
+	/// </summary>
+	/// <param name="pagination"></param>
+	Task<int> CountWithPagination(Pagination pagination);
+
+	/// <summary>
 	///     Find entities by a predicate
 	/// </summary>
 	/// <param name="expression">Predicate</param>

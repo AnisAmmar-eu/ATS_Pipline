@@ -50,6 +50,11 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 			entity.ToDTO());
 	}
 
+	public Task<int> CountWithPagination(Pagination pagination)
+	{
+		return _repository.CountWithPagination(pagination);
+	}
+
 	public async Task<TDTO> Add(T entity)
 	{
 		await AnodeUOW.StartTransaction();

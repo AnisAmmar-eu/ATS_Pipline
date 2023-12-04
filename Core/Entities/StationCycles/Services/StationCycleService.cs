@@ -261,13 +261,13 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}
 
-	private async Task AssignCycleToAnode(StationCycle cycle)
+	private Task AssignCycleToAnode(StationCycle cycle)
     {
         if (cycle is not S1S2Cycle s1S2Cycle)
-            return;
+            return Task.CompletedTask;
 
         Anode anode = Anode.Create(s1S2Cycle);
-        await AnodeUOW.Anode.Add(anode);
+        return AnodeUOW.Anode.Add(anode);
         // TODO Vision
     }
 }

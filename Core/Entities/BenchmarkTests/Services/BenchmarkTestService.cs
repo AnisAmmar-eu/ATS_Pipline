@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Core.Entities.BenchmarkTests.Models.DB;
+using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BenchmarkTests.Models.DTO;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Shared.Dictionaries;
@@ -32,7 +33,16 @@ public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, 
 			DateTimeOffset now = DateTimeOffset.Now;
 			await AnodeUOW.StartTransaction();
 			for (int i = 0; i < nbItems - 10; ++i)
+			{
+				if (i % 100000 == 0 && i != 0)
+				{
+					AnodeUOW.Commit();
+					await AnodeUOW.CommitTransaction();
+					await AnodeUOW.StartTransaction();
+				}
+
 				await AnodeUOW.BenchmarkTest.Add(await GenerateTest(now, i));
+			}
 
 			for (int i = 0; i < 10; ++i)
 				await AnodeUOW.BenchmarkTest.Add(await GenerateTest(now, i, status: 4));
@@ -103,22 +113,25 @@ public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, 
 		return ans;
 	}
 
-	private Task<BenchmarkTest> GenerateTest(DateTimeOffset now, int index, string? rid = null, int? status = null)
+	private async Task<BenchmarkTest> GenerateTest(DateTimeOffset now, int index, string? rid = null, int? status = null)
 	{
 		int stationID = _random.Next(1, 6);
 		int cameraID = _random.Next(1, 3);
+		CameraTest cam = await AnodeUOW.CameraTest.GetById(cameraID);
 		status ??= _random.Next(1, 4);
 
 		int anodeType = _random.Next(1, 3);
 		DateTimeOffset ts = now.Subtract(TimeSpan.FromMinutes(index));
 		rid ??= $"{ts.ToString(AnodeFormat.RIDFormat)}_{stationID.ToString()}_{cameraID.ToString()}_{anodeType.ToString()}";
-		return Task.FromResult(new BenchmarkTest {
+		return await Task.FromResult(new BenchmarkTest {
 			TS = ts,
+			TSIndex = ts,
 			StationID = stationID,
 			CameraID = cameraID,
 			Status = status.Value,
 			AnodeType = anodeType,
 			RID = rid,
+			CameraTest = cam,
 		});
 	}
 }

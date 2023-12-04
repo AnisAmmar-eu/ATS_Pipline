@@ -180,6 +180,19 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		return (nbItems == 0) ? query.ToListAsync() : query.Take(nbItems).ToListAsync();
 	}
 
+	public Task<int> CountWithPagination(Pagination pagination)
+	{
+		return pagination.Includes
+			.Aggregate(
+				Context.Set<T>()
+					.AsQueryable(),
+				(current, value) => current.Include(value))
+			.AsNoTracking()
+			.FilterFromPagination<T, TDTO>(pagination)
+			.TextSearchFromPagination<T, TDTO>(pagination)
+			.CountAsync();
+	}
+
 	/// <summary>
 	///     Find entities by a predicate
 	/// </summary>

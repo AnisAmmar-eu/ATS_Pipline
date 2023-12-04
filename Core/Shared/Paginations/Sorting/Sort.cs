@@ -10,8 +10,8 @@ public static class Sort
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>
 	{
-		SortParam? sortParam = pagination.SortParam;
-		if (sortParam is null)
+		SortParam sortParam = pagination.SortParam;
+		if (sortParam.ColumnName.Length == 0 || sortParam.SortOptionName.Length == 0)
 			return source.OrderByDescending(t => t.ID);
 
 		SortOption sortOption = SortOptionMap.Get(sortParam.SortOptionName);

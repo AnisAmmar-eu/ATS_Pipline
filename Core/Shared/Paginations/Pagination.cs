@@ -10,8 +10,7 @@ namespace Core.Shared.Paginations;
 public class Pagination
 {
 	public string[] Includes { get; set; } = Array.Empty<string>();
-    public int LastID { get; set; }
-    public List<FilterParam> FilterParams { get; set; } = new();
-    public List<TextSearchParam> TextSearchParams { get; set; } = new();
-    public SortParam? SortParam { get; set; }
+    public List<FilterParam> FilterParams { get; set; } = [];
+    public List<TextSearchParam> TextSearchParams { get; set; } = [];
+    public SortParam SortParam { get; set; } = new();
 }
