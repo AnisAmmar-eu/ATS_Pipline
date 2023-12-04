@@ -17,8 +17,8 @@ public class IOTTagEndpoint : BaseEntityEndpoint<IOTTag, DTOIOTTag, IIOTTagServi
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		RouteGroupBuilder group = app.MapGroup("apiIOT/iotTags").WithTags(nameof(IOTTagEndpoint));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read);
+		RouteGroupBuilder group = app.MapGroup("apiIOT").WithTags(nameof(IOTTagEndpoint));
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
 
 		group.MapPut("rids", GetTagValueByArrayRID).WithSummary("Get tags by their RIDs").WithOpenApi();
 		group.MapPut("setValue/{rid}/{value}", SetTagValueByRID).WithSummary("Set a tag value by its RID")

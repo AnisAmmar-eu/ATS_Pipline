@@ -20,7 +20,7 @@ public class KPIRTEndpoint : BaseEntityEndpoint<KPIRT, DTOKPIRT, IKPIRTService>,
 			return;
 
 		RouteGroupBuilder group = app.MapGroup("apiKPIRT").WithTags(nameof(KPIRTEndpoint));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(KPIRT.KPIC));
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(KPIRT.KPIC));
 
 		group.MapPut("{timePeriod}", GetByTimePeriodAndRIDs)
 			.WithSummary("Get KPIRT within a single time period by RIDs")

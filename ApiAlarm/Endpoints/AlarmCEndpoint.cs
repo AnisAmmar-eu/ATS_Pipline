@@ -11,7 +11,7 @@ public class AlarmCEndpoint : BaseEntityEndpoint<AlarmC, DTOAlarmC, IAlarmCServi
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		RouteGroupBuilder group = app.MapGroup("apiAlarm/alarmsClass").WithTags(nameof(AlarmCEndpoint));
+		RouteGroupBuilder group = app.MapGroup("apiAlarm").WithTags(nameof(AlarmCEndpoint));
 		MapBaseEndpoints(group, BaseEndpointFlags.Read);
 	}
 }

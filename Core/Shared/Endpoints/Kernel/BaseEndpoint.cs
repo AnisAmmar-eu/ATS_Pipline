@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http;
@@ -15,30 +14,19 @@ public class BaseEndpoint
 		bool isLogged = true)
 	{
 		TReturn ans;
-		List<object> a = [];
-		Stopwatch watch = new();
 		try
 		{
 			ans = await func.Invoke();
-			for (int i = 0; i < 12; ++i)
-			{
-				watch.Restart();
-				await func.Invoke();
-				watch.Stop();
-				a.Add(watch.Elapsed);
-			}
 		}
 		catch (Exception e)
 		{
 			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		a.Add(ans);
-
 		if (isLogged)
-			return await new ApiResponse(a).SuccessResult(logService, httpContext);
+			return await new ApiResponse(ans).SuccessResult(logService, httpContext);
 
-		return new ApiResponse(a).SuccessResult();
+		return new ApiResponse(ans).SuccessResult();
 	}
 
 	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpointEmptyResponse(

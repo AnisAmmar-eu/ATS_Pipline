@@ -13,8 +13,8 @@ public class LogEndpoint : BaseEntityEndpoint<Log, DTOLog, ILogService>, ICarter
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		RouteGroupBuilder group = app.MapGroup("apiStationCycle/logs").WithTags(nameof(LogEndpoint));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read | BaseEndpointFlags.Delete | BaseEndpointFlags.NoLogs);
+		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(LogEndpoint));
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read | BaseEndpointFlags.Delete | BaseEndpointFlags.NoLogs);
 
 		group.MapDelete("all", DeleteAll);
 	}

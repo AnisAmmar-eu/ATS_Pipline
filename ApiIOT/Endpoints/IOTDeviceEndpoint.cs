@@ -16,8 +16,8 @@ public class IOTDeviceEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIO
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		RouteGroupBuilder group = app.MapGroup("apiIOT/iotDevices").WithTags(nameof(IOTDeviceEndpoint));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(IOTDevice.IOTTags));
+		RouteGroupBuilder group = app.MapGroup("apiIOT").WithTags(nameof(IOTDeviceEndpoint));
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(IOTDevice.IOTTags));
 
 		group.MapGet("status/{rid}", GetStatusByRID).WithSummary("Get a device's STATUS by its RID").WithOpenApi();
 		group.MapPut("rids", GetDevicesByArrayRID).WithSummary("Get devices by their RIDs").WithOpenApi();

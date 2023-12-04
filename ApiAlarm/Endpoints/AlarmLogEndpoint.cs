@@ -16,8 +16,8 @@ public class AlarmLogEndpoint : BaseEntityEndpoint<AlarmLog, DTOAlarmLog, IAlarm
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		RouteGroupBuilder group = app.MapGroup("apiAlarm/alarmsLog").WithTags(nameof(AlarmLogEndpoint));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(AlarmLog.Alarm));
+		RouteGroupBuilder group = app.MapGroup("apiAlarm").WithTags(nameof(AlarmLogEndpoint));
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(AlarmLog.Alarm));
 
 		group.MapPost("ack", AckAlarmLogs);
 	}

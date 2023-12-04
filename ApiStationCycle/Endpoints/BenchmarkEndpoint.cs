@@ -16,9 +16,9 @@ public class BenchmarkEndpoint : BaseEntityEndpoint<BenchmarkTest, DTOBenchmarkT
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		RouteGroupBuilder group = app.MapGroup("apiStationCycle/benchmark2")
+		RouteGroupBuilder group = app.MapGroup("apiStationCycle")
 			.WithTags(nameof(BenchmarkEndpoint));
-		MapBaseEndpoints(
+		group = MapBaseEndpoints(
 			group,
 			BaseEndpointFlags.Create | BaseEndpointFlags.Read | BaseEndpointFlags.Update | BaseEndpointFlags.Delete);
 

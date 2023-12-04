@@ -20,9 +20,10 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
-		MapBaseEndpoints(group, BaseEndpointFlags.Read);
-
 		group.MapGet("status", GetStatus);
+
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
+
 		group.MapGet("reduced", GetAllRIDs);
 		group.MapGet("mostRecent", GetMostRecent);
 		group.MapGet("{id}/images/{cameraNb}", GetImageByIdAndCamera);

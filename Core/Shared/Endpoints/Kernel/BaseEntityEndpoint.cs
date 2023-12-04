@@ -24,12 +24,17 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 	private string[] _includes = Array.Empty<string>();
 	private bool _isLogged;
 
-	protected void MapBaseEndpoints(RouteGroupBuilder group, BaseEndpointFlags flags, params string[] includes)
+	protected RouteGroupBuilder MapBaseEndpoints(
+		RouteGroupBuilder group,
+		BaseEndpointFlags flags,
+		params string[] includes)
 	{
 		string dtoName = typeof(TDTO).Name;
 		string tName = typeof(T).Name;
 		_includes = includes;
 		_isLogged = !flags.HasFlag(BaseEndpointFlags.NoLogs);
+		group = group.MapGroup(tName);
+
 		if (flags.HasFlag(BaseEndpointFlags.Create))
 			group.MapPost(string.Empty, Add).WithSummary($"Add the {dtoName} in the body to the database") .WithOpenApi();
 
@@ -40,13 +45,6 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				.WithOpenApi();
 			group.MapPut(string.Empty, GetAllWithIncludes)
 				.WithSummary($"Get all {tName}s with includes listed in body")
-				.WithOpenApi();
-
-			group.MapGet("id/{id}", GetByID)
-				.WithSummary($"Get a {tName} by ID")
-				.WithOpenApi();
-			group.MapPut("id/{id}", GetByIDWithIncludes)
-				.WithSummary($"Get all {tName}s by ID with includes listed in body")
 				.WithOpenApi();
 
 			group.MapGet("{columnName}/{filterValue}", GetByGeneric)
@@ -73,11 +71,13 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
         }
 
         if (!flags.HasFlag(BaseEndpointFlags.Delete))
-			return;
+			return group;
 
 		group.MapDelete("{id}", Remove)
 			.WithSummary($"Remove the {dtoName} by its ID")
 			.WithOpenApi();
+
+		return group;
 	}
 
 	#region Create
@@ -181,33 +181,6 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 	{
 		return GenericEndpoint(
 			() => service.GetAll(withTracking: false, includes: includes),
-			logService,
-			httpContext,
-			_isLogged);
-	}
-
-	private Task<JsonHttpResult<ApiResponse>> GetByID(
-		TService service,
-		ILogService logService,
-		HttpContext httpContext,
-		[FromRoute] int id)
-	{
-		return GenericEndpoint(
-			() => service.GetByID(id, withTracking: false, includes: _includes),
-			logService,
-			httpContext,
-			_isLogged);
-	}
-
-	private Task<JsonHttpResult<ApiResponse>> GetByIDWithIncludes(
-		TService service,
-		ILogService logService,
-		HttpContext httpContext,
-		[FromRoute] int id,
-		[FromBody] string[] includes)
-	{
-		return GenericEndpoint(
-			() => service.GetByID(id, withTracking: false, includes: includes),
 			logService,
 			httpContext,
 			_isLogged);
