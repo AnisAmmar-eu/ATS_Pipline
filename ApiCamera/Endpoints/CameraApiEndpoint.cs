@@ -1,6 +1,5 @@
 using ApiCamera.Utils;
 using Carter;
-using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Dictionaries;
 using Core.Shared.Dictionaries;
@@ -22,7 +21,6 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 
 		group.MapGet("status", GetStatus);
 		group.MapGet("acquisition", AcquisitionAsync);
-		group.MapGet("temperature", GetTemperatures);
 		group.MapGet("{cameraID}/testImage", GetCameraTestImage);
 	}
 
@@ -78,18 +76,6 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 			},
 			logService,
 			httpContext);
-	}
-
-	#endregion
-
-	#region Get Temperature
-
-	private static Task<JsonHttpResult<ApiResponse>> GetTemperatures(
-		IBITemperatureService biTemperatureService,
-		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(() => biTemperatureService.GetAll(), logService, httpContext);
 	}
 
 	#endregion
