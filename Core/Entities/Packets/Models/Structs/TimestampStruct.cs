@@ -6,13 +6,13 @@ namespace Core.Entities.Packets.Models.Structs;
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct TimestampStruct
 {
-	public ushort Year;
-	public ushort Month;
-	public ushort Day;
-	public ushort Hour;
-	public ushort Minutes;
-	public ushort Sec;
-	public ushort MS;
+	public int Year;
+	public int Month;
+	public int Day;
+	public int Hour;
+	public int Minutes;
+	public int Sec;
+	public int MS;
 
 	public DateTimeOffset GetTimestamp()
 	{

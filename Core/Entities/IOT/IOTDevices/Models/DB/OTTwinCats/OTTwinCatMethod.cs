@@ -4,6 +4,7 @@ using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.Extensions.Logging;
 using TwinCAT;
 using TwinCAT.Ads;
 
@@ -24,7 +25,7 @@ public partial class OTTwinCat
 		return new(this);
 	}
 
-	public override async Task<bool> CheckConnection()
+	public override async Task<bool> CheckConnection(ILogger logger)
 	{
 		CancellationToken cancel = CancellationToken.None;
 		try
@@ -35,8 +36,9 @@ public partial class OTTwinCat
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
 				throw new();
 		}
-		catch (Exception)
+		catch (Exception e)
 		{
+			logger.LogInformation("Error while monitoring TwinCat:\n {error}", e);
 			return await Task.FromResult(false);
 		}
 
@@ -53,10 +55,10 @@ public partial class OTTwinCat
 		}
 		catch (AdsException)
 		{
-			return new List<IOTTag>(); // The TwinCat will be marked as disconnected at next monitoring.
+			return []; // The TwinCat will be marked as disconnected at next monitoring.
 		}
 
-		List<IOTTag> updatedTags = new();
+		List<IOTTag> updatedTags = [];
 		foreach (IOTTag iotTag in IOTTags)
 		{
 			bool hasBeenUpdated = false;
@@ -68,7 +70,7 @@ public partial class OTTwinCat
 			{
 				ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, otTagTwinCat, cancel);
 				if (resultWrite.ErrorCode != AdsErrorCode.NoError)
-					return new List<IOTTag>(); // Same as above
+					return []; // Same as above
 
 				iotTag.HasNewValue = false;
 				hasBeenUpdated = true;
@@ -77,7 +79,7 @@ public partial class OTTwinCat
 			// Else updates the current value bc it might have changed since.
 			ResultValue<object> resultRead = await ReadFromType(tcClient, varHandle, otTagTwinCat, cancel);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
-				return new List<IOTTag>(); // Same as above
+				return []; // Same as above
 
 			hasBeenUpdated = hasBeenUpdated || iotTag.CurrentValue != resultRead.Value?.ToString();
 			if (hasBeenUpdated)

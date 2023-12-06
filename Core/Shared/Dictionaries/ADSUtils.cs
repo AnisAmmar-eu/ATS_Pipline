@@ -4,6 +4,8 @@ public static class ADSUtils
 {
 	public const int AdsPort = 851;
 
+	public const string GlobalRIDForCamera = "VA_FAT.CycleRID.SN";
+
 	public const string MeasurementVariable = "VA_PXX.P04_In";
 
 	public const string CloseCycle = "";

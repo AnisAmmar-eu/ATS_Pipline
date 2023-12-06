@@ -9,17 +9,17 @@ namespace Core.Shared.Data;
 
 public static class DBInitializer
 {
-	public static async Task InitializeStation(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
+	public static Task InitializeStation(AnodeCTX anodeCTX)
 	{
 		IOTInitializer.InitializeStation(anodeCTX);
-		await UserInitializer.Initialize(anodeCTX, userManager);
+		return Task.CompletedTask;
 	}
 
-	public static Task InitializeServer(AnodeCTX anodeCTX)
+	public static async Task InitializeServer(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{
 		IOTInitializer.InitializeServer(anodeCTX);
 		KPIInitializer.Initialize(anodeCTX);
 		VisionInitializer.Initialize(anodeCTX);
-		return Task.CompletedTask;
+		await UserInitializer.Initialize(anodeCTX, userManager);
 	}
 }

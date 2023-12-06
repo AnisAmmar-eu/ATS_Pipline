@@ -35,7 +35,8 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 		IConfiguration configuration,
 		IIOTTagService iotTagService,
 		ILogService logService,
-		HttpContext httpContext)
+		HttpContext httpContext,
+		CancellationToken cancel)
 	{
 		return GenericEndpointEmptyResponse(
 			async () =>
@@ -52,13 +53,15 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 						device1,
 						"jpg",
 						ShootingUtils.Camera1,
-						ShootingUtils.CameraTest1);
+						ShootingUtils.CameraTest1,
+						cancel);
 					Task task2 = CameraUtils.RunAcquisition(
 						iotTagService,
 						device2,
 						"jpg",
 						ShootingUtils.Camera2,
-						ShootingUtils.CameraTest2);
+						ShootingUtils.CameraTest2,
+						cancel);
 					await task1;
 					await task2;
 				}
@@ -70,6 +73,7 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 						"jpg",
 						ShootingUtils.Camera1,
 						ShootingUtils.CameraTest1,
+						cancel,
 						ShootingUtils.Camera2,
 						ShootingUtils.CameraTest2);
 				}

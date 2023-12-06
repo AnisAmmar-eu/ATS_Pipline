@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DTO;
@@ -19,30 +18,21 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<List<DTOIOTTag>> GetByArrayRID(IEnumerable<string> rids)
 	{
-		return (await AnodeUOW.IOTTag.GetAll(
-			new Expression<Func<IOTTag, bool>>[] { tag => rids.Contains(tag.RID) },
-			withTracking: false))
-			.ConvertAll(tag => tag.ToDTO());
+		return (await AnodeUOW.IOTTag.GetAll([tag => rids.Contains(tag.RID)], withTracking: false)).ConvertAll(
+			tag => tag.ToDTO());
 	}
 
-	public async Task<bool> IsTestModeOn()
+	public bool IsTestModeOnSync()
 	{
 		IOTTag testModeTag;
 		if (_testModeID is null)
 		{
-			testModeTag = await AnodeUOW.IOTTag.GetBy(
-				new Expression<Func<IOTTag, bool>>[]
-					{
-						tag => tag.RID == IOTTagRID.TestMode
-					},
-				withTracking: false);
+			testModeTag = AnodeUOW.IOTTag.GetByRIDSync(IOTTagRID.TestMode, withTracking: false);
 			_testModeID = testModeTag.ID;
 		}
 		else
 		{
-			testModeTag = await AnodeUOW.IOTTag.GetById(
-				_testModeID.Value,
-				withTracking: false);
+			testModeTag = AnodeUOW.IOTTag.GetByIdSync(_testModeID.Value, withTracking: false);
 		}
 
 		return bool.Parse(testModeTag.CurrentValue);
@@ -50,12 +40,7 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<DTOIOTTag> UpdateTagByRID(string rid, string value)
 	{
-		IOTTag tag = await AnodeUOW.IOTTag.GetBy(
-			new Expression<Func<IOTTag, bool>>[]
-				{
-					tag => tag.RID == rid
-				},
-			withTracking: false);
+		IOTTag tag = await AnodeUOW.IOTTag.GetBy([tag => tag.RID == rid], withTracking: false);
 		if (tag.IsReadOnly)
 		{
 			throw new InvalidOperationException(
@@ -73,7 +58,7 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<List<DTOIOTTag>> UpdateTags(IEnumerable<PatchIOTTag> updateList)
 	{
-		List<IOTTag> updatedTags = new();
+		List<IOTTag> updatedTags = [];
 		await AnodeUOW.StartTransaction();
 		foreach (PatchIOTTag patchTag in updateList)
 		{
@@ -95,7 +80,7 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 		}
 
 		if (updatedTags.Count == 0)
-			return new List<DTOIOTTag>();
+			return [];
 
 		AnodeUOW.Commit(true);
 		await AnodeUOW.CommitTransaction();

@@ -1,6 +1,7 @@
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB;
 
@@ -27,7 +28,7 @@ public partial class IOTDevice
 		return new(this);
 	}
 
-	public virtual Task<bool> CheckConnection()
+	public virtual Task<bool> CheckConnection(ILogger logger)
 	{
 		return Task.FromResult(true);
 	}

@@ -6,6 +6,8 @@ using Core.Entities.KPI.KPIEntries.Services.KPILogs;
 using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Entities.User.Models.DB.Roles;
+using Core.Entities.User.Models.DB.Users;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background.KPI.KPILogs;
@@ -14,6 +16,7 @@ using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -39,6 +42,10 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+	.AddEntityFrameworkStores<AnodeCTX>()
+	.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<ILogService, LogService>();
 
@@ -88,7 +95,8 @@ if (bool.Parse(dbInitialize))
 	using IServiceScope scope = app.Services.CreateScope();
 	IServiceProvider services = scope.ServiceProvider;
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
-	await DBInitializer.InitializeServer(context);
+	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+	await DBInitializer.InitializeServer(context, userManager);
 }
 
 app.UseCors("AllowOrigin");

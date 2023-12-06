@@ -4,6 +4,7 @@ using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Models.Camera;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using Stemmer.Cvb.GenApi;
@@ -25,7 +26,7 @@ public partial class OTCamera
 		return new(this);
 	}
 
-	public override async Task<bool> CheckConnection()
+	public override async Task<bool> CheckConnection(ILogger logger)
 	{
 		try
 		{
@@ -41,8 +42,9 @@ public partial class OTCamera
 				$"{ITApisDict.IOTAddress}/apiIOT/iotTags/{tempRID}/{temperature.ToString(CultureInfo.InvariantCulture)}", null);
 			return true;
 		}
-		catch (Exception)
+		catch (Exception e)
 		{
+			logger.LogInformation("Error while monitoring to {camRID}:\n {error}", RID, e);
 			return false;
 		}
 	}

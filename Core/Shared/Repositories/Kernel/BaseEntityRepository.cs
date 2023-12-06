@@ -322,26 +322,26 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		if (includes is not null)
         {
             {
-			foreach (KeyValuePair<string, string[]> include in includes)
-                {
-                    if (include.Key != string.Empty)
-				{
-					query = query.Include(include.Key);
-					query = include.Value.Aggregate(
-						query,
-						(current, value) => current.Include(include.Key + "." + value));
-				}
-				else
-				{
-					query = include.Value.Aggregate(query, (current, value) => current.Include(value));
-				}
-                }
+	            foreach (KeyValuePair<string, string[]> include in includes)
+	            {
+		            if (include.Key != string.Empty)
+		            {
+			            query = query.Include(include.Key);
+			            query = include.Value.Aggregate(
+				            query,
+				            (current, value) => current.Include(include.Key + "." + value));
+		            }
+		            else
+		            {
+			            query = include.Value.Aggregate(query, (current, value) => current.Include(value));
+		            }
+	            }
 
-                if (includes.Count > 0)
-                {
-                    // WARNING - https://learn.microsoft.com/fr-fr/ef/core/querying/single-split-queries
-                    query = query.AsSplitQuery();
-                }
+	            if (includes.Count > 0)
+	            {
+		            // WARNING - https://learn.microsoft.com/fr-fr/ef/core/querying/single-split-queries
+		            query = query.AsSplitQuery();
+	            }
             }
         }
 

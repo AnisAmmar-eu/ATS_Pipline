@@ -77,10 +77,6 @@ builder.Services.AddAuthentication(
 builder.Services.AddDbContext<AnodeCTX>(
 	options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-	.AddEntityFrameworkStores<AnodeCTX>()
-	.AddDefaultTokenProviders();
-
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -115,8 +111,7 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
 	using IServiceScope scope = app.Services.CreateScope();
 	IServiceProvider services = scope.ServiceProvider;
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
-	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-	await DBInitializer.InitializeStation(context, userManager);
+	await DBInitializer.InitializeStation(context);
 }
 
 app.UseSwagger();

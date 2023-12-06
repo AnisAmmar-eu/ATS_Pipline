@@ -11,7 +11,6 @@ using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
-using Core.Entities.IOT.IOTDevices.Models.DB.OTRockwells;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
@@ -222,7 +221,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<OTCamera> OTCamera => Set<OTCamera>();
 	public DbSet<OTTwinCat> OTTwinCat => Set<OTTwinCat>();
 	public DbSet<ITApi> ITApi => Set<ITApi>();
-	public DbSet<OTRockwell> OTRockwell => Set<OTRockwell>();
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
 
