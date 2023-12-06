@@ -67,7 +67,7 @@ public class RoleService : IRoleService
 
 		IdentityResult result = await _roleManager.CreateAsync(role);
 		if (!result.Succeeded)
-			throw new EntityNotFoundException("An error happenened during the role creation.");
+			throw new EntityNotFoundException("An error happened during the role creation.");
 
 		await _anodeUOW.CommitTransaction();
 
