@@ -30,7 +30,7 @@ public class DailyKPILogService : BackgroundService
 	private static List<string> GetPeriodsList()
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
-		List<string> periods = new() { KPIPeriod.Day };
+		List<string> periods = [KPIPeriod.Day];
 		if (now.DayOfWeek == DayOfWeek.Monday)
 			periods.Add(KPIPeriod.Week);
 

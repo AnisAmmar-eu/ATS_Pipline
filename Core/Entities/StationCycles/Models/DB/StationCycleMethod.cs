@@ -66,7 +66,7 @@ public partial class StationCycle
 		for (int i = 0; i <= 5; ++i)
 			ans.AddRange(signMatchRIDs.Select(rid => rid + ((i == 0) ? string.Empty : i.ToString())));
 
-		ans.AddRange(new[] { KPICRID.D20Anodes, KPICRID.DXAnodes });
+		ans.AddRange([KPICRID.D20Anodes, KPICRID.DXAnodes]);
 		for (int i = 1; i <= 5; ++i)
 			ans.Add($"{KPICRID.AnodesStation}{i.ToString()}");
 
@@ -91,11 +91,11 @@ public partial class StationCycle
 			{
 				nbAnodes[cycle.StationID - 1]++;
 				if (cycle.AnodeType == AnodeTypeDict.D20)
-                    nbD20++;
-                else if (cycle.AnodeType == AnodeTypeDict.DX)
-                    nbDX++;
+					nbD20++;
+				else if (cycle.AnodeType == AnodeTypeDict.DX)
+					nbDX++;
 
-                if (cycle.SignStatus1 == SignMatchStatus.Ok || cycle.SignStatus2 == SignMatchStatus.Ok)
+				if (cycle.SignStatus1 == SignMatchStatus.Ok || cycle.SignStatus2 == SignMatchStatus.Ok)
 				{
 					if (cycle is MatchingCycle matchingCycle
 						&& (matchingCycle.MatchingCamera1 == SignMatchStatus.Ok
@@ -150,13 +150,12 @@ public partial class StationCycle
 
 	public ReducedStationCycle Reduce()
 	{
-		return new()
-        {
-         ID = ID,
-         RID = RID,
-         AnodeSize = DetectionPacket?.AnodeSize,
-         AnodeType = AnodeType,
-         ShootingTS = ShootingPacket?.ShootingTS,
+		return new() {
+			ID = ID,
+			RID = RID,
+			AnodeSize = DetectionPacket?.AnodeSize,
+			AnodeType = AnodeType,
+			ShootingTS = ShootingPacket?.ShootingTS,
 		};
 	}
 

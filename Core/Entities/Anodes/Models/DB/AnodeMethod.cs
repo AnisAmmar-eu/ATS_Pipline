@@ -56,12 +56,12 @@ public abstract partial class Anode
 
 	public static string[] GetKPICRID()
 	{
-		return new[] { KPICRID.AnodesTotalNumber };
+		return [KPICRID.AnodesTotalNumber];
 	}
 
 	public Func<List<Anode>, string[]> GetComputedValues()
 	{
-		return anodes => new[] { anodes.Count.ToString() };
+		return anodes => [anodes.Count.ToString()];
 	}
 
 	public static Anode Create(S1S2Cycle cycle)

@@ -30,7 +30,7 @@ public class ActEntityRepository : BaseEntityRepository<AnodeCTX, ActEntity, DTO
 			"Act.ActLangs.Language",
 			"SignatureType.C_Langs.Language",
 			"ActEntityRoles"
-		);
+			);
 	}
 
 	public Task<ActEntity> GetByActWithIncludes(Act act, int? entityID, int? parentID, bool withTracking = true)
@@ -42,19 +42,18 @@ public class ActEntityRepository : BaseEntityRepository<AnodeCTX, ActEntity, DTO
 			null,
 			withTracking,
 			"ActEntityRoles"
-		);
+			);
 	}
 
 	private static Expression<Func<ActEntity, bool>>[] QueryFilters(Act act, int? entityID = null, int? parentID = null)
 	{
-		IEnumerable<Expression<Func<ActEntity, bool>>> filters = new Expression<Func<ActEntity, bool>>[] {
-			ae =>
-				ae.Act.RID == act.RID
-					&& ae.Act.EntityType == act.EntityType
-					&& ae.Act.ParentType == act.ParentType
-					&& ae.EntityID == entityID
-					&& ae.ParentID == parentID,
-		};
+		IEnumerable<Expression<Func<ActEntity, bool>>> filters = [
+			ae => ae.Act.RID == act.RID
+				&& ae.Act.EntityType == act.EntityType
+				&& ae.Act.ParentType == act.ParentType
+				&& ae.EntityID == entityID
+				&& ae.ParentID == parentID,
+		];
 
 		return filters.ToArray();
 	}

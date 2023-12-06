@@ -15,11 +15,11 @@ public static class DBInitializer
 		return Task.CompletedTask;
 	}
 
-	public static async Task InitializeServer(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
+	public static Task InitializeServer(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{
 		IOTInitializer.InitializeServer(anodeCTX);
 		KPIInitializer.Initialize(anodeCTX);
 		VisionInitializer.Initialize(anodeCTX);
-		await UserInitializer.Initialize(anodeCTX, userManager);
+		return UserInitializer.Initialize(anodeCTX, userManager);
 	}
 }

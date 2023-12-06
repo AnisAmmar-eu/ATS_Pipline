@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.System.Logs;
@@ -20,10 +19,8 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 	{
 		return (await AnodeUOW.Log.GetAll(
 			orderBy: query => query.OrderByDescending(l => l.TS),
-			withTracking: false)
-			)
-			.ConvertAll(l => l.ToDTO())
-			;
+			withTracking: false))
+			.ConvertAll(l => l.ToDTO());
 	}
 
 	public async Task<List<DTOLog>> GetRange(int start, int nbItems)
@@ -33,11 +30,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 
 	public Task<List<Log>> GetAllUnsent()
 	{
-		return AnodeUOW.Log.GetAll(
-			new Expression<Func<Log, bool>>[] {
-				log => !log.HasBeenSent
-				},
-			withTracking: false);
+		return AnodeUOW.Log.GetAll([log => !log.HasBeenSent], withTracking: false);
 	}
 
 	public async Task SendLogs(List<Log> logs, string address)
@@ -84,9 +77,9 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public async Task DeleteAllLogs()
+	public Task DeleteAllLogs()
 	{
-		await AnodeUOW.Log.DeleteAll();
+		return AnodeUOW.Log.DeleteAll();
 	}
 
 	public async Task Create(

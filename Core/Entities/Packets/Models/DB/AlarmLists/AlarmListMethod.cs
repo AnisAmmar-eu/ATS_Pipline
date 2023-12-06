@@ -1,9 +1,7 @@
-using System.Linq.Expressions;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
-using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB.AlarmLists;
@@ -35,9 +33,10 @@ public partial class AlarmList
 		List<AlarmRT> alarmRTs = await anodeUOW.AlarmRT.GetAllWithInclude(withTracking: false);
 		foreach (AlarmRT alarmRT in alarmRTs)
 		{
-			AlarmCycle alarmCycle = new(alarmRT);
-			alarmCycle.AlarmListPacketID = ID;
-			alarmCycle.AlarmList = this;
+			AlarmCycle alarmCycle = new(alarmRT) {
+				AlarmListPacketID = ID,
+				AlarmList = this,
+			};
 			await anodeUOW.AlarmCycle.Add(alarmCycle);
 			AlarmCycles.Add(alarmCycle);
 		}
@@ -46,16 +45,10 @@ public partial class AlarmList
 			anodeUOW.Commit();
 
 		// StationCycleRID should already be present
-		if (StationCycle is null)
-        {
-            StationCycle = await anodeUOW.StationCycle.GetBy(
-                new Expression<Func<StationCycle, bool>>[] {
-                    stationCycle => stationCycle.RID == StationCycleRID
-					},
-                withTracking: false);
-        }
+		StationCycle ??= await anodeUOW.StationCycle
+			.GetBy([stationCycle => stationCycle.RID == StationCycleRID], withTracking: false);
 
-        StationCycle.AlarmListPacket = this;
+		StationCycle.AlarmListPacket = this;
 		StationCycle.AlarmListID = ID;
 		Status = PacketStatus.Completed;
 		StationCycle.AlarmListStatus = Status;

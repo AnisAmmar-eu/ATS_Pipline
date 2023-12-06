@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.BI.BITemperatures.Repositories;
@@ -20,9 +19,8 @@ public class BITemperatureService : BaseEntityService<IBITemperatureRepository, 
 
 	public async Task LogNewValues()
 	{
-		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag.GetAll(
-			new Expression<Func<IOTTag, bool>>[] { tag => _temperatureTagsRIDs.Contains(tag.RID) },
-			withTracking: false);
+		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag
+			.GetAll([tag => _temperatureTagsRIDs.Contains(tag.RID)], withTracking: false);
 		if (temperatureTags.Count == 0)
 			return;
 
@@ -37,9 +35,8 @@ public class BITemperatureService : BaseEntityService<IBITemperatureRepository, 
 	public async Task PurgeByTimestamp(TimeSpan lifespan)
 	{
 		DateTimeOffset threshold = DateTimeOffset.Now.Subtract(lifespan);
-		List<BITemperature> toPurge = await AnodeUOW.BITemperature.GetAll(
-			new Expression<Func<BITemperature, bool>>[] { kpiTemperature => kpiTemperature.TS < threshold },
-			withTracking: false);
+		List<BITemperature> toPurge
+			= await AnodeUOW.BITemperature.GetAll([kpiTemperature => kpiTemperature.TS < threshold], withTracking: false);
 		await AnodeUOW.StartTransaction();
 		foreach (BITemperature kpiTemperature in toPurge)
 			AnodeUOW.BITemperature.Remove(kpiTemperature);

@@ -34,7 +34,7 @@ public class UserConnectionManager<T>
             }
 			else
 			{
-				connections = new() { connectionId };
+				connections = [connectionId];
 				_connections.TryAdd(key, connections);
 			}
 		}

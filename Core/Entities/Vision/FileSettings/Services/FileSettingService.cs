@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Core.Entities.Vision.FileSettings.Models.DB;
 using Core.Entities.Vision.FileSettings.Models.DTO;
 using Core.Entities.Vision.FileSettings.Models.UploadFileSettings;
@@ -18,9 +17,8 @@ public class FileSettingService : BaseEntityService<IFileSettingRepository, File
 
 	public async Task<DTOFileSetting> ReceiveFile(UploadFileSetting uploadFileSetting, IFormFile file)
 	{
-		FileSetting fileSetting = await AnodeUOW.FileSetting.GetBy(
-			new Expression<Func<FileSetting, bool>>[] { setting => setting.RID == uploadFileSetting.RID },
-			withTracking: false);
+		FileSetting fileSetting
+			= await AnodeUOW.FileSetting.GetBy([setting => setting.RID == uploadFileSetting.RID], withTracking: false);
 
 		fileSetting.LastUsername = uploadFileSetting.Username;
 		fileSetting.LastComment = uploadFileSetting.Comment;

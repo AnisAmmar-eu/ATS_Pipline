@@ -35,12 +35,12 @@ public class ActRepository : BaseEntityRepository<AnodeCTX, Act, DTOAct>, IActRe
 		string? entityType = null,
 		string? parentType = null)
 	{
-		IEnumerable<Expression<Func<Act, bool>>> filters = new Expression<Func<Act, bool>>[] {
+		IEnumerable<Expression<Func<Act, bool>>> filters = [
 			a =>
 				a.RID == rid
 					&& a.EntityType == entityType
 					&& a.ParentType == parentType,
-		};
+		];
 
 		return filters.ToArray();
 	}

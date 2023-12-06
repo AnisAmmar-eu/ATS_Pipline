@@ -1,4 +1,3 @@
-using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,8 +26,7 @@ public class ActAuthorizeHandler : AuthorizationHandler<ActAuthorize>
 
 		bool result = _actService.ValidActionToken(
 			httpContext,
-			new List<DTOActEntityToValid> {
-				new() { Act = new() { RID = requirement.RID }, EntityID = null, ParentID = null } } );
+			[new() { Act = new() { RID = requirement.RID }, EntityID = null, ParentID = null }]);
 		if (!result)
 			context.Fail(new AuthorizationFailureReason(this, "Access denied"));
 		else

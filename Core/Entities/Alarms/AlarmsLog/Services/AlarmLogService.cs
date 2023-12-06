@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
@@ -29,9 +28,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		{
 			// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
 			AlarmLog alarmWithStatus1 = await AnodeUOW.AlarmLog.GetByWithIncludes(
-				new Expression<Func<AlarmLog, bool>>[] {
-					alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID
-					},
+				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID],
 				query => query.OrderByDescending(alarmLog => alarmLog.ID));
 			if (alarm.Value)
 				return; // alarmLog is already active.
@@ -50,9 +47,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 				return; // alarmLog is already inactive or cleared.
 
 			// If an alarmLog doesn't exist, this alarm just raised.
-			AlarmC alarmC = await AnodeUOW.AlarmC.GetBy(new Expression<Func<AlarmC, bool>>[] {
-				alarmLog => alarmLog.RID == alarm.RID
-				});
+			AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmLog => alarmLog.RID == alarm.RID]);
 			AlarmLog newAlarmLog = new(alarmC) {
 				Alarm = alarmC,
 				TS = DateTime.Now,
@@ -85,11 +80,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		await AnodeUOW.StartTransaction();
 		foreach (int idAlarmLog in idAlarmLogs)
 		{
-			AlarmLog alarmLogToAck = await AnodeUOW.AlarmLog.GetByIdWithIncludes(
-				idAlarmLog,
-				new Expression<Func<AlarmLog, bool>>[] {
-					alarmLog => !alarmLog.IsAck
-					});
+			AlarmLog alarmLogToAck = await AnodeUOW.AlarmLog.GetByIdWithIncludes(idAlarmLog, [alarmLog => !alarmLog.IsAck]);
 			alarmLogToAck.IsAck = true;
 			alarmLogToAck.TSRead = DateTime.Now;
 			ackAlarmLogs.Add(alarmLogToAck.ToDTO());
@@ -105,10 +96,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
 		const string api2Url = "https://localhost:7207/apiServerReceive/alarmsLog";
-		List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes(
-			new Expression<Func<AlarmLog, bool>>[] {
-				alarmLog => !alarmLog.HasBeenSent
-				});
+		List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes([alarmLog => !alarmLog.HasBeenSent]);
 		string jsonData = JsonSerializer.Serialize(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 

@@ -39,10 +39,10 @@ public class UserService : IUserService
 			.Select(u => u.ToDTO())
 			.ToListAsync();
 
-		for (int i = 0; i < users.Count; i++)
-            users[i].Roles = await GetRolesByUsername(users[i].Username);
+		foreach (DTOUser user in users)
+			user.Roles = await GetRolesByUsername(user.Username);
 
-        return users;
+		return users;
 	}
 
 	/// <summary>

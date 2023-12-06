@@ -105,10 +105,10 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			withTracking,
 			includes: new Dictionary<string, string[]> { { string.Empty, includes } })
 			.FirstOrDefaultAsync();
-			if (t is null)
-				throw new EntityNotFoundException(typeof(T).Name + " not found");
+		if (t is null)
+			throw new EntityNotFoundException(typeof(T).Name + " not found");
 
-			return t;
+		return t;
 	}
 
 	public async Task<T> GetByWithConcat(
@@ -226,9 +226,9 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Add several entities in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entities"></param>
-	public async Task AddRange(IEnumerable<T> entities)
+	public Task AddRange(IEnumerable<T> entities)
 	{
-		await Context.Set<T>().AddRangeAsync(entities);
+		return Context.Set<T>().AddRangeAsync(entities);
 	}
 
 	/// <summary>
@@ -301,7 +301,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	public Task<bool> Any(Expression<Func<T, bool>> predicate, bool withTracking = true, params string[] includes)
 	{
 		return Query(
-			new[] { predicate },
+			[predicate],
 			null,
 			withTracking,
 			null,
@@ -320,32 +320,32 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	{
 		IQueryable<T> query = Context.Set<T>().AsQueryable();
 		if (includes is not null)
-        {
-            {
-	            foreach (KeyValuePair<string, string[]> include in includes)
-	            {
-		            if (include.Key != string.Empty)
-		            {
-			            query = query.Include(include.Key);
-			            query = include.Value.Aggregate(
-				            query,
-				            (current, value) => current.Include(include.Key + "." + value));
-		            }
-		            else
-		            {
-			            query = include.Value.Aggregate(query, (current, value) => current.Include(value));
-		            }
-	            }
+		{
+			{
+				foreach (KeyValuePair<string, string[]> include in includes)
+				{
+					if (include.Key != string.Empty)
+					{
+						query = query.Include(include.Key);
+						query = include.Value.Aggregate(
+							query,
+							(current, value) => current.Include(include.Key + "." + value));
+					}
+					else
+					{
+						query = include.Value.Aggregate(query, (current, value) => current.Include(value));
+					}
+				}
 
-	            if (includes.Count > 0)
-	            {
-		            // WARNING - https://learn.microsoft.com/fr-fr/ef/core/querying/single-split-queries
-		            query = query.AsSplitQuery();
-	            }
-            }
-        }
+				if (includes.Count > 0)
+				{
+					// WARNING - https://learn.microsoft.com/fr-fr/ef/core/querying/single-split-queries
+					query = query.AsSplitQuery();
+				}
+			}
+		}
 
-        if (!withTracking)
+		if (!withTracking)
 			query = query.AsNoTracking();
 
 		if (_importFilters.Count > 0)

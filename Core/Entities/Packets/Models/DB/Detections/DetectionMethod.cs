@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.Structs;
@@ -38,11 +37,7 @@ public partial class Detection
 		StationCycle stationCycle;
 		try
 		{
-			stationCycle = await anodeUOW.StationCycle.GetBy(
-				new Expression<Func<StationCycle, bool>>[] {
-					cycle => cycle.RID == StationCycleRID
-					},
-				withTracking: false);
+			stationCycle = await anodeUOW.StationCycle.GetBy([cycle => cycle.RID == StationCycleRID], withTracking: false);
 			stationCycle.DetectionStatus = PacketStatus.Initialized;
 			stationCycle.DetectionID = ID;
 			stationCycle.DetectionPacket = this;

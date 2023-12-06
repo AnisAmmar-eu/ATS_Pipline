@@ -48,9 +48,6 @@ public static class SourceAuth
 
 	public static string[] GetSources()
 	{
-		return new[] {
-			//AD,
-			Ekidi,
-		};
+		return [/*AD,*/ Ekidi,];
 	}
 }

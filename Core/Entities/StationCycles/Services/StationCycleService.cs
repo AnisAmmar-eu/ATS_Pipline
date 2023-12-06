@@ -1,5 +1,4 @@
 using System.Configuration;
-using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
@@ -52,20 +51,15 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 
 	public async Task<List<ReducedStationCycle>> GetAllRIDs()
 	{
-		return (await AnodeUOW.StationCycle.GetAll(
-			withTracking: false,
-			includes: new[] { nameof(StationCycle.DetectionPacket), nameof(StationCycle.ShootingPacket) }))
+		return (await AnodeUOW.StationCycle
+			.GetAll(withTracking: false, includes: [nameof(StationCycle.DetectionPacket), nameof(StationCycle.ShootingPacket)]))
 			.ConvertAll(cycle => cycle.Reduce());
 	}
 
 	public Task<List<StationCycle>> GetAllReadyToSent()
 	{
-		return AnodeUOW.StationCycle.GetAllWithIncludes(
-			new Expression<Func<StationCycle, bool>>[]
-				{
-					cycle => cycle.Status == PacketStatus.Completed
-				},
-			withTracking: false);
+		return AnodeUOW.StationCycle
+			.GetAllWithIncludes([cycle => cycle.Status == PacketStatus.Completed], withTracking: false);
 	}
 
 	public async Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera)
@@ -82,18 +76,13 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 
 		return stationCycle.ShootingPacket
-			.GetImagePathFromRoot( stationCycle.StationID, thumbnailsPath, stationCycle.AnodeType, camera);
+			.GetImagePathFromRoot(stationCycle.StationID, thumbnailsPath, stationCycle.AnodeType, camera);
 	}
 
 	public async Task AssignStationCycle(Detection detection, string imagesPath, string thumbnailsPath)
 	{
 		string rid = detection.StationCycleRID;
-		StationCycle cycle = await AnodeUOW.StationCycle.GetBy(
-			new Expression<Func<StationCycle, bool>>[]
-				{
-					cycle => cycle.RID == rid
-				},
-			withTracking: false);
+		StationCycle cycle = await AnodeUOW.StationCycle.GetBy([cycle => cycle.RID == rid], withTracking: false);
 		await UpdateDetectionWithMeasure(cycle);
 
 		Packet shooting = new Shooting(
@@ -145,7 +134,7 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 				JsonSerializer.Serialize(stationCycle.ToDTO()),
 				Encoding.UTF8,
 				"application/json");
-		HttpResponseMessage response = await httpClient.PostAsync( $"{address}/apiServerReceive/stationCycles", content);
+		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/stationCycles", content);
 		if (!response.IsSuccessStatusCode)
 			return;
 
@@ -181,11 +170,11 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			// It will get the corresponding foreign key with the following rule :
 			// [...]Packet => [...]ID
 			PropertyInfo foreignKey
-				= cycle.GetType().GetProperty($"{propertyName[..^"Packet".Length]}ID") ??
-					throw new InvalidOperationException($"No foreign key found for {propertyName}");
+				= cycle.GetType().GetProperty($"{propertyName[..^"Packet".Length]}ID")
+					?? throw new InvalidOperationException($"No foreign key found for {propertyName}");
 			Packet? newPacket = await _packetService.AddPacketFromStationCycle(propertyInfo.GetValue(cycle) as Packet);
-			propertyInfo.SetValue( cycle, newPacket);
-			foreignKey.SetValue( cycle, newPacket?.ID);
+			propertyInfo.SetValue(cycle, newPacket);
+			foreignKey.SetValue(cycle, newPacket?.ID);
 		}
 
 		// Packets need to be commit before adding StationCycle
@@ -210,14 +199,14 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{
-			FileInfo image = Shooting.GetImagePathFromFilename( imagesPath, formFile.Name);
-			FileInfo thumbnail = Shooting.GetImagePathFromFilename( thumbnailsPath, formFile.Name);
+			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
+			FileInfo thumbnail = Shooting.GetImagePathFromFilename(thumbnailsPath, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);
 			Directory.CreateDirectory(thumbnail.DirectoryName!);
-			await using FileStream imageStream = new( image.FullName, FileMode.Create);
+			await using FileStream imageStream = new(image.FullName, FileMode.Create);
 			await formFile.CopyToAsync(imageStream);
 			Image savedImage = Image.FromFile(image.FullName);
-			savedImage.Save( thumbnail.FullName, 0.2);
+			savedImage.Save(thumbnail.FullName, 0.2);
 		});
 		return Task.WhenAll(tasks);
 	}
@@ -235,18 +224,18 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			= stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath, stationCycle.AnodeType, 1)!;
 		if (image1.Exists)
 		{
-			StreamContent content1 = new(File.Open( image1.FullName, FileMode.Open));
+			StreamContent content1 = new(File.Open(image1.FullName, FileMode.Open));
 			content1.Headers.ContentType = new("image/jpeg");
-			formData.Add( content1, image1.Name, image1.Name);
+			formData.Add(content1, image1.Name, image1.Name);
 		}
 
 		FileInfo image2
-			= stationCycle.ShootingPacket?.GetImagePathFromRoot( stationCycle.StationID, imagesPath, stationCycle.AnodeType, 2)!;
+			= stationCycle.ShootingPacket?.GetImagePathFromRoot(stationCycle.StationID, imagesPath, stationCycle.AnodeType, 2)!;
 		if (image2.Exists)
 		{
-			StreamContent content2 = new(File.Open( image2.FullName, FileMode.Open));
+			StreamContent content2 = new(File.Open(image2.FullName, FileMode.Open));
 			content2.Headers.ContentType = new("image/jpeg");
-			formData.Add( content2, image2.Name, image2.Name);
+			formData.Add(content2, image2.Name, image2.Name);
 		}
 
 		if (!formData.Any())
@@ -256,18 +245,18 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
 
 		HttpResponseMessage response
-			= await httpClient.PostAsync( "https://localhost:7280/apiServerReceive/images", formData);
+			= await httpClient.PostAsync("https://localhost:7280/apiServerReceive/images", formData);
 		if (!response.IsSuccessStatusCode)
 			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}
 
 	private Task AssignCycleToAnode(StationCycle cycle)
-    {
-        if (cycle is not S1S2Cycle s1S2Cycle)
-            return Task.CompletedTask;
+	{
+		if (cycle is not S1S2Cycle s1S2Cycle)
+			return Task.CompletedTask;
 
-        Anode anode = Anode.Create(s1S2Cycle);
-        return AnodeUOW.Anode.Add(anode);
-        // TODO Vision
-    }
+		Anode anode = Anode.Create(s1S2Cycle);
+		return AnodeUOW.Anode.Add(anode);
+		// TODO Vision
+	}
 }

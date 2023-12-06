@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
@@ -28,8 +27,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 	public async Task<IOTDeviceStatus> GetStatusByRID(string rid)
 	{
-		return new IOTDeviceStatus(await AnodeUOW.IOTDevice
-			.GetBy(new Expression<Func<IOTDevice, bool>>[] { device => device.RID == rid }, withTracking: false));
+		return new IOTDeviceStatus(await AnodeUOW.IOTDevice.GetBy([device => device.RID == rid], withTracking: false));
 	}
 
 	public async Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids)

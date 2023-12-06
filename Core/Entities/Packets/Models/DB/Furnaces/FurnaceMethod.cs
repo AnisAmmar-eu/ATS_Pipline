@@ -1,9 +1,7 @@
-using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Furnaces;
-using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -28,7 +26,7 @@ public abstract partial class Furnace
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
 		StationCycle = await anodeUOW.StationCycle
-			.GetBy( new Expression<Func<StationCycle, bool>>[] { cycle => cycle.RID == StationCycleRID }, withTracking: false);
+			.GetBy([cycle => cycle.RID == StationCycleRID], withTracking: false);
 		if (StationCycle is not S3S4Cycle s3S4Cycle)
 			throw new InvalidOperationException("Furnace packet associated with a non S3S4Cycle");
 

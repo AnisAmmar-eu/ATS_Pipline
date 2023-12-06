@@ -238,15 +238,15 @@ public class AuthService : IAuthService
     private DTOLoginResponse ClaimsToken(ApplicationUser user)
 	{
 		// Set claims list to add in the token
-		List<Claim> authClaims = new() {
+		List<Claim> authClaims = [
 			new("Id", user.Id),
 			new(ClaimTypes.Name, user.UserName ?? string.Empty),
 			new("Username", user.UserName ?? string.Empty),
-			new ("Firstname", user.Firstname ?? string.Empty),
-			new ("Lastname", user.Lastname ?? string.Empty),
-			new ("IsEkium", user.IsEkium.ToString()),
-			new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-		};
+			new("Firstname", user.Firstname ?? string.Empty),
+			new("Lastname", user.Lastname ?? string.Empty),
+			new("IsEkium", user.IsEkium.ToString()),
+			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+		];
 
 		// Check if in dev mode
 		int time = 180;

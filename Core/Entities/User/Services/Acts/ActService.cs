@@ -518,12 +518,12 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 	private string GenerateActionToken(HttpContext httpContext, ActEntity actEntity)
 	{
 		// Set claims list to add in the token
-		List<Claim> claims = new() {
+		List<Claim> claims = [
 			new("UserId", httpContext.Items["UserId"]?.ToString() ?? string.Empty),
 			new("ActionRID", actEntity.Act.RID),
 			new("Status", "Complete"),
 			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-		};
+		];
 		if (actEntity.EntityID is not null)
 			claims.Add(new Claim("EntityId", actEntity.EntityID.ToString() ?? string.Empty));
 

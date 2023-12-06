@@ -116,7 +116,9 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
-			async () => await stationCycleService.ReceiveStationCycle(dtoStationCycles), logService, httpContext);
+			() => stationCycleService.ReceiveStationCycle(dtoStationCycles),
+			logService,
+			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveImage(
@@ -127,7 +129,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		return GenericEndpointEmptyResponse(
 			() =>
 			{
-				FormFileCollection images = new();
+				FormFileCollection images = [];
 				images.AddRange(
 					httpContext.Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
 				return stationCycleService.ReceiveStationImage(images);

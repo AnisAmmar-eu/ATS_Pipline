@@ -1,6 +1,5 @@
 ﻿using System.Collections.Specialized;
 using System.Web;
-using Core.Entities.User.Models.DTO.Acts.ActEntities;
 using Core.Entities.User.Services.Acts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -59,10 +58,13 @@ public class OldActAuthorizeLogic : IAuthorizationFilter
 
 		bool result = _actService.ValidActionToken(
 			context.HttpContext,
-			new List<DTOActEntityToValid> { new() {
-				Act = new() { RID = _rid, EntityType = _entityType, ParentType = _parentType },
-				EntityID = entityID,
-				ParentID = parentID, }, } );
+			[
+				new() {
+					Act = new() { RID = _rid, EntityType = _entityType, ParentType = _parentType },
+					EntityID = entityID,
+					ParentID = parentID,
+				},
+			]);
 		context.HttpContext.Items["IsActionTokenValid"] = result;
 		if (!result)
             context.Result = new UnauthorizedResult();

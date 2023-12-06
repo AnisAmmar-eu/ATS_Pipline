@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Linq.Expressions;
 using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BenchmarkTests.Models.DTO;
@@ -88,21 +87,15 @@ public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, 
 		}
 
 		watch.Restart();
-		await AnodeUOW.BenchmarkTest
-			.GetAll( new Expression<Func<BenchmarkTest, bool>>[] { b => b.StationID == 3 }, withTracking: false);
+		await AnodeUOW.BenchmarkTest.GetAll([b => b.StationID == 3], withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		await AnodeUOW.BenchmarkTest
-			.GetAll( new Expression<Func<BenchmarkTest, bool>>[] { b => b.AnodeType == 1 }, withTracking: false);
+		await AnodeUOW.BenchmarkTest.GetAll([b => b.AnodeType == 1], withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetBy(
-			new Expression<Func<BenchmarkTest, bool>>[] {
-				b => b.RID == "RandomRID"
-				},
-			withTracking: false);
+		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetBy([b => b.RID == "RandomRID"], withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();

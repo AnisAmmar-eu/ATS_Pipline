@@ -12,9 +12,9 @@ public class AlarmNotification : BaseNotification<Alarm, Alarm>
 		return await CreateSub<AlarmNotification>( ads, ADSUtils.AlarmRemove, ADSUtils.AlarmNewMsg, ADSUtils.AlarmToRead);
 	}
 
-	protected override async Task AddElement(IServiceProvider services, Alarm entity)
+	protected override Task AddElement(IServiceProvider services, Alarm entity)
 	{
 		IAlarmLogService alarmLogService = services.GetRequiredService<IAlarmLogService>();
-		await alarmLogService.Collect(entity);
+		return alarmLogService.Collect(entity);
 	}
 }
