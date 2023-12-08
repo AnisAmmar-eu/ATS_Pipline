@@ -3,18 +3,67 @@ using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
+using Core.Shared.Models.Camera;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using TwinCAT.Ads;
 
-namespace ApiCamera.Utils;
+namespace Core.Shared.Services.Background;
 
-public static class CameraUtils
+public class CameraService : BackgroundService
 {
-	private static IIOTTagService? _iotTagService;
+	private readonly IServiceScopeFactory _factory;
+	private static IIOTTagService _iotTagService = null!;
 
-	public static Task RunAcquisition(
-		IIOTTagService iotTagService,
+	public CameraService(IServiceScopeFactory factory)
+	{
+		_factory = factory;
+	}
+
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	{
+		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+		int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
+		int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
+		_iotTagService = asyncScope.ServiceProvider.GetRequiredService<IIOTTagService>();
+		Device device1 = CameraConnectionManager.Connect(port1);
+		if (Station.Type != StationType.S5)
+		{
+			// Create an instance of the camera
+			Device device2 = CameraConnectionManager.Connect(port2);
+			Task task1 = RunAcquisition(
+				device1,
+				"jpg",
+				ShootingUtils.Camera1,
+				ShootingUtils.CameraTest1,
+				stoppingToken);
+			Task task2 = RunAcquisition(
+				device2,
+				"jpg",
+				ShootingUtils.Camera2,
+				ShootingUtils.CameraTest2,
+				stoppingToken);
+			await task1;
+			await task2;
+		}
+		else
+		{
+			await RunAcquisition(
+				device1,
+				"jpg",
+				ShootingUtils.Camera1,
+				ShootingUtils.CameraTest1,
+				stoppingToken,
+				ShootingUtils.Camera2,
+				ShootingUtils.CameraTest2);
+		}
+	}
+
+	private static Task RunAcquisition(
 		Device device,
 		string extension,
 		string imagesDir,
@@ -23,8 +72,6 @@ public static class CameraUtils
 		string? imagesDir2 = null,
 		string? testDir2 = null)
 	{
-		_iotTagService ??= iotTagService;
-
 		Directory.CreateDirectory(imagesDir);
 
 		if (imagesDir2 is not null)
@@ -120,8 +167,8 @@ public static class CameraUtils
 			throw new ArgumentException(nameof(_iotTagService));
 
 		lock (_iotTagService)
-            return _iotTagService.IsTestModeOnSync();
-    }
+			return _iotTagService.IsTestModeOnSync();
+	}
 
 	private static void Disconnect(object? sender, NotifyEventArgs e)
 	{

@@ -50,6 +50,9 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Temper
 builder.Services.AddSingleton<IOTService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
 
+builder.Services.AddSingleton<CameraService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<CameraService>());
+
 builder.Services.AddCarter();
 
 WebApplication app = builder.Build();
@@ -69,9 +72,6 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()
 	.AllowCredentials());
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

@@ -111,8 +111,12 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
 	await DBInitializer.InitializeStation(context);
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
 
 string? clientHost = builder.Configuration["ClientHost"];
 if (clientHost is null)

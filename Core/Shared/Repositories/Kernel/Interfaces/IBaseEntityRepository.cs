@@ -20,13 +20,6 @@ public interface IBaseEntityRepository<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {
-	/*/// <summary>
-	///     Get entity by id from the table of <typeref name="T"/>
-	/// </summary>
-	/// <param name="id">ID of the entity to get</param>
-	/// <returns>The entity <see cref="T"/></returns>
-	Task<T> GetById(int id);*/
-
 	/// <summary>
 	///     Get an entity based on ID from the table of <typeref name="T" /> with join to its navigation properties
 	/// </summary>
@@ -70,12 +63,6 @@ public interface IBaseEntityRepository<T, TDTO>
 		bool withTracking = true,
 		Dictionary<string, string[]>? includes = null
 		);
-
-	/*	/// <summary>
-	///     Get all entities from the table of <typeref name="T"/>
-	/// </summary>
-	/// <returns>List of entities <see cref="List{T}"/></returns>
-	Task<List<T>> GetAll();*/
 
 	/// <summary>
 	///     Get all entities from the table of <typeref name="T" /> with join to its navigation properties
