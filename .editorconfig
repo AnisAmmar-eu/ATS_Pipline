@@ -673,7 +673,7 @@ dotnet_diagnostic.rcs1226.severity = none
 dotnet_diagnostic.rcs1227.severity = error
 
 # Unused element in documentation comment
-# Temp, now flags empty params but another rule requests params to be present.
+# No flags empty params but another rule requests params to be present.
 dotnet_diagnostic.rcs1228.severity = silent
 
 # Use async/await when necessary
