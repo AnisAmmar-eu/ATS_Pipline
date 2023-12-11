@@ -4,6 +4,7 @@ public static class IOTTagType
 {
 	public const string String = "string";
 	public const string Int = "int";
+	public const string UInt = "uint";
 	public const string Double = "double";
 	public const string UShort = "ushort";
 	public const string Bool = "bool";

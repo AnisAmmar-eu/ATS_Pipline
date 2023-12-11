@@ -8,12 +8,12 @@ namespace ApiUser.SwaggerConfig;
 /// </summary>
 public class SwaggerActionHeader : IOperationFilter
 {
-	/// <summary>
-	///     Apply function
-	/// </summary>
-	/// <param name="operation"></param>
-	/// <param name="context"></param>
-	public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    /// <summary>
+    ///     Apply function
+    /// </summary>
+    /// <param name="operation"></param>
+    /// <param name="context"></param>
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
 	{
 		operation.Parameters ??= new List<OpenApiParameter>();
 

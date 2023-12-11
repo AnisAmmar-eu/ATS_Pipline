@@ -107,13 +107,10 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
 
-builder.Services.AddAuthorization(
-	options =>
-	{
-		options.AddPolicy(
-			ActionRID.AdminGeneralRights,
-			policy => policy.AddRequirements(new ActAuthorize(ActionRID.AdminGeneralRights)));
-	});
+builder.Services.AddAuthorizationBuilder()
+	.AddPolicy(
+		ActionRID.AdminGeneralRights,
+		policy => policy.AddRequirements(new ActAuthorize(ActionRID.AdminGeneralRights)));
 
 builder.Services.AddScoped<IAuthorizationHandler, ActAuthorizeHandler>();
 
@@ -163,6 +160,7 @@ WebApplication app = builder.Build();
 string? clientHost = builder.Configuration["ClientHost"];
 if (clientHost is null)
 	throw new ConfigurationErrorsException("Missing ClientHost");
+
 app.UseCors(policyBuilder => policyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()

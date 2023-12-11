@@ -41,9 +41,10 @@ dotnet_diagnostic.rcs0012.severity = none
 # Add blank line between single-line declarations of different kind
 dotnet_diagnostic.rcs0013.severity = none
 
+# NOW OBSOLETE in 4.7.0 - Replaced by RCS0061
 # Add blank line between switch sections
-dotnet_diagnostic.rcs0014.severity = none
-roslynator_blank_line_between_closing_brace_and_switch_section = false
+# dotnet_diagnostic.rcs0014.severity = none
+# roslynator_blank_line_between_closing_brace_and_switch_section = false
 
 # Add/remove blank line between using directives
 dotnet_diagnostic.rcs0015.severity = error
@@ -162,6 +163,11 @@ roslynator_null_conditional_operator_new_line = before
 # Add/remove line after file scoped namespace declaration
 dotnet_diagnostic.rcs0060.severity = error
 roslynator_blank_line_after_file_scoped_namespace_declaration = true
+
+# Add/remove blank line between switch sections
+# Replaces RCS0014 which became deprecated in 4.70
+dotnet_diagnostic.rcs0061.severity = error
+roslynator_blank_line_between_switch_sections = omit
 
 # Add braces (when expression spans over multiple lines)
 dotnet_diagnostic.rcs1001.severity = error
@@ -667,7 +673,8 @@ dotnet_diagnostic.rcs1226.severity = none
 dotnet_diagnostic.rcs1227.severity = error
 
 # Unused element in documentation comment
-dotnet_diagnostic.rcs1228.severity = error
+# Temp, now flags empty params but another rule requests params to be present.
+dotnet_diagnostic.rcs1228.severity = silent
 
 # Use async/await when necessary
 dotnet_diagnostic.rcs1229.severity = error
@@ -765,6 +772,15 @@ dotnet_diagnostic.rcs1259.severity = error
 # Add/remove trailing comma
 dotnet_diagnostic.rcs1260.severity = error
 roslynator_trailing_comma_style = omit_when_single_line
+
+# Dispose resource asynchronously
+dotnet_diagnostic.rcs1261.severity = error
+
+# Unnecessary raw string literal
+dotnet_diagnostic.rcs1262.severity = error
+
+# Invalid reference in a documentation comment
+dotnet_diagnostic.rcs1263.severity = error
 
 # Use pattern matching
 dotnet_diagnostic.rcs9001.severity = error

@@ -7,6 +7,7 @@ using Core.Shared.Models.Camera;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using TwinCAT.Ads;
@@ -16,31 +17,39 @@ namespace Core.Shared.Services.Background;
 public class CameraService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
+	private readonly ILogger<CameraService> _logger;
 	private static IIOTTagService _iotTagService = null!;
 
-	public CameraService(IServiceScopeFactory factory)
+	public CameraService(IServiceScopeFactory factory, ILogger<CameraService> logger)
 	{
 		_factory = factory;
+		_logger = logger;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+		_logger.LogInformation("Reading camera ports");
 		int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
 		int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
+		_logger.LogInformation("Camera1: {p1}, Camera2: {p2}", port1, port2);
 		_iotTagService = asyncScope.ServiceProvider.GetRequiredService<IIOTTagService>();
+		_logger.LogInformation("Connection to Camera1");
 		Device device1 = CameraConnectionManager.Connect(port1);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
+			_logger.LogInformation("Connection to Camera2");
 			Device device2 = CameraConnectionManager.Connect(port2);
+			_logger.LogInformation("Starting Camera1");
 			Task task1 = RunAcquisition(
 				device1,
 				"jpg",
 				ShootingUtils.Camera1,
 				ShootingUtils.CameraTest1,
 				stoppingToken);
+			_logger.LogInformation("Starting Camera2");
 			Task task2 = RunAcquisition(
 				device2,
 				"jpg",
@@ -52,6 +61,7 @@ public class CameraService : BackgroundService
 		}
 		else
 		{
+			_logger.LogInformation("Starting Camera1");
 			await RunAcquisition(
 				device1,
 				"jpg",
@@ -63,7 +73,7 @@ public class CameraService : BackgroundService
 		}
 	}
 
-	private static Task RunAcquisition(
+	private Task RunAcquisition(
 		Device device,
 		string extension,
 		string imagesDir,
@@ -126,7 +136,6 @@ public class CameraService : BackgroundService
 						}
 						else
 						{
-							Console.WriteLine("Reading RID struct");
 							RIDStruct ridStruct = tcClient.ReadAny<RIDStruct>(ridStructHandle);
 							string rid = ridStruct.ToRID();
 							string ts = DateTimeOffset.Now.ToString(AnodeFormat.RIDFormat);
@@ -140,11 +149,12 @@ public class CameraService : BackgroundService
 							++nbPictures;
 						}
 					}
-					catch (Exception)
+					catch (Exception e)
 					{
 						// Warning -> In prod, this condition is called before the disconnect function
 						// If the program crash, put this inside a try/catch or create a global var
 						// If the stream is always active, stop it
+						_logger.LogError("Error while monitoring a camera: {e}", e);
 						if (device.Stream.IsRunning)
 							stream.TryStop();
 					}
