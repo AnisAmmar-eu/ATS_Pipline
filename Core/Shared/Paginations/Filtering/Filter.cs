@@ -8,7 +8,18 @@ namespace Core.Shared.Paginations.Filtering;
 
 public static class Filter
 {
-	public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
+    /// <summary>
+    /// Apply filters to an IQueryable source from its pagination.
+    /// The last value from the SortParameters is first used to remove previously queried rows. If none is given, no rows are removed.
+    /// Then, it chains every filterParam in pagination with AND boolean operators.
+    /// Filters are then applied to the query.
+    /// </summary>
+    /// <param name="source">Query to filter</param>
+    /// <param name="pagination">Pagination parameters used to </param>
+    /// <typeparam name="T">BaseEntity from which rows will be filtered</typeparam>
+    /// <typeparam name="TDTO"></typeparam>
+    /// <returns>A filtered query</returns>
+    public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>
 	{
@@ -20,16 +31,26 @@ public static class Filter
 		return source .Where(FiltersToWhereClause<T>(pagination.FilterParams, param));
 	}
 
+    /// <summary>
+    /// Returns the expression filter of LastValue. The LastValue comparison is applied on the column on which the result will be sorted.
+    /// If there is no column or sort method specified, it defaults to ID Descending.
+    /// Otherwise, remove every row which are inferior (resp. superior) to it if in ascending (resp. descending) sort.
+    /// </summary>
+    /// <param name="sortParam"></param>
+    /// <param name="param"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
 	private static Expression<Func<T, bool>> GetLastValueWhereClause<T>(SortParam sortParam, ParameterExpression param)
 	{
 		SortOption sortOption = SortOptionMap.Get(sortParam.SortOptionName);
 		string[] names = sortParam.ColumnName.Split('.');
 		PropertyInfo filterColumn = GetColumnProperty<T>(names);
-		IComparable? lastValue = ParseComparable(filterColumn.PropertyType, sortParam.LastValue);
+		IComparable? lastValue = ParseAsComparable(filterColumn.PropertyType, sortParam.LastValue);
 		if (lastValue is null)
 			throw new ArgumentException($"Error happened during parsing of {nameof(lastValue)}");
 
-		Expression left = GetPropertyExpression(param, names);
+		Expression left = GetExpressionProperty(param, names);
 		Expression right = Expression.Constant(lastValue, lastValue.GetType());
 		BinaryExpression comparison = (sortOption == SortOption.Ascending)
 			? Expression.GreaterThan(left, right)
@@ -37,6 +58,14 @@ public static class Filter
 		return Expression.Lambda<Func<T, bool>>(comparison, param);
 	}
 
+    /// <summary>
+    /// Chains all filterParams into a single Expression.
+    /// Filters are chained with the AND boolean operator.
+    /// </summary>
+    /// <param name="filterParams"></param>
+    /// <param name="param"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
 	private static Expression<Func<T, bool>> FiltersToWhereClause<T>(
 		IEnumerable<FilterParam>? filterParams,
 		ParameterExpression param)
@@ -56,6 +85,14 @@ public static class Filter
 		return Expression.Lambda<Func<T, bool>>(expr, param);
 	}
 
+    /// <summary>
+    /// Converts a filterParam into a compilable LINQ to Entities compatible expression so it can be translated to SQL.
+    /// </summary>
+    /// <param name="filterParam"></param>
+    /// <param name="param"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
 	private static Expression FilterToExpression<T>(FilterParam filterParam, ParameterExpression param)
 	{
 		// Gets the property of the class from its column name.
@@ -65,13 +102,13 @@ public static class Filter
 		if (filterOption == FilterOption.Nothing)
 			return Expression.Constant(true);
 
-		IComparable? refValue = ParseComparable(filterColumn.PropertyType, filterParam.FilterValue);
+		IComparable? refValue = ParseAsComparable(filterColumn.PropertyType, filterParam.FilterValue);
 		if (refValue is null)
 			throw new ArgumentException("Error happened during parsing of filterValue");
 
 		return GetExpressionBody(
 			filterOption,
-			GetPropertyExpression(param, names),
+			GetExpressionProperty(param, names),
 			Expression.Constant(refValue, refValue.GetType()));
 	}
 
@@ -88,6 +125,28 @@ public static class Filter
 		};
 	}
 
+	/// <summary>
+	///	Returns the PropertyInfo queried by its name & path to it. If given [ "Bar", "ID" ],
+	/// it will return the PropertyInfo of ID if there's an object with this column in "Bar".
+	/// eg:
+	/// <code>
+	/// public class Foo
+	/// {
+	///		public BarClass Bar { get; set; }
+	///		public int Value { get; set; }
+	/// }
+	/// public class BarClass
+	/// {
+	///		public int ID { get; set; }
+	/// }
+	/// </code>
+	///	ID column is accessed with [ "Bar", "ID" ] from T = Foo.
+	/// Value column is accessed with [ "Value" ] from T = Foo.
+	/// </summary>
+	/// <param name="names">An array of strings for nested parameters</param>
+	/// <typeparam name="T">Type from which column is queried</typeparam>
+	/// <returns>The property info of the (possibly nested) queried column</returns>
+	/// <exception cref="InvalidDataException">Thrown if no PropertyInfo is found due to invalid name</exception>
 	private static PropertyInfo GetColumnProperty<T>(string[] names)
 	{
 		PropertyInfo? propertyInfo = null;
@@ -109,7 +168,14 @@ public static class Filter
 		return propertyInfo;
 	}
 
-	private static Expression GetPropertyExpression(ParameterExpression param, string[] names)
+	/// <summary>
+	/// Similar to <see cref="GetColumnProperty{T}"/>,
+	/// except it returns an Expression accessing this (potentially nested) property instead of its PropertyInfo
+	/// </summary>
+	/// <param name="param">Parameter expression on which to access property</param>
+	/// <param name="names">An array of strings for nested parameters</param>
+	/// <returns>An expression accessing this property from param</returns>
+	private static Expression GetExpressionProperty(ParameterExpression param, string[] names)
 	{
 		Expression property = Expression.Property(param, names[0]);
 		for (int i = 1; i < names.Length; ++i)
@@ -118,14 +184,24 @@ public static class Filter
 		return property;
 	}
 
-	private static IComparable? ParseComparable(Type type, string value)
+	/// <summary>
+	/// Will parse a string into an IComparable object if its <paramref name="type"/> implements IParsable and IComparable.
+	/// This function uses System.Reflection.
+	/// </summary>
+	/// <param name="type">Type of the unparsed value</param>
+	/// <param name="value">Value to be parsed as comparable</param>
+	/// <returns>The parsed value as an IComparable</returns>
+	/// <exception cref="ArgumentException">Thrown if type is either not Comparable or not Parsable</exception>
+	private static IComparable? ParseAsComparable(Type type, string value)
 	{
 		if (type == typeof(string))
 			return value;
+
+		if (type.GetInterfaces().All(c => c != typeof(IComparable)))
+			throw new ArgumentException($"Filter: {type} is not parsable as IComparable.");
+
 		// Verifies if the type is parsable or not by using reflection.
-		bool isParsable = type.GetInterfaces()
-			.Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IParsable<>));
-		if (!isParsable)
+		if (!type.GetInterfaces().Any(c => c.IsGenericType && c.GetGenericTypeDefinition() == typeof(IParsable<>)))
 			throw new ArgumentException("Filter: Trying to parse a value which is not parsable.");
 
 		// Then it gets the Parse method through reflection.
