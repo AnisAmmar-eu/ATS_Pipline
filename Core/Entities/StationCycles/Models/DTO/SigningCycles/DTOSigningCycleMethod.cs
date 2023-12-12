@@ -1,4 +1,4 @@
-using Core.Entities.StationCycles.Models.DB.SigningCycles;
+using Core.Entities.StationCycles.Models.DB.LoadableCycles;
 using Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 
 namespace Core.Entities.StationCycles.Models.DTO.SigningCycles;
@@ -9,11 +9,11 @@ public partial class DTOSigningCycle
 	{
 	}
 
-	public DTOSigningCycle(SigningCycle cycle) : base(cycle)
+	public DTOSigningCycle(LoadableCycle cycle) : base(cycle)
 	{
 	}
 
-	public override SigningCycle ToModel()
+	public override LoadableCycle ToModel()
 	{
 		if (this is DTOS1S2Cycle dtoS1S2Cycle)
 			return dtoS1S2Cycle.ToModel();

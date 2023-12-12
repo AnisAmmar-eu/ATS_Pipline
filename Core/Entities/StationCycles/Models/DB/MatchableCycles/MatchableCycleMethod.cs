@@ -1,14 +1,14 @@
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles;
 
-namespace Core.Entities.StationCycles.Models.DB.MatchingCycles;
+namespace Core.Entities.StationCycles.Models.DB.MatchableCycles;
 
-public abstract partial class MatchingCycle
+public abstract partial class MatchableCycle
 {
-	protected MatchingCycle()
+	protected MatchableCycle()
 	{
 	}
 
-	protected MatchingCycle(DTOMatchingCycle dtoMatchingCycle) : base(dtoMatchingCycle)
+	protected MatchableCycle(DTOMatchingCycle dtoMatchingCycle) : base(dtoMatchingCycle)
 	{
 		MatchingCamera1 = dtoMatchingCycle.MatchingCamera1;
 		MatchingCamera2 = dtoMatchingCycle.MatchingCamera2;

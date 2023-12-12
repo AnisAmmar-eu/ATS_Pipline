@@ -1,6 +1,6 @@
 using Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.Structs;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 
 namespace Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 

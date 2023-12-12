@@ -594,8 +594,8 @@ namespace Core.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("RID")
                         .IsRequired()
@@ -895,6 +895,64 @@ namespace Core.Migrations
                     b.ToTable("FileSetting");
                 });
 
+            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues.LoadableQueue", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("LoadableCycleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SAN1Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SAN2Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LoadableCycleID");
+
+                    b.ToTable("LoadableQueue");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks.MatchableStack", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("MatchableCycleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SAN1Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SAN2Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MatchableCycleID");
+
+                    b.ToTable("MatchableStack");
+                });
+
             modelBuilder.Entity("Core.Shared.Models.DB.System.Logs.Log", b =>
                 {
                     b.Property<int>("ID")
@@ -1085,13 +1143,6 @@ namespace Core.Migrations
                     b.HasDiscriminator().HasValue("OTCamera");
                 });
 
-            modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.OTRockwells.OTRockwell", b =>
-                {
-                    b.HasBaseType("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice");
-
-                    b.HasDiscriminator().HasValue("OTRockwell");
-                });
-
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats.OTTwinCat", b =>
                 {
                     b.HasBaseType("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice");
@@ -1240,64 +1291,24 @@ namespace Core.Migrations
                     b.HasDiscriminator().HasValue("Shooting");
                 });
 
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles.S3S4Cycle", b =>
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.LoadableCycles.LoadableCycle", b =>
                 {
                     b.HasBaseType("Core.Entities.StationCycles.Models.DB.StationCycle");
 
-                    b.Property<string>("AnnounceID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("InFurnaceID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InFurnaceStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MatchingCamera1")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.Property<int>("MatchingCamera2")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OutFurnaceID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OutFurnaceStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("InFurnaceID")
-                        .IsUnique()
-                        .HasFilter("[InFurnaceID] IS NOT NULL");
-
-                    b.HasIndex("OutFurnaceID")
-                        .IsUnique()
-                        .HasFilter("[OutFurnaceID] IS NOT NULL");
-
-                    b.HasDiscriminator().HasValue("S3S4Cycle");
+                    b.HasDiscriminator().HasValue("LoadableCycle");
                 });
 
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles.S5Cycle", b =>
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle", b =>
                 {
                     b.HasBaseType("Core.Entities.StationCycles.Models.DB.StationCycle");
 
                     b.Property<int>("MatchingCamera1")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int");
 
                     b.Property<int>("MatchingCamera2")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("S5Cycle");
-                });
-
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles.S1S2Cycle", b =>
-                {
-                    b.HasBaseType("Core.Entities.StationCycles.Models.DB.StationCycle");
-
-                    b.HasDiscriminator().HasValue("S1S2Cycle");
+                    b.HasDiscriminator().HasValue("MatchableCycle");
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement.S1S2Announcement", b =>
@@ -1322,6 +1333,50 @@ namespace Core.Migrations
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("S3S4Shooting");
+                });
+
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles.S1S2Cycle", b =>
+                {
+                    b.HasBaseType("Core.Entities.StationCycles.Models.DB.LoadableCycles.LoadableCycle");
+
+                    b.HasDiscriminator().HasValue("S1S2Cycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", b =>
+                {
+                    b.HasBaseType("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle");
+
+                    b.Property<string>("AnnounceID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("InFurnaceID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InFurnaceStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OutFurnaceID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OutFurnaceStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("InFurnaceID")
+                        .IsUnique()
+                        .HasFilter("[InFurnaceID] IS NOT NULL");
+
+                    b.HasIndex("OutFurnaceID")
+                        .IsUnique()
+                        .HasFilter("[OutFurnaceID] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("S3S4Cycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", b =>
+                {
+                    b.HasBaseType("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle");
+
+                    b.HasDiscriminator().HasValue("S5Cycle");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsCycle.Models.DB.AlarmCycle", b =>
@@ -1359,13 +1414,13 @@ namespace Core.Migrations
 
             modelBuilder.Entity("Core.Entities.Anodes.Models.DB.Anode", b =>
                 {
-                    b.HasOne("Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles.S1S2Cycle", "S1S2Cycle")
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles.S1S2Cycle", "S1S2Cycle")
                         .WithOne("Anode")
                         .HasForeignKey("Core.Entities.Anodes.Models.DB.Anode", "S1S2CycleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles.S3S4Cycle", "S3S4Cycle")
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "S3S4Cycle")
                         .WithOne("Anode")
                         .HasForeignKey("Core.Entities.Anodes.Models.DB.Anode", "S3S4CycleID")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -1472,6 +1527,28 @@ namespace Core.Migrations
                     b.Navigation("ActEntity");
                 });
 
+            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues.LoadableQueue", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.LoadableCycles.LoadableCycle", "LoadableCycle")
+                        .WithMany("LoadableQueues")
+                        .HasForeignKey("LoadableCycleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LoadableCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks.MatchableStack", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle", "MatchableCycle")
+                        .WithMany("MatchableStacks")
+                        .HasForeignKey("MatchableCycleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MatchableCycle");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Core.Entities.User.Models.DB.Roles.ApplicationRole", null)
@@ -1525,7 +1602,7 @@ namespace Core.Migrations
 
             modelBuilder.Entity("Core.Entities.Anodes.Models.DB.AnodesDX.AnodeDX", b =>
                 {
-                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles.S5Cycle", "S5Cycle")
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", "S5Cycle")
                         .WithOne("Anode")
                         .HasForeignKey("Core.Entities.Anodes.Models.DB.AnodesDX.AnodeDX", "S5CycleID")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -1533,16 +1610,16 @@ namespace Core.Migrations
                     b.Navigation("S5Cycle");
                 });
 
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles.S3S4Cycle", b =>
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", b =>
                 {
                     b.HasOne("Core.Entities.Packets.Models.DB.Furnaces.InFurnaces.InFurnace", "InFurnacePacket")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles.S3S4Cycle", "InFurnaceID")
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "InFurnaceID")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces.OutFurnace", "OutFurnacePacket")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles.S3S4Cycle", "OutFurnaceID")
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "OutFurnaceID")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("InFurnacePacket");
@@ -1612,17 +1689,27 @@ namespace Core.Migrations
                     b.Navigation("StationCycle");
                 });
 
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles.S3S4Cycle", b =>
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.LoadableCycles.LoadableCycle", b =>
+                {
+                    b.Navigation("LoadableQueues");
+                });
+
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle", b =>
+                {
+                    b.Navigation("MatchableStacks");
+                });
+
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles.S1S2Cycle", b =>
                 {
                     b.Navigation("Anode");
                 });
 
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles.S5Cycle", b =>
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", b =>
                 {
                     b.Navigation("Anode");
                 });
 
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles.S1S2Cycle", b =>
+            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", b =>
                 {
                     b.Navigation("Anode");
                 });

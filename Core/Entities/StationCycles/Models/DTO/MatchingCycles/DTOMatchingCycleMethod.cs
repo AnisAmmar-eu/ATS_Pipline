@@ -1,4 +1,4 @@
-using Core.Entities.StationCycles.Models.DB.MatchingCycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
 
@@ -10,13 +10,13 @@ public partial class DTOMatchingCycle
 	{
 	}
 
-	public DTOMatchingCycle(MatchingCycle cycle) : base(cycle)
+	public DTOMatchingCycle(MatchableCycle cycle) : base(cycle)
 	{
 		MatchingCamera1 = cycle.MatchingCamera1;
 		MatchingCamera2 = cycle.MatchingCamera2;
 	}
 
-	public override MatchingCycle ToModel()
+	public override MatchableCycle ToModel()
 	{
 		return this switch {
 			DTOS3S4Cycle dtoS1S2Cycle => dtoS1S2Cycle.ToModel(),

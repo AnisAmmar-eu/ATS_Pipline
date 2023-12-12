@@ -2,8 +2,8 @@ using Core.Entities.Anodes.Models.DB.AnodesD20;
 using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.Anodes.Models.DTO;
 using Core.Entities.KPI.KPICs.Dictionaries;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
-using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 using Core.Shared.Dictionaries;
 
 namespace Core.Entities.Anodes.Models.DB;

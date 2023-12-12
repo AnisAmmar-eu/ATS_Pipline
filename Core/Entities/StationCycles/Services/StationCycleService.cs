@@ -12,7 +12,7 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Repositories;

@@ -1,6 +1,6 @@
 using Core.Entities.Anodes.Models.DTO.AnodesDX;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles;
-using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 
 namespace Core.Entities.Anodes.Models.DB.AnodesDX;
 

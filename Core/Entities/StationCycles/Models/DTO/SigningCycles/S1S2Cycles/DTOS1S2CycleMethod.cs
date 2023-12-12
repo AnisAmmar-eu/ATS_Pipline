@@ -1,6 +1,6 @@
 using Core.Entities.Packets.Models.DTO.Announcements.S1S2Announcements;
 using Core.Entities.StationCycles.Dictionaries;
-using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 
 namespace Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 

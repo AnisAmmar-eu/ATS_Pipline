@@ -27,15 +27,17 @@ using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles;
-using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Entities.User.Models.DB.Acts;
 using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.FileSettings.Models.DB;
+using Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues;
+using Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks;
 using Core.Shared.Models.DB.System.Logs;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +58,76 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	#region Vision
 
 	public DbSet<FileSetting> FileSetting => Set<FileSetting>();
+	public DbSet<MatchableStack> MatchableStack => Set<MatchableStack>();
+	public DbSet<LoadableQueue> LoadableQueue => Set<LoadableQueue>();
+
+	#endregion
+
+	#region Alarms
+
+	public DbSet<AlarmC> AlarmC => Set<AlarmC>();
+	public DbSet<AlarmLog> AlarmLog => Set<AlarmLog>();
+	public DbSet<AlarmRT> AlarmRT => Set<AlarmRT>();
+	public DbSet<AlarmCycle> AlarmCycle => Set<AlarmCycle>();
+
+	#endregion
+
+	#region Anodes
+
+	public DbSet<Anode> Anode => Set<Anode>();
+	public DbSet<AnodeD20> AnodeD20 => Set<AnodeD20>();
+	public DbSet<AnodeDX> AnodeDX => Set<AnodeDX>();
+
+	#endregion
+
+	#region Packets
+
+	public DbSet<Packet> Packet => Set<Packet>();
+	public DbSet<AlarmList> AlarmList => Set<AlarmList>();
+	public DbSet<Announcement> Announcement => Set<Announcement>();
+	public DbSet<S1S2Announcement> S1S2Announcement => Set<S1S2Announcement>();
+	public DbSet<Detection> Detection => Set<Detection>();
+	public DbSet<InFurnace> InFurnace => Set<InFurnace>();
+	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
+	public DbSet<Shooting> Shooting => Set<Shooting>();
+	public DbSet<S3S4Shooting> S3S4Shooting => Set<S3S4Shooting>();
+
+	#endregion
+
+	#region StationCycle
+
+	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
+	public DbSet<S1S2Cycle> S1S2Cycle => Set<S1S2Cycle>();
+	public DbSet<S3S4Cycle> S3S4Cycle => Set<S3S4Cycle>();
+	public DbSet<S5Cycle> S5Cycle => Set<S5Cycle>();
+
+	#endregion
+
+	#region IOT Monitoring
+
+	public DbSet<IOTDevice> IOTDevice => Set<IOTDevice>();
+	public DbSet<OTCamera> OTCamera => Set<OTCamera>();
+	public DbSet<OTTwinCat> OTTwinCat => Set<OTTwinCat>();
+	public DbSet<ITApi> ITApi => Set<ITApi>();
+	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
+	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
+
+	#endregion
+
+	#region KPI
+
+	public DbSet<KPIC> KPIC => Set<KPIC>();
+	public DbSet<KPILog> KPILog => Set<KPILog>();
+	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
+	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
+
+	#endregion
+
+	#region Action
+
+	public DbSet<Act> Acts => Set<Act>();
+	public DbSet<ActEntity> ActEntities => Set<ActEntity>();
+	public DbSet<ActEntityRole> ActEntityRoles => Set<ActEntityRole>();
 
 	#endregion
 
@@ -173,73 +245,21 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasMany(c => c.BenchmarkTests)
 			.WithOne(b => b.CameraTest)
 			.HasForeignKey(b => b.CameraID);
+
+		builder.Entity<MatchableStack>()
+			.HasOne(matchableStack => matchableStack.MatchableCycle)
+			.WithMany(matchableCycle => matchableCycle.MatchableStacks)
+			.HasForeignKey(matchableStack => matchableStack.MatchableCycleID);
+
+		builder.Entity<MatchableStack>()
+			.HasIndex(matchableStack => matchableStack.CycleTS);
+
+		builder.Entity<LoadableQueue>()
+			.HasOne(loadableQueue => loadableQueue.LoadableCycle)
+			.WithMany(loadableCycle => loadableCycle.LoadableQueues)
+			.HasForeignKey(loadableQueue => loadableQueue.LoadableCycleID);
+
+		builder.Entity<LoadableQueue>()
+			.HasIndex(loadableQueue => loadableQueue.CycleTS);
 	}
-
-	#region Alarms
-
-	public DbSet<AlarmC> AlarmC => Set<AlarmC>();
-	public DbSet<AlarmLog> AlarmLog => Set<AlarmLog>();
-	public DbSet<AlarmRT> AlarmRT => Set<AlarmRT>();
-	public DbSet<AlarmCycle> AlarmCycle => Set<AlarmCycle>();
-
-	#endregion
-
-	#region Anodes
-
-	public DbSet<Anode> Anode => Set<Anode>();
-	public DbSet<AnodeD20> AnodeD20 => Set<AnodeD20>();
-	public DbSet<AnodeDX> AnodeDX => Set<AnodeDX>();
-
-	#endregion
-
-	#region Packets
-
-	public DbSet<Packet> Packet => Set<Packet>();
-	public DbSet<AlarmList> AlarmList => Set<AlarmList>();
-	public DbSet<Announcement> Announcement => Set<Announcement>();
-	public DbSet<S1S2Announcement> S1S2Announcement => Set<S1S2Announcement>();
-	public DbSet<Detection> Detection => Set<Detection>();
-	public DbSet<InFurnace> InFurnace => Set<InFurnace>();
-	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
-	public DbSet<Shooting> Shooting => Set<Shooting>();
-	public DbSet<S3S4Shooting> S3S4Shooting => Set<S3S4Shooting>();
-
-	#endregion
-
-	#region StationCycle
-
-	public DbSet<StationCycle> StationCycle => Set<StationCycle>();
-	public DbSet<S1S2Cycle> S1S2Cycle => Set<S1S2Cycle>();
-	public DbSet<S3S4Cycle> S3S4Cycle => Set<S3S4Cycle>();
-	public DbSet<S5Cycle> S5Cycle => Set<S5Cycle>();
-
-	#endregion
-
-	#region IOT Monitoring
-
-	public DbSet<IOTDevice> IOTDevice => Set<IOTDevice>();
-	public DbSet<OTCamera> OTCamera => Set<OTCamera>();
-	public DbSet<OTTwinCat> OTTwinCat => Set<OTTwinCat>();
-	public DbSet<ITApi> ITApi => Set<ITApi>();
-	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
-	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
-
-	#endregion
-
-	#region KPI
-
-	public DbSet<KPIC> KPIC => Set<KPIC>();
-	public DbSet<KPILog> KPILog => Set<KPILog>();
-	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
-	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
-
-	#endregion
-
-	#region Action
-
-	public DbSet<Act> Acts => Set<Act>();
-	public DbSet<ActEntity> ActEntities => Set<ActEntity>();
-	public DbSet<ActEntityRole> ActEntityRoles => Set<ActEntityRole>();
-
-	#endregion
 }

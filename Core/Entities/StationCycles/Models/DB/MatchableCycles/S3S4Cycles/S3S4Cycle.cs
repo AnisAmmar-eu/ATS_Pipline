@@ -3,9 +3,9 @@ using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
-namespace Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
+namespace Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 
-public partial class S3S4Cycle : MatchingCycle, IBaseEntity<S3S4Cycle, DTOS3S4Cycle>
+public partial class S3S4Cycle : MatchableCycle, IBaseEntity<S3S4Cycle, DTOS3S4Cycle>
 {
 	public string? AnnounceID { get; set; }
 

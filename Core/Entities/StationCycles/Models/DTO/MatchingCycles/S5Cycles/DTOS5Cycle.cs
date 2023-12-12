@@ -1,4 +1,4 @@
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;

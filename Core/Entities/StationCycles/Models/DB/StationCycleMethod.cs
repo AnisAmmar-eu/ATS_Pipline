@@ -1,9 +1,9 @@
 using Core.Entities.KPI.KPICs.Dictionaries;
 using Core.Entities.StationCycles.Dictionaries;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S3S4Cycles;
-using Core.Entities.StationCycles.Models.DB.MatchingCycles.S5Cycles;
-using Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Shared.Dictionaries;
@@ -97,7 +97,7 @@ public partial class StationCycle
 
 				if (cycle.SignStatus1 == SignMatchStatus.Ok || cycle.SignStatus2 == SignMatchStatus.Ok)
 				{
-					if (cycle is MatchingCycle matchingCycle
+					if (cycle is MatchableCycle matchingCycle
 						&& (matchingCycle.MatchingCamera1 == SignMatchStatus.Ok
 							|| matchingCycle.MatchingCamera2 == SignMatchStatus.Ok))
 					{

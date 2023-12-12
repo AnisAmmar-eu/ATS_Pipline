@@ -1,7 +1,7 @@
 using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 
-namespace Core.Entities.StationCycles.Models.DB.SigningCycles.S1S2Cycles;
+namespace Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 
 public partial class S1S2Cycle
 {
