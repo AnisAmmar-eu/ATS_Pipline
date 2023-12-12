@@ -10,8 +10,6 @@ namespace Core.Entities.IOT.IOTTags.Services;
 
 public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOTTag>, IIOTTagService
 {
-	private static int? _testModeID;
-
 	public IOTTagService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
 	}
@@ -20,22 +18,6 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 	{
 		return (await AnodeUOW.IOTTag.GetAll([tag => rids.Contains(tag.RID)], withTracking: false)).ConvertAll(
 			tag => tag.ToDTO());
-	}
-
-	public bool IsTestModeOnSync()
-	{
-		IOTTag testModeTag;
-		if (_testModeID is null)
-		{
-			testModeTag = AnodeUOW.IOTTag.GetByRIDSync(IOTTagRID.TestMode, withTracking: false);
-			_testModeID = testModeTag.ID;
-		}
-		else
-		{
-			testModeTag = AnodeUOW.IOTTag.GetByIdSync(_testModeID.Value, withTracking: false);
-		}
-
-		return bool.Parse(testModeTag.CurrentValue);
 	}
 
 	public async Task<DTOIOTTag> UpdateTagByRID(string rid, string value)

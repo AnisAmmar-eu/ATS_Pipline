@@ -1,8 +1,12 @@
 using System.Diagnostics;
-using Core.Entities.IOT.IOTTags.Services;
+using System.Net;
+using System.Text.Json;
+using Core.Entities.IOT.Dictionaries;
+using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.Camera;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +22,6 @@ public class CameraService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<CameraService> _logger;
-	private static IIOTTagService _iotTagService = null!;
 
 	public CameraService(IServiceScopeFactory factory, ILogger<CameraService> logger)
 	{
@@ -34,7 +37,6 @@ public class CameraService : BackgroundService
 		int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
 		int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
 		_logger.LogInformation("Camera1: {p1}, Camera2: {p2}", port1, port2);
-		_iotTagService = asyncScope.ServiceProvider.GetRequiredService<IIOTTagService>();
 		_logger.LogInformation("Connection to Camera1");
 		Device device1 = CameraConnectionManager.Connect(port1);
 		if (Station.Type != StationType.S5)
@@ -109,7 +111,7 @@ public class CameraService : BackgroundService
 		int nbPicturesTest = 0;
 
 		return Task.Run(
-			() =>
+			async () =>
 			{
 				while (!cancel.IsCancellationRequested)
 				{
@@ -123,7 +125,7 @@ public class CameraService : BackgroundService
 						}
 
 						using StreamImage image = stream.Wait();
-						if (IsTestModeOn())
+						if (await IsTestModeOn(_logger))
 						{
 							// testDir2 != null means that we are in a S5 Cycle.
 							string dir = (testDir2 is not null && nbPicturesTest % 2 == 1) ? testDir2 : testDir;
@@ -170,14 +172,34 @@ public class CameraService : BackgroundService
 
 	#region Generics functions
 
-	private static bool IsTestModeOn()
+	private static async Task<bool> IsTestModeOn(ILogger<CameraService> logger)
 	{
-		//if (await iotTagService.IsTestModeOn())
-		if (_iotTagService is null)
-			throw new ArgumentException(nameof(_iotTagService));
+		using HttpClient http = new();
+		try
+		{
+			HttpResponseMessage response = await http.GetAsync(
+				$"{ITApisDict.IOTAddress}/apiIOT/IOTTag/{nameof(IOTTag.RID)}/{IOTTagRID.TestMode}");
+			if (response.StatusCode != HttpStatusCode.OK)
+				throw new ApplicationException($"Response status code is: {response.StatusCode.ToString()}");
 
-		lock (_iotTagService)
-			return _iotTagService.IsTestModeOnSync();
+			ApiResponse? apiResponse = JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
+			if (apiResponse is null)
+				throw new ApplicationException("Could not deserialize ApiIOT response");
+
+			if (apiResponse.Result is not JsonElement jsonElement)
+				throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
+
+			IOTTag[] tags = jsonElement.Deserialize<IOTTag[]>()
+				?? throw new InvalidOperationException(
+					$"ApiResponse IOTTags are null or invalid: {jsonElement.ToString()}");
+			return bool.Parse(tags[0].CurrentValue);
+		}
+		catch (Exception e)
+		{
+			logger.LogError("ApiCamera could not communicate with ApiIOT: {error}", e);
+			// In doubt, we are most likely not in test mode.
+			return false;
+		}
 	}
 
 	private static void Disconnect(object? sender, NotifyEventArgs e)

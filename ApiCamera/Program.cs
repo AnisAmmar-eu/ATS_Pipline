@@ -1,4 +1,5 @@
 using System.Configuration;
+using System.Text;
 using Carter;
 using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTDevices.Services;
@@ -12,7 +13,10 @@ using Core.Shared.SignalR;
 using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +33,41 @@ if (stationName is null)
 Station.Name = stationName;
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddAuthentication(
+	options =>
+	{
+		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+	})
+// Adding Jwt Bearer
+	.AddJwtBearer(options =>
+	{
+		options.SaveToken = true;
+		options.RequireHttpsMetadata = false;
+		string? jwtSecret = builder.Configuration["JWT:Secret"];
+		if (jwtSecret is null)
+			throw new ConfigurationErrorsException("Missing JWT Secret");
+
+		options.TokenValidationParameters = new() {
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidAudience = builder.Configuration["JWT:ValidAudience"],
+			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+		};
+		options.Events = new() {
+			OnMessageReceived = context =>
+			{
+				if (context.Request.Query.TryGetValue("access_token", out StringValues token))
+					context.Token = token;
+
+				return Task.CompletedTask;
+			},
+			OnAuthenticationFailed = _ => Task.CompletedTask,
+		};
+	});
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
@@ -75,6 +114,9 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapCarter();

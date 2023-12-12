@@ -60,8 +60,7 @@ builder.Services.AddAuthentication(
 		options.Events = new() {
 			OnMessageReceived = context =>
 			{
-				if (context.Request.Query.TryGetValue("access_token", out StringValues token)
-				   )
+				if (context.Request.Query.TryGetValue("access_token", out StringValues token))
 					context.Token = token;
 
 				return Task.CompletedTask;

@@ -53,9 +53,11 @@ public static class TriggerSources
 public static class TriggerActivations
 {
 	public const string AnyEdge = "AnyEdge";
+	public const string RisingEdge = "RisingEdge";
 }
 
 public static class PixelFormats
 {
 	public const string BayerRG8 = "BayerRG8";
+	public const string RGB8 = "RGB8";
 }

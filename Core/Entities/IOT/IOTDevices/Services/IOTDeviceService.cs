@@ -89,19 +89,14 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		});
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
-		_logger.LogInformation("There is {nb} connectedDevices", connectedDevices.Count);
 		disconnectedDevices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
 		if (updatedDevices.Length == 0)
 			return connectedDevices;
 
 		await AnodeUOW.StartTransaction();
-		_logger.LogInformation("\nUpdating connected devices\n");
 		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);
-		_logger.LogInformation("\nCommitting connected devices\n");
 		AnodeUOW.Commit();
-		_logger.LogInformation("\nCommitting connected devices transaction\n");
 		await AnodeUOW.CommitTransaction();
-		_logger.LogInformation("\nConnected devices were successfully updated\n");
 		return connectedDevices;
 	}
 }

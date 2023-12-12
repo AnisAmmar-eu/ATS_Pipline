@@ -59,22 +59,22 @@ public partial class OTTwinCat
 		}
 
 		List<IOTTag> updatedTags = [];
-		foreach (IOTTag iotTag in IOTTags)
+		foreach (IOTTag tag in IOTTags)
 		{
 			try
 			{
 				bool hasBeenUpdated = false;
-				if (iotTag is not OTTagTwinCat otTagTwinCat)
+				if (tag is not OTTagTwinCat otTagTwinCat)
 					continue;
 
-				uint varHandle = tcClient.CreateVariableHandle(iotTag.Path);
-				if (iotTag is { IsReadOnly: false, HasNewValue: true })
+				uint varHandle = tcClient.CreateVariableHandle(tag.Path);
+				if (tag is { IsReadOnly: false, HasNewValue: true })
 				{
 					ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, otTagTwinCat, cancel);
 					if (resultWrite.ErrorCode != AdsErrorCode.NoError)
 						return []; // Same as above
 
-					iotTag.HasNewValue = false;
+					tag.HasNewValue = false;
 					hasBeenUpdated = true;
 				}
 
@@ -82,11 +82,13 @@ public partial class OTTwinCat
 				// Nullable warning ignored because ReadFromType always returns a ResultValue
 				object? readValue = await ReadFromType(tcClient, varHandle, otTagTwinCat, cancel);
 
-				hasBeenUpdated = hasBeenUpdated || iotTag.CurrentValue != readValue?.ToString();
+				hasBeenUpdated = hasBeenUpdated || tag.CurrentValue != readValue?.ToString() || tag.CurrentValue != tag.NewValue;
 				if (hasBeenUpdated)
-					updatedTags.Add(iotTag);
+					updatedTags.Add(tag);
 
-				iotTag.CurrentValue = readValue?.ToString()!;
+				tag.CurrentValue = readValue?.ToString()!;
+				if (!tag.HasNewValue)
+					tag.NewValue = readValue?.ToString()!;
 			}
 			catch
 			{

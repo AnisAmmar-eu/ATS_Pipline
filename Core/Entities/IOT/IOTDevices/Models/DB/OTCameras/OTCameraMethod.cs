@@ -51,7 +51,7 @@ public partial class OTCamera
 
 	public override Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
-		List<IOTTag> updatedTags = new();
+		List<IOTTag> updatedTags = [];
 		Device device = CameraConnectionManager.Connect(int.Parse(Address));
 		NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
 		foreach (IOTTag tag in IOTTags)
@@ -95,11 +95,13 @@ public partial class OTCamera
 				_ => throw new InvalidOperationException(
 					$"Camera tag with path {tag.Path} has a path towards unsupported data type."),
 			};
-			hasBeenUpdated = hasBeenUpdated || tag.CurrentValue != readValue;
+			hasBeenUpdated = hasBeenUpdated || tag.CurrentValue != readValue || tag.CurrentValue != tag.NewValue;
 			if (hasBeenUpdated)
 				updatedTags.Add(tag);
 
 			tag.CurrentValue = readValue;
+			if (!tag.HasNewValue)
+				tag.NewValue = readValue;
 		}
 
 		return Task.FromResult(updatedTags);

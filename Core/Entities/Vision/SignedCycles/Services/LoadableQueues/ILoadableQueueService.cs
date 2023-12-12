@@ -7,6 +7,6 @@ namespace Core.Entities.Vision.SignedCycles.Services.LoadableQueues;
 
 public interface ILoadableQueueService : IBaseEntityService<LoadableQueue, DTOLoadableQueue>
 {
-	public Task<LoadableQueue> Peek(DataSetID dataSetID);
-	public Task LoadNextCycle(DataSetID dataSetID, TimeSpan delay);
+	public Task<LoadableQueue?> Peek(DataSetID dataSetID);
+	public Task LoadNextCycle(LoadableQueue? loadable, TimeSpan delay);
 }
