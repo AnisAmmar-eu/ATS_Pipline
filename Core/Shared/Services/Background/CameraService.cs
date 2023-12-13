@@ -26,7 +26,8 @@ public class CameraService : BackgroundService
 	private readonly ILogger<CameraService> _logger;
 	private IHubContext<CameraHub, ICameraHub> _hubContext = null!;
 
-	public CameraService( IServiceScopeFactory factory, ILogger<CameraService> logger) {
+	public CameraService(IServiceScopeFactory factory, ILogger<CameraService> logger)
+	{
 		_factory = factory;
 		_logger = logger;
 	}
@@ -41,22 +42,20 @@ public class CameraService : BackgroundService
 		int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
 		_logger.LogInformation("Camera1: {p1}, Camera2: {p2}", port1, port2);
 		_logger.LogInformation("Connection to Camera1");
-		Device device1 = await CameraConnectionManager.Connect(port1, stoppingToken);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
 			_logger.LogInformation("Connection to Camera2");
-			Device device2 = await CameraConnectionManager.Connect(port2, stoppingToken);
 			_logger.LogInformation("Starting Camera1");
 			Task task1 = RunAcquisition(
-				device1,
+				port1,
 				"jpg",
 				ShootingUtils.Camera1,
 				ShootingUtils.CameraTest1,
 				stoppingToken);
 			_logger.LogInformation("Starting Camera2");
 			Task task2 = RunAcquisition(
-				device2,
+				port2,
 				"jpg",
 				ShootingUtils.Camera2,
 				ShootingUtils.CameraTest2,
@@ -68,7 +67,7 @@ public class CameraService : BackgroundService
 		{
 			_logger.LogInformation("Starting Camera1");
 			await RunAcquisition(
-				device1,
+				port1,
 				"jpg",
 				ShootingUtils.Camera1,
 				ShootingUtils.CameraTest1,
@@ -78,8 +77,8 @@ public class CameraService : BackgroundService
 		}
 	}
 
-	private Task RunAcquisition(
-		Device device,
+	private async Task RunAcquisition(
+		int port,
 		string extension,
 		string imagesDir,
 		string testDir,
@@ -96,6 +95,7 @@ public class CameraService : BackgroundService
 		if (testDir2 is not null)
 			Directory.CreateDirectory(testDir2);
 
+		Device device = await CameraConnectionManager.Connect(port, cancel);
 		device.Notify[NotifyDictionary.DeviceDisconnected].Event += Disconnect;
 		device.Notify[NotifyDictionary.DeviceReconnect].Event += Reconnect;
 
@@ -113,7 +113,7 @@ public class CameraService : BackgroundService
 		int nbPictures = 0;
 		int nbPicturesTest = 0;
 
-		return Task.Run(
+		await Task.Run(
 			async () =>
 			{
 				while (!cancel.IsCancellationRequested)
@@ -186,7 +186,8 @@ public class CameraService : BackgroundService
 			if (response.StatusCode != HttpStatusCode.OK)
 				throw new ApplicationException($"Response status code is: {response.StatusCode.ToString()}");
 
-			ApiResponse? apiResponse = JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
+			ApiResponse? apiResponse
+				= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
 			if (apiResponse is null)
 				throw new ApplicationException("Could not deserialize ApiIOT response");
 
