@@ -101,7 +101,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	{
 		T? t = await Query(
 			filters,
-			null,
+			orderBy,
 			withTracking,
 			includes: new Dictionary<string, string[]> { { string.Empty, includes } })
 			.FirstOrDefaultAsync();

@@ -3,8 +3,6 @@ using Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues;
 using Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks;
 using Core.Entities.Vision.SignedCycles.Models.DTO.MatchableStacks;
 using Core.Entities.Vision.SignedCycles.Repositories.MatchableStacks;
-using Core.Entities.Vision.SignedCycles.Services.LoadableQueues;
-using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -13,56 +11,42 @@ namespace Core.Entities.Vision.SignedCycles.Services.MatchableStacks;
 public class MatchableStackService : BaseEntityService<IMatchableStackRepository, MatchableStack, DTOMatchableStack>,
 	IMatchableStackService
 {
-	private readonly ILoadableQueueService _loadableQueueService;
-
-	public MatchableStackService(IAnodeUOW anodeUOW, ILoadableQueueService loadableQueueService) : base(anodeUOW)
+	public MatchableStackService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
-		_loadableQueueService = loadableQueueService;
 	}
 
-	public async Task<MatchableStack?> Peek()
+	public async Task MatchNextCycles(IEnumerable<(DataSetID, TimeSpan, LoadableQueue?)> datasets)
 	{
-		try
-		{
-			return await AnodeUOW.MatchableStack.GetBy(
-				orderBy: query => query.OrderByDescending(queue => queue.CycleTS),
-				includes: nameof(MatchableStack.MatchableCycle));
-		}
-		catch (EntityNotFoundException)
-		{
-			return null;
-		}
-	}
+		List<(MatchableStack?, TimeSpan, LoadableQueue?)> matchables = [];
+		foreach ((DataSetID, TimeSpan, LoadableQueue?) valueTuple in datasets)
+            matchables.Add((await AnodeUOW.MatchableStack.Peek(valueTuple.Item1), valueTuple.Item2, valueTuple.Item3));
 
-	public async Task<MatchableStack?> Peek(DataSetID dataSetID)
-	{
-		try
-		{
-			return await AnodeUOW.MatchableStack.GetBy(
-				filters: [loadable => loadable.DataSetID == dataSetID],
-				orderBy: query => query.OrderByDescending(queue => queue.CycleTS),
-				includes: nameof(MatchableStack.MatchableCycle));
-		}
-		catch (EntityNotFoundException)
-		{
-			return null;
-		}
-	}
-
-	public async Task MatchNextCycle(MatchableStack? matchable, LoadableQueue? loadable, TimeSpan delay)
-	{
-		if (matchable is null)
-			return;
-		// Verifies if it is too early or not to match the cycle.
-		if (loadable is null || matchable.CycleTS.Add(delay) > loadable.CycleTS)
-			return;
-		// TODO Load in Vision.dll
-		Console.WriteLine(
-			$"Matching following cycle {matchable.MatchableCycle.RID} at {DateTimeOffset.Now.ToString()}");
-		// TODO Assign to anode etc...
+		MatchableStack?[] toUpdate = await Task.WhenAll(
+			matchables.Select(tuple => MatchCycle(tuple.Item1, tuple.Item3, tuple.Item2)));
 		await AnodeUOW.StartTransaction();
-		AnodeUOW.MatchableStack.Remove(matchable);
+		toUpdate.Where(matchable => matchable is not null)!
+			.ToList<MatchableStack>()
+			.ForEach(matchable => AnodeUOW.MatchableStack.Remove(matchable));
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
+	}
+
+	private static async Task<MatchableStack?> MatchCycle(
+		MatchableStack? matchable,
+		LoadableQueue? loadable,
+		TimeSpan delay)
+	{
+		if (matchable is null)
+			return null;
+		// Verifies if it is too early or not to match the cycle.
+		if (loadable is not null && matchable.CycleTS.Add(delay) > loadable.CycleTS)
+			return null;
+		// TODO Load in Vision.dll
+		Console.WriteLine("======================\n\n"
+			+ $"Matching following cycle {matchable.MatchableCycle.RID} at {DateTimeOffset.Now.ToString()}"
+			+ "\n\n=======================");
+		await Task.Delay(100);
+		// TODO Assign to anode etc...
+		return matchable;
 	}
 }

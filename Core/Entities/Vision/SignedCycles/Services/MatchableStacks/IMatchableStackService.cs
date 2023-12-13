@@ -8,7 +8,5 @@ namespace Core.Entities.Vision.SignedCycles.Services.MatchableStacks;
 
 public interface IMatchableStackService : IBaseEntityService<MatchableStack, DTOMatchableStack>
 {
-	public Task<MatchableStack?> Peek();
-	public Task<MatchableStack?> Peek(DataSetID dataSetID);
-	public Task MatchNextCycle(MatchableStack? matchable, LoadableQueue? loadable, TimeSpan delay);
+	public Task MatchNextCycles(IEnumerable<(DataSetID, TimeSpan, LoadableQueue?)> datasets);
 }

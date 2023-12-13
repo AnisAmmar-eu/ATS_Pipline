@@ -1,7 +1,6 @@
 using System.Configuration;
 using Core.Entities.Vision.SignedCycles.Dictionaries;
 using Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues;
-using Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks;
 using Core.Entities.Vision.SignedCycles.Services.LoadableQueues;
 using Core.Entities.Vision.SignedCycles.Services.MatchableStacks;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +14,7 @@ public class LoadMatchService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<LoadMatchService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
+	private readonly TimeSpan _period = TimeSpan.FromDays(1);
 
 	public LoadMatchService(IServiceScopeFactory factory, ILogger<LoadMatchService> logger)
 	{
@@ -38,33 +37,29 @@ public class LoadMatchService : BackgroundService
 		IMatchableStackService matchableStackService
 			= asyncScope.ServiceProvider.GetRequiredService<IMatchableStackService>();
 		using PeriodicTimer timer = new(_period);
-		while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken))
+		do
 		{
 			try
 			{
 				_logger.LogInformation("LoadMatchService: Starting next load...");
-				LoadableQueue? s3S4Loadable = await loadableQueueService.Peek(DataSetID.S3S4);
-				LoadableQueue? s5Loadable = await loadableQueueService.Peek(DataSetID.S5);
-				Task t1 = loadableQueueService.LoadNextCycle(s3S4Loadable, s3S4Delay);
-				Task t2 = loadableQueueService.LoadNextCycle(s5Loadable, s5Delay);
-				await t1;
-				await t2;
+				LoadableQueue?[] loadables = await loadableQueueService.LoadNextCycles(
+					[(DataSetID.S3S4, s3S4Delay),
+					(DataSetID.S5, s5Delay),
+				]);
 				_logger.LogInformation("LoadMatchService: Loading completed, onto matching");
 
 				_logger.LogInformation("LoadMatchService: Starting next matching...");
-				MatchableStack? s3S4Matchable = await matchableStackService.Peek(DataSetID.S3S4);
-				MatchableStack? s5Matchable = await matchableStackService.Peek(DataSetID.S5);
-				t1 = matchableStackService.MatchNextCycle(s3S4Matchable, s3S4Loadable, s3S4Delay);
-				t2 = matchableStackService.MatchNextCycle(s5Matchable, s5Loadable, s5Delay);
-				await t1;
-				await t2;
+				await matchableStackService.MatchNextCycles([
+					(DataSetID.S3S4, s3S4Delay, loadables[0]),
+					(DataSetID.S5, s5Delay, loadables[1]),
+				]);
 				_logger.LogInformation("LoadMatchService: Matching completed, onto next iteration...");
 			}
 			catch (Exception e)
 			{
 				_logger.LogError("Error in LoadMatchService: {error}", e);
 			}
-		}
+		} while (!stoppingToken.IsCancellationRequested
+			&& await timer.WaitForNextTickAsync(stoppingToken));
 	}
 }
