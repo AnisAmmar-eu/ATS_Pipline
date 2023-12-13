@@ -17,19 +17,15 @@ public partial class DTOPacket
 {
 	public DTOPacket()
 	{
-		StationCycleRID = string.Empty;
-		Type = string.Empty;
-		Status = string.Empty;
 	}
 
-	public DTOPacket(Packet detection)
+	public DTOPacket(Packet packet)
 	{
-		Type = string.Empty;
-		ID = detection.ID;
-		TS = detection.TS;
-		StationCycleRID = detection.StationCycleRID;
-		Status = detection.Status;
-		HasError = detection.HasError;
+		ID = packet.ID;
+		TS = packet.TS;
+		StationCycleRID = packet.StationCycleRID;
+		Status = packet.Status;
+		HasError = packet.HasError;
 	}
 
 	public override Packet ToModel()

@@ -10,12 +10,12 @@ public partial class DTODetection
 		Type = PacketType.Detection;
 	}
 
-	public DTODetection(Detection detection) : base(detection)
+	public DTODetection(Detection packet) : base(packet)
 	{
 		Type = PacketType.Detection;
-		MeasuredType = detection.MeasuredType;
-		IsSameType = detection.IsSameType;
-		AnodeSize = detection.AnodeSize;
+		MeasuredType = packet.MeasuredType;
+		IsSameType = packet.IsSameType;
+		AnodeSize = packet.AnodeSize;
 	}
 
 	public override Detection ToModel()

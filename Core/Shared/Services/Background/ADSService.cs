@@ -40,9 +40,6 @@ public class ADSService : BackgroundService
 		if (thumbnailsPath is null)
 			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 
-		AssignNotification.ImagesPath = imagesPath;
-		AssignNotification.ThumbnailsPath = thumbnailsPath;
-
 		while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -86,8 +83,6 @@ public class ADSService : BackgroundService
 			await AnnouncementNotification.Create(ads);
 			await DetectionNotification.Create(ads);
 			await AlarmNotification.Create(ads);
-
-			await AssignNotification.Create(ads);
 			if (Station.Type == StationType.S3S4)
 			{
 				await InFurnaceNotification.Create(ads);

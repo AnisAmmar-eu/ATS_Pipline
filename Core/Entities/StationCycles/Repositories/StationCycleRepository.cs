@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Shared.Data;
 using Core.Shared.Repositories.Kernel;
@@ -24,11 +25,11 @@ public class StationCycleRepository : BaseEntityRepository<AnodeCTX, StationCycl
 			orderBy,
 			withTracking,
 			maxCount,
-			"AnnouncementPacket",
-			"DetectionPacket",
-			"ShootingPacket",
-			"AlarmListPacket",
-			"InFurnacePacket",
-			"OutFurnacePacket");
+			nameof(StationCycle.AnnouncementPacket),
+			nameof(StationCycle.DetectionPacket),
+			nameof(StationCycle.ShootingPacket),
+			nameof(StationCycle.AlarmListPacket),
+			nameof(S3S4Cycle.InFurnacePacket),
+			nameof(S3S4Cycle.OutFurnacePacket));
 	}
 }

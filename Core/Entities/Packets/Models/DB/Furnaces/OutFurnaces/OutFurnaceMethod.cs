@@ -33,11 +33,4 @@ public partial class OutFurnace
 	{
 		return new(this);
 	}
-
-	protected override void FurnaceAssign(S3S4Cycle cycle)
-	{
-		cycle.OutFurnaceID = ID;
-		cycle.OutFurnaceStatus = Status;
-		cycle.OutFurnacePacket = this;
-	}
 }

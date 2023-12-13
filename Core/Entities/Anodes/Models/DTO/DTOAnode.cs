@@ -10,7 +10,7 @@ namespace Core.Entities.Anodes.Models.DTO;
 public abstract partial class DTOAnode : DTOBaseEntity, IDTO<Anode, DTOAnode>
 {
 	public string S1S2CycleRID { get; set; } = string.Empty;
-	public string Status { get; set; } = PacketStatus.Initialized;
+	public PacketStatus Status { get; set; } = PacketStatus.Initialized;
 	public DateTimeOffset? ClosedTS { get; set; }
 
 	public int S1S2CycleID { get; set; }

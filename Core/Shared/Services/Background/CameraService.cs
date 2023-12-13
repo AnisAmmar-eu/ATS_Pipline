@@ -37,23 +37,17 @@ public class CameraService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		_hubContext = asyncScope.ServiceProvider.GetRequiredService<IHubContext<CameraHub, ICameraHub>>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		_logger.LogInformation("Reading camera ports");
 		int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
 		int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
-		_logger.LogInformation("Camera1: {p1}, Camera2: {p2}", port1, port2);
-		_logger.LogInformation("Connection to Camera1");
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
-			_logger.LogInformation("Connection to Camera2");
-			_logger.LogInformation("Starting Camera1");
 			Task task1 = RunAcquisition(
 				port1,
 				"jpg",
 				ShootingUtils.Camera1,
 				ShootingUtils.CameraTest1,
 				stoppingToken);
-			_logger.LogInformation("Starting Camera2");
 			Task task2 = RunAcquisition(
 				port2,
 				"jpg",
@@ -65,7 +59,6 @@ public class CameraService : BackgroundService
 		}
 		else
 		{
-			_logger.LogInformation("Starting Camera1");
 			await RunAcquisition(
 				port1,
 				"jpg",
@@ -160,7 +153,7 @@ public class CameraService : BackgroundService
 						// Warning -> In prod, this condition is called before the disconnect function
 						// If the program crash, put this inside a try/catch or create a global var
 						// If the stream is always active, stop it
-						_logger.LogError("Error while monitoring a camera: {e}", e);
+						_logger.LogError("Error while monitoring camera with port {port}: {e}",port, e);
 						if (device.Stream.IsRunning)
 							stream.TryStop();
 					}

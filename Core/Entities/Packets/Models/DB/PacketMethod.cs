@@ -1,4 +1,3 @@
-using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -8,8 +7,6 @@ public partial class Packet
 {
 	public Packet()
 	{
-		StationCycleRID = string.Empty;
-		Status = PacketStatus.Initialized;
 	}
 
 	public Packet(DTOPacket dto)
@@ -24,18 +21,17 @@ public partial class Packet
 		return new(this);
 	}
 
-	public virtual async Task Create(IAnodeUOW anodeUOW)
+	public async Task Create(IAnodeUOW anodeUOW)
 	{
 		await anodeUOW.Packet.Add(this);
 		anodeUOW.Commit();
 	}
 
-	public async Task<Packet> Build(IAnodeUOW anodeUOW)
+	public async Task Build(IAnodeUOW anodeUOW)
 	{
 		await InheritedBuild(anodeUOW);
 		anodeUOW.Packet.Update(this);
 		anodeUOW.Commit();
-		return this;
 	}
 
 	protected virtual Task InheritedBuild(IAnodeUOW anodeUOW)

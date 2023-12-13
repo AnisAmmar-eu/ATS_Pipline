@@ -36,21 +36,4 @@ public partial class Announcement
 	{
 		return new(this);
 	}
-
-	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
-	{
-		// StationCycle does not exist yet. It needs to be created. We have a RID from ADS.
-		StationCycle stationCycle = StationCycle.Create();
-		stationCycle.RID = StationCycleRID;
-		stationCycle.AnodeType = AnodeType;
-		stationCycle.AnnouncementStatus = PacketStatus.Completed;
-		stationCycle.AnnouncementID = ID;
-		stationCycle.AnnouncementPacket = this;
-		if (stationCycle is S3S4Cycle s3S4Cycle)
-			s3S4Cycle.AnnounceID = AnnounceID;
-
-		await anodeUOW.StationCycle.Add(stationCycle);
-		Status = PacketStatus.Completed;
-		StationCycle = stationCycle;
-	}
 }

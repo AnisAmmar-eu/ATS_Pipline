@@ -1,11 +1,11 @@
 namespace Core.Entities.Packets.Dictionaries;
 
-public static class PacketStatus
+public enum PacketStatus
 {
-	public const string Initialized = "Initialized";
-	public const string Running = "Running";
-	public const string Completed = "Completed";
-	public const string Sent = "Sent";
+	Initialized = 1,
+	Running = 2,
+	Completed = 3,
+	Sent = 4,
 }
 
 public static class PacketType

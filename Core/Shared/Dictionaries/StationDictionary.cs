@@ -18,8 +18,8 @@ public static class Station
 
 			NameSub = value;
 			IsServer = NameSub == Server;
-			Type = StationNameToType();
-			ID = StationNameToID();
+			Type = StationNameToType(Name);
+			ID = StationNameToID(Name);
 		}
 		get => NameSub ?? throw new InvalidOperationException("Station name has not been defined.");
 	}
@@ -46,9 +46,9 @@ public static class Station
 
 	private static string? ServerAddressSub { get; set; }
 
-	private static StationType StationNameToType()
+	public static StationType StationNameToType(string stationName)
 	{
-		return Name switch {
+		return stationName switch {
 			Station1 or Station2 => StationType.S1S2,
 			Station3 or Station4 => StationType.S3S4,
 			Station5 => StationType.S5,
@@ -57,9 +57,9 @@ public static class Station
 		};
 	}
 
-	private static int StationNameToID()
+	public static int StationNameToID(string stationName)
 	{
-		return Name switch {
+		return stationName switch {
 			Station1 => 1,
 			Station2 => 2,
 			Station3 => 3,

@@ -4,6 +4,7 @@ using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Exceptions;
@@ -21,12 +22,14 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
 		group.MapGet("status", GetStatus);
+		if (!Station.IsServer)
+			return;
 
 		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
 
 		group.MapGet("reduced", GetAllRIDs);
 		group.MapGet("mostRecent", GetMostRecent);
-		group.MapGet("{id}/images/{cameraNb}", GetImageByIdAndCamera);
+		group.MapGet("{id:int}/{cameraNb:int}/image", GetImageByIdAndCamera);
 	}
 
 	private static JsonHttpResult<ApiResponse> GetStatus()
@@ -39,7 +42,7 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 		ILogService logService,
 		HttpContext httpContext)
 	{
-		return GenericEndpoint(() => stationCycleService.GetAllRIDs(), logService, httpContext);
+		return GenericEndpoint(stationCycleService.GetAllRIDs, logService, httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetMostRecent(

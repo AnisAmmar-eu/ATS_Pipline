@@ -10,14 +10,15 @@ public partial class DTOShooting
 		Type = PacketType.Shooting;
 	}
 
-	public DTOShooting(Shooting shootings) : base(shootings)
+	public DTOShooting(Shooting shooting) : base(shooting)
 	{
 		Type = PacketType.Shooting;
-		AnodeIDKey = shootings.AnodeIDKey;
-		GlobalStationStatus = shootings.GlobalStationStatus;
-		ProcedurePerformance = shootings.ProcedurePerformance;
-		LedStatus = shootings.LedStatus;
-		ShootingTS = shootings.ShootingTS;
+		AnodeType = shooting.AnodeType;
+		AnodeIDKey = shooting.AnodeIDKey;
+		GlobalStationStatus = shooting.GlobalStationStatus;
+		ProcedurePerformance = shooting.ProcedurePerformance;
+		LedStatus = shooting.LedStatus;
+		ShootingTS = shooting.ShootingTS;
 	}
 
 	public override Shooting ToModel()

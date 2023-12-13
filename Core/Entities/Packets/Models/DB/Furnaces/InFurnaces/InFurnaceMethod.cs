@@ -47,11 +47,4 @@ public partial class InFurnace
 	{
 		return new(this);
 	}
-
-	protected override void FurnaceAssign(S3S4Cycle cycle)
-	{
-		cycle.InFurnaceID = ID;
-		cycle.InFurnaceStatus = Status;
-		cycle.InFurnacePacket = this;
-	}
 }

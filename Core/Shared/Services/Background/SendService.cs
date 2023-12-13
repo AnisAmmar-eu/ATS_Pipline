@@ -1,6 +1,6 @@
-using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Services;
-using Core.Shared.Dictionaries;
+using System.Configuration;
+using Core.Entities.Packets.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,8 +24,17 @@ public class SendService : BackgroundService
 	{
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IStationCycleService stationCycleService
-			= asyncScope.ServiceProvider.GetRequiredService<IStationCycleService>();
+		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+		string? serverAddress = configuration.GetValue<string>("ServerConfig:Address");
+		if (serverAddress is null)
+			throw new ConfigurationErrorsException("Missing ServerConfig:Address");
+
+		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
+		if (imagesPath is null)
+			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+
+		IPacketService packetService
+			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
 
 		while (!stoppingToken.IsCancellationRequested
 			&& await timer.WaitForNextTickAsync(stoppingToken))
@@ -33,10 +42,8 @@ public class SendService : BackgroundService
             try
 			{
 				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
-				_logger.LogInformation("Calling SendStationCycle");
-				List<StationCycle> stationCycles = await stationCycleService.GetAllReadyToSent();
-				foreach (StationCycle stationCycle in stationCycles)
-					await stationCycleService.SendStationCycle(stationCycle, Station.ServerAddress);
+				_logger.LogInformation("Calling SendPackets");
+				await packetService.SendCompletedPackets(serverAddress, imagesPath);
 
 				_executionCount++;
 				_logger.LogInformation(
@@ -44,7 +51,7 @@ public class SendService : BackgroundService
 			}
 			catch (Exception ex)
 			{
-				_logger.LogInformation(
+				_logger.LogError(
 					"Failed to execute PeriodicSendService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}

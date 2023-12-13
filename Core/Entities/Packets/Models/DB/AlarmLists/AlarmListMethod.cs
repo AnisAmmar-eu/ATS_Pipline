@@ -44,14 +44,6 @@ public partial class AlarmList
 		if (AlarmCycles.Count != 0)
 			anodeUOW.Commit();
 
-		// StationCycleRID should already be present
-		StationCycle ??= await anodeUOW.StationCycle
-			.GetBy([stationCycle => stationCycle.RID == StationCycleRID], withTracking: false);
-
-		StationCycle.AlarmListPacket = this;
-		StationCycle.AlarmListID = ID;
 		Status = PacketStatus.Completed;
-		StationCycle.AlarmListStatus = Status;
-		anodeUOW.StationCycle.Update(StationCycle);
 	}
 }

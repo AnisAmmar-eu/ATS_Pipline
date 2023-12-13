@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
@@ -23,6 +24,7 @@ public partial class Shooting
 
 	public Shooting(DTOShooting dtoShooting) : base(dtoShooting)
 	{
+		AnodeType = dtoShooting.AnodeType;
 		AnodeIDKey = dtoShooting.AnodeIDKey;
 		GlobalStationStatus = dtoShooting.GlobalStationStatus;
 		LedStatus = dtoShooting.LedStatus;
@@ -70,6 +72,34 @@ public partial class Shooting
 			= $@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year.ToString()}\M{date.Month:00}\D{
 				date.Day:00}\C{groups["camera"]}\";
 		return new($@"{root}\{path}\{filename}");
+	}
+
+	public async Task SendImages(string serverAddress, string imagesPath)
+	{
+		MultipartFormDataContent formData = new();
+		formData.Headers.ContentType!.MediaType = "multipart/form-data";
+		for (int i = 1; i <= 2; ++i)
+		{
+			FileInfo image
+				= GetImagePathFromRoot(Station.ID, imagesPath, AnodeType, i);
+			if (!image.Exists)
+				continue;
+
+			StreamContent content = new(File.Open(image.FullName, FileMode.Open));
+			content.Headers.ContentType = new("image/jpeg");
+			formData.Add(content, image.Name, image.Name);
+		}
+
+		if (!formData.Any())
+			return;
+
+		using HttpClient httpClient = new();
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+
+		HttpResponseMessage response
+			= await httpClient.PostAsync($"{serverAddress}/apiServerReceive/images", formData);
+		if (!response.IsSuccessStatusCode)
+			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}
 
 	protected override Task InheritedBuild(IAnodeUOW anodeUOW)

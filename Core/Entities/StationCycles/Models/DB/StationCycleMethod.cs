@@ -1,4 +1,6 @@
+using System.Reflection;
 using Core.Entities.KPI.KPICs.Dictionaries;
+using Core.Entities.Packets.Models.DB;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles;
@@ -51,6 +53,18 @@ public partial class StationCycle
 	public StationCycle GetValue()
 	{
 		return this;
+	}
+
+	public void AssignPacket(Packet packet)
+	{
+		PropertyInfo? property = Array.Find(
+			this.GetType()
+				.GetProperties(BindingFlags.Instance | BindingFlags.Public),
+			info => info.GetValue(this)?.GetType() == packet.GetType());
+		if (property is null)
+			throw new ArgumentException($"Cycle of RID {RID} has no packet of type {packet.GetType()}");
+
+		property.SetValue(this, packet);
 	}
 
 	public static string[] GetKPICRID()
@@ -137,15 +151,14 @@ public partial class StationCycle
 		};
 	}
 
-	public static StationCycle Create()
+	public static StationCycle Create(string stationName)
 	{
-		if (Station.Type == StationType.S1S2)
-			return new S1S2Cycle();
-
-		if (Station.Type == StationType.S3S4)
-			return new S3S4Cycle();
-
-		return new S5Cycle();
+		StationType stationType = Station.StationNameToType(stationName);
+		return stationType switch {
+			StationType.S1S2 => new S1S2Cycle(),
+			StationType.S3S4 => new S3S4Cycle(),
+			_ => new S5Cycle(),
+		};
 	}
 
 	public ReducedStationCycle Reduce()
