@@ -1,6 +1,6 @@
 namespace Core.Shared.SignalR.CameraHub;
 
-public interface ICameraHub
+public interface ICameraHub : IBaseHub
 {
 	/// <summary>
 	/// Refreshes test images.
