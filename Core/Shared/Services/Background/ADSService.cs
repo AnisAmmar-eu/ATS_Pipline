@@ -17,7 +17,6 @@ public class ADSService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<ADSService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
 	private int _executionCount;
 
 	public ADSService(ILogger<ADSService> logger, IServiceScopeFactory factory)
@@ -29,7 +28,6 @@ public class ADSService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		using PeriodicTimer timer = new(_period);
 		CancellationToken cancel = CancellationToken.None;
 
 		// Assign configuration
@@ -45,18 +43,19 @@ public class ADSService : BackgroundService
 		AssignNotification.ImagesPath = imagesPath;
 		AssignNotification.ThumbnailsPath = thumbnailsPath;
 
-		while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken))
+		while (!stoppingToken.IsCancellationRequested)
         {
             try
 			{
 				AdsClient tcClient = await InitializeConnection(asyncScope, cancel);
 				// If the TC disconnects, it will loop back to the top
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
-				while (true)
+				while (!stoppingToken.IsCancellationRequested)
                 {
                     if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
 						throw new AdsException("Error while reading variable");
+
+                    await Task.Delay(1000, cancel);
                 }
             }
 			catch (Exception e)

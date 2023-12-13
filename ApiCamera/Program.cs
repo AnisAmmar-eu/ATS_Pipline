@@ -10,6 +10,7 @@ using Core.Shared.Services.Background;
 using Core.Shared.Services.Background.BI.BITemperature;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
+using Core.Shared.SignalR.CameraHub;
 using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -122,5 +123,6 @@ app.UseAuthorization();
 app.MapCarter();
 
 app.MapHub<IOTHub>("/iotHub");
+app.MapHub<CameraHub>("/cameraHub");
 
 app.Run();

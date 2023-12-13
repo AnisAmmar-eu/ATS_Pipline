@@ -8,6 +8,8 @@ using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.Camera;
+using Core.Shared.SignalR.CameraHub;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,9 +24,9 @@ public class CameraService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<CameraService> _logger;
+	private IHubContext<CameraHub, ICameraHub> _hubContext = null!;
 
-	public CameraService(IServiceScopeFactory factory, ILogger<CameraService> logger)
-	{
+	public CameraService( IServiceScopeFactory factory, ILogger<CameraService> logger) {
 		_factory = factory;
 		_logger = logger;
 	}
@@ -32,18 +34,19 @@ public class CameraService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		_hubContext = asyncScope.ServiceProvider.GetRequiredService<IHubContext<CameraHub, ICameraHub>>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		_logger.LogInformation("Reading camera ports");
 		int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
 		int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
 		_logger.LogInformation("Camera1: {p1}, Camera2: {p2}", port1, port2);
 		_logger.LogInformation("Connection to Camera1");
-		Device device1 = CameraConnectionManager.Connect(port1);
+		Device device1 = await CameraConnectionManager.Connect(port1, stoppingToken);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
 			_logger.LogInformation("Connection to Camera2");
-			Device device2 = CameraConnectionManager.Connect(port2);
+			Device device2 = await CameraConnectionManager.Connect(port2, stoppingToken);
 			_logger.LogInformation("Starting Camera1");
 			Task task1 = RunAcquisition(
 				device1,
@@ -135,6 +138,7 @@ public class CameraService : BackgroundService
 
 							image.Save(dir + ShootingUtils.TestFilename, 1);
 							++nbPicturesTest;
+							await _hubContext.Clients.All.RefreshTestImages();
 						}
 						else
 						{

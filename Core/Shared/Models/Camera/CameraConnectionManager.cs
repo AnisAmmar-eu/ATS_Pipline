@@ -10,14 +10,31 @@ public static class CameraConnectionManager
 	/// </summary>
 	private static Dictionary<int, Device> Devices { get; } = new();
 
-	public static Device Connect(int port)
+	public static async Task<Device> Connect(int port, CancellationToken cancel)
 	{
 		if (Devices.TryGetValue(port, out Device? existingDevice))
 			return existingDevice;
 
-		string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
-		Device device = DeviceFactory.OpenPort(driverString, port);
-		Devices.Add(port, device);
-		return device;
+		return await Task.Run(
+			() =>
+			{
+				while (!cancel.IsCancellationRequested)
+				{
+					try
+					{
+						string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
+						Device device = DeviceFactory.OpenPort(driverString, port);
+						Devices.Add(port, device);
+						return device;
+					}
+					catch
+					{
+						// ignored
+					}
+				}
+
+				throw new IOException($"Could not connect to camera with port: {port.ToString()}");
+			},
+			cancel);
 	}
 }

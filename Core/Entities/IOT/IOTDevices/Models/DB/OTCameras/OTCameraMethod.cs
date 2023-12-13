@@ -30,7 +30,9 @@ public partial class OTCamera
 	{
 		try
 		{
-			Device device = CameraConnectionManager.Connect(int.Parse(Address));
+			CancellationTokenSource cancelSource = new();
+			cancelSource.CancelAfter(200);
+			Device device = await CameraConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
 			if (device.ConnectionState != ConnectionState.Connected)
 				return false;
 
@@ -49,10 +51,21 @@ public partial class OTCamera
 		}
 	}
 
-	public override Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
+	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
 		List<IOTTag> updatedTags = [];
-		Device device = CameraConnectionManager.Connect(int.Parse(Address));
+        Device device;
+		CancellationTokenSource cancelSource = new();
+		cancelSource.CancelAfter(200);
+		try
+		{
+			device = await CameraConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
+		}
+		catch (IOException)
+		{
+			return [];
+		}
+
 		NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
 		foreach (IOTTag tag in IOTTags)
 		{
@@ -104,6 +117,6 @@ public partial class OTCamera
 				tag.NewValue = readValue;
 		}
 
-		return Task.FromResult(updatedTags);
+		return updatedTags;
 	}
 }
