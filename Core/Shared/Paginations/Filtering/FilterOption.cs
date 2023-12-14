@@ -10,6 +10,7 @@ public static class FilterOptionMap
 		{ "LessEqual", FilterOption.IsLessThanOrEqualTo },
 		{ "Equal", FilterOption.IsEqualTo },
 		{ "NotEqual", FilterOption.IsNotEqualTo },
+		{ "IsType", FilterOption.IsType },
 	};
 
 	public static FilterOption Get(string key)
@@ -27,4 +28,5 @@ public enum FilterOption
 	IsLessThanOrEqualTo = 4,
 	IsEqualTo = 5,
 	IsNotEqualTo = 6,
+	IsType = 7,
 }

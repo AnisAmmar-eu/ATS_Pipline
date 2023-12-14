@@ -97,6 +97,17 @@ public static class Filter
 	{
 		// Gets the property of the class from its column name.
 		FilterOption filterOption = FilterOptionMap.Get(filterParam.FilterOptionName);
+		if (filterOption == FilterOption.IsType)
+		{
+			// Gets all possible types in the Assembly (running instance) and find the one with the same name.
+			Type? type = Assembly.GetAssembly(typeof(T))?.GetTypes().ToList()
+				.Find(t => t.Name == filterParam.FilterValue);
+			if (type is null)
+				return Expression.Constant(false);
+
+			return Expression.TypeIs(param, type);
+		}
+
 		string[] names = filterParam.ColumnName.Split('.');
 		PropertyInfo filterColumn = GetColumnProperty<T>(names);
 		if (filterOption == FilterOption.Nothing)
