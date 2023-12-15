@@ -4,6 +4,7 @@ using Carter;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
@@ -25,15 +26,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName is null)
-	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
-Station.Name = stationName;
-
-string? address = builder.Configuration.GetValue<string>("ServerConfig:Address");
-if (address is null)
-	throw new ConfigurationErrorsException("Missing ServerConfig:Address");
-Station.ServerAddress = address;
+builder.Configuration.LoadBaseConfiguration();
 
 builder.Services.AddAuthentication(
 	options =>
@@ -71,7 +64,7 @@ builder.Services.AddAuthentication(
 	});
 
 builder.Services.AddDbContext<AnodeCTX>(
-	options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options => options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

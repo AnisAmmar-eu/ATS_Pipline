@@ -4,6 +4,7 @@ using Carter;
 using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
+using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
@@ -28,12 +29,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName is null)
-	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
-Station.Name = stationName;
+builder.Configuration.LoadBaseConfiguration();
 
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string connectionString = builder.Configuration.GetConnectionStringWithThrow("DefaultConnection");
 
 builder.Services.AddAuthentication(
 	options =>

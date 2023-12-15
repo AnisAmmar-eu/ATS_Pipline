@@ -1,8 +1,8 @@
-using System.Configuration;
 using Core.Entities.Vision.SignedCycles.Dictionaries;
 using Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues;
 using Core.Entities.Vision.SignedCycles.Services.LoadableQueues;
 using Core.Entities.Vision.SignedCycles.Services.MatchableStacks;
+using Core.Shared.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,10 +27,8 @@ public class LoadMatchService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-		TimeSpan s3S4Delay = TimeSpan.Parse(configuration.GetValue<string>("VisionSettings:S3S4Delay")
-			?? throw new ConfigurationErrorsException("Missing VisionSettings:S3S4Delay"));
-		TimeSpan s5Delay = TimeSpan.Parse(configuration.GetValue<string>("VisionSettings:S5Delay")
-			?? throw new ConfigurationErrorsException("Missing VisionSettings:S5Delay"));
+		TimeSpan s3S4Delay = TimeSpan.Parse(configuration.GetValueWithThrow<string>("VisionSettings:S3S4Delay"));
+		TimeSpan s5Delay = TimeSpan.Parse(configuration.GetValueWithThrow<string>("VisionSettings:S5Delay"));
 
 		ILoadableQueueService loadableQueueService
 			= asyncScope.ServiceProvider.GetRequiredService<ILoadableQueueService>();

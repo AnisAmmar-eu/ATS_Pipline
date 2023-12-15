@@ -1,10 +1,10 @@
-using System.Configuration;
 using Carter;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
@@ -23,16 +23,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName is null)
-	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
-Station.Name = stationName;
+builder.Configuration.LoadBaseConfiguration();
 
 if (!Station.IsServer)
 	throw new("¨This API can only run on the server. Please update appsettings.json");
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

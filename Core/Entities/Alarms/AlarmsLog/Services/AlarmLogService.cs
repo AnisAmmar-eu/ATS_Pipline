@@ -4,6 +4,7 @@ using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Repositories;
+using Core.Entities.IOT.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.SignalR.AlarmHub;
@@ -95,7 +96,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 
 	public async Task<HttpResponseMessage> SendLogsToServer()
 	{
-		const string api2Url = "https://localhost:7207/apiServerReceive/alarmsLog";
+		string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/alarmsLog";
 		List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes([alarmLog => !alarmLog.HasBeenSent]);
 		string jsonData = JsonSerializer.Serialize(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
 		StringContent content = new(jsonData, Encoding.UTF8, "application/json");

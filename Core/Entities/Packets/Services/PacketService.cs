@@ -1,13 +1,14 @@
-using System.Configuration;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using Core.Entities.IOT.Dictionaries;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
@@ -46,9 +47,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		Shooting shooting = await AnodeUOW.Packet.GetById(shootingID) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
-		string? thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		if (thumbnailsPath is null)
-			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
+		string thumbnailsPath = _configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
 
 		return shooting .GetImagePathFromRoot(Station.ID, thumbnailsPath, shooting.AnodeType, cameraID);
 	}
@@ -65,7 +64,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		return packet.ToDTO();
 	}
 
-	public async Task SendCompletedPackets(string serverAddress, string imagesPath)
+	public async Task SendCompletedPackets(string imagesPath)
 	{
 		IEnumerable<Packet> packets
 			= await AnodeUOW.Packet.GetAll([packet => packet.Status == PacketStatus.Completed], withTracking: false);
@@ -79,11 +78,11 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			{
 				using HttpClient http = new();
 				if (packet is Shooting shooting)
-					await shooting.SendImages(serverAddress, imagesPath);
+					await shooting.SendImages(imagesPath);
 
 				StringContent content = new(JsonSerializer.Serialize(packet.ToDTO()), Encoding.UTF8, "application/json");
 				HttpResponseMessage response = await http.PostAsync(
-					$"{serverAddress}/apiServerReceive/{Station.Name}/packets",
+					$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
 					content);
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
@@ -144,13 +143,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public Task ReceiveStationImage(IFormFileCollection formFiles)
 	{
-		string? imagesPath = _configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath is null)
-			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+		string imagesPath = _configuration.GetValueWithThrow<string>("CameraConfig:ImagesPath");
 
-		string? thumbnailsPath = _configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		if (thumbnailsPath is null)
-			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
+		string thumbnailsPath = _configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
 
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{

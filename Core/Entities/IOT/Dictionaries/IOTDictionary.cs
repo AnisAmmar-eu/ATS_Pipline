@@ -11,37 +11,39 @@ public static class DeviceRID
 public static class ITApisDict
 {
 	public const string ADSRID = "ApiADS";
-	public const string ADSAddress = "https://localhost:7275";
+	public static string ADSAddress = string.Empty; // 7275
 	public const string ADSPath = "/apiADS/status";
 
 	public const string AlarmRID = "ApiAlarm";
-	public const string AlarmAddress = "https://localhost:7276";
+	public static string AlarmAddress = string.Empty; // 7276
 	public const string AlarmPath = "/apiAlarm/status";
 
 	public const string CameraRID = "ApiCamera";
-	public const string CameraAddress = "https://localhost:7277";
+	public static string CameraAddress = string.Empty; // 7277
 	public const string CameraPath = "/apiCamera/status";
 
 	public const string IOTRID = "ApiIOT";
-	public const string IOTAddress = "https://localhost:7278";
+	public static string IOTAddress = string.Empty; // 7278
 	public const string IOTPath = "/apiIOT/status";
 
 	public const string KPIRID = "ApiKPI";
-	public const string KPIAddress = "https://localhost:7279";
+	public static string KPIAddress = string.Empty; // 7279
 	public const string KPIPath = "/apiKPI/status";
 
-	// 7280 & 5247 is taken by ApiServerReceive
+	public const string ServerReceiveRID = "ApiServerReceive";
+	public static string ServerReceiveAddress = string.Empty; // 7280
+	public const string ServerReceivePath = "/apiServerReceive/status";
 
 	public const string StationCycleRID = "ApiStationCycle";
-	public const string StationCycleAddress = "https://localhost:7281";
+	public static string StationCycleAddress = string.Empty; // 7281
 	public const string StationCyclePath = "/apiStationCycle/status";
 
 	public const string UserRID = "ApiUser";
-	public const string UserAddress = "https://localhost:7282";
+	public static string UserAddress = string.Empty; // 7282
 	public const string UserPath = "/apiUser/status";
 
 	public const string VisionRID = "ApiVision";
-	public const string VisionAddress = "https://localhost:7283";
+	public static string VisionAddress = string.Empty; // 7283
 	public const string VisionPath = "/apiVision/status";
 }
 

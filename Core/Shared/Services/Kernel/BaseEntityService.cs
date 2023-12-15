@@ -16,7 +16,7 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 	private readonly TRepository _repository;
 	protected readonly IAnodeUOW AnodeUOW;
 
-	public BaseEntityService(IAnodeUOW anodeUOW)
+	protected BaseEntityService(IAnodeUOW anodeUOW)
 	{
 		AnodeUOW = anodeUOW;
 		_repository = (TRepository?)anodeUOW.GetRepoByType(typeof(TRepository)) ??

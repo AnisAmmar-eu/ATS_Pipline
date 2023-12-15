@@ -1,5 +1,5 @@
-using System.Configuration;
 using Core.Entities.Packets.Services;
+using Core.Shared.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,13 +25,7 @@ public class SendService : BackgroundService
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string? serverAddress = configuration.GetValue<string>("ServerConfig:Address");
-		if (serverAddress is null)
-			throw new ConfigurationErrorsException("Missing ServerConfig:Address");
-
-		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath is null)
-			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
+		string imagesPath = configuration.GetValueWithThrow<string>("CameraConfig:ImagesPath");
 
 		IPacketService packetService
 			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
@@ -43,7 +37,7 @@ public class SendService : BackgroundService
 			{
 				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling SendPackets");
-				await packetService.SendCompletedPackets(serverAddress, imagesPath);
+				await packetService.SendCompletedPackets(imagesPath);
 
 				_executionCount++;
 				_logger.LogInformation(

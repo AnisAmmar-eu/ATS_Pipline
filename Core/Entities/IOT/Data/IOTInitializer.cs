@@ -22,18 +22,13 @@ public static class IOTInitializer
 		// APIs
 		InitializeApi(anodeCTX, ITApisDict.IOTRID, ITApisDict.IOTAddress, ITApisDict.IOTPath, true);
 		string[] rids = [
-			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.StationCycleRID, ITApisDict
-				.UserRID,
+			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.StationCycleRID,
 		];
 		string[] addresses = [
-			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict
-				.StationCycleAddress,
-			ITApisDict.UserAddress,
+			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.StationCycleAddress,
 		];
 		string[] paths = [
-			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict
-				.StationCyclePath,
-			ITApisDict.UserPath,
+			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.StationCyclePath,
 		];
 		for (int i = 0; i < rids.Length; ++i)
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
@@ -49,18 +44,16 @@ public static class IOTInitializer
 
 		// No need for test mode in server.
 		string[] rids = [
-			ITApisDict.IOTRID, ITApisDict.AlarmRID, ITApisDict.KPIRID, ITApisDict.StationCycleRID, ITApisDict
-				.UserRID,
+			ITApisDict.IOTRID, ITApisDict.AlarmRID, ITApisDict.KPIRID, ITApisDict.ServerReceiveRID,
+			ITApisDict.StationCycleRID, ITApisDict.UserRID, ITApisDict.VisionRID,
 		];
 		string[] addresses = [
-			ITApisDict.IOTAddress, ITApisDict.AlarmAddress, ITApisDict.KPIAddress, ITApisDict
-				.StationCycleAddress,
-			ITApisDict.UserAddress,
+			ITApisDict.IOTAddress, ITApisDict.AlarmAddress, ITApisDict.KPIAddress, ITApisDict.ServerReceiveAddress,
+			ITApisDict.StationCycleAddress, ITApisDict.UserAddress, ITApisDict.VisionPath,
 		];
 		string[] paths = [
-			ITApisDict.IOTPath, ITApisDict.AlarmPath, ITApisDict.KPIPath, ITApisDict
-				.StationCyclePath,
-			ITApisDict.UserPath,
+			ITApisDict.IOTPath, ITApisDict.AlarmPath, ITApisDict.KPIPath, ITApisDict.ServerReceivePath,
+			ITApisDict.StationCyclePath, ITApisDict.UserPath, ITApisDict.VisionPath,
 		];
 		for (int i = 0; i < rids.Length; ++i)
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);

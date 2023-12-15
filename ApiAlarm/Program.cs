@@ -4,6 +4,7 @@ using Carter;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
+using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
@@ -26,18 +27,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName is null)
-	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
-Station.Name = stationName;
-
-string? address = builder.Configuration.GetValue<string>("ServerConfig:Address");
-if (address is null)
-	throw new ConfigurationErrorsException("Missing ServerConfig:Address");
-Station.ServerAddress = address;
+builder.Configuration.LoadBaseConfiguration();
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
 builder.Services.AddAuthentication(
 	options =>

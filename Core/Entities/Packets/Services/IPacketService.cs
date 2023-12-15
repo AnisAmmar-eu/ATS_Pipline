@@ -23,10 +23,9 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// Sends all packets given in argument to the given serverAddress, returns all packets which were successfully sent
 	/// with their status as "Sent".
 	/// </summary>
-	/// <param name="serverAddress"></param>
 	/// <param name="imagesPath"></param>
 	/// <returns></returns>
-	public Task SendCompletedPackets(string serverAddress, string imagesPath);
+	public Task SendCompletedPackets(string imagesPath);
 
 	public Task ReceivePacket(DTOPacket dtoPacket, string stationName);
 	public Task ReceiveStationImage(IFormFileCollection formFiles);

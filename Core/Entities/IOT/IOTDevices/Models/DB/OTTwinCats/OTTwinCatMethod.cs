@@ -27,31 +27,33 @@ public partial class OTTwinCat
 
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{
-		CancellationToken cancel = CancellationToken.None;
 		try
 		{
-			AdsClient tcClient = TwinCatConnectionManager.Connect(int.Parse(Address));
+			CancellationTokenSource cancelSource = new();
+			cancelSource.CancelAfter(200);
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
 			uint varHandle = tcClient.CreateVariableHandle(ConnectionPath);
-			ResultValue<int> resultRead = await tcClient.ReadAnyAsync<int>(varHandle, cancel);
+			ResultValue<int> resultRead = await tcClient.ReadAnyAsync<int>(varHandle, cancelSource.Token);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
 				throw new();
 		}
 		catch (Exception e)
 		{
-			logger.LogInformation("Error while monitoring TwinCat:\n {error}", e);
-			return await Task.FromResult(false);
+			logger.LogError("Error while monitoring TwinCat:\n {error}", e);
+			return false;
 		}
 
-		return await Task.FromResult(true);
+		return true;
 	}
 
 	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
 	{
-		CancellationToken cancel = CancellationToken.None;
+		CancellationTokenSource cancelSource = new();
+		cancelSource.CancelAfter(800);
 		AdsClient tcClient;
 		try
 		{
-			tcClient = TwinCatConnectionManager.Connect(int.Parse(Address));
+			tcClient = await TwinCatConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
 		}
 		catch (AdsException)
 		{
@@ -70,7 +72,7 @@ public partial class OTTwinCat
 				uint varHandle = tcClient.CreateVariableHandle(tag.Path);
 				if (tag is { IsReadOnly: false, HasNewValue: true })
 				{
-					ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, otTagTwinCat, cancel);
+					ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, otTagTwinCat, cancelSource.Token);
 					if (resultWrite.ErrorCode != AdsErrorCode.NoError)
 						return []; // Same as above
 
@@ -80,9 +82,11 @@ public partial class OTTwinCat
 
 				// Else updates the current value bc it might have changed since.
 				// Nullable warning ignored because ReadFromType always returns a ResultValue
-				object? readValue = await ReadFromType(tcClient, varHandle, otTagTwinCat, cancel);
+				object? readValue = await ReadFromType(tcClient, varHandle, otTagTwinCat, cancelSource.Token);
 
-				hasBeenUpdated = hasBeenUpdated || tag.CurrentValue != readValue?.ToString() || tag.CurrentValue != tag.NewValue;
+				hasBeenUpdated = hasBeenUpdated
+					|| tag.CurrentValue != readValue?.ToString()
+					|| tag.CurrentValue != tag.NewValue;
 				if (hasBeenUpdated)
 					updatedTags.Add(tag);
 

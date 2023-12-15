@@ -1,10 +1,8 @@
-using System.Configuration;
 using System.Dynamic;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.Services.Notifications;
 using Core.Shared.Services.Notifications.PacketNotifications;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -29,16 +27,6 @@ public class ADSService : BackgroundService
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		CancellationToken cancel = CancellationToken.None;
-
-		// Assign configuration
-		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string? imagesPath = configuration.GetValue<string>("CameraConfig:ImagesPath");
-		if (imagesPath is null)
-			throw new ConfigurationErrorsException("Missing CameraConfig:ImagesPath");
-
-		string? thumbnailsPath = configuration.GetValue<string>("CameraConfig:ThumbnailsPath");
-		if (thumbnailsPath is null)
-			throw new ConfigurationErrorsException("Missing CameraConfig:ThumbnailsPath");
 
 		while (!stoppingToken.IsCancellationRequested)
         {
@@ -74,7 +62,7 @@ public class ADSService : BackgroundService
 		{
 			_logger.LogInformation("ADSService running at: {time}", DateTimeOffset.Now);
 
-			AdsClient tcClient = TwinCatConnectionManager.Connect(851);
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(851, cancel);
 			dynamic ads = new ExpandoObject();
 			ads.tcClient = tcClient;
 			ads.appServices = asyncScope.ServiceProvider;

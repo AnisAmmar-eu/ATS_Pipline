@@ -5,8 +5,8 @@ using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Services;
+using Core.Shared.Configuration;
 using Core.Shared.Data;
-using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.IOTHub;
@@ -26,14 +26,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName is null)
-	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
-Station.Name = stationName;
+builder.Configuration.LoadBaseConfiguration();
 
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (connectionString is null)
-	throw new ConfigurationErrorsException("Missing DefaultConnection");
+string connectionString = builder.Configuration.GetConnectionStringWithThrow("DefaultConnection");
 
 builder.Services.AddAuthentication(
 	options =>

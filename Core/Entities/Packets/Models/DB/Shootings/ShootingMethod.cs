@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using Core.Entities.IOT.Dictionaries;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
@@ -74,7 +75,7 @@ public partial class Shooting
 		return new($@"{root}\{path}\{filename}");
 	}
 
-	public async Task SendImages(string serverAddress, string imagesPath)
+	public async Task SendImages(string imagesPath)
 	{
 		MultipartFormDataContent formData = new();
 		formData.Headers.ContentType!.MediaType = "multipart/form-data";
@@ -97,7 +98,7 @@ public partial class Shooting
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
 
 		HttpResponseMessage response
-			= await httpClient.PostAsync($"{serverAddress}/apiServerReceive/images", formData);
+			= await httpClient.PostAsync($"{ITApisDict.ServerReceiveAddress}/apiServerReceive/images", formData);
 		if (!response.IsSuccessStatusCode)
 			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 	}

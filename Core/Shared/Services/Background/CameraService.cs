@@ -5,6 +5,7 @@ using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.Structs;
+using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.Camera;
@@ -37,8 +38,8 @@ public class CameraService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		_hubContext = asyncScope.ServiceProvider.GetRequiredService<IHubContext<CameraHub, ICameraHub>>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		int port1 = configuration.GetValue<int>("CameraConfig:Camera1:Port");
-		int port2 = configuration.GetValue<int>("CameraConfig:Camera2:Port");
+		int port1 = configuration.GetValueWithThrow<int>("CameraConfig:Camera1:Port");
+		int port2 = configuration.GetValueWithThrow<int>("CameraConfig:Camera2:Port");
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera

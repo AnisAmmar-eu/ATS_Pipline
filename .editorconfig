@@ -542,7 +542,7 @@ dotnet_diagnostic.rcs1179.severity = error
 dotnet_diagnostic.rcs1180.severity = error
 
 # Convert comment to documentation comment
-dotnet_diagnostic.rcs1181.severity = error
+dotnet_diagnostic.rcs1181.severity = silent
 
 # Remove redundant base interface
 dotnet_diagnostic.rcs1182.severity = error

@@ -11,6 +11,7 @@ using Core.Entities.User.Services.Auth;
 using Core.Entities.User.Services.Roles;
 using Core.Entities.User.Services.Users;
 using Core.Shared.Authorize;
+using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Jwt;
@@ -30,16 +31,13 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-string? stationName = builder.Configuration.GetValue<string>("StationConfig:StationName");
-if (stationName is null)
-	throw new ConfigurationErrorsException("Missing StationConfig:StationName");
-Station.Name = stationName;
+builder.Configuration.LoadBaseConfiguration();
 
 if (!Station.IsServer)
 	throw new("¨This API can only run on the server. Please update appsettings.json");
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
 	options =>

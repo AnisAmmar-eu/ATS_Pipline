@@ -16,7 +16,7 @@ namespace Core.Shared.Repositories.Kernel;
 /// </summary>
 /// <typeparam name="TContext"> <see cref="DbContext" /> of the project</typeparam>
 /// <typeparam name="T">
-///     Type that defines an table in the database and have to implement <see cref="IBaseEntity{T}" />
+///     Type that defines a table in the database and have to implement <see cref="IBaseEntity{T}" />
 /// </typeparam>
 /// <typeparam name="TDTO"></typeparam>
 public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, TDTO>
@@ -31,7 +31,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Constructor
 	/// </summary>
 	/// <param name="context"><see cref="DbContext" /> of the project</param>
-	public BaseEntityRepository(TContext context)
+	protected BaseEntityRepository(TContext context)
 	{
 		Context = context;
 	}
