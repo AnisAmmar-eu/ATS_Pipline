@@ -41,7 +41,7 @@ public class TemperatureService : BackgroundService
 				await biTemperatureService.LogNewValues();
 
 				_logger.LogInformation("TemperatureService purging temperatures.");
-				await biTemperatureService.PurgeByTimestamp(TimeSpan.FromHours(2));
+				await biTemperatureService.RemoveByLifeSpan(TimeSpan.FromHours(2));
 
 				_executionCount++;
 				_logger.LogInformation(

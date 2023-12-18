@@ -31,5 +31,6 @@ public interface IBaseEntityService<T, TDTO>
 	public Task<List<TDTO>> UpdateAll(IEnumerable<T> entities);
 	public Task Remove(T entity);
 	public Task Remove(int id, params string[] includes);
+	public Task RemoveByLifeSpan(TimeSpan lifeSpan);
 	public Task RemoveAll(IEnumerable<T> entities);
 }

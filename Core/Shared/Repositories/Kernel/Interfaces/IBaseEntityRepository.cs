@@ -140,6 +140,14 @@ public interface IBaseEntityRepository<T, TDTO>
 	Task Remove(int id, params string[] includes);
 
 	/// <summary>
+	///	Removes all entities outside the specified lifespan in a bulk delete.
+	/// e.g. with a lifespan of 10 days, all rows older than that will be deleted.
+	/// </summary>
+	/// <param name="lifeSpan"></param>
+	/// <returns></returns>
+	public Task RemoveByLifeSpan(TimeSpan lifeSpan);
+
+	/// <summary>
 	///     Remove several entities in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entities"><see cref="IEnumerable{T}" /> of entity to remove</param>

@@ -31,17 +31,4 @@ public class BITemperatureService : BaseEntityService<IBITemperatureRepository, 
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 	}
-
-	public async Task PurgeByTimestamp(TimeSpan lifespan)
-	{
-		DateTimeOffset threshold = DateTimeOffset.Now.Subtract(lifespan);
-		List<BITemperature> toPurge
-			= await AnodeUOW.BITemperature.GetAll([kpiTemperature => kpiTemperature.TS < threshold], withTracking: false);
-		await AnodeUOW.StartTransaction();
-		foreach (BITemperature kpiTemperature in toPurge)
-			AnodeUOW.BITemperature.Remove(kpiTemperature);
-
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
-	}
 }
