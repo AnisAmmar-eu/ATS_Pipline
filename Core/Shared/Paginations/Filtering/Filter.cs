@@ -9,13 +9,13 @@ namespace Core.Shared.Paginations.Filtering;
 public static class Filter
 {
     /// <summary>
-    /// Apply filters to an IQueryable source from its pagination.
-    /// The last value from the SortParameters is first used to remove previously queried rows. If none is given, no rows are removed.
-    /// Then, it chains every filterParam in pagination with AND boolean operators.
+    /// Apply filters to an <see cref="IQueryable{T}"/> source from its pagination.
+    /// The last value from the <see cref="SortParam"/> is first used to remove previously queried rows. If none is given, no rows are removed.
+    /// Then, it chains every <see cref="FilterParam"/> in pagination with AND boolean operators.
     /// Filters are then applied to the query.
     /// </summary>
     /// <param name="source">Query to filter</param>
-    /// <param name="pagination">Pagination parameters used to </param>
+    /// <param name="pagination">Pagination parameters used to filter</param>
     /// <typeparam name="T">BaseEntity from which rows will be filtered</typeparam>
     /// <typeparam name="TDTO"></typeparam>
     /// <returns>A filtered query</returns>
