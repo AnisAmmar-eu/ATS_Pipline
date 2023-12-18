@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Shared.Data;
 using Core.Shared.Repositories.Kernel;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Entities.Alarms.AlarmsLog.Repositories;
 
@@ -34,5 +35,20 @@ public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAl
 		bool withTracking = true)
 	{
 		return GetAll(filters, orderBy, withTracking, includes: nameof(AlarmLog.Alarm));
+	}
+
+	public Task<int> AckAlarmLogs(int[] idAlarmLogs)
+	{
+		DateTimeOffset now = DateTimeOffset.Now;
+		return Context
+			.AlarmLog
+			.Where(alarmLog => idAlarmLogs.Contains(alarmLog.ID))
+			.Where(alarmLog => !alarmLog.IsAck)
+			.ExecuteUpdateAsync(s => s.SetProperty(
+				alarmLog => alarmLog.IsAck,
+				_ => true)
+				.SetProperty(
+					alarmLog => alarmLog.TSRead,
+					_ => now));
 	}
 }

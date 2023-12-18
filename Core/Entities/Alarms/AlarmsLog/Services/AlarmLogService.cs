@@ -75,23 +75,15 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		await _hubContext.Clients.All.RefreshAlarmLog();
 	}
 
-	public async Task<List<DTOAlarmLog>> AckAlarmLogs(int[] idAlarmLogs)
+	public async Task<int> AckAlarmLogs(int[] idAlarmLogs)
 	{
-		List<DTOAlarmLog> ackAlarmLogs = new();
 		await AnodeUOW.StartTransaction();
-		foreach (int idAlarmLog in idAlarmLogs)
-		{
-			AlarmLog alarmLogToAck = await AnodeUOW.AlarmLog.GetByIdWithIncludes(idAlarmLog, [alarmLog => !alarmLog.IsAck]);
-			alarmLogToAck.IsAck = true;
-			alarmLogToAck.TSRead = DateTime.Now;
-			ackAlarmLogs.Add(alarmLogToAck.ToDTO());
-		}
-
+		int res = await AnodeUOW.AlarmLog.AckAlarmLogs(idAlarmLogs);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
-		return ackAlarmLogs;
+		return res;
 	}
 
 	public async Task<HttpResponseMessage> SendLogsToServer()

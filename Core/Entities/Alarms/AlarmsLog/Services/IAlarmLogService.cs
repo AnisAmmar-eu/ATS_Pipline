@@ -7,6 +7,6 @@ namespace Core.Entities.Alarms.AlarmsLog.Services;
 public interface IAlarmLogService : IBaseEntityService<AlarmLog, DTOAlarmLog>
 {
 	Task Collect(Alarm alarm);
-	Task<List<DTOAlarmLog>> AckAlarmLogs(int[] idAlarmLogs);
+	Task<int> AckAlarmLogs(int[] idAlarmLogs);
 	public Task<HttpResponseMessage> SendLogsToServer();
 }

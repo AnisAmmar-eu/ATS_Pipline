@@ -21,4 +21,6 @@ public interface IAlarmLogRepository : IBaseEntityRepository<AlarmLog, DTOAlarmL
 		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
 		bool withTracking = true);
+
+	public Task<int> AckAlarmLogs(int[] idAlarmLogs);
 }
