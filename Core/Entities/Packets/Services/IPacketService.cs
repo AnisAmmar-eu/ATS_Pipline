@@ -1,6 +1,7 @@
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -8,7 +9,7 @@ namespace Core.Entities.Packets.Services;
 
 public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 {
-	public Task<Shooting> GetMostRecentShooting();
+	public Task<DTOShooting> GetMostRecentShooting();
 
 	/// <summary>
 	/// This photo returns the FileInfo of the image gotten through the shooting packet. It works only on the station.

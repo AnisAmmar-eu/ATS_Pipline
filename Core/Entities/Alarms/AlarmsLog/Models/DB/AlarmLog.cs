@@ -9,7 +9,6 @@ namespace Core.Entities.Alarms.AlarmsLog.Models.DB;
 
 public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 {
-	private AlarmC? _alarm;
 	public bool HasBeenSent { get; set; }
 	public int AlarmID { get; set; }
 	public int StationID { get; set; } = Station.ID;
@@ -31,6 +30,8 @@ public partial class AlarmLog : BaseEntity, IBaseEntity<AlarmLog, DTOAlarmLog>
 	/// </summary>
 	[NotMapped]
 	public string? RID { get; set; } = string.Empty;
+
+	private AlarmC? _alarm;
 
 	public AlarmC Alarm
 	{

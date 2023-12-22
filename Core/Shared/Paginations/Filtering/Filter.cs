@@ -221,13 +221,12 @@ public static class Filter
 			type.GetMethods(BindingFlags.Static | BindingFlags.Public),
 			c =>
 				c.Name == "Parse"
-					&& c.GetParameters().Length == 2
-					&& c.GetParameters()[0].ParameterType == typeof(string)
-					&& c.GetParameters()[1].ParameterType == typeof(IFormatProvider));
+					&& c.GetParameters().Length == 1
+					&& c.GetParameters()[0].ParameterType == typeof(string));
 		if (parse is null)
 			throw new ArgumentException("Filter: Trying to parse a value which is not parsable.");
 
 		// And it finally invokes it.
-		return parse.Invoke(null, new object[] { value, null! }) as IComparable;
+		return parse.Invoke(null, [value]) as IComparable;
 	}
 }

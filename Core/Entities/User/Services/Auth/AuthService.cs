@@ -48,12 +48,11 @@ public class AuthService : IAuthService
         if (user is not null)
             throw new EntityNotFoundException("Username already used.");
 
-        // Create User
-        user = dtoRegister.ToUser();
-
         if (dtoRegister.Password is null)
             throw new NoDataException("No password has been given.");
 
+        // Create User
+        user = dtoRegister.ToUser();
         IdentityResult identityResult = await _userManager.CreateAsync(user, dtoRegister.Password);
         if (!identityResult.Succeeded)
             throw new EntityNotFoundException("Error during user creation.");

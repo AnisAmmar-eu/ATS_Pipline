@@ -231,7 +231,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
                     foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
                         a.Type == ApplicationTypeRID.Role))
 					{
-						ApplicationRole? role = await _rolesManager.FindByNameAsync(application.Name ?? string.Empty);
+						ApplicationRole? role = (application.Name is null) ? null : await _rolesManager.FindByNameAsync(application.Name);
 						if (role is null)
 							throw new EntityNotFoundException("role", application.Name ?? string.Empty);
 
@@ -244,7 +244,9 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
                     foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
                         a.Type == ApplicationTypeRID.User))
 					{
-						ApplicationUser? user = await _usersManager.FindByNameAsync(application.Name ?? string.Empty);
+						ApplicationUser? user = (application.Name is null)
+							? null
+							: await _usersManager.FindByNameAsync(application.Name ?? string.Empty);
 						if (user is null)
 							throw new EntityNotFoundException("user", application.Name ?? string.Empty);
 

@@ -1,10 +1,12 @@
-﻿using Core.Entities.Alarms.AlarmsC.Models.DTO;
+﻿using System.Text.Json.Serialization;
+using Core.Entities.Alarms.AlarmsC.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 
 namespace Core.Entities.Alarms.AlarmsLog.Models.DTO;
 
 public partial class DTOAlarmLog
 {
+	[JsonConstructor]
 	public DTOAlarmLog(DTOAlarmC alarm)
 	{
 		Alarm = alarm;

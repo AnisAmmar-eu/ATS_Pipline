@@ -6,6 +6,7 @@ using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Configuration;
@@ -31,15 +32,16 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		_configuration = configuration;
 	}
 
-	public async Task<Shooting> GetMostRecentShooting()
+	public async Task<DTOShooting> GetMostRecentShooting()
 	{
 		// Here, we order by descending ID and not by TS because in a **single** station, the most recent packets always
 		// have the highest IDs. In the server, we would have to order by TS.
-		return await AnodeUOW.Packet
+		return (await AnodeUOW.Packet
 			.GetBy(
 				[packet => packet is Shooting],
 				orderBy: query => query.OrderByDescending(packet => packet.ID)) as Shooting
-			?? throw new EntityNotFoundException();
+			?? throw new EntityNotFoundException())
+			.ToDTO();
 	}
 
 	public async Task<FileInfo> GetImageFromIDAndCamera(int shootingID, int cameraID)
