@@ -12,9 +12,9 @@ public static class ADSUtils
 
 	#region AlarmNotification
 
-	public const string AlarmRemove = "VA_ALM.remove";
-	public const string AlarmNewMsg = "VA_ALM.msgNew";
-	public const string AlarmToRead = "VA_ALM.oldEntry";
+	public const string AlarmRemove = "VA_ALM.remove"; // pour suprimer une fois consomé
+	public const string AlarmNewMsg = "VA_ALM.msgNew"; // pour surveiller qu'il y un nouveau msg
+	public const string AlarmToRead = "VA_ALM.oldEntry"; // zone de lecture et racibe de la structure
 
 	#endregion
 

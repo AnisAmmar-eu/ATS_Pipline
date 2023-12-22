@@ -69,7 +69,7 @@ public class ADSService : BackgroundService
 			ads.cancel = cancel;
 			_logger.LogInformation("Calling Notifications");
 			await AnnouncementNotification.Create(ads);
-			await DetectionNotification.Create(ads);
+			await DetectionNotification.Create(ads);  // permet de lancet cette tache cyclique
 			await AlarmNotification.Create(ads);
 			if (Station.Type == StationType.S3S4)
 			{

@@ -27,6 +27,7 @@ public class PacketNotification<TStruct> : BaseNotification<Packet, TStruct>
 			await packetService.BuildPacket(alarmList);
 		}
 
+		// SignalR
 		await hubContext.Clients.All.RefreshStationCycle();
 	}
 }

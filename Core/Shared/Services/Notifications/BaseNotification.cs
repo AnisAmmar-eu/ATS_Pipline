@@ -35,11 +35,14 @@ public class
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
 
+		// on définit le canal pour s'abonner à des evt ADS
 		uint remove = tcClient.CreateVariableHandle(removeSymbol);
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
 		const int size = sizeof(bool);
+		// abonnement à l'évènement ADS
+		// on n' absoin de s'abonner qu'à NewMSG
 		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(
 			newMsgSymbol,
 			size,
@@ -60,7 +63,9 @@ public class
 
 	private void GetElement(object? sender, AdsNotificationEventArgs e)
 	{
+		// premiière action lorsqu'on reçoit une notification
 		bool newMsg = BitConverter.ToBoolean(e.Data.Span);
+		// on vérifie qu'on nous concern et qu'il s'agit bien d'un nouveau msg
 		if (e.Handle != _resultHandle.Handle || !newMsg)
 			return;
 
