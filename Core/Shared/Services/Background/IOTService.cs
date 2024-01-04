@@ -27,9 +27,9 @@ public class IOTService : BackgroundService
 		IIOTDeviceService iotDeviceService
 			= asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string[]? rids = configuration.GetSection("Devices").Get<string[]>();
-		if (rids is null)
-			throw new ConfigurationErrorsException("Missing Devices");
+		// If there is no given devices RIDs to monitor, it defaults to monitoring all APIs.
+		IEnumerable<string> rids = configuration.GetSection("Devices").Get<string[]>()
+			?? await iotDeviceService.GetAllApisRIDs();
 
 		while (!stoppingToken.IsCancellationRequested
 			&& await timer.WaitForNextTickAsync(stoppingToken))

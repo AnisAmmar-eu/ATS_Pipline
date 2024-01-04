@@ -9,5 +9,6 @@ public interface IIOTDeviceService : IBaseEntityService<IOTDevice, DTOIOTDevice>
 {
 	public Task<IOTDeviceStatus> GetStatusByRID(string rid);
 	public Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids);
-	public Task CheckAllConnectionsAndApplyTags(string[] rids);
+	public Task<IEnumerable<string>> GetAllApisRIDs();
+	public Task CheckAllConnectionsAndApplyTags(IEnumerable<string> rids);
 }

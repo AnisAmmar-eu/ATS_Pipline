@@ -177,7 +177,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			.TextSearchFromPagination<T, TDTO>(pagination)
 			.SortFromPagination<T, TDTO>(pagination);
 
-		return (nbItems == 0) ? query.ToListAsync() : query.Take(nbItems).ToListAsync();
+		return (nbItems <= 0) ? query.ToListAsync() : query.Take(nbItems).ToListAsync();
 	}
 
 	public Task<int> CountWithPagination(Pagination pagination)

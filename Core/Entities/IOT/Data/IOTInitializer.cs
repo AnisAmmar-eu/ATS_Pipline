@@ -44,16 +44,17 @@ public static class IOTInitializer
 
 		// No need for test mode in server.
 		string[] rids = [
-			ITApisDict.IOTRID, ITApisDict.AlarmRID, ITApisDict.KPIRID, ITApisDict.ServerReceiveRID,
+			ITApisDict.IOTRID, ITApisDict.AlarmRID, ITApisDict.KPIRID, ITApisDict.MonitorRID, ITApisDict.ServerReceiveRID,
 			ITApisDict.StationCycleRID, ITApisDict.UserRID, ITApisDict.VisionRID,
 		];
 		string[] addresses = [
-			ITApisDict.IOTAddress, ITApisDict.AlarmAddress, ITApisDict.KPIAddress, ITApisDict.ServerReceiveAddress,
-			ITApisDict.StationCycleAddress, ITApisDict.UserAddress, ITApisDict.VisionPath,
+			ITApisDict.IOTAddress, ITApisDict.AlarmAddress, ITApisDict.KPIAddress, ITApisDict.MonitorAddress,
+			ITApisDict.ServerReceiveAddress, ITApisDict.StationCycleAddress, ITApisDict.UserAddress,
+			ITApisDict.VisionAddress,
 		];
 		string[] paths = [
-			ITApisDict.IOTPath, ITApisDict.AlarmPath, ITApisDict.KPIPath, ITApisDict.ServerReceivePath,
-			ITApisDict.StationCyclePath, ITApisDict.UserPath, ITApisDict.VisionPath,
+			ITApisDict.IOTPath, ITApisDict.AlarmPath, ITApisDict.KPIPath, ITApisDict.MonitorPath,
+			ITApisDict.ServerReceivePath, ITApisDict.StationCyclePath, ITApisDict.UserPath, ITApisDict.VisionPath,
 		];
 		for (int i = 0; i < rids.Length; ++i)
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);

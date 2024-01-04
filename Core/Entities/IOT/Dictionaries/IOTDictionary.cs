@@ -30,20 +30,24 @@ public static class ITApisDict
 	public static string KPIAddress = string.Empty; // 7279
 	public const string KPIPath = "/apiKPI/status";
 
+	public const string MonitorRID = "ApiMonitor";
+	public static string MonitorAddress = string.Empty; // 7280
+	public const string MonitorPath = "/apiMonitor/status";
+
 	public const string ServerReceiveRID = "ApiServerReceive";
-	public static string ServerReceiveAddress = string.Empty; // 7280
+	public static string ServerReceiveAddress = string.Empty; // 7281
 	public const string ServerReceivePath = "/apiServerReceive/status";
 
 	public const string StationCycleRID = "ApiStationCycle";
-	public static string StationCycleAddress = string.Empty; // 7281
+	public static string StationCycleAddress = string.Empty; // 7282
 	public const string StationCyclePath = "/apiStationCycle/status";
 
 	public const string UserRID = "ApiUser";
-	public static string UserAddress = string.Empty; // 7282
+	public static string UserAddress = string.Empty; // 7283
 	public const string UserPath = "/apiUser/status";
 
 	public const string VisionRID = "ApiVision";
-	public static string VisionAddress = string.Empty; // 7283
+	public static string VisionAddress = string.Empty; // 7284
 	public const string VisionPath = "/apiVision/status";
 }
 

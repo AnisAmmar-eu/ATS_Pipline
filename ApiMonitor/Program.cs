@@ -78,6 +78,9 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
 builder.Services.AddScoped<IIOTTagService, IOTTagService>();
 
+builder.Services.AddSingleton<IOTService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
+
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();

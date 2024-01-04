@@ -1,4 +1,5 @@
 using Core.Entities.IOT.IOTDevices.Models.DB;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Repositories;
@@ -36,7 +37,13 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 			.ConvertAll(device => new IOTDeviceStatus(device));
 	}
 
-	public async Task CheckAllConnectionsAndApplyTags(string[] rids)
+	public async Task<IEnumerable<string>> GetAllApisRIDs()
+	{
+		return (await AnodeUOW.IOTDevice.GetAll([device => device is ITApi], withTracking: false))
+			.Select(device => device.RID);
+	}
+
+	public async Task CheckAllConnectionsAndApplyTags(IEnumerable<string> rids)
 	{
 		List<IOTDevice> devices = await CheckAllConnections(rids);
 		bool hasAnyTagChanged = false;
@@ -71,7 +78,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 	/// <returns>
 	///     IOTDevice with IsConnected set as True.
 	/// </returns>
-	private async Task<List<IOTDevice>> CheckAllConnections(string[] rids)
+	private async Task<List<IOTDevice>> CheckAllConnections(IEnumerable<string> rids)
 	{
 		List<IOTDevice> devices = await AnodeUOW.IOTDevice
 			.GetAll([device => rids.Contains(device.RID)], withTracking: true, includes: nameof(IOTDevice.IOTTags));
