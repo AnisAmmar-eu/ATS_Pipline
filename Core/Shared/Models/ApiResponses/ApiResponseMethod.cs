@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.System.Logs;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +14,9 @@ namespace Core.Shared.Models.ApiResponses;
 public partial class ApiResponse
 {
 	private static readonly JsonSerializerOptions JsonOptions = new() {
-		PropertyNamingPolicy = null
-		};
+		PropertyNamingPolicy = null,
+		TypeInfoResolver = new DefaultJsonTypeInfoResolver { Modifiers = { AddNestedDerivedTypes } },
+	};
 
 	public ApiResponse()
 	{
@@ -143,5 +146,32 @@ public partial class ApiResponse
 		{
 			// ignored
 		}
+	}
+
+	private static void AddNestedDerivedTypes(JsonTypeInfo jsonTypeInfo)
+	{
+		if (jsonTypeInfo.PolymorphismOptions is null)
+            return;
+
+        List<Type> derivedTypes = jsonTypeInfo.PolymorphismOptions.DerivedTypes
+               .Where(t => Attribute.IsDefined(t.DerivedType, typeof(JsonDerivedTypeAttribute)))
+               .Select(t => t.DerivedType)
+               .ToList();
+		HashSet<Type> hashset = new(derivedTypes);
+		Queue<Type> queue = new(derivedTypes);
+		while (queue.TryDequeue(out Type? derived))
+		{
+			if (!hashset.Contains(derived))
+			{
+				jsonTypeInfo.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(derived));
+				hashset.Add(derived);
+			}
+
+			foreach (JsonDerivedTypeAttribute jsonDerivedTypeAttribute in derived
+				.GetCustomAttributes<JsonDerivedTypeAttribute>())
+            {
+                queue.Enqueue(jsonDerivedTypeAttribute.DerivedType);
+            }
+        }
 	}
 }

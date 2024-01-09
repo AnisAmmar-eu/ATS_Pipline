@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Announcements;
@@ -5,12 +6,16 @@ using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DTO.LoadableCycles;
+using Core.Entities.StationCycles.Models.DTO.MatchingCycles;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
 namespace Core.Entities.StationCycles.Models.DTO;
 
+[JsonDerivedType(typeof(DTOLoadableCycle))]
+[JsonDerivedType(typeof(DTOMatchingCycle))]
 public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>,
 	IExtensionBinder<DTOStationCycle>
 {

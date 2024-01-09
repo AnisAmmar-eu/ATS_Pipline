@@ -15,7 +15,7 @@ namespace Core.Entities.Packets.Models.DTO;
 
 public partial class DTOPacket
 {
-	public DTOPacket()
+	protected DTOPacket()
 	{
 	}
 

@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Core.Entities.StationCycles.Dictionaries;
+using Core.Entities.StationCycles.Models.DTO.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
-using Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
 using Core.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 

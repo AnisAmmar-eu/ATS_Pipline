@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;

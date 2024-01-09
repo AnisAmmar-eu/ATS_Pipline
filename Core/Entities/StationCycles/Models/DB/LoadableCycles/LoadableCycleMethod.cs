@@ -1,4 +1,4 @@
-using Core.Entities.StationCycles.Models.DTO.SigningCycles;
+using Core.Entities.StationCycles.Models.DTO.LoadableCycles;
 
 namespace Core.Entities.StationCycles.Models.DB.LoadableCycles;
 
@@ -8,11 +8,11 @@ public abstract partial class LoadableCycle
 	{
 	}
 
-	protected LoadableCycle(DTOSigningCycle dtoSigningCycle) : base(dtoSigningCycle)
+	protected LoadableCycle(DTOLoadableCycle dtoLoadableCycle) : base(dtoLoadableCycle)
 	{
 	}
 
-	public override DTOSigningCycle ToDTO()
+	public override DTOLoadableCycle ToDTO()
 	{
 		return new(this);
 	}

@@ -1,15 +1,15 @@
 using Core.Entities.StationCycles.Models.DB.LoadableCycles;
-using Core.Entities.StationCycles.Models.DTO.SigningCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DTO.LoadableCycles.S1S2Cycles;
 
-namespace Core.Entities.StationCycles.Models.DTO.SigningCycles;
+namespace Core.Entities.StationCycles.Models.DTO.LoadableCycles;
 
-public partial class DTOSigningCycle
+public partial class DTOLoadableCycle
 {
-	public DTOSigningCycle()
+	public DTOLoadableCycle()
 	{
 	}
 
-	public DTOSigningCycle(LoadableCycle cycle) : base(cycle)
+	public DTOLoadableCycle(LoadableCycle cycle) : base(cycle)
 	{
 	}
 
