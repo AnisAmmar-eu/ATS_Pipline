@@ -10,14 +10,18 @@ namespace Core.Entities.Packets.Models.Structs;
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct AnnouncementStruct : IBaseADS<Packet>
 {
-	public RIDStruct RID;
-	public RIDStruct AnnounceID;
-	public ushort AnodeType;
+	// Missing AnnounceID?
+	public RIDStruct CycleRID;
+	public int Status;
+	public TimestampStruct TS;
+	// Unused => Put in db
+	public int SyncIndex;
+	// Unused => same
+	public int Double;
+	public int AnodeType;
 
-	public ushort TrolleyNumber;
-
-	[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
-	public string SerialNumber;
+	public RIDStruct SN;
+	public int TrolleyNumber;
 
 	public Packet ToModel()
 	{

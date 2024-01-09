@@ -23,13 +23,16 @@ public partial class Announcement
 
 	public Announcement(AnnouncementStruct adsStruct)
 	{
-		StationCycleRID = adsStruct.RID.ToRID();
+		StationCycleRID = adsStruct.CycleRID.ToRID();
+		Status = (PacketStatus)adsStruct.Status;
+		TS = adsStruct.TS.GetTimestamp();
 		AnodeType = adsStruct.AnodeType switch {
 			1 => AnodeTypeDict.DX,
 			2 => AnodeTypeDict.D20,
 			_ => AnodeTypeDict.Undefined,
 		};
-		AnnounceID = adsStruct.AnnounceID.ToRID();
+		// TODO
+		//AnnounceID = adsStruct.AnnounceID.ToRID();
 	}
 
 	public override DTOAnnouncement ToDTO()

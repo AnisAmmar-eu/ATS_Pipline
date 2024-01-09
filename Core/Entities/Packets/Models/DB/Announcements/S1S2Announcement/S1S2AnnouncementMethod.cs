@@ -17,7 +17,7 @@ public partial class S1S2Announcement
 
 	public S1S2Announcement(AnnouncementStruct adsStruct) : base(adsStruct)
 	{
-		SerialNumber = adsStruct.SerialNumber;
+		SerialNumber = adsStruct.SN.ToRID();
 		TrolleyNumber = adsStruct.TrolleyNumber;
 	}
 

@@ -1,3 +1,4 @@
+using Core.Shared.Dictionaries;
 using TwinCAT;
 using TwinCAT.Ads;
 
@@ -9,30 +10,41 @@ public static class TwinCatConnectionManager
 
 	public static async Task<AdsClient> Connect(int port, CancellationToken cancel)
 	{
-		if (TcClient.IsConnected)
-			return TcClient;
-
-		return await Task.Run(
-			() =>
-			{
-				while (!cancel.IsCancellationRequested)
+		try
+		{
+			// Tricky but if it crashes, we're not connected either.
+			uint handle = TcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
+			TcClient.ReadAny<bool>(handle);
+		}
+		catch
+		{
+			return await Task.Run(
+				() =>
 				{
-					try
+					while (!cancel.IsCancellationRequested)
 					{
-						TcClient.Connect(port);
-						if (!TcClient.IsConnected)
-							throw new AdsException("Could not connect to the automaton");
+						try
+						{
+							TcClient.Connect(port);
+							if (!TcClient.IsConnected)
+								throw new AdsException("Could not connect to the automaton");
+							// Tricky but if it crashes, we're not connected either.
+							uint handle = TcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
+							TcClient.ReadAny<bool>(handle);
 
-						return Task.FromResult(TcClient);
+							return Task.FromResult(TcClient);
+						}
+						catch
+						{
+							// Ignored
+						}
 					}
-					catch
-					{
-						// Ignored
-					}
-				}
 
-				throw new IOException("Could not connect to the automaton");
-			},
-			cancel);
+					throw new IOException("Could not connect to the automaton");
+				},
+				cancel);
+		}
+
+		return TcClient;
 	}
 }

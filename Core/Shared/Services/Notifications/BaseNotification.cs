@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using TwinCAT.Ads;
@@ -35,14 +36,14 @@ public class
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
 
-		// on définit le canal pour s'abonner à des evt ADS
+		// on dÃ©finit le canal pour s'abonner Ã  des evt ADS
 		uint remove = tcClient.CreateVariableHandle(removeSymbol);
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
 		const int size = sizeof(bool);
-		// abonnement à l'évènement ADS
-		// on n' absoin de s'abonner qu'à NewMSG
+		// abonnement Ã  l'Ã©vÃ©nement ADS
+		// on n' absoin de s'abonner qu'Ã  NewMSG
 		ResultHandle resultHandle = await tcClient.AddDeviceNotificationAsync(
 			newMsgSymbol,
 			size,
@@ -57,15 +58,18 @@ public class
 				_resultHandle = resultHandle,
 			};
 		tcClient.AdsNotification += notification.GetElement;
-		// No need to verify if the queue has already an element, a notification is automatically sent when pairing.
+		// A bit tricky but rewriting the newMsg will trigger an event for the notification to see.
+		if (tcClient.ReadAny<bool>(newMsg))
+			tcClient.WriteAny(newMsg, true);
+
 		return notification;
 	}
 
 	private void GetElement(object? sender, AdsNotificationEventArgs e)
 	{
-		// premiière action lorsqu'on reçoit une notification
+		// premiiÃ¨re action lorsqu'on reÃ§oit une notification
 		bool newMsg = BitConverter.ToBoolean(e.Data.Span);
-		// on vérifie qu'on nous concern et qu'il s'agit bien d'un nouveau msg
+		// on vÃ©rifie qu'on nous concern et qu'il s'agit bien d'un nouveau msg
 		if (e.Handle != _resultHandle.Handle || !newMsg)
 			return;
 

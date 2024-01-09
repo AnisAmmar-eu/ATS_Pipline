@@ -52,6 +52,7 @@ public partial class Shooting
 	{
 		string filename
 			= $"S{stationID:00}T{anodeType}C{camera:00}T{ShootingTS.ToString(AnodeFormat.RIDFormat)}.jpg";
+		// TODO Folders should use RID instead of ShootingTS
 		string path
 			= $@"S{stationID:00}\T{anodeType}\Y{ShootingTS.Year.ToString()}\M{ShootingTS.Month:00}\D{
 				ShootingTS.Day:00}\C{camera:00}\";

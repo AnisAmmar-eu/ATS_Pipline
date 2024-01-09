@@ -12,9 +12,9 @@ public static class ADSUtils
 
 	#region AlarmNotification
 
-	public const string AlarmRemove = "VA_ALM.remove"; // pour suprimer une fois consomé
-	public const string AlarmNewMsg = "VA_ALM.msgNew"; // pour surveiller qu'il y un nouveau msg
-	public const string AlarmToRead = "VA_ALM.oldEntry"; // zone de lecture et racibe de la structure
+	public const string AlarmRemove = "VA_ALM.remove"; // Delete once consumed.
+	public const string AlarmNewMsg = "VA_ALM.msgNew"; // Notifies when there is a new message.
+	public const string AlarmToRead = "VA_ALM.oldEntry"; // Data zone and root of the structure.
 
 	#endregion
 
@@ -22,7 +22,7 @@ public static class ADSUtils
 
 	public const string AnnouncementRemove = "VA_PXX.P01_SQL_FIFO.remove";
 	public const string AnnouncementNewMsg = "VA_PXX.P01_SQL_FIFO.msgNew";
-	public const string AnnouncementToRead = "VA_PXX.P01_SQL_FIFO.OldEntry.Out";
+	public const string AnnouncementToRead = "VA_PXX.P01_SQL_FIFO.OldEntry";
 
 	#endregion
 

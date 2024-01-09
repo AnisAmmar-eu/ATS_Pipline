@@ -63,7 +63,6 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The token</returns>
-	[HttpPost("login")]
 	private static async Task<JsonHttpResult<ApiResponse>> Login(
 		[FromBody] DTOLogin dtoLogin, IAuthService authService, ILogService logService, HttpContext httpContext)
 	{
