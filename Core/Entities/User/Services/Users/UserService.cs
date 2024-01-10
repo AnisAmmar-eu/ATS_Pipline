@@ -168,8 +168,7 @@ public class UserService : IUserService
 		IList<string> rolesName = await _userManager.GetRolesAsync(user);
 
 		// Remove admin role in rolesName
-		rolesName.Remove(RoleNames.ATS);
-		rolesName.Remove(RoleNames.Fives);
+		rolesName.Remove(RoleNames.Admin);
 
 		// Remove all roles
 		await _userManager.RemoveFromRolesAsync(user, rolesName);
@@ -197,8 +196,8 @@ public class UserService : IUserService
 			throw new EntityNotFoundException("User [" + username + "] does not exist");
 
 		return toAdmin
-			? (await _userManager.AddToRoleAsync(user, RoleNames.Fives)).Succeeded
-			: (await _userManager.RemoveFromRoleAsync(user, RoleNames.Fives)).Succeeded;
+			? (await _userManager.AddToRoleAsync(user, RoleNames.Admin)).Succeeded
+			: (await _userManager.RemoveFromRoleAsync(user, RoleNames.Admin)).Succeeded;
 	}
 
 	/// <summary>

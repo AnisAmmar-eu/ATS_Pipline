@@ -19,38 +19,26 @@ public static class UserInitializer
 		{
 			anodeCTX.Roles.Add(new ApplicationRole
 				{
-					Name = RoleNames.ATS,
-					NormalizedName = RoleNames.ATS.ToUpper(),
-					Type = ApplicationRoleType.SystemATS,
-				});
-			anodeCTX.Roles.Add(new ApplicationRole
-				{
-					Name = RoleNames.Fives,
-					NormalizedName = RoleNames.Fives.ToUpper(),
-					Type = ApplicationRoleType.SystemFives,
-				});
-			anodeCTX.Roles.Add(new ApplicationRole
-				{
-					Name = RoleNames.Visitor,
-					NormalizedName = RoleNames.Visitor.ToUpper(),
-					Type = ApplicationRoleType.User,
-				});
-			anodeCTX.Roles.Add(new ApplicationRole
-				{
 					Name = RoleNames.Operator,
 					NormalizedName = RoleNames.Operator.ToUpper(),
 					Type = ApplicationRoleType.User,
 				});
 			anodeCTX.Roles.Add(new ApplicationRole
 				{
-					Name = RoleNames.Forcing,
-					NormalizedName = RoleNames.Forcing.ToUpper(),
+					Name = RoleNames.Supervisor,
+					NormalizedName = RoleNames.Supervisor.ToUpper(),
 					Type = ApplicationRoleType.User,
 				});
 			anodeCTX.Roles.Add(new ApplicationRole
 				{
-					Name = RoleNames.Settings,
-					NormalizedName = RoleNames.Settings.ToUpper(),
+					Name = RoleNames.Maintenance,
+					NormalizedName = RoleNames.Maintenance.ToUpper(),
+					Type = ApplicationRoleType.User,
+				});
+			anodeCTX.Roles.Add(new ApplicationRole
+				{
+					Name = RoleNames.Engineer,
+					NormalizedName = RoleNames.Engineer.ToUpper(),
 					Type = ApplicationRoleType.User,
 				});
 			anodeCTX.Roles.Add(new ApplicationRole
@@ -91,8 +79,8 @@ public static class UserInitializer
 
 			// loop through the roles and add them to the user
 			string[] roleNames = [
-					RoleNames.Admin, RoleNames.ATS, RoleNames.Fives, RoleNames.Forcing, RoleNames.Operator,
-					RoleNames.Settings, RoleNames.Visitor,
+					RoleNames.Admin, RoleNames.Maintenance, RoleNames.Operator,
+					RoleNames.Engineer, RoleNames.Supervisor,
 				];
 			foreach (string roleName in roleNames)
 			{

@@ -32,12 +32,10 @@ public static class ApplicationRoleType
 
 public static class RoleNames
 {
-	public const string Fives = "Fives-Administrator";
-	public const string ATS = "ATS-Administrator";
-	public const string Visitor = "Visitor";
 	public const string Operator = "Operator";
-	public const string Forcing = "Forcing";
-	public const string Settings = "Settings";
+	public const string Supervisor = "Supervisor";
+	public const string Maintenance = "Maintenance";
+	public const string Engineer = "Engineer";
 	public const string Admin = "Admin";
 }
 
