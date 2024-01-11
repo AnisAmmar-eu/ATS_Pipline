@@ -12,11 +12,6 @@ public class KPICEndpoint : ICarterModule
 		if (!Station.IsServer)
 			return;
 
-		app.MapGroup("apiKPI").WithTags(nameof(KPICEndpoint)).MapGet("status", GetStatus);
-	}
-
-	private static JsonHttpResult<ApiResponse> GetStatus()
-	{
-		return new ApiResponse().SuccessResult();
+		app.MapGroup("apiKPI").WithTags(nameof(KPICEndpoint)).MapGet("status", () => new ApiResponse().SuccessResult());
 	}
 }

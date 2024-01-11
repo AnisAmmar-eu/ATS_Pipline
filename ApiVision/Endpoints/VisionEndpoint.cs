@@ -12,11 +12,6 @@ public class VisionEndpoint : ICarterModule
 		if (!Station.IsServer)
 			return;
 
-		app.MapGroup("apiVision").WithTags(nameof(VisionEndpoint)).MapGet("status", GetStatus);
-	}
-
-	private static JsonHttpResult<ApiResponse> GetStatus()
-	{
-		return new ApiResponse().SuccessResult();
+		app.MapGroup("apiVision").WithTags(nameof(VisionEndpoint)).MapGet("status", () => new ApiResponse().SuccessResult());
 	}
 }

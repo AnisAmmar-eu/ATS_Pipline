@@ -21,7 +21,7 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
-		group.MapGet("status", GetStatus);
+		group.MapGet("status", () => new ApiResponse().SuccessResult());
 		if (!Station.IsServer)
 			return;
 
@@ -30,11 +30,6 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 		group.MapGet("reduced", GetAllRIDs);
 		group.MapGet("mostRecent", GetMostRecent);
 		group.MapGet("{id:int}/{cameraNb:int}/image", GetImageByIdAndCamera);
-	}
-
-	private static JsonHttpResult<ApiResponse> GetStatus()
-	{
-		return new ApiResponse().SuccessResult();
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetAllRIDs(

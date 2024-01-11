@@ -14,15 +14,6 @@ public class ApiUserEndpoint : ICarterModule
 	/// </summary>
 	/// <param name="app"></param>
 	public void AddRoutes(IEndpointRouteBuilder app)
-	{
-		app.MapGroup("apiUser").WithTags(nameof(ApiUserEndpoint)).MapGet("status", GetStatus);
-	}
-
-	/// <summary>
-	///     Returns 200. Useful to know if the API is down or not.
-	/// </summary>
-	private static JsonHttpResult<ApiResponse> GetStatus()
-	{
-		return new ApiResponse().SuccessResult();
-	}
+		=> app.MapGroup("apiUser").WithTags(nameof(ApiUserEndpoint))
+			.MapGet("status", () => new ApiResponse().SuccessResult());
 }

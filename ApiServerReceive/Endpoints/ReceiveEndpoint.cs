@@ -26,17 +26,12 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 
 		RouteGroupBuilder group = app.MapGroup("apiServerReceive").WithTags(nameof(ReceiveEndpoint));
 
-		group.MapGet("status", GetStatus);
+		group.MapGet("status", () => new ApiResponse().SuccessResult());
 		group.MapPost("alarmsLog", ReceiveAlarmLog);
 		group.MapPost("{stationName}/packets", ReceivePacket);
 		// This one needs more information due to CustomModelBinding requiring the removal of [FromBody]
 		group.MapPost("images", ReceiveImage);
 		group.MapPost("logs", ReceiveLog);
-	}
-
-	private static JsonHttpResult<ApiResponse> GetStatus()
-	{
-		return new ApiResponse().SuccessResult();
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(

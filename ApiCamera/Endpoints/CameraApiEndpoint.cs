@@ -14,13 +14,8 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 	{
 		RouteGroupBuilder group = app.MapGroup("apiCamera").WithTags(nameof(CameraApiEndpoint));
 
-		group.MapGet("status", GetStatus);
-		group.MapGet("{cameraID}/testImage", GetCameraTestImage);
-	}
-
-	private static JsonHttpResult<ApiResponse> GetStatus()
-	{
-		return new ApiResponse().SuccessResult();
+		group.MapGet("status", () => new ApiResponse().SuccessResult());
+		group.MapGet("{cameraID:int}/testImage", GetCameraTestImage);
 	}
 
 	#region Get TestImages
