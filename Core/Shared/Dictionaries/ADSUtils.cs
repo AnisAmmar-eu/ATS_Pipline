@@ -5,7 +5,7 @@ public static class ADSUtils
 	public const int AdsPort = 851;
 
 	public const string ConnectionPath = "VA_HMI.Connection";
-	public const string GlobalRIDForCamera = "VA_FAT.CycleRID.SN";
+	public const string GlobalRIDForCamera = "VA_FAT.CycleRID.StationID";
 
 	public const string MeasurementVariable = "VA_PXX.P04_In";
 
