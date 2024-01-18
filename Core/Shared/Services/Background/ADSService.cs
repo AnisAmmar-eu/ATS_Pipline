@@ -34,7 +34,7 @@ public class ADSService : BackgroundService
 			{
 				AdsClient tcClient = await InitializeConnection(asyncScope, cancel);
 				// If the TC disconnects, it will loop back to the top
-				uint handle = tcClient.CreateVariableHandle(ADSUtils.AnnouncementNewMsg);
+				uint handle = tcClient.CreateVariableHandle(ADSUtils.ConnectionPath);
 				while (!stoppingToken.IsCancellationRequested)
                 {
                     if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
@@ -46,7 +46,8 @@ public class ADSService : BackgroundService
 			catch (Exception e)
 			{
 				_logger.LogInformation(
-					"PeriodicADSService lost connection to the TwinCat with error message: {error}",
+					"PeriodicADSService lost connection with path {ConnectionPath} to the TwinCat with error message: {error}",
+					ADSUtils.ConnectionPath,
 					e);
 
 				_executionCount++;
@@ -69,7 +70,6 @@ public class ADSService : BackgroundService
 			ads.cancel = cancel;
 			_logger.LogInformation("Calling Notifications");
 			await AnnouncementNotification.Create(ads);
-			await DetectionNotification.Create(ads);  // permet de lancet cette tache cyclique
 			await AlarmNotification.Create(ads);
 			if (Station.Type == StationType.S3S4)
 			{

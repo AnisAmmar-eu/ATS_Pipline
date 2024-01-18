@@ -34,7 +34,7 @@ public static class IOTInitializer
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
 
 		// TODO Path.
-		InitializeTwinCat(anodeCTX, DeviceRID.TwinCat, ADSUtils.AdsPort.ToString(), string.Empty);
+		InitializeTwinCat(anodeCTX, DeviceRID.TwinCat, ADSUtils.AdsPort.ToString(), ADSUtils.ConnectionPath);
 	}
 
 	public static void InitializeServer(AnodeCTX anodeCTX)
