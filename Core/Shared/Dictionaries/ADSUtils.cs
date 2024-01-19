@@ -5,11 +5,13 @@ public static class ADSUtils
 	public const int AdsPort = 851;
 
 	public const string ConnectionPath = "VA_HMI.Connection";
-	public const string GlobalRIDForCamera = "VA_FAT.CycleRID.StationID";
 
-	public const string MeasurementVariable = "VA_PXX.P04_In";
+	#region Camera
 
-	public const string CloseCycle = "";
+	public const string GlobalRID = "VA_STATION.CycleRID";
+	public const string GlobalAnodeType = "VA_STATION.Anode.AnodeType";
+
+	#endregion
 
 	#region AlarmNotification
 
@@ -27,12 +29,11 @@ public static class ADSUtils
 
 	#endregion
 
-	// Todo : Remove this if DetectionNotification is not used.
-	#region DetectionNotification
+	#region ShootingNotification
 
-	public const string DetectionRemove = "VA_P02.SQL_FIFO.remove";
-	public const string DetectionNewMsg = "VA_P02.SQL_FIFO.msgNew";
-	public const string DetectionToRead = "VA_P02.SQL_FIFO.OldEntry.Out";
+	public const string ShootingRemove = "VA_P05.SQL_FIFO.remove";
+	public const string ShootingNewMsg = "VA_P05.SQL_FIFO.msgNew";
+	public const string ShootingToRead = "VA_P05.SQL_FIFO.OldEntry";
 
 	#endregion
 
@@ -52,11 +53,4 @@ public static class ADSUtils
 
 	#endregion
 
-	#region ShootingNotification
-
-	public const string ShootingAcquitMsg = "";
-	public const string ShootingNewMsg = "";
-	public const string ShootingToRead = "";
-
-	#endregion
 }

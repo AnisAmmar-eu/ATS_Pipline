@@ -8,12 +8,14 @@ namespace Core.Entities.Packets.Models.Structs;
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct ShootingStruct : IBaseADS<Packet>
 {
-	public RIDStruct StationCycleRID;
-	public ushort AnodeIDKey;
-	public string GlobalStationStatus; // TODO Dictionary?
-	public ushort ProcedurePerformance; // TODO int?
-	public string LedStatus; // TODO Dictionary?
-	public TimestampStruct ShootingTS;
+	public RIDStruct CycleRID;
+	public int Status;
+	public TimestampStruct TS;
+	public int SyncIndex;
+	public int AnodeType;
+	public int AnodeSize;
+	public int Cam01Status;
+	public int Cam02Status;
 
 	public Packet ToModel()
 	{

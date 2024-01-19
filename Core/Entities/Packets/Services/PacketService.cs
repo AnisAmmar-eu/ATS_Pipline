@@ -50,8 +50,15 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
+		string extension = _configuration.GetValueWithThrow<string>("CameraConfig:Extension");
 
-		return shooting .GetImagePathFromRoot(Station.ID, thumbnailsPath, shooting.AnodeType, cameraID);
+		return Shooting.GetImagePathFromRoot(
+			shooting.StationCycleRID,
+			Station.ID,
+			thumbnailsPath,
+			shooting.AnodeType,
+			cameraID,
+			extension);
 	}
 
 	public async Task<DTOPacket> BuildPacket(Packet packet)
@@ -68,6 +75,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task SendCompletedPackets(string imagesPath)
 	{
+		string extension = _configuration.GetValueWithThrow<string>("CameraConfig:Extension");
 		IEnumerable<Packet> packets
 			= await AnodeUOW.Packet.GetAll([packet => packet.Status == PacketStatus.Completed], withTracking: false);
 		if (!packets.Any())
@@ -80,7 +88,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			{
 				using HttpClient http = new();
 				if (packet is Shooting shooting)
-					await shooting.SendImages(imagesPath);
+					await shooting.SendImages(imagesPath, extension);
 
 				StringContent content = new(JsonSerializer.Serialize(packet.ToDTO()), Encoding.UTF8, "application/json");
 				HttpResponseMessage response = await http.PostAsync(

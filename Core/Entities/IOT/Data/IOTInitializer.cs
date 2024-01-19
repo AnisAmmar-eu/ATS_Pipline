@@ -20,15 +20,15 @@ public static class IOTInitializer
 		InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
 
 		// APIs
-		InitializeApi(anodeCTX, ITApisDict.IOTRID, ITApisDict.IOTAddress, ITApisDict.IOTPath, true);
 		string[] rids = [
-			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.StationCycleRID,
+			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.IOTRID, ITApisDict.StationCycleRID,
 		];
 		string[] addresses = [
-			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.StationCycleAddress,
+			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.IOTAddress, ITApisDict
+				.StationCycleAddress,
 		];
 		string[] paths = [
-			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.StationCyclePath,
+			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.IOTPath, ITApisDict.StationCyclePath,
 		];
 		for (int i = 0; i < rids.Length; ++i)
 			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
@@ -255,8 +255,7 @@ public static class IOTInitializer
 		AnodeCTX anodeCTX,
 		string rid,
 		string address,
-		string path,
-		bool addTestMode = false)
+		string path)
 	{
 		ITApi api = new() {
 			RID = rid,
@@ -267,21 +266,6 @@ public static class IOTInitializer
 			IsConnected = false,
 		};
 		anodeCTX.ITApi.Add(api);
-		anodeCTX.SaveChanges();
-		if (!addTestMode)
-			return;
-
-		anodeCTX.IOTTag.Add(new IOTTag {
-			RID = IOTTagRID.TestMode,
-			Name = IOTTagRID.TestMode,
-			Description = "Test mode tag. Should be the sole one.",
-			CurrentValue = "false",
-			NewValue = "false",
-			HasNewValue = false,
-			Path = string.Empty,
-			IOTDeviceID = api.ID,
-			IOTDevice = api,
-		});
 		anodeCTX.SaveChanges();
 	}
 
@@ -306,7 +290,7 @@ public static class IOTInitializer
 			Description = "Temperature for Camera 1",
 			CurrentValue = "19.84",
 			NewValue = string.Empty,
-			ValueType = IOTTagType.Double,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.TemperatureCam1,
 			IOTDeviceID = twinCat.ID,
@@ -318,7 +302,7 @@ public static class IOTInitializer
 			Description = "Temperature for Camera 2",
 			CurrentValue = "19.84",
 			NewValue = string.Empty,
-			ValueType = IOTTagType.Double,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.TemperatureCam2,
 			IOTDeviceID = twinCat.ID,
@@ -330,7 +314,7 @@ public static class IOTInitializer
 			Description = "Ok - Warn temperature threshold",
 			CurrentValue = "42.0",
 			NewValue = string.Empty,
-			ValueType = IOTTagType.Double,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			IsReadOnly = true,
 			Path = IOTTagPath.TemperatureOkWarnThreshold,
@@ -343,10 +327,190 @@ public static class IOTInitializer
 			Description = "Warn - Error temperature threshold",
 			CurrentValue = "70.0",
 			NewValue = string.Empty,
-			ValueType = IOTTagType.Double,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			IsReadOnly = true,
 			Path = IOTTagPath.TemperatureWarnErrorThreshold,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.TemperatureStatusCam1,
+			Name = "Cam1 temperature status",
+			Description = "Cam1 temperature status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.TemperatureStatusCam1,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.TemperatureStatusCam2,
+			Name = "Cam2 temperature status",
+			Description = "Cam2 temperature status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.TemperatureStatusCam2,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		#endregion
+
+		#region Status
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.TSH01,
+			Name = "High temperature status",
+			Description = "High temperature status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.TSH01,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.PowerFailure,
+			Name = "Power failure status",
+			Description = "Power failure status",
+			CurrentValue = "false",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.Bool,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.PowerFailure,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.AirPressure,
+			Name = "Air pressure status",
+			Description = "Air pressure status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.AirPressure,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.TT01,
+			Name = "TT01 status",
+			Description = "TT01 status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.TT01,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		if (Station.Type == StationType.S5)
+		{
+			anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+				RID = IOTTagRID.TT02,
+				Name = "TT02 status",
+				Description = "TT02 status",
+				CurrentValue = "1",
+				NewValue = string.Empty,
+				ValueType = IOTTagType.UShort,
+				HasNewValue = false,
+				IsReadOnly = true,
+				Path = IOTTagPath.TT02,
+				IOTDeviceID = twinCat.ID,
+				IOTDevice = twinCat,
+			});
+		}
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DiagCam1LedOn,
+			Name = "Cam1 LedOn status",
+			Description = "Cam1 LedOn status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.DiagCam1LedOn,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DiagCam1LedOff,
+			Name = "Cam1 LedOff status",
+			Description = "Cam1 LedOff status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.DiagCam1LedOff,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DiagCam2LedOn,
+			Name = "Cam2 LedOn status",
+			Description = "Cam2 LedOn status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.DiagCam2LedOn,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DiagCam2LedOff,
+			Name = "Cam2 LedOff status",
+			Description = "Cam2 LedOff status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.DiagCam2LedOff,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.Cam1Status,
+			Name = "Cam1 status",
+			Description = "Cam1 status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.Cam1Status,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.Cam2Status,
+			Name = "Cam2 status",
+			Description = "Cam2 status",
+			CurrentValue = "1",
+			NewValue = string.Empty,
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			IsReadOnly = true,
+			Path = IOTTagPath.Cam2Status,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -354,6 +518,20 @@ public static class IOTInitializer
 		#endregion
 
 		#region TestMode
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.TestMode,
+			Name = IOTTagRID.TestMode,
+			Description = "Test mode tag. Should be the sole one.",
+			CurrentValue = "false",
+			NewValue = "false",
+			ValueType = IOTTagType.Bool,
+			HasNewValue = false,
+			Path = IOTTagPath.TestMode,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.SaveChanges();
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.Shoot1,
@@ -463,6 +641,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.SequencePicture1,
 			Name = "Sequence Picture 1",
@@ -488,14 +667,26 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.SequenceCleaning,
-			Name = "Sequence Cleaning",
-			Description = "Sequence Cleaning",
+			RID = IOTTagRID.SequenceCleaningCam1,
+			Name = "Sequence Cleaning Cam1",
+			Description = "Sequence Cleaning Cam1",
 			CurrentValue = "false",
 			NewValue = "false",
 			ValueType = IOTTagType.Bool,
 			HasNewValue = false,
-			Path = IOTTagPath.SequenceCleaning,
+			Path = IOTTagPath.SequenceCleaningCam1,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.SequenceCleaningCam2,
+			Name = "Sequence Cleaning Cam2",
+			Description = "Sequence Cleaning Cam2",
+			CurrentValue = "false",
+			NewValue = "false",
+			ValueType = IOTTagType.Bool,
+			HasNewValue = false,
+			Path = IOTTagPath.SequenceCleaningCam2,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -512,38 +703,50 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.SequencePressure,
-			Name = "Sequence Pressure",
-			Description = "Sequence Pressure",
+			RID = IOTTagRID.SequenceCam1LedOn,
+			Name = "Sequence Cam1 Led On",
+			Description = "Sequence Cam1 Led On",
 			CurrentValue = "false",
 			NewValue = "false",
 			ValueType = IOTTagType.Bool,
 			HasNewValue = false,
-			Path = IOTTagPath.SequencePressure,
+			Path = IOTTagPath.SequenceCam1LedOn,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.SequenceLEDOff,
-			Name = "Sequence LED Off",
-			Description = "Sequence LED Off",
+			RID = IOTTagRID.SequenceCam1LedOff,
+			Name = "Sequence Cam1 Led Off",
+			Description = "Sequence Cam1 Led Off",
 			CurrentValue = "false",
 			NewValue = "false",
 			ValueType = IOTTagType.Bool,
 			HasNewValue = false,
-			Path = IOTTagPath.SequenceLEDOff,
+			Path = IOTTagPath.SequenceCam1LedOff,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.SequenceLEDOn,
-			Name = "Sequence LED On",
-			Description = "Sequence LED On",
+			RID = IOTTagRID.SequenceCam2LedOn,
+			Name = "Sequence Cam2 Led On",
+			Description = "Sequence Cam2 Led On",
 			CurrentValue = "false",
 			NewValue = "false",
 			ValueType = IOTTagType.Bool,
 			HasNewValue = false,
-			Path = IOTTagPath.SequenceLEDOn,
+			Path = IOTTagPath.SequenceCam2LedOn,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.SequenceCam2LedOff,
+			Name = "Sequence Cam2 Led Off",
+			Description = "Sequence Cam2 Led Off",
+			CurrentValue = "false",
+			NewValue = "false",
+			ValueType = IOTTagType.Bool,
+			HasNewValue = false,
+			Path = IOTTagPath.SequenceCam2LedOff,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -1135,7 +1338,7 @@ public static class IOTInitializer
 			Description = "Laser ZT1",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.ZT1,
 			IOTDeviceID = twinCat.ID,
@@ -1147,7 +1350,7 @@ public static class IOTInitializer
 			Description = "Laser ZT2",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.ZT2,
 			IOTDeviceID = twinCat.ID,
@@ -1159,7 +1362,7 @@ public static class IOTInitializer
 			Description = "Laser ZT3",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.ZT3,
 			IOTDeviceID = twinCat.ID,
@@ -1171,7 +1374,7 @@ public static class IOTInitializer
 			Description = "Laser ZT4",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.ZT4,
 			IOTDeviceID = twinCat.ID,

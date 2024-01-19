@@ -8,10 +8,10 @@ namespace Core.Entities.Packets.Models.DTO.Shootings;
 [JsonDerivedType(typeof(DTOS3S4Shooting))]
 public partial class DTOShooting : DTOPacket, IDTO<Shooting, DTOShooting>
 {
-	public string AnodeType { get; set; } = string.Empty;
-	public int AnodeIDKey { get; set; }
-	public string GlobalStationStatus { get; set; } = string.Empty; // TODO Dictionary ?
-	public string LedStatus { get; set; } = string.Empty; // TODO Dictionary ?
-	public int ProcedurePerformance { get; set; } // TODO int ?
 	public DateTimeOffset ShootingTS { get; set; }
+	public int SyncIndex { get; set; }
+	public string AnodeType { get; set; } = string.Empty;
+	public int AnodeSize { get; set; }
+	public int Cam01Status { get; set; }
+	public int Cam02Status { get; set; }
 }

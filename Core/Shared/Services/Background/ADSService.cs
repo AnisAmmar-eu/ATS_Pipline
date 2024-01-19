@@ -71,6 +71,7 @@ public class ADSService : BackgroundService
 			_logger.LogInformation("Calling Notifications");
 			await AnnouncementNotification.Create(ads);
 			await AlarmNotification.Create(ads);
+			await ShootingNotification.Create(ads);
 			if (Station.Type == StationType.S3S4)
 			{
 				await InFurnaceNotification.Create(ads);

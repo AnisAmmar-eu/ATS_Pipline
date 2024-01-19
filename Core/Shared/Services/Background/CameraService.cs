@@ -4,6 +4,7 @@ using System.Text.Json;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.Packets.Dictionaries;
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
@@ -25,12 +26,22 @@ public class CameraService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<CameraService> _logger;
+	private string _imagesPath = string.Empty;
+	private string _thumbnailsPath = string.Empty;
+	private string _extension = string.Empty;
 	private IHubContext<CameraHub, ICameraHub> _hubContext = null!;
 
 	public CameraService(IServiceScopeFactory factory, ILogger<CameraService> logger)
 	{
 		_factory = factory;
 		_logger = logger;
+	}
+
+	private enum CameraNb
+	{
+		Camera1 = 1,
+		Camera2 = 2,
+		Both = 3,
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,65 +51,39 @@ public class CameraService : BackgroundService
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		int port1 = configuration.GetValueWithThrow<int>("CameraConfig:Camera1:Port");
 		int port2 = configuration.GetValueWithThrow<int>("CameraConfig:Camera2:Port");
+		_imagesPath = configuration.GetValueWithThrow<string>("CameraConfig:ImagesPath");
+		_thumbnailsPath = configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
+		_extension = configuration.GetValueWithThrow<string>("CameraConfig:Extension");
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
-			Task task1 = RunAcquisition(
-				port1,
-				"jpg",
-				ShootingUtils.Camera1,
-				ShootingUtils.CameraTest1,
-				stoppingToken);
-			Task task2 = RunAcquisition(
-				port2,
-				"jpg",
-				ShootingUtils.Camera2,
-				ShootingUtils.CameraTest2,
-				stoppingToken);
+			Task task1 = RunAcquisition(port1, CameraNb.Camera1, stoppingToken);
+			Task task2 = RunAcquisition(port2, CameraNb.Camera2, stoppingToken);
 			await task1;
 			await task2;
 		}
 		else
 		{
-			await RunAcquisition(
-				port1,
-				"jpg",
-				ShootingUtils.Camera1,
-				ShootingUtils.CameraTest1,
-				stoppingToken,
-				ShootingUtils.Camera2,
-				ShootingUtils.CameraTest2);
+			await RunAcquisition(port1, CameraNb.Both, stoppingToken);
 		}
 	}
 
 	private async Task RunAcquisition(
 		int port,
-		string extension,
-		string imagesDir,
-		string testDir,
-		CancellationToken cancel,
-		string? imagesDir2 = null,
-		string? testDir2 = null)
+		CameraNb cameraNb,
+		CancellationToken cancel)
 	{
-		Directory.CreateDirectory(imagesDir);
-
-		if (imagesDir2 is not null)
-			Directory.CreateDirectory(imagesDir2);
-
-		Directory.CreateDirectory(testDir);
-		if (testDir2 is not null)
-			Directory.CreateDirectory(testDir2);
-
 		Device device = await CameraConnectionManager.Connect(port, cancel);
 		device.Notify[NotifyDictionary.DeviceDisconnected].Event += Disconnect;
 		device.Notify[NotifyDictionary.DeviceReconnect].Event += Reconnect;
 
 		AdsClient tcClient = new();
-		tcClient.Connect(851);
+		tcClient.Connect(ADSUtils.AdsPort);
 		if (!tcClient.IsConnected)
 			throw new("Not connected");
 
-		uint ridStructHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalRIDForCamera);
+		uint ridStructHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalRID);
+		uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
 
 		Stemmer.Cvb.Driver.Stream stream = device.Stream;
 		if (!stream.IsRunning)
@@ -125,7 +110,9 @@ public class CameraService : BackgroundService
 						if (await IsTestModeOn(_logger))
 						{
 							// testDir2 != null means that we are in a S5 Cycle.
-							string dir = (testDir2 is not null && nbPicturesTest % 2 == 1) ? testDir2 : testDir;
+							string dir = (cameraNb == CameraNb.Both && nbPicturesTest % 2 == 1)
+								? ShootingUtils.CameraTest2
+								: ShootingUtils.CameraTest1;
 							FileInfo previousImage = new(dir + ShootingUtils.TestFilename);
 							if (previousImage.Exists)
 								previousImage.Delete();
@@ -136,15 +123,25 @@ public class CameraService : BackgroundService
 						}
 						else
 						{
-							RIDStruct ridStruct = tcClient.ReadAny<RIDStruct>(ridStructHandle);
-							string rid = ridStruct.ToRID();
-							string ts = DateTimeOffset.Now.ToString(AnodeFormat.RIDFormat);
-							string filename = rid + "-" + ts + "." + extension;
-							// imagesDir2 != null means that we are in a S5 Cycle.
-							if (imagesDir2 is not null && nbPictures % 2 == 1)
-								image.Save(imagesDir2 + filename, 1);
-							else
-								image.Save(imagesDir + filename, 1);
+							RIDStruct rid = tcClient.ReadAny<RIDStruct>(ridStructHandle);
+							string anodeType = AnodeTypeDict.AnodeTypeIntToString(tcClient.ReadAny<int>(anodeTypeHandle));
+							int cameraID = (cameraNb != CameraNb.Both)
+                                ? (int)cameraNb
+								: (int)((nbPictures % 2 == 1) ? CameraNb.Camera2 : CameraNb.Camera1);
+							FileInfo imagePath
+								= Shooting.GetImagePathFromRoot(rid.ToRID(), Station.ID, _imagesPath, anodeType, cameraID, _extension);
+							FileInfo thumbnailPath
+								= Shooting.GetImagePathFromRoot(rid.ToRID(), Station.ID, _thumbnailsPath, anodeType, cameraID, _extension);
+
+							if (imagePath.DirectoryName is not null)
+								Directory.CreateDirectory(imagePath.DirectoryName);
+
+							image.Save(imagePath.FullName, 1);
+
+							if (thumbnailPath.DirectoryName is not null)
+								Directory.CreateDirectory(thumbnailPath.DirectoryName);
+
+							image.Save(thumbnailPath.FullName, 0.2);
 
 							++nbPictures;
 						}

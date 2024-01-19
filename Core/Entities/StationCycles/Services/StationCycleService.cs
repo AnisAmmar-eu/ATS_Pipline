@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
@@ -46,8 +47,14 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
+		string extenstion = _configuration.GetValueWithThrow<string>("CameraConfig:Extension");
 
-		return stationCycle.ShootingPacket
-			.GetImagePathFromRoot(stationCycle.StationID, thumbnailsPath, stationCycle.AnodeType, camera);
+		return Shooting.GetImagePathFromRoot(
+			stationCycle.ShootingPacket.StationCycleRID,
+			stationCycle.StationID,
+			thumbnailsPath,
+			stationCycle.AnodeType,
+			camera,
+			extenstion);
 	}
 }

@@ -5,6 +5,7 @@ public static class IOTTagType
 	public const string String = "string";
 	public const string Int = "int";
 	public const string UInt = "uint";
+	public const string Float = "float";
 	public const string Double = "double";
 	public const string UShort = "ushort";
 	public const string Bool = "bool";
@@ -43,6 +44,27 @@ public static class IOTTagRID
 	public const string TemperatureCam2 = "TemperatureCam2";
 	public const string TemperatureOkWarnThreshold = "TemperatureOkWarnThreshold";
 	public const string TemperatureWarnErrorThreshold = "TemperatureWarnErrorThreshold";
+	public const string TemperatureStatusCam1 = "TemperatureStatusCam1";
+	public const string TemperatureStatusCam2 = "TemperatureStatusCam2";
+
+	#endregion
+
+	#region Status
+
+	public const string TSH01 = "TSH01";
+	public const string PowerFailure = "PowerFailure";
+	public const string AirPressure = "AirPressure";
+
+	public const string TT01 = "TT01";
+	public const string TT02 = "TT02";
+
+	public const string DiagCam1LedOn = "DiagCam1LedOn";
+	public const string DiagCam1LedOff = "DiagCam1LedOff";
+	public const string DiagCam2LedOn = "DiagCam2LedOn";
+	public const string DiagCam2LedOff = "DiagCam2LedOff";
+
+	public const string Cam1Status = "Cam1Status";
+	public const string Cam2Status = "Cam2Status";
 
 	#endregion
 
@@ -60,11 +82,13 @@ public static class IOTTagRID
 
 	public const string SequencePicture1 = "SequencePicture1";
 	public const string SequencePicture2 = "SequencePicture2";
-	public const string SequenceCleaning = "SequenceCleaning";
+	public const string SequenceCleaningCam1 = "SequenceCleaningCam1";
+	public const string SequenceCleaningCam2 = "SequenceCleaningCam2";
 	public const string SequenceCooling = "SequenceCooling";
-	public const string SequencePressure = "SequencePressure";
-	public const string SequenceLEDOff = "SequenceLEDOff";
-	public const string SequenceLEDOn = "SequenceLEDOn";
+	public const string SequenceCam1LedOn = "SequenceCam1LedOn";
+	public const string SequenceCam1LedOff = "SequenceCam1LedOff";
+	public const string SequenceCam2LedOn = "SequenceCam2LedOn";
+	public const string SequenceCam2LedOff = "SequenceCam2LedOff";
 
 	#endregion
 
@@ -182,32 +206,57 @@ public static class IOTTagPath
 
 	#region Camera Temperature
 
-	public const string TemperatureCam1 = "";
-	public const string TemperatureCam2 = "";
+	public const string TemperatureCam1 = "VA_DM.CAM001_Temp";
+	public const string TemperatureCam2 = "VA_DM.CAM002_Temp";
 	public const string TemperatureOkWarnThreshold = "";
 	public const string TemperatureWarnErrorThreshold = "";
+	public const string TemperatureStatusCam1 = "VA_HMI.Cam01_Temp_Status";
+	public const string TemperatureStatusCam2 = "VA_HMI.Cam02_Temp_Status";
+
+	#endregion
+
+	#region Status
+
+	public const string TSH01 = "VA_HMI.TSH01";
+	public const string PowerFailure = "VA_HMI.PW_F";
+	public const string AirPressure = "VA_HMI.PSL01";
+
+	public const string TT01 = "VA_HMI.TT01";
+	public const string TT02 = "VA_HMI.TT02";
+
+	public const string DiagCam1LedOn = "VA_HMI.Cam01_Led_ON";
+	public const string DiagCam1LedOff = "VA_HMI.Cam01_Led_OFF";
+	public const string DiagCam2LedOn = "VA_HMI.Cam02_Led_ON";
+	public const string DiagCam2LedOff = "VA_HMI.Cam02_Led_OFF";
+
+	public const string Cam1Status = "VA_DM.CAM001_Status";
+	public const string Cam2Status = "VA_DM.CAM002_Status";
 
 	#endregion
 
 	#region TestMode
 
-	public const string Shoot1 = "";
-	public const string Shoot2 = "";
-	public const string Led1 = "";
-	public const string Led2 = "";
-	public const string Led3 = "";
-	public const string Led4 = "";
-	public const string Blowing1 = "";
-	public const string Blowing2 = "";
-	public const string Blowing3 = "";
+	public const string TestMode = "VA_HMI.TestMode";
 
-	public const string SequencePicture1 = "";
-	public const string SequencePicture2 = "";
-	public const string SequenceCleaning = "";
-	public const string SequenceCooling = "";
-	public const string SequencePressure = "";
-	public const string SequenceLEDOff = "";
-	public const string SequenceLEDOn = "";
+	public const string Shoot1 = "VA_HMI.Cam01";
+	public const string Shoot2 = "VA_HMI.Cam02";
+	public const string Led1 = "VA_HMI.LFN01";
+	public const string Led2 = "VA_HMI.LFN02";
+	public const string Led3 = "VA_HMI.LFN03";
+	public const string Led4 = "VA_HMI.LFN04";
+	public const string Blowing1 = "VA_HMI.FV01";
+	public const string Blowing2 = "VA_HMI.FV02";
+	public const string Blowing3 = "VA_HMI.FV03";
+
+	public const string SequencePicture1 = "VA_HMI.Shooting_Cam01";
+	public const string SequencePicture2 = "VA_HMI.Shooting_Cam02";
+	public const string SequenceCleaningCam1 = "VA_HMI.Clean_Cam01";
+	public const string SequenceCleaningCam2 = "VA_HMI.Clean_Cam02";
+	public const string SequenceCooling = "VA_HMI.Cool_Cam01";
+	public const string SequenceCam1LedOn = "VA_HMI.DIAG_CAM01_LED_ON";
+	public const string SequenceCam1LedOff = "VA_HMI.DIAG_CAM01_LED_OFF";
+	public const string SequenceCam2LedOn = "VA_HMI.DIAG_CAM02_LED_ON";
+	public const string SequenceCam2LedOff = "VA_HMI.DIAG_CAM02_LED_OFF";
 
 	#endregion
 
@@ -292,10 +341,10 @@ public static class IOTTagPath
 
 	#region Lasers
 
-	public const string ZT1 = "";
-	public const string ZT2 = "";
-	public const string ZT3 = "";
-	public const string ZT4 = "";
+	public const string ZT1 = "VA_HMI.ZT01";
+	public const string ZT2 = "VA_HMI.ZT02";
+	public const string ZT3 = "VA_HMI.ZT03";
+	public const string ZT4 = "VA_HMI.ZT04";
 
 	#endregion
 }

@@ -9,7 +9,7 @@ public class ShootingNotification : PacketNotification<ShootingStruct>
 	{
 		return await CreateSub<ShootingNotification>(
 			ads,
-			ADSUtils.ShootingAcquitMsg,
+			ADSUtils.ShootingRemove,
 			ADSUtils.ShootingNewMsg,
 			ADSUtils.ShootingToRead) as ShootingNotification;
 	}
