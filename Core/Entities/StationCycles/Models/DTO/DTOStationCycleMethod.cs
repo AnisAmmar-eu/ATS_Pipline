@@ -32,10 +32,6 @@ public partial class DTOStationCycle
 		AnnouncementID = stationCycle.AnnouncementID;
 		AnnouncementPacket = stationCycle.AnnouncementPacket?.ToDTO();
 
-		DetectionStatus = stationCycle.DetectionStatus;
-		DetectionID = stationCycle.DetectionID;
-		DetectionPacket = stationCycle.DetectionPacket?.ToDTO();
-
 		ShootingStatus = stationCycle.ShootingStatus;
 		ShootingID = stationCycle.ShootingID;
 		ShootingPacket = stationCycle.ShootingPacket?.ToDTO();

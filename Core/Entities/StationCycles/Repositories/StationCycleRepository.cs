@@ -26,7 +26,6 @@ public class StationCycleRepository : BaseEntityRepository<AnodeCTX, StationCycl
 			withTracking,
 			maxCount,
 			nameof(StationCycle.AnnouncementPacket),
-			nameof(StationCycle.DetectionPacket),
 			nameof(StationCycle.ShootingPacket),
 			nameof(StationCycle.AlarmListPacket),
 			nameof(S3S4Cycle.InFurnacePacket),

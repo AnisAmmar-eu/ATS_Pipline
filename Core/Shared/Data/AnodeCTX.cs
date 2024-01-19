@@ -21,7 +21,6 @@ using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Announcements;
 using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
-using Core.Entities.Packets.Models.DB.Detections;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DB.Shootings;
@@ -86,7 +85,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<AlarmList> AlarmList => Set<AlarmList>();
 	public DbSet<Announcement> Announcement => Set<Announcement>();
 	public DbSet<S1S2Announcement> S1S2Announcement => Set<S1S2Announcement>();
-	public DbSet<Detection> Detection => Set<Detection>();
 	public DbSet<InFurnace> InFurnace => Set<InFurnace>();
 	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
 	public DbSet<Shooting> Shooting => Set<Shooting>();
@@ -171,13 +169,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasOne(stationCycle => stationCycle.AnnouncementPacket)
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AnnouncementID)
-			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
-
-		builder.Entity<StationCycle>()
-			.HasOne(stationCycle => stationCycle.DetectionPacket)
-			.WithOne(packet => packet.StationCycle)
-			.HasForeignKey<StationCycle>(stationCycle => stationCycle.DetectionID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 

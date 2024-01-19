@@ -8,16 +8,24 @@ namespace Core.Entities.Packets.Models.Structs;
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct OutFurnaceStruct : IBaseADS<Packet>
 {
-	public RIDStruct StationCycleRID;
-	public RIDStruct AnnounceID;
-
-	public ushort FTAPickUp;
-	public TimestampStruct PickUpTS;
-	public TimestampStruct DepositTS;
-	public ushort InvalidPacket;
+	public RIDStruct CycleRID;
+	//public int Status;
+	public TimestampStruct TS;
+	public OutFurnaceRWStruct MD;
 
 	public Packet ToModel()
 	{
 		return new OutFurnace(this);
 	}
+}
+
+[StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
+public struct OutFurnaceRWStruct
+{
+	public RIDStruct AnnounceID;
+	public int PitFTA;
+	public TimestampStruct PitPickup;
+	public TimestampStruct PitDeposit;
+	public int InvalidPacket;
+	public int BackedConvPos;
 }

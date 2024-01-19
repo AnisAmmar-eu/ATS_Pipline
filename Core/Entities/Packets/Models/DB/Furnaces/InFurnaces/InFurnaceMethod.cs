@@ -28,19 +28,17 @@ public partial class InFurnace
 
 	public InFurnace(InFurnaceStruct adsStruct)
 	{
-		StationCycleRID = adsStruct.StationCycleRID.ToRID();
-		InAnnounceID = adsStruct.AnnounceID.ToRID();
-		OriginID = adsStruct.OriginID;
-		PackPosition = adsStruct.PackPosition;
-		PalletSide = adsStruct.PalletSide;
-		PitNumber = adsStruct.PitNumber;
-		PitSectionNumber = adsStruct.PitSectionNumber;
-		PitHeight = adsStruct.PitHeight;
-		FTAPlace = adsStruct.FTAPlace;
-		FTASuck = adsStruct.FTASuck;
-		GreenConvPos = adsStruct.GreenConvPos;
-		BakedConvPos = adsStruct.BakedConvPos;
-		PitLoadTS = adsStruct.PitLoadTS.GetTimestamp();
+		StationCycleRID = adsStruct.CycleRID.ToRID();
+		InAnnounceID = adsStruct.MD.AnnounceID.ToRID();
+		OriginID = adsStruct.MD.OriginID;
+		PackPosition = adsStruct.MD.PackPosition;
+		PalletSide = adsStruct.MD.PalletSide;
+		PitNumber = adsStruct.MD.PitNumber;
+		PitSectionNumber = adsStruct.MD.PitSectionNumber;
+		PitHeight = adsStruct.MD.PitHeight;
+		FTAPlace = adsStruct.MD.PitFTA;
+		GreenConvPos = adsStruct.MD.GreenConvPos;
+		PitLoadTS = adsStruct.MD.PitLoadTS.GetTimestamp();
 	}
 
 	public override DTOInFurnace ToDTO()

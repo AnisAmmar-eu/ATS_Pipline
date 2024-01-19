@@ -32,10 +32,6 @@ public partial class StationCycle
 		AnnouncementID = dtoStationCycle.AnnouncementID;
 		AnnouncementPacket = dtoStationCycle.AnnouncementPacket?.ToModel();
 
-		DetectionStatus = dtoStationCycle.DetectionStatus;
-		DetectionID = dtoStationCycle.DetectionID;
-		DetectionPacket = dtoStationCycle.DetectionPacket?.ToModel();
-
 		ShootingStatus = dtoStationCycle.ShootingStatus;
 		ShootingID = dtoStationCycle.ShootingID;
 		ShootingPacket = dtoStationCycle.ShootingPacket?.ToModel();
@@ -166,7 +162,7 @@ public partial class StationCycle
 		return new() {
 			ID = ID,
 			RID = RID,
-			AnodeSize = DetectionPacket?.AnodeSize,
+			AnodeSize = ShootingPacket?.AnodeSize,
 			AnodeType = AnodeType,
 			ShootingTS = ShootingPacket?.ShootingTS,
 		};

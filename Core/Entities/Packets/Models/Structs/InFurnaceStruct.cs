@@ -8,25 +8,29 @@ namespace Core.Entities.Packets.Models.Structs;
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct InFurnaceStruct : IBaseADS<Packet>
 {
-	public RIDStruct StationCycleRID;
-	public RIDStruct AnnounceID;
-
-	public ushort OriginID;
-	public ushort PackPosition;
-	public ushort PalletSide;
-	public ushort PitNumber;
-	public ushort PitSectionNumber;
-	public ushort PitHeight;
-
-	public ushort FTAPlace;
-	public ushort FTASuck;
-
-	public ushort GreenConvPos;
-	public ushort BakedConvPos;
-	public TimestampStruct PitLoadTS;
+	public RIDStruct CycleRID;
+	//public int Status;
+	public TimestampStruct TS;
+	public InFurnaceRWStruct MD;
 
 	public Packet ToModel()
 	{
 		return new InFurnace(this);
 	}
+}
+
+[StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
+public struct InFurnaceRWStruct
+{
+	public RIDStruct AnnounceID;
+
+	public int OriginID;
+	public int PackPosition;
+	public int PalletSide;
+	public int PitNumber;
+	public int PitSectionNumber;
+	public int PitHeight;
+	public int PitFTA;
+	public int GreenConvPos;
+	public TimestampStruct PitLoadTS;
 }
