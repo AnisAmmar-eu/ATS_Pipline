@@ -1,7 +1,6 @@
 using Carter;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiVision.Endpoints;
 
