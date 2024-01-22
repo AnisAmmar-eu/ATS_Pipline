@@ -4,7 +4,6 @@ using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Announcements;
-using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DTO.Shootings;
@@ -61,7 +60,6 @@ public partial class DTOPacket
 			PacketType.Alarm => typeof(DTOAlarmList),
 			PacketType.Announcement => typeof(DTOAnnouncement),
 			PacketType.S1S2Announcement => typeof(S1S2Announcement),
-			PacketType.Detection => typeof(DTODetection),
 			PacketType.Shooting => typeof(DTOShooting),
 			PacketType.InFurnace => typeof(DTOInFurnace),
 			PacketType.OutFurnace => typeof(DTOOutFurnace),

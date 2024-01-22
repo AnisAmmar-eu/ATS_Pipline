@@ -21,12 +21,12 @@ public partial class OutFurnace
 
 	public OutFurnace(OutFurnaceStruct adsStruct)
 	{
-		StationCycleRID = adsStruct.StationCycleRID.ToRID();
-		OutAnnounceID = adsStruct.AnnounceID.ToRID();
-		FTAPickUp = adsStruct.FTAPickUp;
-		PickUpTS = adsStruct.PickUpTS.GetTimestamp();
-		DepositTS = adsStruct.DepositTS.GetTimestamp();
-		InvalidPacket = adsStruct.InvalidPacket;
+		StationCycleRID = adsStruct.CycleRID.ToRID();
+		OutAnnounceID = adsStruct.MD.AnnounceID.ToRID();
+		FTAPickUp = adsStruct.MD.PitFTA;
+		PickUpTS = adsStruct.MD.PitPickup.GetTimestamp();
+		DepositTS = adsStruct.MD.PitDeposit.GetTimestamp();
+		InvalidPacket = adsStruct.MD.InvalidPacket;
 	}
 
 	public override DTOOutFurnace ToDTO()

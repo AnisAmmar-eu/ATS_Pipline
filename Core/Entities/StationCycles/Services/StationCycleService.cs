@@ -33,7 +33,7 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 	public async Task<List<ReducedStationCycle>> GetAllRIDs()
 	{
 		return (await AnodeUOW.StationCycle
-			.GetAll(withTracking: false, includes: [nameof(StationCycle.DetectionPacket), nameof(StationCycle.ShootingPacket)]))
+			.GetAll(withTracking: false, includes: [nameof(StationCycle.ShootingPacket)]))
 			.ConvertAll(cycle => cycle.Reduce());
 	}
 

@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Announcements;
-using Core.Entities.Packets.Models.DTO.Detections;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
@@ -31,10 +30,6 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	public PacketStatus? AnnouncementStatus { get; set; }
 	public int? AnnouncementID { get; set; }
 	public DTOAnnouncement? AnnouncementPacket { get; set; }
-
-	public PacketStatus? DetectionStatus { get; set; }
-	public int? DetectionID { get; set; }
-	public DTODetection? DetectionPacket { get; set; }
 
 	public PacketStatus? ShootingStatus { get; set; }
 	public int? ShootingID { get; set; }

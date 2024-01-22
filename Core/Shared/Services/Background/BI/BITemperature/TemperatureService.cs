@@ -9,7 +9,8 @@ public class TemperatureService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<TemperatureService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromMinutes(15);
+	private const int _delay = 5;
+	private readonly TimeSpan _period = TimeSpan.FromSeconds(_delay);
 	private int _executionCount;
 
 	public TemperatureService(ILogger<TemperatureService> logger, IServiceScopeFactory factory)
@@ -21,7 +22,7 @@ public class TemperatureService : BackgroundService
 	private static TimeSpan TimeToWaitUntilNextQuarterHour()
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
-		return TimeSpan.FromMinutes(15 - (now.Minute % 15));
+		return TimeSpan.FromSeconds(_delay - (now.Second % _delay));
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
