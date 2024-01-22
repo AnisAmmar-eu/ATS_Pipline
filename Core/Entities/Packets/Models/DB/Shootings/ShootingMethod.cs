@@ -23,6 +23,9 @@ public partial class Shooting
 		AnodeSize = dtoShooting.AnodeSize;
 		Cam01Status = dtoShooting.Cam01Status;
 		Cam02Status = dtoShooting.Cam02Status;
+		Cam01Temp = dtoShooting.Cam01Temp;
+		Cam02Temp = dtoShooting.Cam02Temp;
+		TT01 = dtoShooting.TT01;
 	}
 
 	public Shooting(ShootingStruct adsStruct)
@@ -34,6 +37,9 @@ public partial class Shooting
 		AnodeSize = adsStruct.AnodeSize;
 		Cam01Status = adsStruct.Cam01Status;
 		Cam02Status = adsStruct.Cam02Status;
+		Cam01Temp = adsStruct.Cam01Temp;
+		Cam02Temp = adsStruct.Cam02Temp;
+		TT01 = adsStruct.TT01;
 	}
 
 	public override DTOShooting ToDTO()
