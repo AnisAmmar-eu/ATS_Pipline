@@ -32,6 +32,7 @@ public partial class OTCamera
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{
 		bool isConnected;
+		float? temperature = null;
 		CancellationTokenSource cancelSource = new();
 		cancelSource.CancelAfter(400);
 		try
@@ -41,11 +42,7 @@ public partial class OTCamera
 				return false;
 
 			NodeMap nodeMap = device.NodeMaps[NodeMapNames.Device];
-			double temperature = (nodeMap["DeviceTemperature"] as FloatNode)!.Value;
-			using HttpClient httpClient = new();
-			string tempRID = (RID == DeviceRID.Camera1) ? IOTTagRID.TemperatureCam1 : IOTTagRID.TemperatureCam2;
-			await httpClient.PutAsync(
-				$"{ITApisDict.IOTAddress}/apiIOT/iotTags/{tempRID}/{temperature.ToString(CultureInfo.InvariantCulture)}", null);
+			temperature = (float?)(nodeMap["DeviceTemperature"] as FloatNode)!.Value;
 			isConnected = true;
 		}
 		catch (Exception e)
@@ -58,8 +55,16 @@ public partial class OTCamera
 		{
 			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, cancelSource.Token);
 			uint statusHandle
-				= tcClient.CreateVariableHandle((RID == DeviceRID.Camera1) ? IOTTagPath.Cam1Status : IOTTagPath.Cam2Status);
+				= tcClient.CreateVariableHandle(
+					(RID == DeviceRID.Camera1) ? IOTTagPath.Cam1StatusWrite : IOTTagPath.Cam2StatusWrite);
 			tcClient.WriteAny(statusHandle, isConnected);
+			if (temperature is not null)
+			{
+				uint temperatureHandle
+					= tcClient.CreateVariableHandle(
+						(RID == DeviceRID.Camera1) ? IOTTagPath.TemperatureCam1Write : IOTTagPath.TemperatureCam2Write);
+				tcClient.WriteAny(temperatureHandle, temperature.Value);
+			}
 		}
 		catch (Exception e)
 		{

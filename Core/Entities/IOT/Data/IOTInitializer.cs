@@ -248,7 +248,7 @@ public static class IOTInitializer
 			NewValue = string.Empty,
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.TemperatureCam1,
+			Path = IOTTagPath.TemperatureCam1Read,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -260,7 +260,7 @@ public static class IOTInitializer
 			NewValue = string.Empty,
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.TemperatureCam2,
+			Path = IOTTagPath.TemperatureCam2Read,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -453,7 +453,7 @@ public static class IOTInitializer
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
 			IsReadOnly = true,
-			Path = IOTTagPath.Cam1Status,
+			Path = IOTTagPath.Cam1StatusRead,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -466,7 +466,7 @@ public static class IOTInitializer
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
 			IsReadOnly = true,
-			Path = IOTTagPath.Cam2Status,
+			Path = IOTTagPath.Cam2StatusRead,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
