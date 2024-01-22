@@ -112,11 +112,6 @@ public partial class OTCamera
 				tag.HasNewValue = false;
 				hasBeenUpdated = true;
 			}
-			else if (!tag.IsReadOnly && !nodeMap[tag.Path].IsWritable)
-			{
-				tag.IsReadOnly = true;
-				hasBeenUpdated = true;
-			}
 
 			string readValue = nodeMap[tag.Path] switch {
 				IntegerNode integerNode => integerNode.Value.ToString(),

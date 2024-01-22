@@ -72,17 +72,6 @@ public static class IOTInitializer
 		anodeCTX.OTCamera.Add(cam);
 		anodeCTX.SaveChanges();
 		anodeCTX.IOTTag.Add(new IOTTag {
-			RID = IOTTagRID.TriggerMode + port,
-			Name = "Trigger mode",
-			Description = "Trigger mode for Camera" + port,
-			CurrentValue = "On",
-			NewValue = "On",
-			HasNewValue = true,
-			Path = IOTTagPath.TriggerMode,
-			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
-		});
-		anodeCTX.IOTTag.Add(new IOTTag {
 			RID = IOTTagRID.TriggerSource + port,
 			Name = "Trigger source",
 			Description = "Trigger source for Camera" + port,
@@ -112,39 +101,6 @@ public static class IOTInitializer
 			NewValue = "30000.0",
 			HasNewValue = true,
 			Path = IOTTagPath.ExposureTime,
-			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
-		});
-		anodeCTX.IOTTag.Add(new IOTTag {
-			RID = IOTTagRID.PixelFormat + port,
-			Name = "Pixel format",
-			Description = "Pixel format for Camera" + port,
-			CurrentValue = PixelFormats.RGB8,
-			NewValue = PixelFormats.RGB8,
-			HasNewValue = true,
-			Path = IOTTagPath.PixelFormat,
-			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
-		});
-		anodeCTX.IOTTag.Add(new IOTTag {
-			RID = IOTTagRID.Width + port,
-			Name = "Width",
-			Description = "Width for Camera" + port,
-			CurrentValue = "2464",
-			NewValue = "2464",
-			HasNewValue = true,
-			Path = IOTTagPath.Width,
-			IOTDeviceID = cam.ID,
-			IOTDevice = cam,
-		});
-		anodeCTX.IOTTag.Add(new IOTTag {
-			RID = IOTTagRID.Height + port,
-			Name = "Height",
-			Description = "Height for Camera" + port,
-			CurrentValue = "2056",
-			NewValue = "2056",
-			HasNewValue = true,
-			Path = IOTTagPath.Height,
 			IOTDeviceID = cam.ID,
 			IOTDevice = cam,
 		});
@@ -220,7 +176,7 @@ public static class IOTInitializer
 			Description = "Adaptive noise suppression factor for Camera" + port,
 			CurrentValue = "1",
 			NewValue = "1",
-			HasNewValue = true,
+			HasNewValue = false,
 			Path = IOTTagPath.AdaptiveNoiseSuppressionFactor,
 			IOTDeviceID = cam.ID,
 			IOTDevice = cam,
@@ -231,7 +187,7 @@ public static class IOTInitializer
 			Description = "Sharpness for Camera" + port,
 			CurrentValue = "0",
 			NewValue = "0",
-			HasNewValue = true,
+			HasNewValue = false,
 			Path = IOTTagPath.Sharpness,
 			IOTDeviceID = cam.ID,
 			IOTDevice = cam,

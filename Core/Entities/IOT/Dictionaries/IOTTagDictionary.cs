@@ -17,13 +17,9 @@ public static class IOTTagRID
 
 	#region Camera
 
-	public const string TriggerMode = "TriggerMode";
 	public const string TriggerSource = "TriggerSource";
 	public const string TriggerActivation = "TriggerActivation";
 	public const string ExposureTime = "ExposureTime";
-	public const string PixelFormat = "PixelFormat";
-	public const string Width = "Width";
-	public const string Height = "Height";
 	public const string AcquisitionFrameRateEnable = "AcquisitionFrameRateEnable";
 	public const string Gain = "Gain";
 	public const string BlackLevel = "BlackLevel";
@@ -185,13 +181,9 @@ public static class IOTTagPath
 {
 	#region Camera
 
-	public const string TriggerMode = "TriggerMode";
 	public const string TriggerSource = "TriggerSource";
 	public const string TriggerActivation = "TriggerActivation";
 	public const string ExposureTime = "ExposureTime";
-	public const string PixelFormat = "PixelFormat";
-	public const string Width = "Width";
-	public const string Height = "Height";
 	public const string AcquisitionFrameRateEnable = "AcquisitionFrameRateEnable";
 	public const string Gain = "Gain";
 	public const string BlackLevel = "BlackLevel";
