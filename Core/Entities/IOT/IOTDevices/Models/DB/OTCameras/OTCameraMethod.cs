@@ -2,12 +2,15 @@ using System.Globalization;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.Camera;
+using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
 using Stemmer.Cvb.GenApi;
+using TwinCAT.Ads;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 
@@ -28,10 +31,11 @@ public partial class OTCamera
 
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{
+		bool isConnected;
+		CancellationTokenSource cancelSource = new();
+		cancelSource.CancelAfter(400);
 		try
 		{
-			CancellationTokenSource cancelSource = new();
-			cancelSource.CancelAfter(200);
 			Device device = await CameraConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
 			if (device.ConnectionState != ConnectionState.Connected)
 				return false;
@@ -42,13 +46,27 @@ public partial class OTCamera
 			string tempRID = (RID == DeviceRID.Camera1) ? IOTTagRID.TemperatureCam1 : IOTTagRID.TemperatureCam2;
 			await httpClient.PutAsync(
 				$"{ITApisDict.IOTAddress}/apiIOT/iotTags/{tempRID}/{temperature.ToString(CultureInfo.InvariantCulture)}", null);
-			return true;
+			isConnected = true;
 		}
 		catch (Exception e)
 		{
 			logger.LogInformation("Error while monitoring to {camRID}:\n {error}", RID, e);
-			return false;
+			isConnected = false;
 		}
+
+		try
+		{
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, cancelSource.Token);
+			uint statusHandle
+				= tcClient.CreateVariableHandle((RID == DeviceRID.Camera1) ? IOTTagPath.Cam1Status : IOTTagPath.Cam2Status);
+			tcClient.WriteAny(statusHandle, isConnected);
+		}
+		catch (Exception e)
+		{
+			logger.LogInformation("Error while writing {camRID} status in TwinCat:\n {error}", RID, e);
+		}
+
+		return isConnected;
 	}
 
 	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)

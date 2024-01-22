@@ -84,6 +84,10 @@ public class CameraService : BackgroundService
 
 		uint ridStructHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalRID);
 		uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
+		uint pictureCounter
+			= tcClient.CreateVariableHandle((cameraNb == CameraNb.Camera2)
+				? ADSUtils.PictureCountCam2
+				: ADSUtils.PictureCountCam1);
 
 		Stemmer.Cvb.Driver.Stream stream = device.Stream;
 		if (!stream.IsRunning)
@@ -143,6 +147,7 @@ public class CameraService : BackgroundService
 
 							image.Save(thumbnailPath.FullName, 0.2);
 
+							tcClient.WriteAny(pictureCounter, (ushort)1);
 							++nbPictures;
 						}
 					}
@@ -154,6 +159,8 @@ public class CameraService : BackgroundService
 						_logger.LogError("Error while monitoring camera with port {port}: {e}",port, e);
 						if (device.Stream.IsRunning)
 							stream.TryStop();
+
+						stream.Start();
 					}
 				}
 
@@ -188,7 +195,7 @@ public class CameraService : BackgroundService
 			IOTTag[] tags = jsonElement.Deserialize<IOTTag[]>()
 				?? throw new InvalidOperationException(
 					$"ApiResponse IOTTags are null or invalid: {jsonElement.ToString()}");
-			return bool.Parse(tags[0].CurrentValue);
+			return tags.Length != 0 && bool.Parse(tags[0].CurrentValue);
 		}
 		catch (Exception e)
 		{
