@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Security.Cryptography;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
@@ -6,6 +7,7 @@ using Core.Shared.Dictionaries;
 using Core.Shared.Models.Camera;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
@@ -93,6 +95,9 @@ public partial class OTCamera
 		foreach (IOTTag tag in IOTTags)
 		{
 			bool hasBeenUpdated = false;
+			if (tag is { IsReadOnly: false, HasNewValue: true } && !nodeMap[tag.Path].IsWritable)
+				device.Stream.TryStop();
+
 			if (tag is { IsReadOnly: false, HasNewValue: true } && nodeMap[tag.Path].IsWritable)
 			{
 				switch (nodeMap[tag.Path])
@@ -116,6 +121,11 @@ public partial class OTCamera
 
 				tag.HasNewValue = false;
 				hasBeenUpdated = true;
+			}
+			else
+			{
+				Console.WriteLine($"Could not update tag with RID: {tag.RID}");
+				tag.HasNewValue = false;
 			}
 
 			string readValue = nodeMap[tag.Path] switch {

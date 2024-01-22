@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
+using Stemmer.Cvb.Wpf.Adorners;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
@@ -109,6 +110,9 @@ public class CameraService : BackgroundService
 							Thread.Sleep(1000);
 							continue;
 						}
+
+						if (!stream.IsRunning)
+							stream.Start();
 
 						using StreamImage image = stream.Wait();
 						if (await IsTestModeOn(_logger))
