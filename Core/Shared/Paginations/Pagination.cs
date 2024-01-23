@@ -20,7 +20,7 @@ public class Pagination
 
 	/// <summary>
 	/// A list of <see cref="FilterParam"/> to apply to the query. Filter params are the first ones to be applied.
-	/// Filtering also handles the <see cref="SortParam.LastValue"/>-based pagination.
+	/// Filtering also handles the <see cref="Sorting.SortParam.LastValue"/>-based pagination.
 	/// <seealso cref="Filter"/>
 	/// </summary>
     public List<FilterParam> FilterParams { get; set; } = [];

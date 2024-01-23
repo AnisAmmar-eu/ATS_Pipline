@@ -18,7 +18,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
-using Stemmer.Cvb.Wpf.Adorners;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
@@ -90,7 +89,7 @@ public class CameraService : BackgroundService
 				? ADSUtils.PictureCountCam2
 				: ADSUtils.PictureCountCam1);
 
-		Stemmer.Cvb.Driver.Stream stream = device.Stream;
+        Stemmer.Cvb.Driver.Stream stream = device.Stream;
 		if (!stream.IsRunning)
 			stream.Start();
 

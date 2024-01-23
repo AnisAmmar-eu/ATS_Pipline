@@ -1,5 +1,4 @@
 using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Shared.Services.Kernel.Interfaces;

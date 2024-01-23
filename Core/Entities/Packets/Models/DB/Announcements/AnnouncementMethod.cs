@@ -1,10 +1,7 @@
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Announcements;
 using Core.Entities.Packets.Models.Structs;
-using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 using Core.Shared.Dictionaries;
-using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.Packets.Models.DB.Announcements;
 

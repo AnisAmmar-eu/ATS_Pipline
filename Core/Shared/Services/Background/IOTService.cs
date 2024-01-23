@@ -1,4 +1,3 @@
-using System.Configuration;
 using Core.Entities.IOT.IOTDevices.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
