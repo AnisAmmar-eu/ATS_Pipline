@@ -33,12 +33,13 @@ public partial class IOTDevice
 		return Task.FromResult(true);
 	}
 
-	/// <summary>
-	///     Will apply all the tags of the device which need to be updated.
-	/// </summary>
-	/// <param name="anodeUOW"></param>
-	/// <returns>True if at least one tag is applied. False otherwise.</returns>
-	public virtual Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
+    /// <summary>
+    ///     Will apply all the tags of the device which need to be updated.
+    /// </summary>
+    /// <param name="anodeUOW"></param>
+    /// <param name="logger"></param>
+    /// <returns>True if at least one tag is applied. False otherwise.</returns>
+    public virtual Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger)
 	{
 		return Task.FromResult(new List<IOTTag>());
 	}

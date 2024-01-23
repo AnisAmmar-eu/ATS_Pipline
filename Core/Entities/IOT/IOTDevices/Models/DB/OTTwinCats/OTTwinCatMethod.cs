@@ -46,7 +46,7 @@ public partial class OTTwinCat
 		return true;
 	}
 
-	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
+	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger)
 	{
 		CancellationTokenSource cancelSource = new();
 		cancelSource.CancelAfter(800);
@@ -55,8 +55,9 @@ public partial class OTTwinCat
 		{
 			tcClient = await TwinCatConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
 		}
-		catch (AdsException)
+		catch (AdsException e)
 		{
+			logger.LogError($"Error while connecting to {RID} when applying tags: {e}");
 			return []; // The TwinCat will be marked as disconnected at next monitoring.
 		}
 
@@ -94,9 +95,9 @@ public partial class OTTwinCat
 				if (!tag.HasNewValue)
 					tag.NewValue = readValue?.ToString()!;
 			}
-			catch
+			catch (Exception e)
 			{
-				// ignored
+				logger.LogError($"Error while applying tag {tag.RID}: {e}");
 			}
 		}
 

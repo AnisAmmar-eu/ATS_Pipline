@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using Core.Entities.IOT.Dictionaries;
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
@@ -128,6 +129,7 @@ public partial class Shooting
 			HasError = HasError || !HasSecondShoot;
 		}
 
+		Status = PacketStatus.Completed;
 		return Task.CompletedTask;
 	}
 }

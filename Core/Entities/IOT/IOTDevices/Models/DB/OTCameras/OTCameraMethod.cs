@@ -74,7 +74,7 @@ public partial class OTCamera
 		return isConnected;
 	}
 
-	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
+	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger)
 	{
 		List<IOTTag> updatedTags = [];
         Device device;
@@ -84,8 +84,9 @@ public partial class OTCamera
 		{
 			device = await CameraConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
 		}
-		catch (IOException)
+		catch (IOException e)
 		{
+			logger.LogError($"Error while connecting to {RID} when applying tags: {e}");
 			return [];
 		}
 

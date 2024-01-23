@@ -1,3 +1,4 @@
+using Core.Entities.Alarms.Data;
 using Core.Entities.IOT.Data;
 using Core.Entities.KPI.Data;
 using Core.Entities.User.Data;
@@ -12,6 +13,7 @@ public static class DBInitializer
 	public static Task InitializeStation(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{
 		IOTInitializer.InitializeStation(anodeCTX);
+		AlarmInitializer.InitializeStation(anodeCTX);
 		return UserInitializer.Initialize(anodeCTX, userManager);
 	}
 

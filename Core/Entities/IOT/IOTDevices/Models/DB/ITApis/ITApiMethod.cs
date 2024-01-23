@@ -36,7 +36,7 @@ public partial class ITApi
 		}
 	}
 
-	public override Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW)
+	public override Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger)
 	{
 		return Task.FromResult(IOTTags.Where(tag => tag.HasNewValue)
 			.Select(tag =>

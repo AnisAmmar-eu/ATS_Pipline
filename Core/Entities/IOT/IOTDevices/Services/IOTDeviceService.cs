@@ -52,7 +52,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 		IEnumerable<Task<List<IOTTag>>> tasks = devices.Select(async device =>
 		{
-			List<IOTTag> updatedTags = await device.ApplyTags(AnodeUOW);
+			List<IOTTag> updatedTags = await device.ApplyTags(AnodeUOW, _logger);
 			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Count != 0;
 			return updatedTags;
 		});
