@@ -80,7 +80,8 @@ public static class IOTTagRID
 	public const string SequencePicture1 = "SequencePicture1";
 	public const string SequencePicture2 = "SequencePicture2";
 	public const string SequenceCleaningCam = "SequenceCleaningCam";
-	public const string SequenceCooling = "SequenceCooling";
+	public const string SequenceCoolingCam = "SequenceCoolingCam";
+	public const string SequenceCoolingLed = "SequenceCoolingLed";
 	public const string SequenceCam1LedOn = "SequenceCam1LedOn";
 	public const string SequenceCam1LedOff = "SequenceCam1LedOff";
 	public const string SequenceCam2LedOn = "SequenceCam2LedOn";
@@ -247,9 +248,9 @@ public static class IOTTagPath
 
 	public const string SequencePicture1 = "VA_HMI.Shooting_Cam01";
 	public const string SequencePicture2 = "VA_HMI.Shooting_Cam02";
-	public const string SequenceCleaningCam1 = "VA_HMI.Clean_Cam";
-	public const string SequenceCleaningCam2 = "VA_HMI.Clean_Cam02";
-	public const string SequenceCooling = "VA_HMI.Cool_Cam01";
+	public const string SequenceCleaningCam = "VA_HMI.Clean_Cam";
+	public const string SequenceCoolingCam = "VA_HMI.Cool_Cam";
+	public const string SequenceCoolingLed = "VA_HMI.Cool_Led";
 	public const string SequenceCam1LedOn = "VA_HMI.DIAG_CAM01_LED_ON";
 	public const string SequenceCam1LedOff = "VA_HMI.DIAG_CAM01_LED_OFF";
 	public const string SequenceCam2LedOn = "VA_HMI.DIAG_CAM02_LED_ON";
