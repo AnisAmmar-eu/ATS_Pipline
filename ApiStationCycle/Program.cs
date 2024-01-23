@@ -4,6 +4,8 @@ using Carter;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Entities.User.Models.DB.Roles;
+using Core.Entities.User.Models.DB.Users;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -12,6 +14,7 @@ using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
@@ -69,6 +72,10 @@ builder.Services.AddDbContext<AnodeCTX>(
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+	.AddEntityFrameworkStores<AnodeCTX>()
+	.AddDefaultTokenProviders();
+
 builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IBenchmarkTestService, BenchmarkTestService>();
@@ -100,7 +107,8 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
 	using IServiceScope scope = app.Services.CreateScope();
 	IServiceProvider services = scope.ServiceProvider;
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
-	await DBInitializer.InitializeStation(context);
+	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+	await DBInitializer.InitializeStation(context, userManager);
 }
 
 // Configure the HTTP request pipeline.

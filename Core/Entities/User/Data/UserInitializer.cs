@@ -124,7 +124,7 @@ public static class UserInitializer
 			{
 				RID = ActionRID.AdminGeneralRights + "." + ApplicationRoleType.SystemFives,
 				ApplicationType = ApplicationTypeRID.Role,
-				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SystemFives).Id,
+				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.User).Id,
 				ActEntityID = anodeCTX.ActEntities.First(ae => ae.RID == ActionRID.AdminGeneralRights).ID,
 			});
 
@@ -132,7 +132,7 @@ public static class UserInitializer
 			{
 				RID = ActionRID.AdminGeneralRights + "." + ApplicationRoleType.SystemATS,
 				ApplicationType = ApplicationTypeRID.Role,
-				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.SystemATS).Id,
+				ApplicationID = anodeCTX.Roles.First(r => r.Type == ApplicationRoleType.User).Id,
 				ActEntityID = anodeCTX.ActEntities.First(ae => ae.RID == ActionRID.AdminGeneralRights).ID,
 			});
 		anodeCTX.SaveChanges();

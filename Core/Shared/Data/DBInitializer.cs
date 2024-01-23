@@ -9,10 +9,10 @@ namespace Core.Shared.Data;
 
 public static class DBInitializer
 {
-	public static Task InitializeStation(AnodeCTX anodeCTX)
+	public static Task InitializeStation(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{
 		IOTInitializer.InitializeStation(anodeCTX);
-		return Task.CompletedTask;
+		return UserInitializer.Initialize(anodeCTX, userManager);
 	}
 
 	public static Task InitializeServer(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
