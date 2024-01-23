@@ -16,6 +16,9 @@ public struct ShootingStruct : IBaseADS<Packet>
 	public int AnodeSize;
 	public int Cam01Status;
 	public int Cam02Status;
+	public float Cam01Temp;
+	public float Cam02Temp;
+	public float TT01;
 
 	public Packet ToModel()
 	{

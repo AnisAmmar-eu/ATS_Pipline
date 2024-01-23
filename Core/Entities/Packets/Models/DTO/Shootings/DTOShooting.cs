@@ -14,4 +14,7 @@ public partial class DTOShooting : DTOPacket, IDTO<Shooting, DTOShooting>
 	public int AnodeSize { get; set; }
 	public int Cam01Status { get; set; }
 	public int Cam02Status { get; set; }
+	public float Cam01Temp { get; set; }
+	public float Cam02Temp { get; set; }
+	public float TT01 { get; set; }
 }
