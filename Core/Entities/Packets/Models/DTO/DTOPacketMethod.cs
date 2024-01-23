@@ -24,6 +24,7 @@ public partial class DTOPacket
 		TS = packet.TS;
 		StationCycleRID = packet.StationCycleRID;
 		Status = packet.Status;
+		TwinCatStatus = packet.TwinCatStatus;
 		HasError = packet.HasError;
 	}
 

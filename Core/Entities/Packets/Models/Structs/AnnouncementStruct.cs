@@ -10,7 +10,6 @@ namespace Core.Entities.Packets.Models.Structs;
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
 public struct AnnouncementStruct : IBaseADS<Packet>
 {
-	// Missing AnnounceID?
 	public RIDStruct CycleRID;
 	public int Status;
 	public TimestampStruct TS;

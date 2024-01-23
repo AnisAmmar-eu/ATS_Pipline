@@ -18,6 +18,7 @@ public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>
 {
 	public string StationCycleRID { get; set; } = string.Empty;
 	public PacketStatus Status { get; set; } = PacketStatus.Initialized;
+	public int TwinCatStatus { get; set; }
 	public string Type { get; set; } = string.Empty;
 	public bool HasError { get; set; }
 }

@@ -31,7 +31,9 @@ public partial class Shooting
 	public Shooting(ShootingStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.CycleRID.ToRID();
-		ShootingTS = adsStruct.TS.GetTimestamp();
+		TwinCatStatus = adsStruct.Status;
+		// TODO ShootingTS -> Go through automaton
+		TS = adsStruct.TS.GetTimestamp();
 		SyncIndex = adsStruct.SyncIndex;
 		AnodeType = AnodeTypeDict.AnodeTypeIntToString(adsStruct.AnodeType);
 		AnodeSize = adsStruct.AnodeSize;

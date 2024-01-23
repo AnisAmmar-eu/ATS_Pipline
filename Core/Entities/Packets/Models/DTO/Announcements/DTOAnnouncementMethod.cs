@@ -14,7 +14,8 @@ public partial class DTOAnnouncement
 	{
 		Type = PacketType.Announcement;
 		AnodeType = announcement.AnodeType;
-		AnnounceID = announcement.AnnounceID;
+		SyncIndex = announcement.SyncIndex;
+		IsDouble = announcement.IsDouble;
 	}
 
 	public override Announcement ToModel()

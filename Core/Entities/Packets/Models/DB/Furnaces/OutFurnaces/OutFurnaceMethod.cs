@@ -21,6 +21,8 @@ public partial class OutFurnace
 	public OutFurnace(OutFurnaceStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.CycleRID.ToRID();
+		TS = adsStruct.TS.GetTimestamp();
+		TwinCatStatus = adsStruct.Status;
 		OutAnnounceID = adsStruct.MD.AnnounceID.ToRID();
 		FTAPickUp = adsStruct.MD.PitFTA;
 		PickUpTS = adsStruct.MD.PitPickup.GetTimestamp();

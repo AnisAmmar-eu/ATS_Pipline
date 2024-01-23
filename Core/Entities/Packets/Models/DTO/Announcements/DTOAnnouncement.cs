@@ -9,5 +9,6 @@ namespace Core.Entities.Packets.Models.DTO.Announcements;
 public partial class DTOAnnouncement : DTOPacket, IDTO<Announcement, DTOAnnouncement>
 {
 	public string AnodeType { get; set; } = string.Empty;
-	public string AnnounceID { get; set; } = string.Empty;
+	public int SyncIndex { get; set; }
+	public bool IsDouble { get; set; }
 }

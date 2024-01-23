@@ -6,6 +6,6 @@ namespace Core.Entities.Packets.Models.DB.Announcements;
 public partial class Announcement : Packet, IBaseEntity<Announcement, DTOAnnouncement>
 {
 	public string AnodeType { get; set; } = string.Empty;
-	// TODO remove
-	public string AnnounceID { get; set; } = string.Empty;
+	public int SyncIndex { get; set; }
+	public bool IsDouble { get; set; }
 }

@@ -28,6 +28,8 @@ public partial class InFurnace
 	public InFurnace(InFurnaceStruct adsStruct)
 	{
 		StationCycleRID = adsStruct.CycleRID.ToRID();
+		TS = adsStruct.TS.GetTimestamp();
+		TwinCatStatus = adsStruct.Status;
 		InAnnounceID = adsStruct.MD.AnnounceID.ToRID();
 		OriginID = adsStruct.MD.OriginID;
 		PackPosition = adsStruct.MD.PackPosition;
