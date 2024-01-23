@@ -46,9 +46,9 @@ public partial class DTOPacket
 			object? formattedModel = JsonSerializer.Deserialize(json, dtoType);
 			return formattedModel as DTOPacket;
 		}
-		catch
+		catch (Exception e)
 		{
-			throw new InvalidCastException($"DTO Binding of {nameof(DTOPacket)} has failed.");
+			throw new InvalidCastException($"DTO Binding of {nameof(DTOPacket)} has failed: {e}");
 		}
 	}
 

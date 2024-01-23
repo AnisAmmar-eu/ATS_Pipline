@@ -1,5 +1,6 @@
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Notifications;
@@ -12,14 +13,16 @@ public class
 	private uint _oldEntry;
 	private uint _remove;
 	private ResultHandle _resultHandle = null!;
+	private ILogger _logger = null!;
 	protected bool ToDequeue = true;
 
-	public BaseNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry)
+	public BaseNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry, ILogger logger)
 	{
 		_resultHandle = resultHandle;
 		_remove = remove;
 		_newMsg = newMsg;
 		_oldEntry = oldEntry;
+		_logger = logger;
 	}
 
 	protected BaseNotification()
@@ -30,7 +33,8 @@ public class
 		dynamic ads,
 		string removeSymbol,
 		string newMsgSymbol,
-		string oldEntrySymbol)
+		string oldEntrySymbol,
+		ILogger logger)
 		where TNotification : BaseNotification<T, TStruct>, new()
 	{
 		AdsClient tcClient = (AdsClient)ads.tcClient;
@@ -55,6 +59,7 @@ public class
 				_newMsg = newMsg,
 				_oldEntry = oldEntry,
 				_resultHandle = resultHandle,
+				_logger = logger,
 			};
 		tcClient.AdsNotification += notification.GetElement;
 		// A bit tricky but rewriting the newMsg will trigger an event for the notification to see.
@@ -94,8 +99,11 @@ public class
 			if (ToDequeue)
 				tcClient.WriteAny(_remove, true);
 		}
-		catch
+		catch (Exception e)
 		{
+			_logger.LogError($"Error while dequeuing a {typeof(T).Name}: {e}");
+			if (ToDequeue)
+				tcClient.WriteAny(_remove, true);
 			// Retry
 			//tcClient.WriteAny(_acquitMsg, Utils.ErrorWhileReading);
 		}

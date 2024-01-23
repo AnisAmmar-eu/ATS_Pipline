@@ -69,13 +69,13 @@ public class ADSService : BackgroundService
 			ads.appServices = asyncScope.ServiceProvider;
 			ads.cancel = cancel;
 			_logger.LogInformation("Calling Notifications");
-			await AnnouncementNotification.Create(ads);
-			await AlarmNotification.Create(ads);
-			await ShootingNotification.Create(ads);
+			await AnnouncementNotification.Create(ads, _logger);
+			await AlarmNotification.Create(ads, _logger);
+			await ShootingNotification.Create(ads, _logger);
 			if (Station.Type == StationType.S3S4)
 			{
-				await InFurnaceNotification.Create(ads);
-				await OutFurnaceNotification.Create(ads);
+				await InFurnaceNotification.Create(ads, _logger);
+				await OutFurnaceNotification.Create(ads, _logger);
 			}
 
 			_logger.LogInformation("ADSService successfully created Notifications");
