@@ -93,6 +93,9 @@ public partial class OTCamera
 		foreach (IOTTag tag in IOTTags)
 		{
 			bool hasBeenUpdated = false;
+			if (tag is { IsReadOnly: false, HasNewValue: true } && !nodeMap[tag.Path].IsWritable)
+				device.Stream.TryStop();
+
 			if (tag is { IsReadOnly: false, HasNewValue: true } && nodeMap[tag.Path].IsWritable)
 			{
 				switch (nodeMap[tag.Path])
@@ -116,6 +119,11 @@ public partial class OTCamera
 
 				tag.HasNewValue = false;
 				hasBeenUpdated = true;
+			}
+			else
+			{
+				Console.WriteLine($"Could not update tag with RID: {tag.RID}");
+				tag.HasNewValue = false;
 			}
 
 			string readValue = nodeMap[tag.Path] switch {

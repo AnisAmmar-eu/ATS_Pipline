@@ -1,4 +1,3 @@
-using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,7 +32,7 @@ public class SendLogService : BackgroundService
 			{
 				_logger.LogInformation("SendLogService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling SendLog");
-				await logService.SendLogs(await logService.GetAllUnsent(), Station.ServerAddress);
+				await logService.SendLogs(await logService.GetAllUnsent());
 
 				_executionCount++;
 				_logger.LogInformation(

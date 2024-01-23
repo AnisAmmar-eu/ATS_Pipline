@@ -9,7 +9,7 @@ public interface ILogService : IBaseEntityService<Log, DTOLog>
 	public Task<List<DTOLog>> GetAll();
 	public Task<List<DTOLog>> GetRange(int start, int nbItems);
 	public Task<List<Log>> GetAllUnsent();
-	public Task SendLogs(List<Log> logs, string address);
+	public Task SendLogs(List<Log> logs);
 	public Task ReceiveLogs(List<DTOLog> dtoLogs);
 	public Task DeleteAllLogs();
 

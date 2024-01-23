@@ -72,6 +72,17 @@ public static class IOTInitializer
 		anodeCTX.OTCamera.Add(cam);
 		anodeCTX.SaveChanges();
 		anodeCTX.IOTTag.Add(new IOTTag {
+			RID = IOTTagRID.TriggerMode + port,
+			Name = "Trigger mode",
+			Description = "Trigger mode for Camera" + port,
+			CurrentValue = "On",
+			NewValue = "On",
+			HasNewValue = true,
+			Path = IOTTagPath.TriggerMode,
+			IOTDeviceID = cam.ID,
+			IOTDevice = cam,
+		});
+		anodeCTX.IOTTag.Add(new IOTTag {
 			RID = IOTTagRID.TriggerSource + port,
 			Name = "Trigger source",
 			Description = "Trigger source for Camera" + port,

@@ -89,7 +89,7 @@ public class CameraService : BackgroundService
 				? ADSUtils.PictureCountCam2
 				: ADSUtils.PictureCountCam1);
 
-		Stemmer.Cvb.Driver.Stream stream = device.Stream;
+        Stemmer.Cvb.Driver.Stream stream = device.Stream;
 		if (!stream.IsRunning)
 			stream.Start();
 
@@ -109,6 +109,9 @@ public class CameraService : BackgroundService
 							Thread.Sleep(1000);
 							continue;
 						}
+
+						if (!stream.IsRunning)
+							stream.Start();
 
 						using StreamImage image = stream.Wait();
 						if (await IsTestModeOn(_logger))

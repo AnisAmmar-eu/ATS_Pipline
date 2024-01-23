@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Core.Entities.IOT.Dictionaries;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.System.Logs;
 using Core.Shared.Models.DTO.System.Logs;
@@ -33,7 +34,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		return AnodeUOW.Log.GetAll([log => !log.HasBeenSent], withTracking: false);
 	}
 
-	public async Task SendLogs(List<Log> logs, string address)
+	public async Task SendLogs(List<Log> logs)
 	{
 		if (logs.Count == 0)
 			return;
@@ -44,7 +45,9 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 				JsonSerializer.Serialize(logs.ConvertAll(cycle => cycle.ToDTO())),
 				Encoding.UTF8,
 				"application/json");
-		HttpResponseMessage response = await httpClient.PostAsync($"{address}/apiServerReceive/logs", content);
+		HttpResponseMessage response = await httpClient.PostAsync(
+			$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/logs",
+			content);
 		if (!response.IsSuccessStatusCode)
 			return;
 

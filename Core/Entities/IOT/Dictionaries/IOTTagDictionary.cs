@@ -17,6 +17,7 @@ public static class IOTTagRID
 
 	#region Camera
 
+	public const string TriggerMode = "TriggerMode";
 	public const string TriggerSource = "TriggerSource";
 	public const string TriggerActivation = "TriggerActivation";
 	public const string ExposureTime = "ExposureTime";
@@ -180,6 +181,7 @@ public static class IOTTagPath
 {
 	#region Camera
 
+	public const string TriggerMode = "TriggerMode";
 	public const string TriggerSource = "TriggerSource";
 	public const string TriggerActivation = "TriggerActivation";
 	public const string ExposureTime = "ExposureTime";

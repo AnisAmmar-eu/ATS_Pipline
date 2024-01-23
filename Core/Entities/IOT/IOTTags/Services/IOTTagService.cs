@@ -1,4 +1,3 @@
-using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DTO;
 using Core.Entities.IOT.IOTTags.Models.Structs;

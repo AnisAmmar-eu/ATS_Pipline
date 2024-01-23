@@ -1,9 +1,9 @@
+using Carter;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.BI.BITemperatures.Models.DTO;
 using Core.Entities.BI.BITemperatures.Services;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
-using Carter;
 
 namespace ApiCamera.Endpoints;
 
