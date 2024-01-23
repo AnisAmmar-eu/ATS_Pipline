@@ -260,80 +260,82 @@ public static class IOTTagPath
 
 	#region Shooting
 
-	public const string RetentiveShootingWaitTimer = "";
+	//public const string RetentiveShootingWaitTimer = "";
 
-	public const string DelayFlashD20 = "";
-	public const string DelayFlashDX = "";
-	public const string DelayFlashInvalid = "";
+	public const string DelayFlashD20 = "VA_SETTINGS.Anode_D20.Delay_Flash";
+	public const string DelayFlashDX = "VA_SETTINGS.Anode_DX.Delay_Flash";
+	//public const string DelayFlashInvalid = "";
 
-	public const string DurationFlashD20 = "";
+	public const string DurationFlashD20 = "VA_SETTINGS.Anode_D20.Duration_Flash";
 
-	public const string DelayCamD20 = "";
-	public const string DelayCamDX = "";
-	public const string DelayCamInvalid = "";
+	public const string DelayCamD20 = "VA_SETTINGS.Anode_D20.Delay_Cam";
+	public const string DelayCamDX = "VA_SETTINGS.Anode_DX.Delay_Cam";
+	//public const string DelayCamInvalid = "";
 
-	public const string TriggerThreshold1DX = "";
-	public const string TriggerThreshold1D20 = "";
-	public const string TriggerThreshold2DX = "";
-	public const string TriggerThreshold2D20 = "";
-	public const string TriggerThreshold3DX = "";
-	public const string TriggerThreshold3D20 = "";
+	public const string TriggerThreshold1DX = "VA_SETTINGS.Anode_DX.Hight_Top";
+	public const string TriggerThreshold1D20 = "VA_SETTINGS.Anode_D20.Hight_Top";
+	public const string TriggerThreshold2DX = "VA_SETTINGS.Anode_DX.Hole_Min";
+	public const string TriggerThreshold2D20 = "VA_SETTINGS.Anode_D20.Hole_Min";
+	public const string TriggerThreshold3DX = "VA_SETTINGS.Anode_DX.Hole_Max";
+	public const string TriggerThreshold3D20 = "VA_SETTINGS.Anode_D20.Hole_Max";
 
-	public const string DelayValidLaser = "";
-	public const string TransferTimer = "";
+	//public const string DelayValidLaser = "";
+	//public const string TransferTimer = "";
 
 	#endregion
 
 	#region Anode
 
-	public const string LengthMinD20 = "";
-	public const string LengthMaxD20 = "";
-	public const string LengthMinDX = "";
-	public const string LengthMaxDX = "";
+	public const string LengthMinD20 = "VA_SETTINGS.Anode_D20.Lenght_Min";
+	public const string LengthMaxD20 = "VA_SETTINGS.Anode_D20.Lenght_Max";
+	public const string LengthMinDX = "VA_SETTINGS.Anode_DX.Lenght_Min";
+	public const string LengthMaxDX = "VA_SETTINGS.Anode_DX.Lenght_Max";
 
-	public const string WidthMinD20 = "";
-	public const string WidthMaxD20 = "";
-	public const string WidthMinDX = "";
-	public const string WidthMaxDX = "";
+	public const string WidthMinD20 = "VA_SETTINGS.Anode_D20.Width_Min";
+	public const string WidthMaxD20 = "VA_SETTINGS.Anode_D20.Width_Max";
+	public const string WidthMinDX = "VA_SETTINGS.Anode_DX.Width_Min";
+	public const string WidthMaxDX = "VA_SETTINGS.Anode_DX.Width_Max";
 
-	public const string RetentiveAnodeTypeWaitTimer = "";
-	public const string LengthPresenceAnodeLimit = "";
-	public const string WidthPresenceAnodeLimit = "";
+	//public const string RetentiveAnodeTypeWaitTimer = "";
+	//public const string LengthPresenceAnodeLimit = "";
+	//public const string WidthPresenceAnodeLimit = "";
 
 	#endregion
 
 	#region Announcement
 
-	public const string EGAMetaDataWait = "";
-	public const string RetentiveAnodeDetectionTimerZT04 = "";
+	//public const string EGAMetaDataWait = "";
+	//public const string RetentiveAnodeDetectionTimerZT04 = "";
 
 	#endregion
 
 	#region Health
 
-	public const string DelayFV01 = "";
-	public const string DurationFV01 = "";
-	public const string DelayFV02 = "";
-	public const string DurationFV02 = "";
-	public const string DelayFV03 = "";
+	//public const string DelayFV01 = "";
+	public const string DurationFV01 = "VA_SETTINGS.Health_Clean_Cam.Duration";
+	//public const string DelayFV02 = "";
+	public const string DurationFV02 = "VA_SETTINGS.Health_Clean_Led.Duration";
+	public const string DelayFV03 = "VA_SETTINGS.Clean_Waitting_Delay";
+	// TODO: Implement this
+	//public const string DurationFV03 = "VA_SETTINGS.Health_Cool_Cam.Duration";
 
-	public const string RetentiveAnodeEntranceTimerZT04 = "";
-	public const string CameraCoolingFrequencyNormal = "";
-	public const string CameraCoolingFrequencyHot = "";
-	public const string LEDBarsCleaningFrequencyNormal = "";
-	public const string LEDBarsCleaningFrequencyHot = "";
-	public const string HotAnodeTT02 = "";
+	//public const string RetentiveAnodeEntranceTimerZT04 = "";
+	public const string CameraCoolingFrequencyNormal = "VA_SETTINGS.Health_Clean_Cam.SP";
+	public const string CameraCoolingFrequencyHot = "VA_SETTINGS.Health_Clean_Cam.SP_Warning";
+	public const string LEDBarsCleaningFrequencyNormal = "VA_SETTINGS.Health_Clean_Led.SP";
+	public const string LEDBarsCleaningFrequencyHot = "VA_SETTINGS.Health_Clean_Led.SP_Warning";
+	public const string HotAnodeTT02 = "VA_SETTINGS.Health_Cool_AnodeTemp_SP";
 
 	#endregion
 
 	#region Diagnostic
 
-	public const string DelayLuxCheck = "";
-	public const string DurationLuxCheck = "";
-	public const string ThresholdLuminosityLED = "";
-	public const string ThresholdLuminosityNoLED = "";
-	public const string LuminosityWaitTimer = "";
-	public const string LuminosityCheckFrequency = "";
+	//public const string DelayLuxCheck = "";
+	public const string DurationLuxCheck = "VA_SETTINGS.Health_Cool_AnodeTemp_SP";
+	public const string ThresholdLuminosityLED = "VA_SETTINGS.CAM01_LED_ON.SP";
+	public const string ThresholdLuminosityNoLED = "VA_SETTINGS.CAM01_LED_OFF.SP";
+	//public const string LuminosityWaitTimer = "";
+	public const string LuminosityCheckFrequency = "VA_SETTINGS.CAM01_LED_ON.Counter_SP";
 
 	#endregion
 
