@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Security.Cryptography;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DTO.OTCameras;
 using Core.Entities.IOT.IOTTags.Models.DB;
@@ -7,7 +6,6 @@ using Core.Shared.Dictionaries;
 using Core.Shared.Models.Camera;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
-using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;

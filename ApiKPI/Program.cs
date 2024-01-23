@@ -106,6 +106,12 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>("ClientHost");
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
+	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+	.AllowAnyHeader()
+	.AllowCredentials());
+
 app.UseHttpsRedirection();
 
 app.UseRouting();

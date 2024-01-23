@@ -1,6 +1,5 @@
 using Carter;
 using Core.Shared.Models.ApiResponses;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiUser.Endpoints;
 

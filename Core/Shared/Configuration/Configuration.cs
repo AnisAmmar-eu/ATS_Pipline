@@ -16,6 +16,15 @@ public static class Configuration
 		return res;
 	}
 
+	public static T GetSectionWithThrow<T>(this IConfiguration configuration, string path)
+	{
+		T? res = configuration.GetSection(path).Get<T>();
+		if (res is null)
+			throw new ConfigurationErrorsException($"Missing {path}");
+
+		return res;
+	}
+
 	public static string GetConnectionStringWithThrow(this IConfiguration configuration, string path)
 	{
 		string? res = configuration.GetConnectionString(path);

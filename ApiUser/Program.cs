@@ -155,10 +155,7 @@ builder.Services.AddSwaggerGen(
 
 WebApplication app = builder.Build();
 
-string? clientHost = builder.Configuration["ClientHost"];
-if (clientHost is null)
-	throw new ConfigurationErrorsException("Missing ClientHost");
-
+string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>("ClientHost");
 app.UseCors(policyBuilder => policyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()
