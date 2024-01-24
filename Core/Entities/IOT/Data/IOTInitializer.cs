@@ -275,32 +275,32 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TemperatureOkWarnThreshold,
-			Name = "Ok - Warn Threshold",
-			Description = "Ok - Warn temperature threshold",
-			CurrentValue = "42.0",
-			NewValue = string.Empty,
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			IsReadOnly = true,
-			Path = IOTTagPath.TemperatureOkWarnThreshold,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TemperatureWarnErrorThreshold,
-			Name = "Warn - Error Threshold",
-			Description = "Warn - Error temperature threshold",
-			CurrentValue = "70.0",
-			NewValue = string.Empty,
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			IsReadOnly = true,
-			Path = IOTTagPath.TemperatureWarnErrorThreshold,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
+		//anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+		//	RID = IOTTagRID.TemperatureOkWarnThreshold,
+		//	Name = "Ok - Warn Threshold",
+		//	Description = "Ok - Warn temperature threshold",
+		//	CurrentValue = "42.0",
+		//	NewValue = string.Empty,
+		//	ValueType = IOTTagType.Float,
+		//	HasNewValue = false,
+		//	IsReadOnly = true,
+		//	Path = IOTTagPath.TemperatureOkWarnThreshold,
+		//	IOTDeviceID = twinCat.ID,
+		//	IOTDevice = twinCat,
+		//});
+		//anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+		//	RID = IOTTagRID.TemperatureWarnErrorThreshold,
+		//	Name = "Warn - Error Threshold",
+		//	Description = "Warn - Error temperature threshold",
+		//	CurrentValue = "70.0",
+		//	NewValue = string.Empty,
+		//	ValueType = IOTTagType.Float,
+		//	HasNewValue = false,
+		//	IsReadOnly = true,
+		//	Path = IOTTagPath.TemperatureWarnErrorThreshold,
+		//	IOTDeviceID = twinCat.ID,
+		//	IOTDevice = twinCat,
+		//});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.TemperatureStatusCam1,
 			Name = "Cam1 temperature status",
