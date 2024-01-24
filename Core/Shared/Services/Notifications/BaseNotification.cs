@@ -85,8 +85,7 @@ public class
 	private async void GetElementSub(dynamic dynamicObject)
 	{
 		AdsClient? tcClient = dynamicObject.tcClient as AdsClient;
-		//tcClient!.WriteAny(_acquitMsg, Utils.IsReading);
-		tcClient!.WriteAny(_newMsg, false);
+
 		// Get element of FIFO
 		TStruct adsStruct = tcClient.ReadAny<TStruct>(_oldEntry);
 		T entity = adsStruct.ToModel();
@@ -96,16 +95,15 @@ public class
 		try
 		{
 			await AddElement(services, entity);
-			if (ToDequeue)
-				tcClient.WriteAny(_remove, true);
+			tcClient.WriteAny(_remove, true);
+			tcClient!.WriteAny(_newMsg, false);
 		}
 		catch (Exception e)
 		{
 			_logger.LogError($"Error while dequeuing a {typeof(T).Name}: {e}");
-			if (ToDequeue)
-				tcClient.WriteAny(_remove, true);
+
 			// Retry
-			//tcClient.WriteAny(_acquitMsg, Utils.ErrorWhileReading);
+			tcClient!.WriteAny(_newMsg, false);
 		}
 	}
 
