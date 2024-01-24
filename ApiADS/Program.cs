@@ -84,8 +84,8 @@ builder.Services.AddSingleton<IServiceProvider>(sp => sp);
 builder.Services.AddSingleton<ADSService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<ADSService>());
 
-builder.Services.AddSingleton<IOTService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
+//builder.Services.AddSingleton<IOTService>();
+//builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
 
 builder.Services.AddCarter();
 

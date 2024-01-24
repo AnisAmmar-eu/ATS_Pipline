@@ -87,7 +87,7 @@ public class
 		AdsClient? tcClient = dynamicObject.tcClient as AdsClient;
 
 		// Get element of FIFO
-		TStruct adsStruct = tcClient.ReadAny<TStruct>(_oldEntry);
+		TStruct adsStruct = tcClient!.ReadAny<TStruct>(_oldEntry);
 		T entity = adsStruct.ToModel();
 		await using AsyncServiceScope scope = ((IServiceProvider)dynamicObject.appServices).CreateAsyncScope();
 		IServiceProvider services = scope.ServiceProvider;
@@ -95,15 +95,16 @@ public class
 		try
 		{
 			await AddElement(services, entity);
+			tcClient.WriteAny(_newMsg, false);
 			tcClient.WriteAny(_remove, true);
-			tcClient!.WriteAny(_newMsg, false);
 		}
 		catch (Exception e)
 		{
 			_logger.LogError($"Error while dequeuing a {typeof(T).Name}: {e}");
 
 			// Retry
-			tcClient!.WriteAny(_newMsg, false);
+			tcClient.WriteAny(_newMsg, false);
+			tcClient.WriteAny(_newMsg, true);
 		}
 	}
 

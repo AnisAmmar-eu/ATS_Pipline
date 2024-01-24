@@ -16,15 +16,22 @@ public struct TimestampStruct
 
 	public DateTimeOffset GetTimestamp()
 	{
-		return new(
-			Year,
-			Month,
-			Day,
-			Hour,
-			Minutes,
-			Sec,
-			MS,
-			new GregorianCalendar(GregorianCalendarTypes.Localized),
-			TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow));
+		try
+		{
+			return new(
+				Year,
+				Month,
+				Day,
+				Hour,
+				Minutes,
+				Sec,
+				MS,
+				new GregorianCalendar(GregorianCalendarTypes.Localized),
+				TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow));
+		}
+		catch (ArgumentOutOfRangeException)
+		{
+			return DateTimeOffset.UnixEpoch;
+		}
 	}
 }
