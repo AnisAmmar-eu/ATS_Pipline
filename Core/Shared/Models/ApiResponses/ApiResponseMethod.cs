@@ -13,7 +13,7 @@ namespace Core.Shared.Models.ApiResponses;
 
 public partial class ApiResponse
 {
-	private static readonly JsonSerializerOptions JsonOptions = new() {
+	public static readonly JsonSerializerOptions JsonOptions = new() {
 		PropertyNamingPolicy = null,
 		TypeInfoResolver = new DefaultJsonTypeInfoResolver { Modifiers = { AddNestedDerivedTypes } },
 	};

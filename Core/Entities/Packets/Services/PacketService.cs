@@ -12,6 +12,7 @@ using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
+using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -90,7 +91,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				if (packet is Shooting shooting)
 					await shooting.SendImages(imagesPath, extension);
 
-				StringContent content = new(JsonSerializer.Serialize(packet.ToDTO()), Encoding.UTF8, "application/json");
+				StringContent content
+					= new(JsonSerializer.Serialize(packet.ToDTO(), ApiResponse.JsonOptions), Encoding.UTF8, "application/json");
 				HttpResponseMessage response = await http.PostAsync(
 					$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
 					content);
