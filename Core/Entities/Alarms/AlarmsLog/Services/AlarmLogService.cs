@@ -10,17 +10,22 @@ using Core.Shared.Services.Kernel;
 using Core.Shared.SignalR.AlarmHub;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Entities.Alarms.AlarmsLog.Services;
 
 public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, DTOAlarmLog>, IAlarmLogService
 {
 	private readonly IHubContext<AlarmHub, IAlarmHub> _hubContext;
+	private readonly ILogger<AlarmLogService> _logger;
 
-	public AlarmLogService(IAnodeUOW anodeUOW, IHubContext<AlarmHub, IAlarmHub> hubContext) : base(anodeUOW)
+	public AlarmLogService(
+		IAnodeUOW anodeUOW,
+		IHubContext<AlarmHub, IAlarmHub> hubContext,
+		ILogger<AlarmLogService> logger) : base(anodeUOW)
 	{
 		_hubContext = hubContext;
-		//_myHub = myHub;
+		_logger = logger;
 	}
 
 	public async Task Collect(Alarm alarm)
@@ -29,13 +34,16 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		{
 			// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
 			AlarmLog alarmWithStatus1 = await AnodeUOW.AlarmLog.GetByWithIncludes(
-				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID],
+				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID.ToString()],
 				query => query.OrderByDescending(alarmLog => alarmLog.ID));
 			if (alarm.Value)
+			{
+				_logger.LogWarning($"Alarm with RID {alarm.RID.ToString()} is already active");
 				return; // alarmLog is already active.
+			}
 
 			alarmWithStatus1.IsActive = false;
-			alarmWithStatus1.TSClear = alarm.TimeStamp.GetTimestamp();
+			alarmWithStatus1.TSClear = alarm.TS.GetTimestamp();
 			alarmWithStatus1.TS = DateTime.Now;
 			alarmWithStatus1.IsAck = false;
 			alarmWithStatus1.HasBeenSent = false;
@@ -48,7 +56,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 				return; // alarmLog is already inactive or cleared.
 
 			// If an alarmLog doesn't exist, this alarm just raised.
-			AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmLog => alarmLog.RID == alarm.RID]);
+			AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmLog => alarmLog.RID == alarm.RID.ToString()]);
 			AlarmLog newAlarmLog = new(alarmC) {
 				Alarm = alarmC,
 				TS = DateTime.Now,
@@ -57,14 +65,14 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			if (alarm.OneShot)
 			{
 				newAlarmLog.IsActive = false;
-				newAlarmLog.TSClear = alarm.TimeStamp.GetTimestamp();
+				newAlarmLog.TSClear = alarm.TS.GetTimestamp();
 			}
 			else
 			{
 				newAlarmLog.IsActive = true;
 			}
 
-			newAlarmLog.TSRaised = alarm.TimeStamp.GetTimestamp();
+			newAlarmLog.TSRaised = alarm.TS.GetTimestamp();
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmLog.Add(newAlarmLog);
 		}

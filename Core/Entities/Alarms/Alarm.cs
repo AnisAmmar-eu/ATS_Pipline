@@ -31,10 +31,9 @@ public struct Alarm : IBaseADS<Alarm>
 	[MarshalAs(UnmanagedType.I1)]
 	public bool OneShot;
 
-	public TimestampStruct TimeStamp;
+	public TimestampStruct TS;
 
-	[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
-	public string RID;
+	public int RID;
 
 	/// <summary>
 	///     This is tricky but other notifications are supposed to be converted to something before being processed.
