@@ -734,6 +734,7 @@ public static class IOTInitializer
 
 		#region Shooting
 
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.RetentiveShootingWaitTimer,
 			Name = "Retentive Shooting Wait Timer",
@@ -746,6 +747,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayFlashD20,
 			Name = "Delay Flash D20",
@@ -770,6 +772,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayFlashInvalid,
 			Name = "Delay Flash Invalid",
@@ -781,7 +784,7 @@ public static class IOTInitializer
 			Path = IOTTagPath.DelayFlashInvalid,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
-		});
+		});*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationFlashD20,
 			Name = "Duration Flash D20",
@@ -818,6 +821,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayCamInvalid,
 			Name = "Delay Cam Invalid",
@@ -830,6 +834,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.TriggerThreshold1DX,
 			Name = "Trigger Threshold1 DX",
@@ -902,6 +907,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayValidLaser,
 			Name = "Delay Valid Laser",
@@ -926,6 +932,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 
 		#endregion
 
@@ -1027,6 +1034,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.RetentiveAnodeTypeWaitTimer,
 			Name = "Retentive Anode Type Wait Timer",
@@ -1063,11 +1071,13 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 
 		#endregion
 
 		#region Announcement
 
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.EGAMetaDataWait,
 			Name = "EGA Meta Data Wait",
@@ -1092,11 +1102,13 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 
 		#endregion
 
 		#region Health
 
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayFV01,
 			Name = "Delay FV01",
@@ -1109,6 +1121,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationFV01,
 			Name = "Duration FV01",
@@ -1121,6 +1134,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayFV02,
 			Name = "Delay FV02",
@@ -1133,6 +1147,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationFV02,
 			Name = "Duration FV02",
@@ -1157,6 +1172,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.RetentiveAnodeEntranceTimerZT04,
 			Name = "Retentive Anode Entrance Timer ZT04",
@@ -1169,6 +1185,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingFrequencyNormal,
 			Name = "Camera Cooling Frequency Normal",
@@ -1234,6 +1251,7 @@ public static class IOTInitializer
 
 		#region Diagnostic
 
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayLuxCheck,
 			Name = "Delay Lux Check",
@@ -1246,6 +1264,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationLuxCheck,
 			Name = "Duration Lux Check",
@@ -1282,6 +1301,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LuminosityWaitTimer,
 			Name = "Luminosity Wait Timer",
@@ -1294,6 +1314,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LuminosityCheckFrequency,
 			Name = "Luminosity Check Frequency",
