@@ -33,8 +33,8 @@ public partial class Shooting
 	{
 		StationCycleRID = adsStruct.CycleRID.ToRID();
 		TwinCatStatus = adsStruct.Status;
-		// TODO ShootingTS -> Go through automaton
 		TS = adsStruct.TS.GetTimestamp();
+		ShootingTS = adsStruct.TS.GetTimestamp();
 		SyncIndex = adsStruct.SyncIndex;
 		AnodeType = AnodeTypeDict.AnodeTypeIntToString(adsStruct.AnodeType);
 		AnodeSize = adsStruct.AnodeSize;
@@ -96,7 +96,7 @@ public partial class Shooting
 			if (!image.Exists)
 				continue;
 
-			StreamContent content = new(File.Open(image.FullName, FileMode.Open));
+			StreamContent content = new(image.Open(FileMode.Open));
 			content.Headers.ContentType = new("image/jpeg");
 			formData.Add(content, image.Name, image.Name);
 		}

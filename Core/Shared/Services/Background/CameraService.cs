@@ -150,6 +150,8 @@ public class CameraService : BackgroundService
 
 							image.Save(thumbnailPath.FullName, 0.2);
 
+							image.Close();
+
 							tcClient.WriteAny(pictureCounter, (ushort)1);
 							++nbPictures;
 						}
