@@ -120,11 +120,13 @@ public class CameraService : BackgroundService
 							string dir = (cameraNb == CameraNb.Both && nbPicturesTest % 2 == 1)
 								? ShootingUtils.CameraTest2
 								: ShootingUtils.CameraTest1;
+							Directory.CreateDirectory(dir);
 							FileInfo previousImage = new(dir + ShootingUtils.TestFilename);
 							if (previousImage.Exists)
 								previousImage.Delete();
 
 							image.Save(dir + ShootingUtils.TestFilename, 1);
+							image.Close();
 							++nbPicturesTest;
 							await _hubContext.Clients.All.RefreshTestImages();
 						}

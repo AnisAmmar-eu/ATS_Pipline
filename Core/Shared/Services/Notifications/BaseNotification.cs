@@ -73,7 +73,7 @@ public class
 	{
 		// premiière action lorsqu'on reçoit une notification
 		bool newMsg = BitConverter.ToBoolean(e.Data.Span);
-		// on vérifie qu'on nous concern et qu'il s'agit bien d'un nouveau msg
+		// on vérifie qu'on nous concerne et qu'il s'agit bien d'un nouveau msg
 		if (e.Handle != _resultHandle.Handle || !newMsg)
 			return;
 
@@ -95,17 +95,14 @@ public class
 		try
 		{
 			await AddElement(services, entity);
-			tcClient.WriteAny(_newMsg, false);
-			tcClient.WriteAny(_remove, true);
 		}
 		catch (Exception e)
 		{
 			_logger.LogError($"Error while dequeuing a {typeof(T).Name}: {e}");
-
-			// Retry
-			tcClient.WriteAny(_newMsg, false);
-			tcClient.WriteAny(_newMsg, true);
 		}
+
+		tcClient.WriteAny(_newMsg, false);
+		tcClient.WriteAny(_remove, true);
 	}
 
 	protected virtual Task AddElement(IServiceProvider services, T entity)

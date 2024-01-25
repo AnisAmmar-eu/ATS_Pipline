@@ -121,9 +121,9 @@ public partial class OTCamera
 				tag.HasNewValue = false;
 				hasBeenUpdated = true;
 			}
-			else
+			else if (tag is { IsReadOnly: true, HasNewValue: true })
 			{
-				Console.WriteLine($"Could not update tag with RID: {tag.RID}");
+				Console.WriteLine($"Could not update tag with RID: {tag.RID} because it is readonly");
 				tag.HasNewValue = false;
 			}
 
