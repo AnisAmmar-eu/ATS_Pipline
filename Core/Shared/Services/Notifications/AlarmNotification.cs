@@ -14,6 +14,7 @@ public class AlarmNotification : BaseNotification<Alarm, Alarm>
 			ads,
 			ADSUtils.AlarmRemove,
 			ADSUtils.AlarmNewMsg,
+			ADSUtils.AlarmAcquitMsg,
 			ADSUtils.AlarmToRead,
 			logger);
 	}

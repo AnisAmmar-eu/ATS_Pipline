@@ -10,17 +10,25 @@ public class
 	where TStruct : struct, IBaseADS<T>
 {
 	private uint _newMsg;
+	private uint _acquitMsg;
 	private uint _oldEntry;
 	private uint _remove;
 	private ResultHandle _resultHandle = null!;
 	private ILogger _logger = null!;
 	protected bool ToDequeue = true;
 
-	public BaseNotification(ResultHandle resultHandle, uint remove, uint newMsg, uint oldEntry, ILogger logger)
+	public BaseNotification(
+		ResultHandle resultHandle,
+		uint remove,
+		uint newMsg,
+		uint oldEntry,
+		uint acquitMsg,
+		ILogger logger)
 	{
 		_resultHandle = resultHandle;
 		_remove = remove;
 		_newMsg = newMsg;
+		_acquitMsg = acquitMsg;
 		_oldEntry = oldEntry;
 		_logger = logger;
 	}
@@ -33,6 +41,7 @@ public class
 		dynamic ads,
 		string removeSymbol,
 		string newMsgSymbol,
+		string acquitMsgSymbol,
 		string oldEntrySymbol,
 		ILogger logger)
 		where TNotification : BaseNotification<T, TStruct>, new()
@@ -42,6 +51,7 @@ public class
 		// on définit le canal pour s'abonner à des evt ADS
 		uint remove = tcClient.CreateVariableHandle(removeSymbol);
 		uint newMsg = tcClient.CreateVariableHandle(newMsgSymbol);
+		uint acquitMsg = tcClient.CreateVariableHandle(acquitMsgSymbol);
 		uint oldEntry = tcClient.CreateVariableHandle(oldEntrySymbol);
 
 		const int size = sizeof(bool);
@@ -57,6 +67,7 @@ public class
 			= new() {
 				_remove = remove,
 				_newMsg = newMsg,
+				_acquitMsg = acquitMsg,
 				_oldEntry = oldEntry,
 				_resultHandle = resultHandle,
 				_logger = logger,
@@ -84,10 +95,13 @@ public class
 
 	private async void GetElementSub(dynamic dynamicObject)
 	{
-		AdsClient? tcClient = dynamicObject.tcClient as AdsClient;
+		AdsClient tcClient = dynamicObject.tcClient as AdsClient
+			?? throw new InvalidOperationException("tcClient in ads dynamicObject is null");
+		tcClient.WriteAny(_acquitMsg, true);
+		tcClient.WriteAny(_newMsg, false);
 
 		// Get element of FIFO
-		TStruct adsStruct = tcClient!.ReadAny<TStruct>(_oldEntry);
+		TStruct adsStruct = tcClient.ReadAny<TStruct>(_oldEntry);
 		T entity = adsStruct.ToModel();
 		await using AsyncServiceScope scope = ((IServiceProvider)dynamicObject.appServices).CreateAsyncScope();
 		IServiceProvider services = scope.ServiceProvider;
@@ -101,8 +115,8 @@ public class
 			_logger.LogError($"Error while dequeuing a {typeof(T).Name}: {e}");
 		}
 
-		tcClient.WriteAny(_newMsg, false);
 		tcClient.WriteAny(_remove, true);
+		tcClient.WriteAny(_acquitMsg, false);
 	}
 
 	protected virtual Task AddElement(IServiceProvider services, T entity)

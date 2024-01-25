@@ -12,6 +12,7 @@ public class OutFurnaceNotification : PacketNotification<OutFurnaceStruct>
 			ads,
 			ADSUtils.OutFurnaceRemove,
 			ADSUtils.OutFurnaceNewMsg,
+			ADSUtils.OutFurnaceAcquitMsg,
 			ADSUtils.OutFurnaceToRead,
 			logger) as OutFurnaceNotification)!;
 	}

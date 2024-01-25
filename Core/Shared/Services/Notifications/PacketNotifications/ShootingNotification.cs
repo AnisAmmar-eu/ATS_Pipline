@@ -12,6 +12,7 @@ public class ShootingNotification : PacketNotification<ShootingStruct>
 			ads,
 			ADSUtils.ShootingRemove,
 			ADSUtils.ShootingNewMsg,
+			ADSUtils.ShootingAcquitMsg,
 			ADSUtils.ShootingToRead,
 			logger) as ShootingNotification;
 	}

@@ -12,6 +12,7 @@ public class AnnouncementNotification : PacketNotification<AnnouncementStruct>
 			ads,
 			ADSUtils.AnnouncementRemove,
 			ADSUtils.AnnouncementNewMsg,
+			ADSUtils.AnnouncementAcquitMsg,
 			ADSUtils.AnnouncementToRead,
 			logger) as AnnouncementNotification)!;
 	}

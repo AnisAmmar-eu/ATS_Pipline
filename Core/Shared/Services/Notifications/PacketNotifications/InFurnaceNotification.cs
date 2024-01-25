@@ -12,6 +12,7 @@ public class InFurnaceNotification : PacketNotification<InFurnaceStruct>
 			ads,
 			ADSUtils.InFurnaceRemove,
 			ADSUtils.InFurnaceNewMsg,
+			ADSUtils.InFurnaceAcquitMsg,
 			ADSUtils.InFurnaceToRead,
 			logger) as InFurnaceNotification)!;
 	}

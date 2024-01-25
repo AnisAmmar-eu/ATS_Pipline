@@ -22,6 +22,9 @@ using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
 
+/// <summary>
+/// Background service used to "wait" for camera images and save them in the correct folder.
+/// </summary>
 public class CameraService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
