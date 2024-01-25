@@ -13,6 +13,8 @@ public static class ADSUtils
 	public const string PictureCountCam1 = "VA_STATION.PictureCounter_Cam01";
 	public const string PictureCountCam2 = "VA_STATION.PictureCounter_Cam02";
 
+	public const string IsHole1 = "VA_STATION.IsHole1";
+
 	#endregion
 
 	#region AlarmNotification

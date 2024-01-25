@@ -93,9 +93,6 @@ public class CameraService : BackgroundService
 		if (!stream.IsRunning)
 			stream.Start();
 
-		int nbPictures = 0;
-		int nbPicturesTest = 0;
-
 		await Task.Run(
 			async () =>
 			{
@@ -117,9 +114,7 @@ public class CameraService : BackgroundService
 						if (await IsTestModeOn(_logger))
 						{
 							// testDir2 != null means that we are in a S5 Cycle.
-							string dir = (cameraNb == CameraNb.Both && nbPicturesTest % 2 == 1)
-								? ShootingUtils.CameraTest2
-								: ShootingUtils.CameraTest1;
+							string dir = (GetCameraID(cameraNb, tcClient) == 1) ? ShootingUtils.CameraTest1 : ShootingUtils .CameraTest2;
 							Directory.CreateDirectory(dir);
 							FileInfo previousImage = new(dir + ShootingUtils.TestFilename);
 							if (previousImage.Exists)
@@ -127,16 +122,13 @@ public class CameraService : BackgroundService
 
 							image.Save(dir + ShootingUtils.TestFilename, 1);
 							image.Close();
-							++nbPicturesTest;
 							await _hubContext.Clients.All.RefreshTestImages();
 						}
 						else
 						{
 							RIDStruct rid = tcClient.ReadAny<RIDStruct>(ridStructHandle);
 							string anodeType = AnodeTypeDict.AnodeTypeIntToString(tcClient.ReadAny<int>(anodeTypeHandle));
-							int cameraID = (cameraNb != CameraNb.Both)
-                                ? (int)cameraNb
-								: (int)((nbPictures % 2 == 1) ? CameraNb.Camera2 : CameraNb.Camera1);
+							int cameraID = GetCameraID(cameraNb, tcClient);
 							FileInfo imagePath
 								= Shooting.GetImagePathFromRoot(rid.ToRID(), Station.ID, _imagesPath, anodeType, cameraID, _extension);
 							FileInfo thumbnailPath
@@ -155,7 +147,6 @@ public class CameraService : BackgroundService
 							image.Close();
 
 							tcClient.WriteAny(pictureCounter, (ushort)1);
-							++nbPictures;
 						}
 					}
 					catch (Exception e)
@@ -180,6 +171,15 @@ public class CameraService : BackgroundService
 	}
 
 	#region Generics functions
+
+	private static int GetCameraID(CameraNb cameraNb, AdsClient tcClient)
+	{
+		if (cameraNb != CameraNb.Both)
+			return (int)cameraNb;
+
+		uint isHole1Handle = tcClient.CreateVariableHandle(ADSUtils.IsHole1);
+		return (tcClient.ReadAny<bool>(isHole1Handle)) ? (int)CameraNb.Camera1 : (int)CameraNb.Camera2;
+	}
 
 	private static async Task<bool> IsTestModeOn(ILogger<CameraService> logger)
 	{

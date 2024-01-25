@@ -104,6 +104,4 @@ app.UseAuthorization();
 
 app.MapCarter();
 
-app.MapHub<IOTHub>("/iotHub");
-
 app.Run();
