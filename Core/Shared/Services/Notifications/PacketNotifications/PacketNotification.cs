@@ -3,6 +3,7 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.SignalR.StationCycleHub;
 using Microsoft.AspNetCore.SignalR;
@@ -22,8 +23,8 @@ public class PacketNotification<TStruct> : BaseNotification<Packet, TStruct>
 			= services.GetRequiredService<IHubContext<StationCycleHub, IStationCycleHub>>();
 		if (entity is Shooting shooting)
 		{
-			shooting.ImagesPath = configuration.GetValueWithThrow<string>("CameraConfig:ImagesPath");
-			shooting.Extension = configuration.GetValueWithThrow<string>("CameraConfig:Extension");
+			shooting.ImagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+			shooting.Extension = configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 			await packetService.BuildPacket(shooting);
 			Packet alarmList = new AlarmList {
 				StationCycleRID = shooting.StationCycleRID,

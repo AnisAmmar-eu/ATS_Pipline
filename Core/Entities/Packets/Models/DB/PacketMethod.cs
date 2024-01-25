@@ -1,3 +1,4 @@
+using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO;
 using Core.Shared.UnitOfWork.Interfaces;
 
@@ -30,6 +31,7 @@ public partial class Packet
 	public async Task Build(IAnodeUOW anodeUOW)
 	{
 		await InheritedBuild(anodeUOW);
+		Status = PacketStatus.Completed;
 		anodeUOW.Packet.Update(this);
 		anodeUOW.Commit();
 	}

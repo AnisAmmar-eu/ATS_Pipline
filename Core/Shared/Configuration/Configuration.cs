@@ -36,17 +36,17 @@ public static class Configuration
 
 	public static void LoadBaseConfiguration(this IConfiguration configuration)
 	{
-		Station.Name = configuration.GetValueWithThrow<string>("StationConfig:StationName");
+		Station.Name = configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
 
 		// TODO IF station is server then different config
-		ITApisDict.ADSAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiADS");
-		ITApisDict.AlarmAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiAlarm");
-		ITApisDict.CameraAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiCamera");
-		ITApisDict.IOTAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiIOT");
-		ITApisDict.KPIAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiKPI");
-		ITApisDict.ServerReceiveAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiServerReceive");
-		ITApisDict.StationCycleAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiStationCycle");
-		ITApisDict.UserAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiUser");
-		ITApisDict.VisionAddress = configuration.GetValueWithThrow<string>("ApiAddresses:ApiVision");
+		ITApisDict.ADSAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiADSAddress);
+		ITApisDict.AlarmAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiAlarmAddress);
+		ITApisDict.CameraAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiCameraAddress);
+		ITApisDict.IOTAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiIOTAddress);
+		ITApisDict.KPIAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiKPIAddress);
+		ITApisDict.ServerReceiveAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiServerReceiveAddress);
+		ITApisDict.StationCycleAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiStationCycleAddress);
+		ITApisDict.UserAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiUserAddress);
+		ITApisDict.VisionAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiVisionAddress);
 	}
 }

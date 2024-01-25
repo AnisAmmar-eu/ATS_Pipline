@@ -1,5 +1,6 @@
 using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,7 +26,7 @@ public class SendService : BackgroundService
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string imagesPath = configuration.GetValueWithThrow<string>("CameraConfig:ImagesPath");
+		string imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 
 		IPacketService packetService
 			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();

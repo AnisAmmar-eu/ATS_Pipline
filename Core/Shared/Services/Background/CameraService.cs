@@ -49,11 +49,11 @@ public class CameraService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		_hubContext = asyncScope.ServiceProvider.GetRequiredService<IHubContext<CameraHub, ICameraHub>>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		int port1 = configuration.GetValueWithThrow<int>("CameraConfig:Camera1:Port");
-		int port2 = configuration.GetValueWithThrow<int>("CameraConfig:Camera2:Port");
-		_imagesPath = configuration.GetValueWithThrow<string>("CameraConfig:ImagesPath");
-		_thumbnailsPath = configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
-		_extension = configuration.GetValueWithThrow<string>("CameraConfig:Extension");
+		int port1 = configuration.GetValueWithThrow<int>(ConfigDictionary.Camera1Port);
+		int port2 = configuration.GetValueWithThrow<int>(ConfigDictionary.Camera2Port);
+		_imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		_thumbnailsPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
+		_extension = configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera

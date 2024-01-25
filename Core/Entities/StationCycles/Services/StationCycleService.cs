@@ -4,6 +4,7 @@ using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Repositories;
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -46,8 +47,8 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		if (stationCycle.ShootingPacket is null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 
-		string thumbnailsPath = _configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
-		string extenstion = _configuration.GetValueWithThrow<string>("CameraConfig:Extension");
+		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
+		string extenstion = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
 		return Shooting.GetImagePathFromRoot(
 			stationCycle.ShootingPacket.StationCycleRID,

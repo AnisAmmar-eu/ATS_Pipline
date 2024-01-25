@@ -50,8 +50,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		Shooting shooting = await AnodeUOW.Packet.GetById(shootingID) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
-		string thumbnailsPath = _configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
-		string extension = _configuration.GetValueWithThrow<string>("CameraConfig:Extension");
+		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
+		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
 		return Shooting.GetImagePathFromRoot(
 			shooting.StationCycleRID,
@@ -76,7 +76,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task SendCompletedPackets(string imagesPath)
 	{
-		string extension = _configuration.GetValueWithThrow<string>("CameraConfig:Extension");
+		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		IEnumerable<Packet> packets
 			= await AnodeUOW.Packet.GetAll([packet => packet.Status == PacketStatus.Completed], withTracking: false);
 		if (!packets.Any())
@@ -155,9 +155,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public Task ReceiveStationImage(IFormFileCollection formFiles)
 	{
-		string imagesPath = _configuration.GetValueWithThrow<string>("CameraConfig:ImagesPath");
+		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 
-		string thumbnailsPath = _configuration.GetValueWithThrow<string>("CameraConfig:ThumbnailsPath");
+		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{

@@ -2,7 +2,6 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using Core.Entities.IOT.Dictionaries;
-using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
@@ -96,7 +95,8 @@ public partial class Shooting
 			if (!image.Exists)
 				continue;
 
-			StreamContent content = new(image.Open(FileMode.Open));
+			await using FileStream fileStream = image.Open(FileMode.Open);
+			StreamContent content = new(fileStream);
 			content.Headers.ContentType = new("image/jpeg");
 			formData.Add(content, image.Name, image.Name);
 		}
@@ -129,7 +129,6 @@ public partial class Shooting
 			HasError = HasError || !HasSecondShoot;
 		}
 
-		Status = PacketStatus.Completed;
 		return Task.CompletedTask;
 	}
 }
