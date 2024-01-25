@@ -44,7 +44,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 
 			alarmWithStatus1.IsActive = false;
 			alarmWithStatus1.TSClear = alarm.TS.GetTimestamp();
-			alarmWithStatus1.TS = DateTime.Now;
+			alarmWithStatus1.TS = DateTimeOffset.Now;
 			alarmWithStatus1.IsAck = false;
 			alarmWithStatus1.HasBeenSent = false;
 			await AnodeUOW.StartTransaction();
@@ -59,7 +59,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmLog => alarmLog.RID == alarm.RID.ToString()]);
 			AlarmLog newAlarmLog = new(alarmC) {
 				Alarm = alarmC,
-				TS = DateTime.Now,
+				TS = DateTimeOffset.Now,
 				HasBeenSent = false,
 			};
 			if (alarm.OneShot)
