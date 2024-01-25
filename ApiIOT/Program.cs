@@ -7,7 +7,6 @@ using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
-using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
