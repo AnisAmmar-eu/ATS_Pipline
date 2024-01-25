@@ -14,6 +14,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Core.Shared.Endpoints.Kernel;
 
+/// <summary>
+/// Allows for an easy implementation of a generic CRUD.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <typeparam name="TDTO"></typeparam>
+/// <typeparam name="TService"></typeparam>
 public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
@@ -22,6 +28,16 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 	private string[] _includes = Array.Empty<string>();
 	private bool _isLogged;
 
+	/// <summary>
+	/// Calling this function creates the needed CRUD generic functions depending on which ones are asked for.
+	/// </summary>
+	/// <param name="group"></param>
+	/// <param name="flags">
+	/// <see cref="BaseEndpointFlags"/>specifying which endpoints are needed among Create, Read, Update and Delete.
+	/// Allows to also disable logging
+	/// </param>
+	/// <param name="includes">List of includes to be in every request.</param>
+	/// <returns></returns>
 	protected RouteGroupBuilder MapBaseEndpoints(
 		RouteGroupBuilder group,
 		BaseEndpointFlags flags,

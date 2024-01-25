@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background;
 
+/// <summary>
+/// Background service responsible for monitoring devices & apis statuses and processing their tags.
+/// </summary>
 public class IOTService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;

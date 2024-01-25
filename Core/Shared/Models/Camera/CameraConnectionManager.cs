@@ -2,11 +2,14 @@ using Stemmer.Cvb;
 
 namespace Core.Shared.Models.Camera;
 
+/// <summary>
+/// Responsible for handling connection to a camera with retry
+/// </summary>
 public static class CameraConnectionManager
 {
 	/// <summary>
-	///     Could be a list but by being a dictionary, having 2 or 42 cameras does not matter as there is no need to specify
-	///     a maximum length for the list.
+	/// Could be a list but by being a dictionary, having 2 or 42 cameras does not matter as there is no need to specify
+	/// a maximum length for the list.
 	/// </summary>
 	private static Dictionary<int, Device> Devices { get; } = new();
 

@@ -4,6 +4,9 @@ using TwinCAT.Ads;
 
 namespace Core.Shared.Models.TwinCat;
 
+/// <summary>
+/// Responsible for handling multiple connections to the automaton with retry.
+/// </summary>
 public static class TwinCatConnectionManager
 {
 	private static readonly AdsClient TcClient = new();

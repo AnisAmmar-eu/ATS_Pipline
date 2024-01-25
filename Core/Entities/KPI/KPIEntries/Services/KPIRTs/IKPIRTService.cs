@@ -11,6 +11,12 @@ namespace Core.Entities.KPI.KPIEntries.Services.KPIRTs;
 public interface IKPIRTService : IBaseEntityService<KPIRT, DTOKPIRT>
 {
 	public Task<List<DTOKPIRT>> GetByRIDsAndPeriod(string period, List<string> rids);
+
+	/// <summary>
+	/// Converts every KPIRT to its log version.
+	/// </summary>
+	/// <param name="periodsToSave"></param>
+	/// <returns></returns>
 	public Task<List<DTOKPILog>> SaveRTsToLogs(List<string> periodsToSave);
 
 	/// <summary>

@@ -1,5 +1,8 @@
 namespace Core.Shared.Dictionaries;
 
+/// <summary>
+/// Provides a set of Anode types.
+/// </summary>
 public static class AnodeTypeDict
 {
 	public const string D20 = "D20";
@@ -16,6 +19,9 @@ public static class AnodeTypeDict
 	}
 }
 
+/// <summary>
+/// Universal format of any <see cref="DateTimeOffset"/> among the project for backend purposes such as RID creation.
+/// </summary>
 public static class AnodeFormat
 {
 	public const string RIDFormat = "yyyyMMdd-HHmmss-fff";

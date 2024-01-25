@@ -1,6 +1,8 @@
 using Core.Entities.Packets.Models.DB;
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
+using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Services.Kernel.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -17,6 +19,13 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// <param name="cameraID"></param>
 	/// <returns></returns>
 	public Task<FileInfo> GetImageFromIDAndCamera(int shootingID, int cameraID);
+
+	/// <summary>
+	/// Executes side effects on a packet when called. Allows a packet to update itself on other factors determined by
+	/// the implementation of a InheritedBuild function.
+	/// </summary>
+	/// <param name="packet"></param>
+	/// <returns></returns>
 	public Task<DTOPacket> BuildPacket(Packet packet);
 
 	/// <summary>
@@ -27,6 +36,19 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// <returns></returns>
 	public Task SendCompletedPackets(string imagesPath);
 
+	/// <summary>
+	/// Receives a <see cref="Packet"/> from a station and saves it in the database. If needed, creates its corresponding <see cref="StationCycle"/>
+	/// </summary>
+	/// <param name="dtoPacket"></param>
+	/// <param name="stationName"></param>
+	/// <returns></returns>
 	public Task ReceivePacket(DTOPacket dtoPacket, string stationName);
+
+	/// <summary>
+	/// Receives the images of a <see cref="Shooting"/> packet from a station and saves them at the right location.
+	/// However, receiving the <see cref="Shooting"/> packet is managed by <see cref="ReceivePacket"/>
+	/// </summary>
+	/// <param name="formFiles"></param>
+	/// <returns></returns>
 	public Task ReceiveStationImage(IFormFileCollection formFiles);
 }

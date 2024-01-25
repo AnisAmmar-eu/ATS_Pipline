@@ -11,6 +11,9 @@ using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
 
+/// <summary>
+/// Background service responsible for starting the NotificationServices used to retrieve data from the automaton SQL queues.
+/// </summary>
 public class ADSService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;

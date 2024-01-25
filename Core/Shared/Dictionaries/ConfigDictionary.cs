@@ -1,5 +1,8 @@
 namespace Core.Shared.Dictionaries;
 
+/// <summary>
+/// Provides a set of constants for configurations.
+/// </summary>
 public static class ConfigDictionary
 {
 	#region Api Addresses

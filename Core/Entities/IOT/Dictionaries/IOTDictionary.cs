@@ -1,3 +1,5 @@
+using Core.Shared.Configuration;
+
 namespace Core.Entities.IOT.Dictionaries;
 
 public static class DeviceRID
@@ -8,6 +10,9 @@ public static class DeviceRID
 	public const string TwinCat = "TwinCat";
 }
 
+/// <summary>
+/// Provides information about every Api. The Address is given at runtime by loading the base configuration. <see cref="Configuration"/>
+/// </summary>
 public static class ITApisDict
 {
 	public const string ADSRID = "ApiADS";

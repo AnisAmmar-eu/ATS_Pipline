@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background.KPI.KPIRTs;
 
+/// <summary>
+/// Background service computing KPIRT values on <see cref="Anode"/>
+/// </summary>
 public class HourlyAnodeService : BaseHourlyKPIRTService<Anode, DTOAnode, IAnodeRepository,
 	Anode>
 {

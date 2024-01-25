@@ -8,6 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background;
 
+/// <summary>
+/// Background service responsible for sending completed packets.
+/// If the packet is a Shooting one, its images will be sent along.
+/// </summary>
 public class SendService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;

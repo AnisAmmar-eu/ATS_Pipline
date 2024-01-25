@@ -1,5 +1,12 @@
+using Core.Shared.Services.Background;
+using Core.Shared.Services.Notifications;
+
 namespace Core.Shared.Dictionaries;
 
+/// <summary>
+/// Provides a set of constant for automaton-related operations such as <see cref="BaseNotification{T,TStruct}"/>
+/// or values needed by <see cref="CameraService"/>
+/// </summary>
 public static class ADSUtils
 {
 	public const int AdsPort = 851;

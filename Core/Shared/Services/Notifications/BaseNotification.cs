@@ -5,8 +5,13 @@ using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Notifications;
 
-public class
-	BaseNotification<T, TStruct>
+/// <summary>
+/// Generic service responsible for dequeuing data from the automaton and add it to the SQL Database.
+/// Its <see cref="AddElement"/> function should be override to allow for custom side effect and choosing in which table to add it.
+/// </summary>
+/// <typeparam name="T">Type to which to struct is converted before being given to the <see cref="AddElement"/> function.</typeparam>
+/// <typeparam name="TStruct">Struct which corresponds to the one in the automaton</typeparam>
+public class BaseNotification<T, TStruct>
 	where TStruct : struct, IBaseADS<T>
 {
 	private uint _newMsg;
@@ -37,6 +42,17 @@ public class
 	{
 	}
 
+	/// <summary>
+	/// Creates the Notification which automatically starts.
+	/// </summary>
+	/// <param name="ads"></param>
+	/// <param name="removeSymbol"></param>
+	/// <param name="newMsgSymbol"></param>
+	/// <param name="acquitMsgSymbol"></param>
+	/// <param name="oldEntrySymbol"></param>
+	/// <param name="logger"></param>
+	/// <typeparam name="TNotification"></typeparam>
+	/// <returns></returns>
 	protected static async Task<BaseNotification<T, TStruct>> CreateSub<TNotification>(
 		dynamic ads,
 		string removeSymbol,
@@ -119,6 +135,12 @@ public class
 		tcClient.WriteAny(_acquitMsg, false);
 	}
 
+	/// <summary>
+	/// Should be override to save the retrieved data.
+	/// </summary>
+	/// <param name="services"></param>
+	/// <param name="entity"></param>
+	/// <returns></returns>
 	protected virtual Task AddElement(IServiceProvider services, T entity)
 	{
 		return Task.CompletedTask;

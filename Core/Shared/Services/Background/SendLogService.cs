@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background;
 
+/// <summary>
+/// Background service responsible for sending station logs to the server.
+/// </summary>
 public class SendLogService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;

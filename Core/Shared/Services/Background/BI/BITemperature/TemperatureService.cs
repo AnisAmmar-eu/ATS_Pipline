@@ -5,12 +5,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background.BI.BITemperature;
 
+/// <summary>
+/// Background service responsibles for logging both camera temperatures every <see cref="Delay"/> seconds.
+/// </summary>
 public class TemperatureService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<TemperatureService> _logger;
-	private const int _delay = 5;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(_delay);
+	private const int Delay = 5;
+	private readonly TimeSpan _period = TimeSpan.FromSeconds(Delay);
 	private int _executionCount;
 
 	public TemperatureService(ILogger<TemperatureService> logger, IServiceScopeFactory factory)
@@ -22,7 +25,7 @@ public class TemperatureService : BackgroundService
 	private static TimeSpan TimeToWaitUntilNextQuarterHour()
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
-		return TimeSpan.FromSeconds(_delay - (now.Second % _delay));
+		return TimeSpan.FromSeconds(Delay - (now.Second % Delay));
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)

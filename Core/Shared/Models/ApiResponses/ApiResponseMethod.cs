@@ -13,6 +13,9 @@ namespace Core.Shared.Models.ApiResponses;
 
 public partial class ApiResponse
 {
+	/// <summary>
+	/// Default JsonOptions which should be used when sending data to the front or for back to back communications.
+	/// </summary>
 	public static readonly JsonSerializerOptions JsonOptions = new() {
 		PropertyNamingPolicy = null,
 		TypeInfoResolver = new DefaultJsonTypeInfoResolver { Modifiers = { AddNestedDerivedTypes } },
@@ -148,6 +151,12 @@ public partial class ApiResponse
 		}
 	}
 
+	/// <summary>
+	/// This function allows for the class decorator <see cref="JsonDerivedType"/> to only specify direct children.
+	/// The function then recursively adds the derived type of its children to the possible derived types.
+	/// It allows for less cumbersome class decorators in DTO by needing to only specify direct children.
+	/// </summary>
+	/// <param name="jsonTypeInfo"></param>
 	private static void AddNestedDerivedTypes(JsonTypeInfo jsonTypeInfo)
 	{
 		if (jsonTypeInfo.PolymorphismOptions is null)

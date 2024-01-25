@@ -9,6 +9,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background.KPI.KPIRTs;
 
+/// <summary>
+/// Background service responsible for computing KPIRT values every hour.
+/// </summary>
+/// <typeparam name="T">Entities on which the computation will be done.</typeparam>
+/// <typeparam name="TDTO"></typeparam>
+/// <typeparam name="TRepository"></typeparam>
+/// <typeparam name="TValue"></typeparam>
 public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundService
 	where T : class, IBaseEntity<T, TDTO>, IBaseKPI<TValue>
 	where TDTO : class, IDTO<T, TDTO>

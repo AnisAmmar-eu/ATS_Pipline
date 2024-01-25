@@ -5,6 +5,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Core.Shared.Configuration;
 
+/// <summary>
+/// Provides helper functions for easier configuration managing.
+/// Those functions automatically throw if the configuration is not found thus returning a non-nullable value.
+/// </summary>
 public static class Configuration
 {
 	public static T GetValueWithThrow<T>(this IConfiguration configuration, string path)
@@ -34,6 +38,10 @@ public static class Configuration
 		return res;
 	}
 
+	/// <summary>
+	/// Allows to load config common to every Api upon startup
+	/// </summary>
+	/// <param name="configuration"></param>
 	public static void LoadBaseConfiguration(this IConfiguration configuration)
 	{
 		Station.Name = configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);

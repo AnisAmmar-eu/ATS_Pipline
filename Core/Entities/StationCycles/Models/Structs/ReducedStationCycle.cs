@@ -1,5 +1,8 @@
 namespace Core.Entities.StationCycles.Models.Structs;
 
+/// <summary>
+/// Lighter version a station cycle for the front.
+/// </summary>
 public struct ReducedStationCycle
 {
 	public int ID { get; set; }

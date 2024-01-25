@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Core.Shared.Data;
 
+/// <summary>
+/// Functions to be called upon startup of one Api per station/server to initialise the database.
+/// </summary>
 public static class DBInitializer
 {
 	public static Task InitializeStation(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)

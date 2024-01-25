@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background.KPI.KPILogs;
 
+/// <summary>
+/// Background service responsible for logging every KPIRT every day at midnight.
+/// </summary>
 public class DailyKPILogService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
