@@ -1,7 +1,4 @@
-using Core.Entities.Packets.Services;
-using Core.Shared.Configuration;
-using Core.Shared.Dictionaries;
-using Microsoft.Extensions.Configuration;
+using Core.Entities.Alarms.AlarmsLog.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,14 +9,14 @@ namespace Core.Shared.Services.Background;
 /// Background service responsible for sending completed packets.
 /// If the packet is a Shooting one, its images will be sent along.
 /// </summary>
-public class SendService : BackgroundService
+public class SendAlarmLogService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
-	private readonly ILogger<SendService> _logger;
+	private readonly ILogger<SendAlarmLogService> _logger;
 	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
 	private int _executionCount;
 
-	public SendService(ILogger<SendService> logger, IServiceScopeFactory factory)
+	public SendAlarmLogService(ILogger<SendAlarmLogService> logger, IServiceScopeFactory factory)
 	{
 		_logger = logger;
 		_factory = factory;
@@ -29,11 +26,9 @@ public class SendService : BackgroundService
 	{
 		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 
-		IPacketService packetService
-			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
+		IAlarmLogService alarmLogService
+			= asyncScope.ServiceProvider.GetRequiredService<IAlarmLogService>();
 
 		while (!stoppingToken.IsCancellationRequested
 			&& await timer.WaitForNextTickAsync(stoppingToken))
@@ -41,8 +36,8 @@ public class SendService : BackgroundService
             try
 			{
 				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
-				_logger.LogInformation("Calling SendPackets");
-				await packetService.SendCompletedPackets(imagesPath);
+				_logger.LogInformation("Calling SendAlarmLogs");
+				await alarmLogService.SendLogsToServer();
 
 				_executionCount++;
 				_logger.LogInformation(

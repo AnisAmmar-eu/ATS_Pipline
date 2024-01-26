@@ -83,7 +83,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			return;
 
 		await AnodeUOW.StartTransaction();
-		await Task.WhenAll(packets.Select(async packet =>
+		foreach (Packet packet in packets)
 		{
 			try
 			{
@@ -109,7 +109,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			{
 				_logger.LogError("Error when sending packet: {e}", e);
 			}
-		}));
+		}
+
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 	}

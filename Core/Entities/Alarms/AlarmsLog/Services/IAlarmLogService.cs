@@ -8,5 +8,5 @@ public interface IAlarmLogService : IBaseEntityService<AlarmLog, DTOAlarmLog>
 {
 	Task Collect(Alarm alarm);
 	Task<int> AckAlarmLogs(int[] idAlarmLogs);
-	public Task<HttpResponseMessage> SendLogsToServer();
+	public Task SendLogsToServer();
 }

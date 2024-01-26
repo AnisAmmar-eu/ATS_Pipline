@@ -89,8 +89,8 @@ builder.Services.AddCarter();
 
 if (!Station.IsServer)
 {
-	builder.Services.AddSingleton<SendService>();
-	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendService>());
+	builder.Services.AddSingleton<SendPacketService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendPacketService>());
 
 	builder.Services.AddSingleton<SendLogService>();
 	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendLogService>());

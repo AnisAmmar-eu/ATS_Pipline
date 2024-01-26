@@ -6,6 +6,8 @@ using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
+using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.AlarmHub;
@@ -81,6 +83,12 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
+
+if (!Station.IsServer)
+{
+	builder.Services.AddSingleton<SendAlarmLogService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendAlarmLogService>());
+}
 
 WebApplication app = builder.Build();
 

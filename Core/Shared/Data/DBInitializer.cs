@@ -23,6 +23,8 @@ public static class DBInitializer
 	public static Task InitializeServer(AnodeCTX anodeCTX, UserManager<ApplicationUser> userManager)
 	{
 		IOTInitializer.InitializeServer(anodeCTX);
+		// TODO Don't. RIDs are the same station by station but need to be different on the server
+		AlarmInitializer.InitializeStation(anodeCTX);
 		KPIInitializer.Initialize(anodeCTX);
 		VisionInitializer.Initialize(anodeCTX);
 		return UserInitializer.Initialize(anodeCTX, userManager);

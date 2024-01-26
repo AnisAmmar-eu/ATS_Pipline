@@ -94,28 +94,37 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		return res;
 	}
 
-	public async Task<HttpResponseMessage> SendLogsToServer()
+	// TODO Send one by one for exception control instead of a list.
+	public async Task SendLogsToServer()
 	{
-		string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/alarmsLog";
-		List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes([alarmLog => !alarmLog.HasBeenSent]);
-		string jsonData = JsonSerializer.Serialize(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
-		StringContent content = new(jsonData, Encoding.UTF8, "application/json");
-
-		using HttpClient httpClient = new();
-		HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
-
-		if (!response.IsSuccessStatusCode || alarmLogs.Count == 0)
-			return response;
-
-		await AnodeUOW.StartTransaction();
-		alarmLogs.ForEach(alarmLog =>
+		try
 		{
-			alarmLog.HasBeenSent = true;
-			AnodeUOW.AlarmLog.Update(alarmLog);
-		});
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+			string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/alarmsLog";
+			List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes([alarmLog => !alarmLog.HasBeenSent]);
+			string jsonData = JsonSerializer.Serialize(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
+			StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 
-		return response;
+			using HttpClient httpClient = new();
+			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
+
+			if (!response.IsSuccessStatusCode || alarmLogs.Count == 0)
+            {
+                throw new("Send alarmLog to server failed with status code:"
+                    + $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+            }
+
+            await AnodeUOW.StartTransaction();
+			alarmLogs.ForEach(alarmLog =>
+			{
+				alarmLog.HasBeenSent = true;
+				AnodeUOW.AlarmLog.Update(alarmLog);
+			});
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
+		}
+		catch (Exception e)
+		{
+			_logger.LogError($"Error while sending AlarmLog: {e}");
+		}
 	}
 }
