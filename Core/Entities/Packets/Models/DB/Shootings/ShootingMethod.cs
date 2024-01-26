@@ -95,8 +95,7 @@ public partial class Shooting
 			if (!image.Exists)
 				continue;
 
-			await using FileStream fileStream = image.Open(FileMode.Open);
-			StreamContent content = new(fileStream);
+			StreamContent content = new(image.Open(FileMode.Open));
 			content.Headers.ContentType = new("image/jpeg");
 			formData.Add(content, image.Name, image.Name);
 		}

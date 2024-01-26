@@ -10,10 +10,11 @@ public partial class Packet
 	{
 	}
 
-	public Packet(DTOPacket dto)
+	public Packet(DTOPacket dto) : base(dto)
 	{
 		StationCycleRID = dto.StationCycleRID;
 		Status = dto.Status;
+		TwinCatStatus = dto.TwinCatStatus;
 		HasError = dto.HasError;
 	}
 
