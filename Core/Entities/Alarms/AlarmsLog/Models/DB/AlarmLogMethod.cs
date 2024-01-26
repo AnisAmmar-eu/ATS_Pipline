@@ -18,15 +18,12 @@ public partial class AlarmLog
 		Alarm = alarmC;
 	}
 
-	public AlarmLog(DTOAlarmLog dtoAlarmLog)
+	public AlarmLog(DTOAlarmLog dtoAlarmLog) : base(dtoAlarmLog)
 	{
-		ID = dtoAlarmLog.ID;
-		TS = (DateTimeOffset)dtoAlarmLog.TS!;
 		StationID = dtoAlarmLog.StationID;
 		IsAck = dtoAlarmLog.IsAck;
 		IsActive = dtoAlarmLog.IsActive;
 		AlarmID = dtoAlarmLog.AlarmID;
-		Alarm = dtoAlarmLog.Alarm.ToModel();
 		HasBeenSent = dtoAlarmLog.HasBeenSent;
 		TSRaised = dtoAlarmLog.TSRaised;
 		TSClear = dtoAlarmLog.TSClear;

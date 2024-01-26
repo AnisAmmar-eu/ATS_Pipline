@@ -1,8 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Carter;
-using Core.Entities.Alarms.AlarmsC.Models.DTO;
-using Core.Entities.Alarms.AlarmsC.Services;
-using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
@@ -36,7 +33,6 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(
 		[FromBody] [Required] List<DTOAlarmLog> dtoAlarmLogs,
-		IAlarmCService alarmCService,
 		IAlarmLogService alarmLogService,
 		ILogService logService,
 		HttpContext httpContext)
@@ -45,16 +41,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 			async () =>
 			{
 				foreach (DTOAlarmLog alarmLog in dtoAlarmLogs)
-				{
-					DTOAlarmC newAlarmC = await alarmCService.GetByRID(alarmLog.AlarmRID);
-
-					AlarmLog alarmLogToAdd = alarmLog.ToModel();
-					alarmLogToAdd.ID = 0;
-					alarmLogToAdd.IsAck = false;
-					alarmLogToAdd.HasBeenSent = true;
-					alarmLogToAdd.AlarmID = newAlarmC.ID;
-					await alarmLogService.Add(alarmLogToAdd);
-				}
+					await alarmLogService.ReceiveAlarmLog(alarmLog);
 			},
 			logService,
 			httpContext);

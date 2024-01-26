@@ -127,4 +127,16 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			_logger.LogError($"Error while sending AlarmLog: {e}");
 		}
 	}
+
+	public async Task ReceiveAlarmLog(DTOAlarmLog dtoAlarmLog)
+	{
+		AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
+		AlarmLog alarmLog = dtoAlarmLog.ToModel();
+		alarmLog.Alarm = alarmC;
+		alarmLog.ID = 0;
+		await AnodeUOW.StartTransaction();
+		await AnodeUOW.AlarmLog.Add(alarmLog);
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+	}
 }
