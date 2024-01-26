@@ -6,8 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace Core.Shared.Services.Background;
 
 /// <summary>
-/// Background service responsible for sending completed packets.
-/// If the packet is a Shooting one, its images will be sent along.
+/// Background service responsible for sending alarm logs
 /// </summary>
 public class SendAlarmLogService : BackgroundService
 {
