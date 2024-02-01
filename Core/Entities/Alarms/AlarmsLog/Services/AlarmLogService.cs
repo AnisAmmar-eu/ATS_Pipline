@@ -81,6 +81,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			alarmWithStatus.HasBeenSent = false;
 			await AnodeUOW.StartTransaction();
 			AnodeUOW.AlarmLog.Update(alarmWithStatus);
+			_logger.LogInformation($"Updated alarmLog with ID {alarmWithStatus.ID.ToString()}");
 		}
 		catch (EntityNotFoundException)
 		{
@@ -107,6 +108,11 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			newAlarmLog.TSRaised = alarm.TS.GetTimestamp();
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmLog.Add(newAlarmLog);
+		}
+		catch (Exception e)
+		{
+			_logger.LogError($"Error while collecting AlarmLog: {e}");
+			return;
 		}
 
 		AnodeUOW.Commit();

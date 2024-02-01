@@ -51,6 +51,7 @@ public class ADSService : BackgroundService
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
+			_logger.LogInformation("Create ADSService");
 			AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
 			/*
 				Create each notification :
@@ -83,7 +84,7 @@ public class ADSService : BackgroundService
 				ADSUtils.OutFurnaceToRead);
 			OutFurnaceNotification outFurnaceNotification = new(outFurnaceNewMsg, outFurnaceOldEntry, _logger);
 
-			_logger.LogInformation("Create ADS services");
+			_logger.LogInformation("ADS Loop started");
 			try
 			{
 				// Define a task that retrieves all the elements asynchronously
@@ -99,8 +100,15 @@ public class ADSService : BackgroundService
 							: Task.CompletedTask);
 				}
 
+				uint handle = tcClient.CreateVariableHandle(ADSUtils.ConnectionPath);
 				while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
+				{
+					if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
+						throw new AdsException("Error while reading variable");
+
+					_logger.LogInformation("Time to get elements");
 					await GetAllElements();
+				}
 			}
 			catch (Exception e)
 			{

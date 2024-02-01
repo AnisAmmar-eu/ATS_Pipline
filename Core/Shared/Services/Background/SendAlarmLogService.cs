@@ -12,7 +12,7 @@ public class SendAlarmLogService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendAlarmLogService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
+	private readonly TimeSpan _period = TimeSpan.FromSeconds(5);
 	private int _executionCount;
 
 	public SendAlarmLogService(ILogger<SendAlarmLogService> logger, IServiceScopeFactory factory)

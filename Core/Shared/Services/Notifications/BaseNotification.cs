@@ -35,6 +35,11 @@ public class BaseNotification<T, TStruct>
 
 	public async Task GetElement(AdsClient tcClient, IServiceProvider appServices)
 	{
+		ushort newMsg = tcClient.ReadAny<ushort>(_newMsg);
+
+		if (newMsg != 2)
+			return;
+
 		// Get element of FIFO
 		TStruct adsStruct = tcClient.ReadAny<TStruct>(_oldEntry);
 		T entity = adsStruct.ToModel();
@@ -44,13 +49,13 @@ public class BaseNotification<T, TStruct>
 		try
 		{
 			await AddElement(services, entity);
+			tcClient.WriteAny(_newMsg, (ushort)1);
 		}
 		catch (Exception e)
 		{
 			_logger.LogError($"Error while dequeuing a {typeof(T).Name}: {e}");
+			tcClient.WriteAny(_newMsg, (ushort)1);
 		}
-
-		tcClient.WriteAny(_newMsg, false);
 	}
 
 	/// <summary>
