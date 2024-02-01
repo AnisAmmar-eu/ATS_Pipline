@@ -19,12 +19,11 @@ using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
 using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
-using Core.Entities.Packets.Models.DB.Announcements;
-using Core.Entities.Packets.Models.DB.Announcements.S1S2Announcement;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
+using Core.Entities.Packets.Models.DB.Shootings.S5Shootings;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
@@ -83,12 +82,11 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	public DbSet<Packet> Packet => Set<Packet>();
 	public DbSet<AlarmList> AlarmList => Set<AlarmList>();
-	public DbSet<Announcement> Announcement => Set<Announcement>();
-	public DbSet<S1S2Announcement> S1S2Announcement => Set<S1S2Announcement>();
 	public DbSet<InFurnace> InFurnace => Set<InFurnace>();
 	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
 	public DbSet<Shooting> Shooting => Set<Shooting>();
 	public DbSet<S3S4Shooting> S3S4Shooting => Set<S3S4Shooting>();
+	public DbSet<S5Shooting> S5Shooting => Set<S5Shooting>();
 
 	#endregion
 
@@ -166,13 +164,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<StationCycle>()
-			.HasOne(stationCycle => stationCycle.AnnouncementPacket)
-			.WithOne(packet => packet.StationCycle)
-			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AnnouncementID)
-			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
-
-		builder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.ShootingPacket)
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.ShootingID)
@@ -183,13 +174,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasOne(stationCycle => stationCycle.AlarmListPacket)
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AlarmListID)
-			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
-
-		builder.Entity<S1S2Cycle>()
-			.HasOne(s1S2Cycle => s1S2Cycle.AnnouncementPacket)
-			.WithOne(packet => packet.StationCycle as S1S2Cycle)
-			.HasForeignKey<S1S2Cycle>(s1S2Cycle => s1S2Cycle.AnnouncementID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 

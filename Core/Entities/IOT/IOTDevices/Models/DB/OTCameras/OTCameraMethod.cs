@@ -53,7 +53,7 @@ public partial class OTCamera
 
 		try
 		{
-			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, cancelSource.Token);
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, logger, 1000, cancelSource.Token);
 			uint statusHandle
 				= tcClient.CreateVariableHandle(
 					(RID == DeviceRID.Camera1) ? IOTTagPath.Cam1StatusWrite : IOTTagPath.Cam2StatusWrite);

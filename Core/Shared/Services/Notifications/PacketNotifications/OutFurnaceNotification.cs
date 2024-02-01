@@ -10,14 +10,10 @@ namespace Core.Shared.Services.Notifications.PacketNotifications;
 /// </summary>
 public class OutFurnaceNotification : PacketNotification<OutFurnaceStruct>
 {
-	public static async Task<OutFurnaceNotification> Create(dynamic ads, ILogger logger)
+	public OutFurnaceNotification(
+		uint newMsg,
+		uint oldEntry,
+		ILogger logger) : base(newMsg, oldEntry, logger)
 	{
-		return (await CreateSub<OutFurnaceNotification>(
-			ads,
-			ADSUtils.OutFurnaceRemove,
-			ADSUtils.OutFurnaceNewMsg,
-			ADSUtils.OutFurnaceAcquitMsg,
-			ADSUtils.OutFurnaceToRead,
-			logger) as OutFurnaceNotification)!;
 	}
 }

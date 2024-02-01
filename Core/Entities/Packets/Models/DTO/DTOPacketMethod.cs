@@ -2,8 +2,6 @@ using System.Text.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
-using Core.Entities.Packets.Models.DTO.Announcements;
-using Core.Entities.Packets.Models.DTO.Announcements.S1S2Announcements;
 using Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DTO.Shootings;
@@ -59,8 +57,6 @@ public partial class DTOPacket
 
 		return type switch {
 			PacketType.Alarm => typeof(DTOAlarmList),
-			PacketType.Announcement => typeof(DTOAnnouncement),
-			PacketType.S1S2Announcement => typeof(DTOS1S2Announcement),
 			PacketType.Shooting => typeof(DTOShooting),
 			PacketType.InFurnace => typeof(DTOInFurnace),
 			PacketType.OutFurnace => typeof(DTOOutFurnace),

@@ -9,6 +9,7 @@ using Core.Shared.SignalR.StationCycleHub;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Notifications.PacketNotifications;
 
@@ -19,6 +20,13 @@ namespace Core.Shared.Services.Notifications.PacketNotifications;
 public class PacketNotification<TStruct> : BaseNotification<Packet, TStruct>
 	where TStruct : struct, IBaseADS<Packet>
 {
+	public PacketNotification(
+		uint newMsg,
+		uint oldEntry,
+		ILogger logger) : base(newMsg, oldEntry, logger)
+	{
+	}
+
 	/// <summary>
 	/// Builds and add the <see cref="entity"/> packet in the table, will verify its images if it is a <see cref="Shooting"/> packet.
 	/// </summary>

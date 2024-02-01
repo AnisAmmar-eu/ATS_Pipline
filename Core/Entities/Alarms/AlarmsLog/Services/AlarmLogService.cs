@@ -28,12 +28,44 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		_logger = logger;
 	}
 
+	/// <summary>
+	/// Collects alarm data and processes it based on its current state and value.
+	/// This method handles both existing alarms that are currently active and new alarm instances.
+	/// </summary>
+	/// <param name="alarm">The alarm instance to be processed.</param>
+	/// <remarks>
+	/// This method performs several key functions:
+	/// <list type="number">
+	/// <item>
+	/// Checks if there is an existing active alarm log for the given alarm.
+	///    - If an active alarm log exists and the alarm's value is true, logs a warning and exits.
+	///    - If an active alarm log exists and the alarm's value is false, updates the alarm log status to inactive.
+	/// </item>
+	/// <item>
+	/// In case no active alarm log exists and the alarm's value is false, exits the method.
+	/// </item>
+	/// <item>
+	/// If no active alarm log exists and the alarm's value is true, creates a new alarm log.
+	///    - The new alarm log is marked as active unless the alarm is a one-shot type.
+	/// </item>
+	/// <item>
+	/// Initiates a transaction for database operations.
+	/// </item>
+	/// <item>
+	/// Commits the transaction and sends real-time updates to all connected clients about the alarm status.
+	/// </item>
+	/// </list>
+	/// </remarks>
+	/// <exception cref="EntityNotFoundException">Thrown when no matching alarm is found in the database.</exception>
+	/// <returns>
+	/// A Task representing the asynchronous operation.
+	/// </returns>
 	public async Task Collect(Alarm alarm)
 	{
 		try
 		{
 			// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
-			AlarmLog alarmWithStatus1 = await AnodeUOW.AlarmLog.GetByWithIncludes(
+			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
 				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID.ToString()],
 				query => query.OrderByDescending(alarmLog => alarmLog.ID));
 			if (alarm.Value)
@@ -42,13 +74,13 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 				return; // alarmLog is already active.
 			}
 
-			alarmWithStatus1.IsActive = false;
-			alarmWithStatus1.TSClear = alarm.TS.GetTimestamp();
-			alarmWithStatus1.TS = DateTimeOffset.Now;
-			alarmWithStatus1.IsAck = false;
-			alarmWithStatus1.HasBeenSent = false;
+			alarmWithStatus.IsActive = false;
+			alarmWithStatus.TSClear = alarm.TS.GetTimestamp();
+			alarmWithStatus.TS = DateTimeOffset.Now;
+			alarmWithStatus.IsAck = false;
+			alarmWithStatus.HasBeenSent = false;
 			await AnodeUOW.StartTransaction();
-			AnodeUOW.AlarmLog.Update(alarmWithStatus1);
+			AnodeUOW.AlarmLog.Update(alarmWithStatus);
 		}
 		catch (EntityNotFoundException)
 		{

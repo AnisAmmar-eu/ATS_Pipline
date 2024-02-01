@@ -1,4 +1,5 @@
 using Core.Shared.Dictionaries;
+using Microsoft.Extensions.Logging;
 using TwinCAT;
 using TwinCAT.Ads;
 
@@ -13,7 +14,7 @@ public static class TwinCatConnectionManager
 
 	private const string ConnectionPath = ADSUtils.ConnectionPath;
 
-	public static async Task<AdsClient> Connect(int port, CancellationToken cancel)
+	public static async Task<AdsClient> Connect(int port, ILogger logger, int retryMS, CancellationToken cancel)
 	{
 		try
 		{
@@ -23,10 +24,11 @@ public static class TwinCatConnectionManager
 		}
 		catch(Exception ex)
 		{
-			return await Task.Run(
-				() =>
+			return await await Task.Run(
+				async () =>
 				{
-					while (!cancel.IsCancellationRequested)
+					using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(retryMS));
+					while (!cancel.IsCancellationRequested && await timer.WaitForNextTickAsync(cancel))
 					{
 						try
 						{
@@ -41,7 +43,7 @@ public static class TwinCatConnectionManager
 						}
 						catch
 						{
-							// Ignored
+							logger.LogError("Connection lost at {date}", DateTimeOffset.Now);
 						}
 					}
 

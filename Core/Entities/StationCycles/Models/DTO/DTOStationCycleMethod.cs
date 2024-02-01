@@ -28,10 +28,6 @@ public partial class DTOStationCycle
 		SignStatus1 = stationCycle.SignStatus1;
 		SignStatus2 = stationCycle.SignStatus2;
 
-		AnnouncementStatus = stationCycle.AnnouncementStatus;
-		AnnouncementID = stationCycle.AnnouncementID;
-		AnnouncementPacket = stationCycle.AnnouncementPacket?.ToDTO();
-
 		ShootingStatus = stationCycle.ShootingStatus;
 		ShootingID = stationCycle.ShootingID;
 		ShootingPacket = stationCycle.ShootingPacket?.ToDTO();

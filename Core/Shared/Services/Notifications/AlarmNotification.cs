@@ -12,15 +12,11 @@ namespace Core.Shared.Services.Notifications;
 /// </summary>
 public class AlarmNotification : BaseNotification<Alarm, Alarm>
 {
-	public static async Task<AlarmNotification> Create(dynamic ads, ILogger logger)
+	public AlarmNotification(
+		uint newMsg,
+		uint oldEntry,
+		ILogger logger) : base(newMsg, oldEntry, logger)
 	{
-		return await CreateSub<AlarmNotification>(
-			ads,
-			ADSUtils.AlarmRemove,
-			ADSUtils.AlarmNewMsg,
-			ADSUtils.AlarmAcquitMsg,
-			ADSUtils.AlarmToRead,
-			logger);
 	}
 
 	/// <summary>

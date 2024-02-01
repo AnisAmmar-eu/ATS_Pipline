@@ -11,9 +11,6 @@ public enum PacketStatus
 public static class PacketType
 {
 	public const string Alarm = "Alarm";
-	public const string Announcement = "Annnouncement";
-	public const string S1S2Announcement = "S1S2announcement";
-	public const string Detection = "Detection";
 	public const string Shooting = "Shooting";
 	public const string InFurnace = "InFurnace";
 	public const string OutFurnace = "OutFurnace";

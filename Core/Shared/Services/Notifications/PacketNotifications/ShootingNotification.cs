@@ -10,14 +10,10 @@ namespace Core.Shared.Services.Notifications.PacketNotifications;
 /// </summary>
 public class ShootingNotification : PacketNotification<ShootingStruct>
 {
-	public static async Task<ShootingNotification?> Create(dynamic ads, ILogger logger)
+	public ShootingNotification(
+		uint newMsg,
+		uint oldEntry,
+		ILogger logger) : base(newMsg, oldEntry, logger)
 	{
-		return await CreateSub<ShootingNotification>(
-			ads,
-			ADSUtils.ShootingRemove,
-			ADSUtils.ShootingNewMsg,
-			ADSUtils.ShootingAcquitMsg,
-			ADSUtils.ShootingToRead,
-			logger) as ShootingNotification;
 	}
 }

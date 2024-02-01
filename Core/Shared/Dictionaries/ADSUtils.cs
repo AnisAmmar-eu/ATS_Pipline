@@ -26,45 +26,28 @@ public static class ADSUtils
 
 	#region AlarmNotification
 
-	public const string AlarmRemove = "VA_ALM.remove"; // Delete once consumed.
 	public const string AlarmNewMsg = "VA_ALM.msgNew"; // Notifies when there is a new message.
-	public const string AlarmAcquitMsg = "VA_ALM.msgAck";
 	public const string AlarmToRead = "VA_ALM.oldEntry"; // Data zone and root of the structure.
-
-	#endregion
-
-	#region AnnouncementNotification
-
-	public const string AnnouncementRemove = "VA_P01.SQL_FIFO.remove";
-	public const string AnnouncementNewMsg = "VA_P01.SQL_FIFO.msgNew";
-	public const string AnnouncementAcquitMsg = "VA_P01.SQL_FIFO.msgAck";
-	public const string AnnouncementToRead = "VA_P01.SQL_FIFO.OldEntry";
 
 	#endregion
 
 	#region ShootingNotification
 
-	public const string ShootingRemove = "VA_P05.SQL_FIFO.remove";
 	public const string ShootingNewMsg = "VA_P05.SQL_FIFO.msgNew";
-	public const string ShootingAcquitMsg = "VA_P05.SQL_FIFO.msgAck";
 	public const string ShootingToRead = "VA_P05.SQL_FIFO.OldEntry";
 
 	#endregion
 
 	#region InFurnaceNotification
 
-	public const string InFurnaceRemove = "VA_P21.SQL_FIFO.remove";
 	public const string InFurnaceNewMsg = "VA_P21.SQL_FIFO.msgNew";
-	public const string InFurnaceAcquitMsg = "VA_P21.SQL_FIFO.msgAck";
 	public const string InFurnaceToRead = "VA_P21.SQL_FIFO.OldEntry";
 
 	#endregion
 
 	#region OutFurnaceNotification
 
-	public const string OutFurnaceRemove = "VA_P22.SQL_FIFO.remove";
 	public const string OutFurnaceNewMsg = "VA_P22.SQL_FIFO.msgNew";
-	public const string OutFurnaceAcquitMsg = "VA_P22.SQL_FIFO.msgAck";
 	public const string OutFurnaceToRead = "VA_P22.SQL_FIFO.OldEntry";
 
 	#endregion

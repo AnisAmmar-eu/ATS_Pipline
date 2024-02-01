@@ -1,8 +1,10 @@
 using System.Dynamic;
+using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.TwinCat;
 using Core.Shared.Services.Notifications;
 using Core.Shared.Services.Notifications.PacketNotifications;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -18,34 +20,88 @@ public class ADSService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<ADSService> _logger;
+	private readonly IConfiguration _configuration;
 	private int _executionCount;
 
-	public ADSService(ILogger<ADSService> logger, IServiceScopeFactory factory)
+	public ADSService(ILogger<ADSService> logger, IServiceScopeFactory factory, IConfiguration configuration)
 	{
 		_logger = logger;
 		_factory = factory;
+		_configuration = configuration;
 	}
 
+	/// <summary>
+	/// Executes an asynchronous task that continuously monitors and processes ADS notifications.
+	/// This task creates and manages different types of notifications (Alarm, Shooting, InFurnace, OutFurnace)
+	/// and performs actions based on these notifications.
+	/// </summary>
+	/// <remarks>
+	/// This method uses a <see cref="PeriodicTimer"/> to periodically execute tasks. It creates ADS services
+	/// for different notifications and retrieves elements asynchronously based on the station type.
+	/// The method handles exceptions by logging information and increments an execution count.
+	/// </remarks>
+	/// <param name="stoppingToken">A <see cref="CancellationToken"/> that signals the method to stop its execution.</param>
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		CancellationToken cancel = CancellationToken.None;
+		int delayMS = _configuration.GetValueWithThrow<int>("CycleMS");
+		int retryMS = _configuration.GetValueWithThrow<int>("RetryMS");
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
 
 		while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-			{
-				AdsClient tcClient = await InitializeConnection(asyncScope, cancel);
-				// If the TC disconnects, it will loop back to the top
-				uint handle = tcClient.CreateVariableHandle(ADSUtils.ConnectionPath);
-				while (!stoppingToken.IsCancellationRequested)
-                {
-                    if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
-						throw new AdsException("Error while reading variable");
+		{
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
+			/*
+				Create each notification :
+				AlarmNotification
+				ShootingNotification
+				InFurnaceNotification
+				OutFurnaceNotification
+			*/
+			(uint alarmNewmsg, uint alarmOldEntry) = CreateVarADS(
+				tcClient,
+				ADSUtils.AlarmNewMsg,
+				ADSUtils.AlarmToRead);
+			AlarmNotification alarmNotification = new(alarmNewmsg, alarmOldEntry, _logger);
 
-                    await Task.Delay(1000, cancel);
-                }
-            }
+			(uint shootingNewMsg, uint shootingOldEntry) = CreateVarADS(
+				tcClient,
+				ADSUtils.ShootingNewMsg,
+				ADSUtils.ShootingToRead);
+			ShootingNotification shootingNotification = new(shootingNewMsg, shootingOldEntry, _logger);
+
+			(uint inFurnaceNewMsg, uint inFurnaceOldEntry) = CreateVarADS(
+				tcClient,
+				ADSUtils.InFurnaceNewMsg,
+				ADSUtils.InFurnaceToRead);
+			InFurnaceNotification inFurnaceNotification = new(inFurnaceNewMsg, inFurnaceOldEntry, _logger);
+
+			(uint outFurnaceNewMsg, uint outFurnaceOldEntry) = CreateVarADS(
+				tcClient,
+				ADSUtils.OutFurnaceNewMsg,
+				ADSUtils.OutFurnaceToRead);
+			OutFurnaceNotification outFurnaceNotification = new(outFurnaceNewMsg, outFurnaceOldEntry, _logger);
+
+			_logger.LogInformation("Create ADS services");
+			try
+			{
+				// Define a task that retrieves all the elements asynchronously
+				Task GetAllElements()
+				{
+					return Task.WhenAll(
+						alarmNotification.GetElement(tcClient, asyncScope.ServiceProvider),
+						shootingNotification.GetElement(tcClient, asyncScope.ServiceProvider),
+						(Station.Type == StationType.S3S4)
+							? Task.WhenAll(
+								inFurnaceNotification.GetElement(tcClient, asyncScope.ServiceProvider),
+								outFurnaceNotification.GetElement(tcClient, asyncScope.ServiceProvider))
+							: Task.CompletedTask);
+				}
+
+				while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
+					await GetAllElements();
+			}
 			catch (Exception e)
 			{
 				_logger.LogInformation(
@@ -60,36 +116,18 @@ public class ADSService : BackgroundService
         }
     }
 
-	private async Task<AdsClient> InitializeConnection(AsyncServiceScope asyncScope, CancellationToken cancel)
+	/// <summary>
+	/// Creates msgNew and OldEntry variable handles for the notification services and returns them.
+	/// </summary>
+	/// <param name="tcClient">The AdsClient instance.</param>
+	/// <param name="newMsgPath">The path of the new message variable.</param>
+	/// <param name="oldEntryPath">The path of the old entry variable.</param>
+	private static (uint newMsgHandle, uint oldEntryHandle) CreateVarADS(
+		AdsClient tcClient, string newMsgPath, string oldEntryPath)
 	{
-		try
-		{
-			_logger.LogInformation("ADSService running at: {time}", DateTimeOffset.Now);
+		uint newMsgHandle =  tcClient.CreateVariableHandle(newMsgPath);
+		uint oldEntryHandle =  tcClient.CreateVariableHandle(oldEntryPath);
 
-			AdsClient tcClient = await TwinCatConnectionManager.Connect(851, cancel);
-			dynamic ads = new ExpandoObject();
-			ads.tcClient = tcClient;
-			ads.appServices = asyncScope.ServiceProvider;
-			ads.cancel = cancel;
-			_logger.LogInformation("Calling Notifications");
-			await AnnouncementNotification.Create(ads, _logger);
-			await AlarmNotification.Create(ads, _logger);
-			await ShootingNotification.Create(ads, _logger);
-			if (Station.Type == StationType.S3S4)
-			{
-				await InFurnaceNotification.Create(ads, _logger);
-				await OutFurnaceNotification.Create(ads, _logger);
-			}
-
-			_logger.LogInformation("ADSService successfully created Notifications");
-			return tcClient;
-		}
-		catch (Exception ex)
-		{
-			_logger.LogInformation(
-				"Failed to execute PeriodicADSService with exception message {message}. Good luck next round!",
-				ex.Message);
-			throw;
-		}
+		return (newMsgHandle, oldEntryHandle);
 	}
 }

@@ -31,7 +31,7 @@ public partial class OTTwinCat
 		{
 			CancellationTokenSource cancelSource = new();
 			cancelSource.CancelAfter(200);
-			AdsClient tcClient = await TwinCatConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(int.Parse(Address), logger, 1000, cancelSource.Token);
 			uint varHandle = tcClient.CreateVariableHandle(ConnectionPath);
 			ResultValue<bool> resultRead = await tcClient.ReadAnyAsync<bool>(varHandle, cancelSource.Token);
 			if (resultRead.ErrorCode != AdsErrorCode.NoError)
@@ -53,7 +53,7 @@ public partial class OTTwinCat
 		AdsClient tcClient;
 		try
 		{
-			tcClient = await TwinCatConnectionManager.Connect(int.Parse(Address), cancelSource.Token);
+			tcClient = await TwinCatConnectionManager.Connect(int.Parse(Address), logger, 1000, cancelSource.Token);
 		}
 		catch (AdsException e)
 		{
