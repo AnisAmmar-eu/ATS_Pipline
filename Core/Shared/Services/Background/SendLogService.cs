@@ -28,8 +28,8 @@ public class SendLogService : BackgroundService
 		ILogService logService
 			= asyncScope.ServiceProvider.GetRequiredService<ILogService>();
 
-		while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken))
+		while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested)
         {
             try
 			{

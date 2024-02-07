@@ -304,6 +304,25 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		return entities;
 	}
 
+	// Update using ExecuteUpdateAsync
+
+	/// <summary>
+	///    Update an entity in the table of <typeref name="T" /> and returns the updated entity
+	///    using the ExecuteUpdateAsync method
+	///    SetProperties is used to update only the properties that are not null
+	/// </summary>
+	/// <param name="entity">Entity to updated, null attribute will not change</param>
+	/// <param name="properties">Properties to update</param>
+	/// <returns>The updated entity <see cref="T" /></returns>
+	public Task<int> UpdateWithExecuteUpdateAsync(
+		T entity,
+		Expression<Func<
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties)
+	{
+		return Context.Set<T>().Where(x => x.ID == entity.ID).ExecuteUpdateAsync(properties);
+	}
+
 	/// <summary>
 	///     Check if an element exist with the predication
 	/// </summary>

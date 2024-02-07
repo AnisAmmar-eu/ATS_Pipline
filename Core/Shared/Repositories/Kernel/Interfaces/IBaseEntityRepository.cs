@@ -168,6 +168,20 @@ public interface IBaseEntityRepository<T, TDTO>
 	T[] UpdateArray(T[] entities);
 
 	/// <summary>
+	///    Update an entity in the table of <typeref name="T" /> and returns the updated entity
+	///    using the ExecuteUpdateAsync method
+	///    SetProperties is used to update only the properties that are not null
+	/// </summary>
+	/// <param name="entity">Entity to updated, null attribute will not change</param>
+	/// <param name="properties">Properties to update</param>
+	/// <returns>The updated entity <see cref="T" /></returns>
+	Task<int> UpdateWithExecuteUpdateAsync(
+		T entity,
+		Expression<Func<
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties);
+
+	/// <summary>
 	///     Check if an element exist with the predication
 	/// </summary>
 	/// <param name="predicate"></param>

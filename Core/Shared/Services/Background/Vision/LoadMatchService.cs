@@ -58,7 +58,7 @@ public class LoadMatchService : BackgroundService
 			{
 				_logger.LogError("Error in LoadMatchService: {error}", e);
 			}
-		} while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken));
+		} while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested);
 	}
 }

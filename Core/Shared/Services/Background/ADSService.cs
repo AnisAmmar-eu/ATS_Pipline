@@ -101,7 +101,7 @@ public class ADSService : BackgroundService
 				}
 
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.ConnectionPath);
-				while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
+				while (await timer.WaitForNextTickAsync(stoppingToken)&& !stoppingToken.IsCancellationRequested)
 				{
 					if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
 						throw new AdsException("Error while reading variable");

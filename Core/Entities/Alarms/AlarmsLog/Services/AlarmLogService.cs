@@ -66,8 +66,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		{
 			// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
 			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
-				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID.ToString()],
-				query => query.OrderByDescending(alarmLog => alarmLog.ID));
+				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID.ToString()]);
 			if (alarm.Value)
 			{
 				_logger.LogWarning($"Alarm with RID {alarm.RID.ToString()} is already active");
@@ -81,6 +80,8 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			alarmWithStatus.HasBeenSent = false;
 			await AnodeUOW.StartTransaction();
 			AnodeUOW.AlarmLog.Update(alarmWithStatus);
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
 			_logger.LogInformation($"Updated alarmLog with ID {alarmWithStatus.ID.ToString()}");
 		}
 		catch (EntityNotFoundException)
@@ -108,17 +109,14 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			newAlarmLog.TSRaised = alarm.TS.GetTimestamp();
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmLog.Add(newAlarmLog);
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
 		}
 		catch (Exception e)
 		{
 			_logger.LogError($"Error while collecting AlarmLog: {e}");
 			return;
 		}
-
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
-		await _hubContext.Clients.All.RefreshAlarmRT();
-		await _hubContext.Clients.All.RefreshAlarmLog();
 	}
 
 	public async Task<int> AckAlarmLogs(int[] idAlarmLogs)
@@ -138,43 +136,77 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		try
 		{
 			string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/alarmsLog";
-			List<AlarmLog> alarmLogs = await AnodeUOW.AlarmLog.GetAllWithIncludes([alarmLog => !alarmLog.HasBeenSent]);
+			AlarmLog alarmLog = await AnodeUOW.AlarmLog.GetByWithIncludes(
+				[alarmLog => !alarmLog.HasBeenSent],
+				query => query.OrderByDescending(alarmLog => alarmLog.ID),
+				false);
+
+			List<AlarmLog> alarmLogs = [ alarmLog ];
 			string jsonData = JsonSerializer.Serialize(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
 			StringContent content = new(jsonData, Encoding.UTF8, "application/json");
-
 			using HttpClient httpClient = new();
 			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
 
-			if (!response.IsSuccessStatusCode || alarmLogs.Count == 0)
-            {
-                throw new("Send alarmLog to server failed with status code:"
-                    + $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
-            }
-
-            await AnodeUOW.StartTransaction();
-			alarmLogs.ForEach(alarmLog =>
+			if (!response.IsSuccessStatusCode)
 			{
-				alarmLog.HasBeenSent = true;
-				AnodeUOW.AlarmLog.Update(alarmLog);
-			});
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
+				throw new("Send alarmLog to server failed with status code:"
+					+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+			}
+
+			await AnodeUOW.AlarmLog.UpdateWithExecuteUpdateAsync(
+				alarmLog,
+				setters => setters.SetProperty(alarmLog => alarmLog.HasBeenSent, true));
+
+			await _hubContext.Clients.All.RefreshAlarmRT();
+			await _hubContext.Clients.All.RefreshAlarmLog();
 		}
 		catch (Exception e)
 		{
 			_logger.LogError($"Error while sending AlarmLog: {e}");
 		}
+
+		await AnodeUOW.CommitTransaction();
 	}
 
 	public async Task ReceiveAlarmLog(DTOAlarmLog dtoAlarmLog)
 	{
 		AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
-		AlarmLog alarmLog = dtoAlarmLog.ToModel();
-		alarmLog.Alarm = alarmC;
-		alarmLog.ID = 0;
-		await AnodeUOW.StartTransaction();
-		await AnodeUOW.AlarmLog.Add(alarmLog);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+
+		try
+		{
+			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
+				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == dtoAlarmLog.AlarmRID],
+				query => query.OrderByDescending(alarmLog => alarmLog.ID),
+				false);
+
+			if (dtoAlarmLog.IsActive)
+			{
+				_logger.LogWarning($"Alarm with RID {dtoAlarmLog.AlarmRID} is already active");
+				return; // alarmLog is already active.
+			}
+
+			alarmWithStatus.IsActive = false;
+			alarmWithStatus.TSClear = dtoAlarmLog.TSClear;
+			if (dtoAlarmLog.TS.HasValue)
+				alarmWithStatus.TS = dtoAlarmLog.TS.Value;
+
+			alarmWithStatus.IsAck = false;
+			alarmWithStatus.HasBeenSent = false;
+			await AnodeUOW.StartTransaction();
+			AnodeUOW.AlarmLog.Update(alarmWithStatus);
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
+		}
+		catch (EntityNotFoundException)
+		{
+			// If an alarmLog doesn't exist, this alarm just raised.
+			AlarmLog newAlarmLog = dtoAlarmLog.ToModel();
+			newAlarmLog.Alarm = alarmC;
+			newAlarmLog.ID = 0;
+			await AnodeUOW.StartTransaction();
+			await AnodeUOW.AlarmLog.Add(newAlarmLog);
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
+		}
 	}
 }

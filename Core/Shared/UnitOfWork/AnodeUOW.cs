@@ -236,6 +236,16 @@ public class AnodeUOW : IAnodeUOW
 		GC.SuppressFinalize(this);
 	}
 
+	public int GetTransactionCount()
+	{
+		return _transactionCount;
+	}
+
+	public bool GetTransactionIsNull()
+	{
+		return _transaction is null;
+	}
+
 	#region Users
 
 	public IActRepository Acts { get; }

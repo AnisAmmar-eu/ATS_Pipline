@@ -33,8 +33,8 @@ public class IOTService : BackgroundService
 		IEnumerable<string> rids = configuration.GetSection("Devices").Get<string[]>()
 			?? await iotDeviceService.GetAllApisRIDs();
 
-		while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken))
+		while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested)
         {
             try
 			{

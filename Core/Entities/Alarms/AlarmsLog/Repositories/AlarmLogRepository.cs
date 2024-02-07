@@ -18,7 +18,7 @@ public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAl
 		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		bool withTracking = true)
 	{
-		return GetById(id, filters, withTracking, "Alarm");
+		return GetById(id, filters, withTracking, nameof(AlarmLog.Alarm));
 	}
 
 	public Task<AlarmLog> GetByWithIncludes(
@@ -26,7 +26,7 @@ public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAl
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
 		bool withTracking = true)
 	{
-		return GetBy(filters, orderBy, withTracking, "Alarm");
+		return GetBy(filters, orderBy, withTracking, nameof(AlarmLog.Alarm));
 	}
 
 	public Task<List<AlarmLog>> GetAllWithIncludes(

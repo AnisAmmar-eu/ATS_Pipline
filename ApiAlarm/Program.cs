@@ -31,7 +31,8 @@ builder.Services.AddSwaggerGen();
 builder.Configuration.LoadBaseConfiguration();
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection"))
+		.EnableSensitiveDataLogging());
 
 builder.Services.AddAuthentication(
 	options =>

@@ -67,6 +67,10 @@ public interface IAnodeUOW : IDisposable
 
 	Task CommitTransaction();
 
+	int GetTransactionCount();
+
+	bool GetTransactionIsNull();
+
 	#region Users
 
 	public IActRepository Acts { get; }

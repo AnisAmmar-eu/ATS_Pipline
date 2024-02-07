@@ -1,4 +1,6 @@
 using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Shared.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,24 +15,29 @@ public class SendAlarmLogService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendAlarmLogService> _logger;
 	private readonly TimeSpan _period = TimeSpan.FromSeconds(5);
+
+	private readonly IConfiguration _configuration;
 	private int _executionCount;
 
-	public SendAlarmLogService(ILogger<SendAlarmLogService> logger, IServiceScopeFactory factory)
+	public SendAlarmLogService(
+		ILogger<SendAlarmLogService> logger,
+		IServiceScopeFactory factory,
+		IConfiguration configuration)
 	{
 		_logger = logger;
 		_factory = factory;
+		_configuration = configuration;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		using PeriodicTimer timer = new(_period);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-
+		int delayMS = _configuration.GetValueWithThrow<int>("SendAlarmCycleMS");
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
 		IAlarmLogService alarmLogService
 			= asyncScope.ServiceProvider.GetRequiredService<IAlarmLogService>();
-
-		while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken))
+		while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested)
         {
             try
 			{

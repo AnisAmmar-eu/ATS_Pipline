@@ -35,8 +35,8 @@ public class SendPacketService : BackgroundService
 		IPacketService packetService
 			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
 
-		while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken))
+		while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested)
         {
             try
 			{

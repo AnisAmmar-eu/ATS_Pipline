@@ -26,29 +26,29 @@ public static class ADSUtils
 
 	#region AlarmNotification
 
-	public const string AlarmNewMsg = "VA_ALM.msgNew"; // Notifies when there is a new message.
-	public const string AlarmToRead = "VA_ALM.oldEntry"; // Data zone and root of the structure.
+	public const string AlarmNewMsg = "VA_ALM.MsgNew"; // Notifies when there is a new message.
+	public const string AlarmToRead = "VA_ALM.Out"; // Data zone and root of the structure.
 
 	#endregion
 
 	#region ShootingNotification
 
-	public const string ShootingNewMsg = "VA_P05.SQL_FIFO.msgNew";
-	public const string ShootingToRead = "VA_P05.SQL_FIFO.OldEntry";
+	public const string ShootingNewMsg = "VA_P05.MsgNew";
+	public const string ShootingToRead = "VA_P05.Out";
 
 	#endregion
 
 	#region InFurnaceNotification
 
-	public const string InFurnaceNewMsg = "VA_P21.SQL_FIFO.msgNew";
-	public const string InFurnaceToRead = "VA_P21.SQL_FIFO.OldEntry";
+	public const string InFurnaceNewMsg = "VA_P21.MsgNew";
+	public const string InFurnaceToRead = "VA_P21.OldEntry";
 
 	#endregion
 
 	#region OutFurnaceNotification
 
-	public const string OutFurnaceNewMsg = "VA_P22.SQL_FIFO.msgNew";
-	public const string OutFurnaceToRead = "VA_P22.SQL_FIFO.OldEntry";
+	public const string OutFurnaceNewMsg = "VA_P22.MsgNew";
+	public const string OutFurnaceToRead = "VA_P22.OldEntry";
 
 	#endregion
 

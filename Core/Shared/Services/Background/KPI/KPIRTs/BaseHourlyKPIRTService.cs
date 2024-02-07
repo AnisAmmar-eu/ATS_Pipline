@@ -67,7 +67,7 @@ public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundSe
 					"Failed to execute BaseKPIRTService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-		} while (!stoppingToken.IsCancellationRequested
-			&& await timer.WaitForNextTickAsync(stoppingToken));
+		} while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested);
 	}
 }
