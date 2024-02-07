@@ -41,14 +41,14 @@ public static class ADSUtils
 	#region InFurnaceNotification
 
 	public const string InFurnaceNewMsg = "VA_P21.MsgNew";
-	public const string InFurnaceToRead = "VA_P21.OldEntry";
+	public const string InFurnaceToRead = "VA_P21.Out";
 
 	#endregion
 
 	#region OutFurnaceNotification
 
 	public const string OutFurnaceNewMsg = "VA_P22.MsgNew";
-	public const string OutFurnaceToRead = "VA_P22.OldEntry";
+	public const string OutFurnaceToRead = "VA_P22.Out";
 
 	#endregion
 

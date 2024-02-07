@@ -52,41 +52,41 @@ public class ADSService : BackgroundService
 		while (!stoppingToken.IsCancellationRequested)
 		{
 			_logger.LogInformation("Create ADSService");
-			AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
-			/*
-				Create each notification :
-				AlarmNotification
-				ShootingNotification
-				InFurnaceNotification
-				OutFurnaceNotification
-			*/
-			(uint alarmNewmsg, uint alarmOldEntry) = CreateVarADS(
-				tcClient,
-				ADSUtils.AlarmNewMsg,
-				ADSUtils.AlarmToRead);
-			AlarmNotification alarmNotification = new(alarmNewmsg, alarmOldEntry, _logger);
-
-			(uint shootingNewMsg, uint shootingOldEntry) = CreateVarADS(
-				tcClient,
-				ADSUtils.ShootingNewMsg,
-				ADSUtils.ShootingToRead);
-			ShootingNotification shootingNotification = new(shootingNewMsg, shootingOldEntry, _logger);
-
-			(uint inFurnaceNewMsg, uint inFurnaceOldEntry) = CreateVarADS(
-				tcClient,
-				ADSUtils.InFurnaceNewMsg,
-				ADSUtils.InFurnaceToRead);
-			InFurnaceNotification inFurnaceNotification = new(inFurnaceNewMsg, inFurnaceOldEntry, _logger);
-
-			(uint outFurnaceNewMsg, uint outFurnaceOldEntry) = CreateVarADS(
-				tcClient,
-				ADSUtils.OutFurnaceNewMsg,
-				ADSUtils.OutFurnaceToRead);
-			OutFurnaceNotification outFurnaceNotification = new(outFurnaceNewMsg, outFurnaceOldEntry, _logger);
-
-			_logger.LogInformation("ADS Loop started");
 			try
 			{
+				AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
+				/*
+					Create each notification :
+					AlarmNotification
+					ShootingNotification
+					InFurnaceNotification
+					OutFurnaceNotification
+				*/
+				(uint alarmNewmsg, uint alarmOldEntry) = CreateVarADS(
+					tcClient,
+					ADSUtils.AlarmNewMsg,
+					ADSUtils.AlarmToRead);
+				AlarmNotification alarmNotification = new(alarmNewmsg, alarmOldEntry, _logger);
+
+				(uint shootingNewMsg, uint shootingOldEntry) = CreateVarADS(
+					tcClient,
+					ADSUtils.ShootingNewMsg,
+					ADSUtils.ShootingToRead);
+				ShootingNotification shootingNotification = new(shootingNewMsg, shootingOldEntry, _logger);
+
+				(uint inFurnaceNewMsg, uint inFurnaceOldEntry) = CreateVarADS(
+					tcClient,
+					ADSUtils.InFurnaceNewMsg,
+					ADSUtils.InFurnaceToRead);
+				InFurnaceNotification inFurnaceNotification = new(inFurnaceNewMsg, inFurnaceOldEntry, _logger);
+
+				(uint outFurnaceNewMsg, uint outFurnaceOldEntry) = CreateVarADS(
+					tcClient,
+					ADSUtils.OutFurnaceNewMsg,
+					ADSUtils.OutFurnaceToRead);
+				OutFurnaceNotification outFurnaceNotification = new(outFurnaceNewMsg, outFurnaceOldEntry, _logger);
+
+				_logger.LogInformation("ADS Loop started");
 				// Define a task that retrieves all the elements asynchronously
 				Task GetAllElements()
 				{
