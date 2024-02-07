@@ -76,7 +76,6 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			alarmWithStatus.IsActive = false;
 			alarmWithStatus.TSClear = alarm.TS.GetTimestamp();
 			alarmWithStatus.TS = DateTimeOffset.Now;
-			alarmWithStatus.IsAck = false;
 			alarmWithStatus.HasBeenSent = false;
 			await AnodeUOW.StartTransaction();
 			AnodeUOW.AlarmLog.Update(alarmWithStatus);

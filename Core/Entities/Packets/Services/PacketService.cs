@@ -1,11 +1,15 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using Core.Entities.Alarms.AlarmsCycle.Models.DB;
+using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
+using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Models.DB;
@@ -78,7 +82,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	{
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		IEnumerable<Packet> packets
-			= await AnodeUOW.Packet.GetAll([packet => packet.Status == PacketStatus.Completed], withTracking: false);
+			= await AnodeUOW.Packet.GetAll([packet => packet.Status == PacketStatus.Completed]);
 		if (!packets.Any())
 			return;
 
@@ -102,6 +106,18 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 						+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
 				}
 
+				// Response content is a Packet
+				Stream responseContent = await response.Content.ReadAsStreamAsync();
+
+				if (packet is AlarmList alarmList)
+				{
+					DTOPacket? dtoPacket = JsonSerializer.Deserialize<DTOAlarmList>(responseContent, ApiResponse.JsonOptions);
+					if (dtoPacket is null)
+						throw new("Received packet is null");
+
+					await alarmList.SendAlarmsCycle(AnodeUOW, dtoPacket.ID);
+				}
+
 				packet.Status = PacketStatus.Sent;
 				AnodeUOW.Packet.Update(packet);
 			}
@@ -115,7 +131,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public async Task ReceivePacket(DTOPacket dtoPacket, string stationName)
+	public async Task<DTOPacket> ReceivePacket(DTOPacket dtoPacket, string stationName)
 	{
 		Packet packet = dtoPacket.ToModel();
 		packet.ID = 0;
@@ -152,6 +168,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		}
 
 		await AnodeUOW.CommitTransaction();
+		return packet.ToDTO();
 	}
 
 	public Task ReceiveStationImage(IFormFileCollection formFiles)
@@ -172,5 +189,19 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			savedImage.Save(thumbnail.FullName, 0.2);
 		});
 		return Task.WhenAll(tasks);
+	}
+
+	public async Task ReceiveAlarmsCycle(List<DTOAlarmCycle> dtoAlarmCycles)
+	{
+		await AnodeUOW.StartTransaction();
+		foreach (DTOAlarmCycle dtoAlarmCycle in dtoAlarmCycles)
+		{
+			AlarmCycle alarmCycle = dtoAlarmCycle.ToModel();
+			alarmCycle.ID = 0;
+			await AnodeUOW.AlarmCycle.Add(alarmCycle);
+		}
+
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
 	}
 }

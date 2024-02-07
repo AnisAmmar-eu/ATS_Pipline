@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Carter;
+using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Packets.Models.DTO;
@@ -28,6 +29,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		group.MapPost("{stationName}/packets", ReceivePacket);
 		// This one needs more information due to CustomModelBinding requiring the removal of [FromBody]
 		group.MapPost("images", ReceiveImage);
+		group.MapPost("alarmsCycle", ReceiveAlarmCycle);
 		group.MapPost("logs", ReceiveLog);
 	}
 
@@ -54,7 +56,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		ILogService logService,
 		HttpContext httpContext)
 	{
-		return GenericEndpointEmptyResponse(
+		return GenericEndpoint(
 			() => packetService.ReceivePacket(packet, stationName),
 			logService,
 			httpContext);
@@ -73,6 +75,18 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 					httpContext.Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
 				return packetService.ReceiveStationImage(images);
 			},
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmCycle(
+		[FromBody] [Required] List<DTOAlarmCycle> dtoAlarmsCycle,
+		IPacketService packetService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpointEmptyResponse(
+			() => packetService.ReceiveAlarmsCycle(dtoAlarmsCycle),
 			logService,
 			httpContext);
 	}

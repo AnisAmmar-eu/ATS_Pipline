@@ -1,3 +1,4 @@
+using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
@@ -42,7 +43,7 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// <param name="dtoPacket"></param>
 	/// <param name="stationName"></param>
 	/// <returns></returns>
-	public Task ReceivePacket(DTOPacket dtoPacket, string stationName);
+	public Task<DTOPacket> ReceivePacket(DTOPacket dtoPacket, string stationName);
 
 	/// <summary>
 	/// Receives the images of a <see cref="Shooting"/> packet from a station and saves them at the right location.
@@ -51,4 +52,11 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// <param name="formFiles"></param>
 	/// <returns></returns>
 	public Task ReceiveStationImage(IFormFileCollection formFiles);
+
+	/// <summary>
+	/// Receives the alarm cycles.
+	/// </summary>
+	/// <param name="dtoAlarmCycles">The list of DTO alarm cycles.</param>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	public Task ReceiveAlarmsCycle(List<DTOAlarmCycle> dtoAlarmCycles);
 }
