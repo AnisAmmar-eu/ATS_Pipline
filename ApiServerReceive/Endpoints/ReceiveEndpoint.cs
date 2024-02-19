@@ -50,7 +50,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceivePacket(
-		DTOPacket packet,
+		[FromBody] [Required] DTOPacket packet,
 		[FromRoute] string stationName,
 		IPacketService packetService,
 		ILogService logService,

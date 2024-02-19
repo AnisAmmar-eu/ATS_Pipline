@@ -85,14 +85,7 @@ public class CameraService : BackgroundService
 		if (!tcClient.IsConnected)
 			throw new("Not connected");
 
-		uint ridStructHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalRID);
-		uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
-		uint pictureCounter
-			= tcClient.CreateVariableHandle((cameraNb == CameraNb.Camera2)
-				? ADSUtils.PictureCountCam2
-				: ADSUtils.PictureCountCam1);
-
-        Stemmer.Cvb.Driver.Stream stream = device.Stream;
+		Stemmer.Cvb.Driver.Stream stream = device.Stream;
 		if (!stream.IsRunning)
 			stream.Start();
 
@@ -129,8 +122,12 @@ public class CameraService : BackgroundService
 						}
 						else
 						{
+							_logger.LogInformation("Image received from camera with port {port}", port);
+							uint ridStructHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalRID);
 							RIDStruct rid = tcClient.ReadAny<RIDStruct>(ridStructHandle);
+							uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
 							string anodeType = AnodeTypeDict.AnodeTypeIntToString(tcClient.ReadAny<int>(anodeTypeHandle));
+							_logger.LogInformation("Read TwinCAT variables");
 							int cameraID = GetCameraID(cameraNb, tcClient);
 							FileInfo imagePath
 								= Shooting.GetImagePathFromRoot(rid.ToRID(), Station.ID, _imagesPath, anodeType, cameraID, _extension);
@@ -149,6 +146,10 @@ public class CameraService : BackgroundService
 
 							image.Close();
 
+							uint pictureCounter
+							= tcClient.CreateVariableHandle((cameraNb == CameraNb.Camera2)
+								? ADSUtils.PictureCountCam2
+								: ADSUtils.PictureCountCam1);
 							tcClient.WriteAny(pictureCounter, (ushort)1);
 						}
 					}

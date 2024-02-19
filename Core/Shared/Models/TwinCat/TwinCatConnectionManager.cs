@@ -24,11 +24,11 @@ public static class TwinCatConnectionManager
 		}
 		catch(Exception ex)
 		{
-			return await await Task.Run(
-				async () =>
+			return await Task.Run(
+				() =>
 				{
-					using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(retryMS));
-					while (!cancel.IsCancellationRequested && await timer.WaitForNextTickAsync(cancel))
+					//using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(retryMS));
+					while (!cancel.IsCancellationRequested)
 					{
 						try
 						{

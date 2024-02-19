@@ -92,8 +92,25 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			try
 			{
 				using HttpClient http = new();
+				_logger.LogInformation("Sending packet: {packetID}", packet.ID);
+				_logger.LogInformation("Sending is shooting: {isShooting}", packet is Shooting);
+				_logger.LogInformation("Sending is alarm list: {isAlarmList}", packet is AlarmList);
+
 				if (packet is Shooting shooting)
-					await shooting.SendImages(imagesPath, extension);
+					await shooting.SendImages(imagesPath, extension, _logger);
+
+				if (packet is AlarmList alarmLists)
+				{
+					_logger.LogInformation("Sending alarm list: {alarmList}", alarmLists.ToDTO().AlarmCycles.Count);
+					_logger.LogInformation("Sending alarm list: {alarmList}", alarmLists.ToDTO().ID);
+					_logger.LogInformation($"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets");
+					StringContent contents
+					= new(JsonSerializer.Serialize(alarmLists.ToDTO(), ApiResponse.JsonOptions), Encoding.UTF8, "application/json");
+					string json = await new StreamReader(contents.ReadAsStream()).ReadToEndAsync();
+
+					DTOPacket polo = JsonSerializer.Deserialize<DTOPacket>(json)!;
+					_logger.LogInformation("Sending alarm list: {polo}", polo.ToString());
+				}
 
 				StringContent content
 					= new(JsonSerializer.Serialize(packet.ToDTO(), ApiResponse.JsonOptions), Encoding.UTF8, "application/json");
@@ -112,6 +129,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				if (packet is AlarmList alarmList)
 				{
 					DTOPacket? dtoPacket = JsonSerializer.Deserialize<DTOAlarmList>(responseContent, ApiResponse.JsonOptions);
+					_logger.LogInformation("Received packet: {dtoPacket}", dtoPacket);
 					if (dtoPacket is null)
 						throw new("Received packet is null");
 
@@ -120,6 +138,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 				packet.Status = PacketStatus.Sent;
 				AnodeUOW.Packet.Update(packet);
+				_logger.LogInformation("Packet sent: {packetID}", packet.ID);
 			}
 			catch (Exception e)
 			{

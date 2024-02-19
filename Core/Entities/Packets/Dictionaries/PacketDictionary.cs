@@ -10,7 +10,7 @@ public enum PacketStatus
 
 public static class PacketType
 {
-	public const string Alarm = "Alarm";
+	public const string AlarmList = "AlarmList";
 	public const string Shooting = "Shooting";
 	public const string InFurnace = "InFurnace";
 	public const string OutFurnace = "OutFurnace";

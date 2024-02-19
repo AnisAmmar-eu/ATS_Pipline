@@ -6,6 +6,7 @@ using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Models.Structs;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Entities.Packets.Models.DB.Shootings;
 
@@ -84,12 +85,20 @@ public partial class Shooting
 		return new($@"{root}\{path}\{filename}");
 	}
 
-	public async Task SendImages(string imagesPath, string extension)
+	public async Task SendImages(string imagesPath, string extension, ILogger logger)
 	{
 		MultipartFormDataContent formData = new();
 		formData.Headers.ContentType!.MediaType = "multipart/form-data";
 		for (int i = 1; i <= 2; ++i)
 		{
+			logger.LogInformation(
+				"{StationCycleRID} {Station.ID} {imagesPath} {AnodeType} {i} {extension}",
+				StationCycleRID,
+				Station.ID,
+				imagesPath,
+				AnodeType,
+				i,
+				extension);
 			FileInfo image
 				= GetImagePathFromRoot(StationCycleRID, Station.ID, imagesPath, AnodeType, i, extension);
 			if (!image.Exists)
@@ -100,16 +109,21 @@ public partial class Shooting
 			formData.Add(content, image.Name, image.Name);
 		}
 
+		logger.LogInformation("Sending images to the server ? {formData}", formData.Any());
+
 		if (!formData.Any())
 			return;
 
 		using HttpClient httpClient = new();
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
 
+		logger.LogInformation("Sending images to the server: http");
 		HttpResponseMessage response
 			= await httpClient.PostAsync($"{ITApisDict.ServerReceiveAddress}/apiServerReceive/images", formData);
 		if (!response.IsSuccessStatusCode)
 			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
+
+		logger.LogInformation("Sending images to the server: {reponse}", response.ToString());
 	}
 
 	protected override Task InheritedBuild(IAnodeUOW anodeUOW)

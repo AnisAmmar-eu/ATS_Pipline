@@ -144,6 +144,11 @@ public partial class OTCamera
 				tag.NewValue = readValue;
 		}
 
+		//var nodeMap = device.NodeMaps[NodeMapNames.Device];
+		////Reset to factory defaults
+		//nodeMap.Set("Std::UserSetSelector", "Default");
+		//nodeMap.Execute("Std::UserSetSave");
+
 		return updatedTags;
 	}
 }
