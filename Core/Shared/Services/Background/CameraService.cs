@@ -24,6 +24,7 @@ namespace Core.Shared.Services.Background;
 
 /// <summary>
 /// Background service responsible for receiving images from both cameras and storing them in the right folder.
+/// Wait 5 seconds before starting to avoid any conflict with the Stemmer.Cvb library.
 /// </summary>
 public class CameraService : BackgroundService
 {
@@ -57,6 +58,9 @@ public class CameraService : BackgroundService
 		_imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		_thumbnailsPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 		_extension = configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(5000));
+		await timer.WaitForNextTickAsync(stoppingToken);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
