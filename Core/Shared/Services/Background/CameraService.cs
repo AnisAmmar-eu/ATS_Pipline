@@ -59,8 +59,6 @@ public class CameraService : BackgroundService
 		_thumbnailsPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 		_extension = configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(5000));
-		await timer.WaitForNextTickAsync(stoppingToken);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera

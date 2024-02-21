@@ -43,7 +43,7 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// <param name="dtoPacket"></param>
 	/// <param name="stationName"></param>
 	/// <returns></returns>
-	public Task<DTOPacket> ReceivePacket(DTOPacket dtoPacket, string stationName);
+	public Task ReceivePacket(DTOPacket dtoPacket, string stationName);
 
 	/// <summary>
 	/// Receives the images of a <see cref="Shooting"/> packet from a station and saves them at the right location.
@@ -57,6 +57,8 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// Receives the alarm cycles.
 	/// </summary>
 	/// <param name="dtoAlarmCycles">The list of DTO alarm cycles.</param>
+	/// /// <param name="stationName"></param>
+	/// /// <param name="cycleRID"></param>
 	/// <returns>A task representing the asynchronous operation.</returns>
-	public Task ReceiveAlarmsCycle(List<DTOAlarmCycle> dtoAlarmCycles);
+	public Task ReceivePacketAlarm(List<DTOAlarmCycle> dtoAlarmCycles, string stationName, string cycleRID);
 }

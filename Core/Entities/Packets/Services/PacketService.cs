@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
@@ -97,43 +98,39 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				_logger.LogInformation("Sending is alarm list: {isAlarmList}", packet is AlarmList);
 
 				if (packet is Shooting shooting)
+				{
 					await shooting.SendImages(imagesPath, extension, _logger);
+					_logger.LogInformation("Sending images: {packet}", shooting.ToDTO());
+					_logger.LogInformation("Sending images: {packet}", shooting.ToDTO().Type);
+					_logger.LogInformation("Sending images: {packet}", shooting.ToDTO().GetType());
+					HttpResponseMessage response = await http.PostAsJsonAsync(
+						$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
+						shooting.ToDTO(),
+						ApiResponse.JsonOptions);
+					if (response.StatusCode != HttpStatusCode.OK)
+					{
+						throw new("Send packet to server failed with status code:"
+							+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+					}
+				}
 
 				if (packet is AlarmList alarmLists)
 				{
-					_logger.LogInformation("Sending alarm list: {alarmList}", alarmLists.ToDTO().AlarmCycles.Count);
-					_logger.LogInformation("Sending alarm list: {alarmList}", alarmLists.ToDTO().ID);
-					_logger.LogInformation($"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets");
-					StringContent contents
-					= new(JsonSerializer.Serialize(alarmLists.ToDTO(), ApiResponse.JsonOptions), Encoding.UTF8, "application/json");
-					string json = await new StreamReader(contents.ReadAsStream()).ReadToEndAsync();
+					// Get all alarmCycle
+					List<DTOAlarmCycle> dtoAlarmCycles = (await AnodeUOW.AlarmCycle
+						.GetAll([alarmCycle => alarmCycle.AlarmListPacketID == alarmLists.ID], withTracking: false))
+						.ConvertAll(alarmCycle => alarmCycle.ToDTO());
 
-					DTOPacket polo = JsonSerializer.Deserialize<DTOPacket>(json)!;
-					_logger.LogInformation("Sending alarm list: {polo}", polo.ToString());
-				}
-
-				StringContent content
-					= new(JsonSerializer.Serialize(packet.ToDTO(), ApiResponse.JsonOptions), Encoding.UTF8, "application/json");
-				HttpResponseMessage response = await http.PostAsync(
-					$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
-					content);
-				if (response.StatusCode != HttpStatusCode.OK)
-				{
-					throw new("Send packet to server failed with status code:"
-						+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
-				}
-
-				// Response content is a Packet
-				Stream responseContent = await response.Content.ReadAsStreamAsync();
-
-				if (packet is AlarmList alarmList)
-				{
-					DTOPacket? dtoPacket = JsonSerializer.Deserialize<DTOAlarmList>(responseContent, ApiResponse.JsonOptions);
-					_logger.LogInformation("Received packet: {dtoPacket}", dtoPacket);
-					if (dtoPacket is null)
-						throw new("Received packet is null");
-
-					await alarmList.SendAlarmsCycle(AnodeUOW, dtoPacket.ID);
+					StringContent content
+					= new(JsonSerializer.Serialize(dtoAlarmCycles, ApiResponse.JsonOptions), Encoding.UTF8, "application/json");
+					HttpResponseMessage response = await http.PostAsync(
+						$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/AlarmPacket/{alarmLists.StationCycleRID}",
+						content);
+					if (response.StatusCode != HttpStatusCode.OK)
+					{
+						throw new("Send packet to server failed with status code:"
+							+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+					}
 				}
 
 				packet.Status = PacketStatus.Sent;
@@ -150,13 +147,18 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public async Task<DTOPacket> ReceivePacket(DTOPacket dtoPacket, string stationName)
+	public async Task ReceivePacket(DTOPacket dtoPacket, string stationName)
 	{
+		_logger.LogInformation("MARCO1 DToPacket: {dtoPacket}", dtoPacket);
+		_logger.LogInformation("MARCO1 DToPacket: {dtoPacketType}", dtoPacket.Type);
+		_logger.LogInformation("MARCO1 DToPacket: {dtoPacketType}", dtoPacket.GetType());
 		Packet packet = dtoPacket.ToModel();
 		packet.ID = 0;
 		await AnodeUOW.StartTransaction();
+		_logger.LogInformation("MARCO2");
 		await AnodeUOW.Packet.Add(packet);
 		AnodeUOW.Commit();
+		_logger.LogInformation("MARCO3");
 		try
 		{
 			StationCycle stationCycle
@@ -174,20 +176,23 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				stationCycle.AnodeType = shooting.AnodeType;
 				stationCycle.RID = shooting.StationCycleRID;
 				stationCycle.ShootingPacket = shooting;
+				_logger.LogInformation("POLO1");
 				// Every "orphan" packet is aggregated to this stationCycle.
 				List<Packet> packets
 					= await AnodeUOW.Packet
 						.GetAll(
 							[packet1 => packet1.StationCycleRID == stationCycle.RID, packet2 => packet2.ID != shooting.ID],
 							withTracking: false);
+				_logger.LogInformation("POLO2");
 				packets.ForEach(stationCycle.AssignPacket);
 				await AnodeUOW.StationCycle.Add(stationCycle);
+				_logger.LogInformation("POLO3");
 				AnodeUOW.Commit();
+				_logger.LogInformation("POLO4");
 			}
 		}
 
 		await AnodeUOW.CommitTransaction();
-		return packet.ToDTO();
 	}
 
 	public Task ReceiveStationImage(IFormFileCollection formFiles)
@@ -210,16 +215,27 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		return Task.WhenAll(tasks);
 	}
 
-	public async Task ReceiveAlarmsCycle(List<DTOAlarmCycle> dtoAlarmCycles)
+	public async Task ReceivePacketAlarm(List<DTOAlarmCycle> dtoAlarmCycles, string stationName, string cycleRID)
 	{
 		await AnodeUOW.StartTransaction();
-		foreach (DTOAlarmCycle dtoAlarmCycle in dtoAlarmCycles)
-		{
-			AlarmCycle alarmCycle = dtoAlarmCycle.ToModel();
-			alarmCycle.ID = 0;
-			await AnodeUOW.AlarmCycle.Add(alarmCycle);
-		}
 
+		// insert Alarm Packet then associate AlarmCycle to Alarm Packet
+		Packet alarmList = new AlarmList
+		{
+			StationCycleRID = cycleRID
+		};
+		await BuildPacket(alarmList);
+		List<AlarmCycle> alarmCycles = dtoAlarmCycles.ConvertAll(dto => dto.ToModel());
+		alarmCycles.ForEach(alarmCycle => {
+			alarmCycle.AlarmListPacketID = alarmList.ID;
+			AnodeUOW.AlarmCycle.Add(alarmCycle);
+		});
+		AnodeUOW.Commit();
+
+		StationCycle stationCycle
+				= await AnodeUOW.StationCycle.GetBy([cycle => cycle.RID == alarmList.StationCycleRID], withTracking: false);
+		stationCycle.AssignPacket(alarmList);
+		AnodeUOW.StationCycle.Update(stationCycle);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 	}

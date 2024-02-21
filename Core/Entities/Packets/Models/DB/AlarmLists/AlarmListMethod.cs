@@ -32,24 +32,6 @@ public partial class AlarmList
 		return new(this);
 	}
 
-	public async Task SendAlarmsCycle(IAnodeUOW anodeUOW, int stationCycleID)
-	{
-		using HttpClient httpClient = new();
-
-		List<DTOAlarmCycle> alarmsCycle = AlarmCycles.ToList().ConvertAll(cycle => cycle.ToDTO());
-		alarmsCycle.ForEach(cycle => cycle.AlarmListPacketID = stationCycleID);
-		StringContent content
-			= new(
-				JsonSerializer.Serialize(alarmsCycle),
-				Encoding.UTF8,
-				"application/json");
-		HttpResponseMessage response = await httpClient.PostAsync(
-			$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/alarmsCycle",
-			content);
-		if (!response.IsSuccessStatusCode)
-			throw new HttpRequestException("Could not send alarms cycle to the server: " + response.ReasonPhrase);
-	}
-
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
 		List<AlarmRT> alarmRTs = await anodeUOW.AlarmRT.GetAllWithInclude(withTracking: false);
