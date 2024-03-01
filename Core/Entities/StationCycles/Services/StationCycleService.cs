@@ -23,7 +23,7 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 		_configuration = configuration;
 	}
 
-	public async Task<ReducedStationCycle?> GetMostRecentWithIncludes()
+	public async Task<DTOReducedStationCycle?> GetMostRecentWithIncludes()
 	{
 		return (await AnodeUOW.StationCycle.GetAllWithIncludes(orderBy: query =>
 			query.OrderByDescending(cycle => cycle.TS)))
@@ -31,7 +31,7 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 			?.Reduce();
 	}
 
-	public async Task<List<ReducedStationCycle>> GetAllRIDs()
+	public async Task<List<DTOReducedStationCycle>> GetAllRIDs()
 	{
 		return (await AnodeUOW.StationCycle
 			.GetAll(withTracking: false, includes: [nameof(StationCycle.ShootingPacket)]))

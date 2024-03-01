@@ -175,11 +175,34 @@ public interface IBaseEntityRepository<T, TDTO>
 	/// <param name="entity">Entity to updated, null attribute will not change</param>
 	/// <param name="properties">Properties to update</param>
 	/// <returns>The updated entity <see cref="T" /></returns>
-	Task<int> UpdateWithExecuteUpdateAsync(
+	Task<int> ExecuteUpdateByIdAsync(
 		T entity,
 		Expression<Func<
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties);
+
+	/// <summary>
+	///    Update an entity in the table of <typeref name="T" /> and returns the number entity affected
+	///    using the ExecuteUpdateAsync method
+	///    SetProperties is used to update only the properties that are not null
+	/// </summary>
+	/// <param name="predicate">Predicate where</param>
+	/// <param name="properties">Properties to update</param>
+	/// <returns>The updated entity <see cref="T" /></returns>
+	public Task<int> ExecuteUpdateAsync(
+		Expression<Func<T, bool>> predicate,
+		Expression<Func<
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties);
+
+	/// <summary>
+	///    Delete an entity in the table of <typeref name="T" /> and returns the number entity affected
+	///    using the ExecuteDeleteAsync method
+	/// </summary>
+	/// <param name="predicate">Predicate where</param>
+	/// <returns>The deleted entity <see cref="T" /></returns>
+	public Task<int> ExecuteDeleteAsync(
+		Expression<Func<T, bool>> predicate);
 
 	/// <summary>
 	///     Check if an element exist with the predication

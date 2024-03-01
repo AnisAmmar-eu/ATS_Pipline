@@ -153,12 +153,12 @@ public partial class StationCycle
 		};
 	}
 
-	public ReducedStationCycle Reduce()
+	public DTOReducedStationCycle Reduce()
 	{
 		return new() {
 			ID = ID,
 			RID = RID,
-			AnodeSize = ShootingPacket?.AnodeSize,
+			AnodeSize = null,
 			AnodeType = AnodeType,
 			ShootingTS = ShootingPacket?.ShootingTS,
 		};

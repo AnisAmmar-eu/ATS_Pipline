@@ -14,10 +14,6 @@ public partial class S5Shooting
 		IsDoubleAnode = dtos5Shooting.IsDoubleAnode;
 	}
 
-	public S5Shooting(ShootingStruct adsStruct) : base(adsStruct)
-	{
-	}
-
 	public override DTOS5Shooting ToDTO()
 	{
 		return new(this);

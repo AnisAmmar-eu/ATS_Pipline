@@ -2,6 +2,7 @@ using System.Configuration;
 using System.Text;
 using Carter;
 using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Services;
@@ -69,6 +70,7 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
+builder.Services.AddScoped<IAlarmRTService, AlarmRTService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();

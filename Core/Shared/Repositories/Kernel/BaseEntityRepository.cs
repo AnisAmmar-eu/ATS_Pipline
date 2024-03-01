@@ -314,13 +314,42 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="entity">Entity to updated, null attribute will not change</param>
 	/// <param name="properties">Properties to update</param>
 	/// <returns>The updated entity <see cref="T" /></returns>
-	public Task<int> UpdateWithExecuteUpdateAsync(
+	public Task<int> ExecuteUpdateByIdAsync(
 		T entity,
 		Expression<Func<
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties)
 	{
 		return Context.Set<T>().Where(x => x.ID == entity.ID).ExecuteUpdateAsync(properties);
+	}
+
+	/// <summary>
+	///    Update an entity in the table of <typeref name="T" /> and returns the updated entity
+	///    using the ExecuteUpdateAsync method
+	///    SetProperties is used to update only the properties that are not null
+	/// </summary>
+	/// <param name="predicate">Predicate where</param>
+	/// <param name="properties">Properties to update</param>
+	/// <returns>The updated entity <see cref="T" /></returns>
+	public Task<int> ExecuteUpdateAsync(
+		Expression<Func<T, bool>> predicate,
+		Expression<Func<
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
+			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties)
+	{
+		return Context.Set<T>().Where(predicate).ExecuteUpdateAsync(properties);
+	}
+
+	/// <summary>
+	///    Delete an entity in the table of <typeref name="T" /> and returns the number entity affected
+	///    using the ExecuteDeleteAsync method
+	/// </summary>
+	/// <param name="predicate">Predicate where</param>
+	/// <returns>The deleted entity <see cref="T" /></returns>
+	public Task<int> ExecuteDeleteAsync(
+		Expression<Func<T, bool>> predicate)
+	{
+		return Context.Set<T>().Where(predicate).ExecuteDeleteAsync();
 	}
 
 	/// <summary>

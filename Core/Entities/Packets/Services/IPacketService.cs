@@ -16,10 +16,10 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// <summary>
 	/// This photo returns the FileInfo of the image gotten through the shooting packet. It works only on the station.
 	/// </summary>
-	/// <param name="shootingID"></param>
+	/// <param name="stationCycleRID"></param>
 	/// <param name="cameraID"></param>
 	/// <returns></returns>
-	public Task<FileInfo> GetImageFromIDAndCamera(int shootingID, int cameraID);
+	public Task<FileInfo> GetImageFromCycleRIDAndCamera(string stationCycleRID, int cameraID);
 
 	/// <summary>
 	/// Executes side effects on a packet when called. Allows a packet to update itself on other factors determined by

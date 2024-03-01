@@ -15,15 +15,20 @@ public partial class AlarmRT
 		Alarm = alarmC;
 	}
 
+	public AlarmRT(Alarm alarm)
+	{
+		IRID = alarm.RID.ToString();
+		IsActive = alarm.Value;
+		TSRaised = alarm.TS.GetTimestamp();
+	}
+
 	public AlarmRT(DTOAlarmRT dtoAlarmRT) : base(dtoAlarmRT)
 	{
 		IRID = dtoAlarmRT.IRID;
 		AlarmID = dtoAlarmRT.AlarmID;
 		StationID = dtoAlarmRT.StationID;
-		NbNonAck = dtoAlarmRT.NbNonAck;
 		IsActive = dtoAlarmRT.IsActive;
 		TSRaised = dtoAlarmRT.TSRaised;
-		TSClear = dtoAlarmRT.TSClear;
 
 		Alarm = dtoAlarmRT.Alarm.ToModel();
 	}

@@ -1,4 +1,5 @@
 using System.Dynamic;
+using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.TwinCat;
@@ -44,6 +45,7 @@ public class ADSService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		IAlarmRTService alarmRTService = asyncScope.ServiceProvider.GetRequiredService<IAlarmRTService>();
 		CancellationToken cancel = CancellationToken.None;
 		int delayMS = _configuration.GetValueWithThrow<int>("CycleMS");
 		int retryMS = _configuration.GetValueWithThrow<int>("RetryMS");
@@ -58,7 +60,6 @@ public class ADSService : BackgroundService
 				/*
 					Create each notification :
 					AlarmNotification
-					ShootingNotification
 					InFurnaceNotification
 					OutFurnaceNotification
 				*/
@@ -68,11 +69,7 @@ public class ADSService : BackgroundService
 					ADSUtils.AlarmToRead);
 				AlarmNotification alarmNotification = new(alarmNewmsg, alarmOldEntry, _logger);
 
-				(uint shootingNewMsg, uint shootingOldEntry) = CreateVarADS(
-					tcClient,
-					ADSUtils.ShootingNewMsg,
-					ADSUtils.ShootingToRead);
-				ShootingNotification shootingNotification = new(shootingNewMsg, shootingOldEntry, _logger);
+				uint alarmListHandle = tcClient.CreateVariableHandle(ADSUtils.AlarmList);
 
 				(uint inFurnaceNewMsg, uint inFurnaceOldEntry) = CreateVarADS(
 					tcClient,
@@ -92,7 +89,7 @@ public class ADSService : BackgroundService
 				{
 					return Task.WhenAll(
 						alarmNotification.GetElement(tcClient, asyncScope.ServiceProvider),
-						shootingNotification.GetElement(tcClient, asyncScope.ServiceProvider),
+						alarmRTService.Collect(tcClient, alarmListHandle),
 						(Station.Type == StationType.S3S4)
 							? Task.WhenAll(
 								inFurnaceNotification.GetElement(tcClient, asyncScope.ServiceProvider),

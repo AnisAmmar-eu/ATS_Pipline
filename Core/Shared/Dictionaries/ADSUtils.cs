@@ -31,6 +31,13 @@ public static class ADSUtils
 
 	#endregion
 
+	#region AlarmRT
+
+	public const string AlarmList = "VA_ALM.List";
+	public const string AlarmTime = "VA_IT.AlarmTime";
+
+	#endregion
+
 	#region ShootingNotification
 
 	public const string ShootingNewMsg = "VA_P05.MsgNew";

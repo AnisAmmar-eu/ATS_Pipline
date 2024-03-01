@@ -3,6 +3,8 @@ using Carter;
 using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Models.DTO;
 using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Entities.Alarms.AlarmsRT.Models.DTO;
+using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Services;
@@ -27,6 +29,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 
 		group.MapGet("status", () => new ApiResponse().SuccessResult());
 		group.MapPost("alarmsLog", ReceiveAlarmLog);
+		group.MapPost("alarmsRT", ReceiveAlarmRT);
 		group.MapPost("{stationName}/packets", ReceivePacket);
 		// This one needs more information due to CustomModelBinding requiring the removal of [FromBody]
 		group.MapPost("images", ReceiveImage);
@@ -45,6 +48,22 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 			{
 				foreach (DTOAlarmLog alarmLog in dtoAlarmLogs)
 					await alarmLogService.ReceiveAlarmLog(alarmLog);
+			},
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmRT(
+		[FromBody] [Required] List<DTOAlarmRT> dtoAlarmRTs,
+		IAlarmRTService alarmRTService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpointEmptyResponse(
+			async () =>
+			{
+				foreach (DTOAlarmRT alarmRT in dtoAlarmRTs)
+					await alarmRTService.ReceiveAlarmRT(alarmRT);
 			},
 			logService,
 			httpContext);

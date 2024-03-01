@@ -6,6 +6,7 @@ using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.Structs;
+using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Stemmer.Cvb;
 using Stemmer.Cvb.Driver;
+using Stemmer.Cvb.Utilities;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background;
@@ -53,29 +55,34 @@ public class CameraService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		_hubContext = asyncScope.ServiceProvider.GetRequiredService<IHubContext<CameraHub, ICameraHub>>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+		IPacketService packetService = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
 		int port1 = configuration.GetValueWithThrow<int>(ConfigDictionary.Camera1Port);
 		int port2 = configuration.GetValueWithThrow<int>(ConfigDictionary.Camera2Port);
+		double timeOutCamera = configuration.GetValueWithThrow<int>(ConfigDictionary.TimeOutCamera);
 		_imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		_thumbnailsPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 		_extension = configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
+		_logger.LogInformation("isStationS5 ? {isStationS5}", Station.Type == StationType.S5);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
-			Task task1 = RunAcquisition(port1, CameraNb.Camera1, stoppingToken);
-			Task task2 = RunAcquisition(port2, CameraNb.Camera2, stoppingToken);
+			Task task1 = RunAcquisition(port1, CameraNb.Camera1, timeOutCamera, packetService ,stoppingToken);
+			Task task2 = RunAcquisition(port2, CameraNb.Camera2, timeOutCamera, packetService ,stoppingToken);
 			await task1;
 			await task2;
 		}
 		else
 		{
-			await RunAcquisition(port1, CameraNb.Both, stoppingToken);
+			await RunAcquisition(port1, CameraNb.Both, timeOutCamera, packetService ,stoppingToken);
 		}
 	}
 
 	private async Task RunAcquisition(
 		int port,
 		CameraNb cameraNb,
+		double timeOutCamera,
+		IPacketService packetService,
 		CancellationToken cancel)
 	{
 		Device device = await CameraConnectionManager.Connect(port, cancel);
@@ -91,10 +98,12 @@ public class CameraService : BackgroundService
 		if (!stream.IsRunning)
 			stream.Start();
 
+		WaitStatus status = WaitStatus.Ok;
+
 		await Task.Run(
 			async () =>
 			{
-				while (!cancel.IsCancellationRequested)
+				while (true)
 				{
 					try
 					{
@@ -108,7 +117,10 @@ public class CameraService : BackgroundService
 						if (!stream.IsRunning)
 							stream.Start();
 
-						using StreamImage image = stream.Wait();
+						using StreamImage image = stream.WaitFor(UsTimeSpan.FromMilliseconds(timeOutCamera), out status);
+						if (status != WaitStatus.Ok)
+							throw new($"Exception: {status.ToString()}");
+
 						if (await IsTestModeOn(_logger))
 						{
 							// testDir2 != null means that we are in a S5 Cycle.
@@ -124,13 +136,12 @@ public class CameraService : BackgroundService
 						}
 						else
 						{
-							_logger.LogInformation("Image received from camera with port {port}", port);
 							uint ridStructHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalRID);
 							RIDStruct rid = tcClient.ReadAny<RIDStruct>(ridStructHandle);
 							uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
 							string anodeType = AnodeTypeDict.AnodeTypeIntToString(tcClient.ReadAny<int>(anodeTypeHandle));
-							_logger.LogInformation("Read TwinCAT variables");
 							int cameraID = GetCameraID(cameraNb, tcClient);
+
 							FileInfo imagePath
 								= Shooting.GetImagePathFromRoot(rid.ToRID(), Station.ID, _imagesPath, anodeType, cameraID, _extension);
 							FileInfo thumbnailPath
@@ -148,30 +159,24 @@ public class CameraService : BackgroundService
 
 							image.Close();
 
-							uint pictureCounter
-							= tcClient.CreateVariableHandle((cameraNb == CameraNb.Camera2)
-								? ADSUtils.PictureCountCam2
-								: ADSUtils.PictureCountCam1);
-							tcClient.WriteAny(pictureCounter, (ushort)1);
+							Shooting shooting = new()
+							{
+								StationCycleRID = rid.ToRID(),
+								AnodeType = anodeType,
+								ShootingTS = DateTimeOffset.Now,
+								Cam01Status = (cameraID == (int)CameraNb.Camera1) ? 1 : 0,
+								Cam02Status = (cameraID == (int)CameraNb.Camera2) ? 1 : 0,
+							};
+
+							await packetService.BuildPacket(shooting);
 						}
 					}
 					catch (Exception e)
 					{
-						// Warning -> In prod, this condition is called before the disconnect function
-						// If the program crash, put this inside a try/catch or create a global var
-						// If the stream is always active, stop it
+						_logger.LogError("WaitStatus: {status}", status);
 						_logger.LogError("Error while monitoring camera with port {port}: {e}",port, e);
-						if (device.Stream.IsRunning)
-							stream.TryStop();
-
-						stream.Start();
 					}
 				}
-
-				if (device.Stream.IsRunning)
-					stream.TryStop();
-
-				return Task.CompletedTask;
 			},
 			cancel);
 	}
@@ -218,33 +223,14 @@ public class CameraService : BackgroundService
 		}
 	}
 
-	private static void Disconnect(object? sender, NotifyEventArgs e)
+	private void Disconnect(object? sender, NotifyEventArgs e)
 	{
-		Console.WriteLine("disconnected");
-
-		if (sender is null)
-			return;
-
-		Device? device = (Device?)sender.GetType().GetProperty("Parent")?.GetValue(sender);
-
-		if (device is null)
-			return;
-
-		try
-		{
-			bool isOk = device.Stream.TryStop();
-			if (!isOk)
-				Debug.WriteLine("Could not stop the stream!");
-		}
-		catch (Exception ex)
-		{
-			Debug.WriteLine("Error: " + ex.Message);
-		}
+		_logger.LogInformation("disconnected");
 	}
 
-	private static void Reconnect(object? sender, NotifyEventArgs e)
+	private void Reconnect(object? sender, NotifyEventArgs e)
 	{
-		Console.WriteLine("reconnected");
+		_logger.LogInformation("reconnected");
 
 		Device? device = (Device?)sender?.GetType().GetProperty("Parent")?.GetValue(sender);
 
@@ -253,11 +239,15 @@ public class CameraService : BackgroundService
 
 		try
 		{
-			device.Stream.Start();
+			bool isOk = device.Stream.TryStop();
+			if (isOk)
+				device.Stream.Start();
+			else
+				_logger.LogInformation("Could not stop the stream!");
 		}
 		catch (Exception ex)
 		{
-			Debug.WriteLine("Error: " + ex.Message);
+			_logger.LogInformation("Error: " + ex.Message);
 		}
 	}
 

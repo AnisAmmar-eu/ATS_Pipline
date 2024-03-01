@@ -1,4 +1,5 @@
 using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,6 @@ public class SendAlarmLogService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendAlarmLogService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(5);
 
 	private readonly IConfiguration _configuration;
 	private int _executionCount;
@@ -36,14 +36,17 @@ public class SendAlarmLogService : BackgroundService
 		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
 		IAlarmLogService alarmLogService
 			= asyncScope.ServiceProvider.GetRequiredService<IAlarmLogService>();
+		IAlarmRTService alarmRTService
+			= asyncScope.ServiceProvider.GetRequiredService<IAlarmRTService>();
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
         {
             try
 			{
-				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
 				_logger.LogInformation("Calling SendAlarmLogs");
 				await alarmLogService.SendLogsToServer();
+				_logger.LogInformation("Calling SendAlarmRT");
+				await alarmRTService.SendRTsToServer();
 
 				_executionCount++;
 				_logger.LogInformation(

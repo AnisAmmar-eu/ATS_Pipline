@@ -200,8 +200,8 @@ public static class IOTTagPath
 
 	#region Camera Temperature
 
-	public const string TemperatureCam1Write = "VA_DM.CAM01_Temp";
-	public const string TemperatureCam2Write = "VA_DM.CAM02_Temp";
+	public const string TemperatureCam1Write = "VA_IT.CAM01_Temp";
+	public const string TemperatureCam2Write = "VA_IT.CAM02_Temp";
 	public const string TemperatureCam1Read = "VA_HMI.Cam01_Temp";
 	public const string TemperatureCam2Read = "VA_HMI.Cam02_Temp";
 	public const string TemperatureOkWarnThreshold = "";
@@ -225,8 +225,8 @@ public static class IOTTagPath
 	public const string DiagCam2LedOn = "VA_HMI.Cam02_Led_ON";
 	public const string DiagCam2LedOff = "VA_HMI.Cam02_Led_OFF";
 
-	public const string Cam1StatusWrite = "VA_DM.CAM01_Status";
-	public const string Cam2StatusWrite = "VA_DM.CAM02_Status";
+	public const string Cam1StatusWrite = "VA_IT.CAM01_Status";
+	public const string Cam2StatusWrite = "VA_IT.CAM02_Status";
 	public const string Cam1StatusRead = "VA_HMI.Cam01_Status";
 	public const string Cam2StatusRead = "VA_HMI.Cam02_Status";
 

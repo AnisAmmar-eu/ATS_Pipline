@@ -19,30 +19,9 @@ public partial class Shooting
 	public Shooting(DTOShooting dtoShooting) : base(dtoShooting)
 	{
 		ShootingTS = dtoShooting.ShootingTS;
-		SyncIndex = dtoShooting.SyncIndex;
 		AnodeType = dtoShooting.AnodeType;
-		AnodeSize = dtoShooting.AnodeSize;
 		Cam01Status = dtoShooting.Cam01Status;
 		Cam02Status = dtoShooting.Cam02Status;
-		Cam01Temp = dtoShooting.Cam01Temp;
-		Cam02Temp = dtoShooting.Cam02Temp;
-		TT01 = dtoShooting.TT01;
-	}
-
-	public Shooting(ShootingStruct adsStruct)
-	{
-		StationCycleRID = adsStruct.CycleRID.ToRID();
-		TwinCatStatus = adsStruct.Status;
-		TS = adsStruct.TS.GetTimestamp();
-		ShootingTS = adsStruct.TS.GetTimestamp();
-		SyncIndex = adsStruct.SyncIndex;
-		AnodeType = AnodeTypeDict.AnodeTypeIntToString(adsStruct.AnodeType);
-		AnodeSize = adsStruct.AnodeSize;
-		Cam01Status = adsStruct.Cam01Status;
-		Cam02Status = adsStruct.Cam02Status;
-		Cam01Temp = adsStruct.Cam01Temp;
-		Cam02Temp = adsStruct.Cam02Temp;
-		TT01 = adsStruct.TT01;
 	}
 
 	public override DTOShooting ToDTO()
@@ -132,16 +111,15 @@ public partial class Shooting
 		{
 			FileInfo image = GetImagePathFromRoot(StationCycleRID, Station.ID, ImagesPath, AnodeType, 1, Extension);
 			HasFirstShoot = image.Exists;
-			HasError = HasError || !HasFirstShoot;
 		}
 
 		if (Cam02Status == 1)
 		{
 			FileInfo image = GetImagePathFromRoot(StationCycleRID, Station.ID, ImagesPath, AnodeType, 2, Extension);
 			HasSecondShoot = image.Exists;
-			HasError = HasError || !HasSecondShoot;
 		}
 
+		HasError = HasError || (!HasFirstShoot && !HasSecondShoot);
 		return Task.CompletedTask;
 	}
 }

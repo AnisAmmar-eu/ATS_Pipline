@@ -12,7 +12,6 @@ public partial class DTOAlarmCycle
 	public DTOAlarmCycle(AlarmCycle alarmCycle)
 	{
 		AlarmRID = alarmCycle.AlarmRID;
-		NbNonAck = alarmCycle.NbNonAck;
 		IsActive = alarmCycle.IsActive;
 		AlarmListPacketID = alarmCycle.AlarmListPacketID;
 	}

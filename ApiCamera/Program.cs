@@ -4,6 +4,7 @@ using Carter;
 using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
+using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Services.Background;
@@ -78,6 +79,7 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
 builder.Services.AddScoped<IIOTTagService, IOTTagService>();
 builder.Services.AddScoped<IBITemperatureService, BITemperatureService>();
+builder.Services.AddScoped<IPacketService, PacketService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 

@@ -10,7 +10,7 @@ public partial class DTOAlarmLog
 	public DTOAlarmLog(DTOAlarmC alarm)
 	{
 		Alarm = alarm;
-		TS = DateTime.Now;
+		TS = DateTimeOffset.Now;
 		IsAck = false;
 	}
 

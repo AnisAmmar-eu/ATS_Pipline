@@ -48,7 +48,7 @@ public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationC
 		return GenericEndpoint(
 			async () =>
 			{
-				ReducedStationCycle? result = await stationCycleService.GetMostRecentWithIncludes();
+				DTOReducedStationCycle? result = await stationCycleService.GetMostRecentWithIncludes();
 				if (result is null)
 					throw new NoDataException("There is no station cycles yet.");
 

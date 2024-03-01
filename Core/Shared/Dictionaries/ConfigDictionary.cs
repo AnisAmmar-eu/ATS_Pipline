@@ -23,6 +23,7 @@ public static class ConfigDictionary
 
 	public const string Camera1Port = "CameraConfig:Camera1:Port";
 	public const string Camera2Port = "CameraConfig:Camera2:Port";
+	public const string TimeOutCamera = "CameraConfig:TimeOut";
 
 	public const string ThumbnailsPath = "CameraConfig:ThumbnailsPath";
 	public const string ImagesPath = "CameraConfig:ImagesPath";

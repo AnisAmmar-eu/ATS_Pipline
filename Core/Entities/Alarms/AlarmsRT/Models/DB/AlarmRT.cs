@@ -11,10 +11,8 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 	public string IRID { get; set; } = string.Empty;
 	public int AlarmID { get; set; }
 	public int StationID { get; set; } = Station.ID;
-	public int? NbNonAck { get; set; }
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }
-	public DateTimeOffset? TSClear { get; set; }
 
 	#region Nav Properties
 

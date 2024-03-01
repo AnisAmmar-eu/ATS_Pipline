@@ -5,9 +5,9 @@ namespace Core.Shared.Dictionaries;
 /// </summary>
 public static class AnodeTypeDict
 {
-	public const string D20 = "D20";
-	public const string DX = "DX";
-	public const string Undefined = "Undefined";
+	public const string D20 = "02";
+	public const string DX = "01";
+	public const string Undefined = "00";
 
 	public static string AnodeTypeIntToString(int anodeType)
 	{

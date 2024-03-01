@@ -9,7 +9,6 @@ public partial class DTOAlarmCycle : DTOBaseEntity, IDTO<AlarmCycle, DTOAlarmCyc
 	// DTO ONLY SENT TO SERVER
 
 	public string AlarmRID { get; set; }
-	public int? NbNonAck { get; set; }
 	public bool IsActive { get; set; }
 
 	public int AlarmListPacketID { get; set; }

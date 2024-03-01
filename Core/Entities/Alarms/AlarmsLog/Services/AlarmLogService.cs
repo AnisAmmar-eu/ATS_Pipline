@@ -152,7 +152,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 					+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
 			}
 
-			await AnodeUOW.AlarmLog.UpdateWithExecuteUpdateAsync(
+			await AnodeUOW.AlarmLog.ExecuteUpdateByIdAsync(
 				alarmLog,
 				setters => setters.SetProperty(alarmLog => alarmLog.HasBeenSent, true));
 
@@ -169,8 +169,6 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 
 	public async Task ReceiveAlarmLog(DTOAlarmLog dtoAlarmLog)
 	{
-		AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
-
 		try
 		{
 			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
@@ -200,7 +198,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		{
 			// If an alarmLog doesn't exist, this alarm just raised.
 			AlarmLog newAlarmLog = dtoAlarmLog.ToModel();
-			newAlarmLog.Alarm = alarmC;
+			newAlarmLog.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
 			newAlarmLog.ID = 0;
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmLog.Add(newAlarmLog);

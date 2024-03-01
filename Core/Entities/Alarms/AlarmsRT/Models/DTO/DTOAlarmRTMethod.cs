@@ -9,10 +9,8 @@ public partial class DTOAlarmRT
 		IRID = alarmRT.IRID;
 		AlarmID = alarmRT.AlarmID;
 		StationID = alarmRT.StationID;
-		NbNonAck = alarmRT.NbNonAck;
 		IsActive = alarmRT.IsActive;
 		TSRaised = alarmRT.TSRaised;
-		TSClear = alarmRT.TSClear;
 
 		Alarm = alarmRT.Alarm.ToDTO();
 	}

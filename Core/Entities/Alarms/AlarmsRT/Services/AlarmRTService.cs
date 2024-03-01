@@ -1,17 +1,104 @@
 using System.Linq.Expressions;
+using System.Text;
+using System.Text.Json;
 using Core.Entities.Alarms.AlarmsC.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Repositories;
+using Core.Entities.IOT.Dictionaries;
+using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
+using Core.Shared.SignalR.AlarmHub;
 using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+using TwinCAT.Ads;
 
 namespace Core.Entities.Alarms.AlarmsRT.Services;
 
 public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTOAlarmRT>, IAlarmRTService
 {
-	public AlarmRTService(IAnodeUOW anodeUOW) : base(anodeUOW)
+	private readonly IHubContext<AlarmHub, IAlarmHub> _hubContext;
+	private readonly ILogger<AlarmRTService> _logger;
+
+	public AlarmRTService(
+		IAnodeUOW anodeUOW,
+		IHubContext<AlarmHub, IAlarmHub> hubContext,
+		ILogger<AlarmRTService> logger) : base(anodeUOW)
 	{
+		_hubContext = hubContext;
+		_logger = logger;
+	}
+
+	public async Task Collect(AdsClient adsClient, uint alarmListHandle)
+	{
+		try
+		{
+			Alarm[] alarmStructs = (Alarm[])adsClient.ReadAny(alarmListHandle, typeof(Alarm[]), [41]);
+			List<AlarmRT> alarms = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
+			foreach (Alarm alarmStruct in alarmStructs)
+			{
+				AlarmRT alarmRT = new(alarmStruct);
+				string RIDAlarmStruct = alarmStruct.RID.ToString();
+
+				try
+				{
+					if (await AnodeUOW.AlarmRT
+						.ExecuteUpdateAsync(
+							a => a.IRID == alarmRT.IRID,
+							s => s
+								.SetProperty(a => a.IsActive, alarmRT.IsActive)
+								.SetProperty(a => a.TS, alarmRT.TS)
+						) == 0)
+				{
+					throw new EntityNotFoundException();
+				}
+
+				alarms = alarms.Where(alarm => alarm.IRID != RIDAlarmStruct).ToList();
+				}
+				catch (EntityNotFoundException)
+				{
+					alarmRT.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == RIDAlarmStruct]);
+					await AnodeUOW.AlarmRT.Add(alarmRT);
+					AnodeUOW.Commit();
+					alarms = alarms.Where(alarm => alarm.IRID != RIDAlarmStruct).ToList();
+				}
+			}
+
+			await AnodeUOW.AlarmRT.ExecuteDeleteAsync(alarm => alarms.Select(alarm => alarm.IRID).Contains(alarm.IRID));
+		}
+		catch (Exception e)
+		{
+			_logger.LogError($"Error while reading alarm list: {e}");
+		}
+	}
+
+	public async Task SendRTsToServer()
+	{
+		try
+		{
+			string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/alarmsRT";
+			List<AlarmRT> alarmRTs = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
+
+			string jsonData = JsonSerializer.Serialize(alarmRTs.ConvertAll(alarmRT => alarmRT.ToDTO()));
+			StringContent content = new(jsonData, Encoding.UTF8, "application/json");
+			using HttpClient httpClient = new();
+			HttpResponseMessage response = await httpClient.PostAsync(api2Url, content);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new("Send alarmRT to server failed with status code:"
+					+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+			}
+
+			await _hubContext.Clients.All.RefreshAlarmRT();
+		}
+		catch (Exception e)
+		{
+			_logger.LogError($"Error while sending AlarmRT: {e}");
+		}
+
+		await AnodeUOW.CommitTransaction();
 	}
 
 	new public async Task<List<DTOAlarmRT>> GetAll(
@@ -30,11 +117,37 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 		List<AlarmRT> alarmRts = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
 		List<AlarmC> alarmCs = await AnodeUOW.AlarmC.GetAll(withTracking: false);
 		int nbActiveAlarms = alarmRts.Count(alarmRT => alarmRT.IsActive);
-		int nbNonAck = (int)alarmRts.Where(alarmRT => !alarmRT.IsActive).Sum(alarmRT => alarmRT.NbNonAck)!;
-		int[] stats = new int[3];
-		stats[0] = alarmCs.Count - nbActiveAlarms - nbNonAck;
-		stats[1] = nbNonAck;
-		stats[2] = nbActiveAlarms;
-		return stats;
+		int nbNonAck = (await AnodeUOW.AlarmLog.GetAll([alarmLog => !alarmLog.IsAck], withTracking: false)).Count;
+		return [0, nbNonAck, nbActiveAlarms];
+	}
+
+	public async Task ReceiveAlarmRT(DTOAlarmRT dtoAlarmRT)
+	{
+		List<AlarmRT> alarms = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
+		try
+		{
+			if (await AnodeUOW.AlarmRT
+				.ExecuteUpdateAsync(
+					a => a.IRID == dtoAlarmRT.IRID,
+					s => s
+						.SetProperty(a => a.IsActive, dtoAlarmRT.IsActive)
+						.SetProperty(a => a.TSRaised, dtoAlarmRT.TSRaised)
+					) == 0)
+			{
+				throw new EntityNotFoundException();
+			}
+
+			alarms = alarms.Where(alarm => alarm.IRID != dtoAlarmRT.IRID).ToList();
+		}
+		catch (EntityNotFoundException)
+		{
+			// If an alarmRT doesn't exist, this alarm just raised.
+			AlarmRT newAlarmRT = dtoAlarmRT.ToModel();
+			newAlarmRT.ID = 0;
+			await AnodeUOW.StartTransaction();
+			await AnodeUOW.AlarmRT.Add(newAlarmRT);
+			AnodeUOW.Commit();
+			await AnodeUOW.CommitTransaction();
+		}
 	}
 }

@@ -8,7 +8,6 @@ namespace Core.Entities.Alarms.AlarmsCycle.Models.DB;
 public partial class AlarmCycle : BaseEntity, IBaseEntity<AlarmCycle, DTOAlarmCycle>
 {
 	public string AlarmRID { get; set; }
-	public int? NbNonAck { get; set; }
 	public bool IsActive { get; set; }
 
 	public int AlarmListPacketID { get; set; }
