@@ -3,27 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAlarm", "ApiAlarm\ApiAlarm.csproj", "{F476616D-C645-4E1B-82E9-3A3B820C2932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAlarm", "ApiAlarm\ApiAlarm.csproj", "{F476616D-C645-4E1B-82E9-3A3B820C2932}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{0B493D42-003A-41AB-92F5-88A99860F306}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{0B493D42-003A-41AB-92F5-88A99860F306}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServerReceive", "ApiServerReceive\ApiServerReceive.csproj", "{4C29DBB6-3F75-403B-9AFA-F7DE73B6CD86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiServerReceive", "ApiServerReceive\ApiServerReceive.csproj", "{4C29DBB6-3F75-403B-9AFA-F7DE73B6CD86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiADS", "ApiADS\ApiADS.csproj", "{A513115D-DF69-4F0E-9748-6F17DC6D4D4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiADS", "ApiADS\ApiADS.csproj", "{A513115D-DF69-4F0E-9748-6F17DC6D4D4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCamera", "ApiCamera\ApiCamera.csproj", "{8572CF1E-CAAF-4137-9C76-9C659263DB33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiCamera", "ApiCamera\ApiCamera.csproj", "{8572CF1E-CAAF-4137-9C76-9C659263DB33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiUser", "ApiUser\ApiUser.csproj", "{78A7C96B-5445-4DC0-B1E1-10634C272F86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiUser", "ApiUser\ApiUser.csproj", "{78A7C96B-5445-4DC0-B1E1-10634C272F86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiIOT", "ApiIOT\ApiIOT.csproj", "{38CB2E38-E242-4D1D-BD81-671AE542BE29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiIOT", "ApiIOT\ApiIOT.csproj", "{38CB2E38-E242-4D1D-BD81-671AE542BE29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiStationCycle", "ApiStationCycle\ApiStationCycle.csproj", "{5899B35D-A6E8-4D3E-BAEC-DB0C87C0A48F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiStationCycle", "ApiStationCycle\ApiStationCycle.csproj", "{5899B35D-A6E8-4D3E-BAEC-DB0C87C0A48F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiKPI", "ApiKPI\ApiKPI.csproj", "{C9954DC3-9184-42DD-AB71-FFDC66E845C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiKPI", "ApiKPI\ApiKPI.csproj", "{C9954DC3-9184-42DD-AB71-FFDC66E845C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiVision", "ApiVision\ApiVision.csproj", "{61608E06-1607-4022-A089-F2DFA1E0A178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiVision", "ApiVision\ApiVision.csproj", "{61608E06-1607-4022-A089-F2DFA1E0A178}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiMonitor", "ApiMonitor\ApiMonitor.csproj", "{F277058E-6DA1-435D-8339-42C9805E6275}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiMonitor", "ApiMonitor\ApiMonitor.csproj", "{F277058E-6DA1-435D-8339-42C9805E6275}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiSign", "ApiSign\ApiSign.csproj", "{CA4420F0-3296-4217-9C1F-DACF9D4559E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{F277058E-6DA1-435D-8339-42C9805E6275}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F277058E-6DA1-435D-8339-42C9805E6275}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F277058E-6DA1-435D-8339-42C9805E6275}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA4420F0-3296-4217-9C1F-DACF9D4559E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA4420F0-3296-4217-9C1F-DACF9D4559E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA4420F0-3296-4217-9C1F-DACF9D4559E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA4420F0-3296-4217-9C1F-DACF9D4559E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
