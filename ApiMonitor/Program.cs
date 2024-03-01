@@ -5,6 +5,7 @@ using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
@@ -83,6 +84,12 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTSer
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
+
+if (!Station.IsServer)
+{
+	builder.Services.AddSingleton<CheckSyncTimeService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<CheckSyncTimeService>());
+}
 
 WebApplication app = builder.Build();
 
