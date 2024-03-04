@@ -7,7 +7,7 @@ public partial class MetaData : Packet, IBaseEntity<MetaData, DTOMetaData>
 {
 	public int SyncIndex { get; set; }
 	public float AnodeSize { get; set; }
-	public int AnodeType { get; set; }
+	public int AnodeType_MD { get; set; }
 	public int SyncIndex_RW { get; set; }
 	public int Double_RW { get; set; }
 	public int AnodeType_RW { get; set; }

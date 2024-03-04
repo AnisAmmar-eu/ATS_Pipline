@@ -28,6 +28,7 @@ public class StationCycleRepository : BaseEntityRepository<AnodeCTX, StationCycl
 			nameof(StationCycle.Shooting1Packet),
 			nameof(StationCycle.Shooting2Packet),
 			nameof(StationCycle.AlarmListPacket),
+			nameof(StationCycle.MetaDataPacket),
 			nameof(S3S4Cycle.InFurnacePacket),
 			nameof(S3S4Cycle.OutFurnacePacket));
 	}

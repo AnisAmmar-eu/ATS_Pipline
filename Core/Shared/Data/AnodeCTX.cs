@@ -21,6 +21,7 @@ using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
+using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
 using Core.Entities.Packets.Models.DB.Shootings.S5Shootings;
@@ -84,6 +85,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<AlarmList> AlarmList => Set<AlarmList>();
 	public DbSet<InFurnace> InFurnace => Set<InFurnace>();
 	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
+	public DbSet<MetaData> MetaData => Set<MetaData>();
 	public DbSet<Shooting> Shooting => Set<Shooting>();
 	public DbSet<S3S4Shooting> S3S4Shooting => Set<S3S4Shooting>();
 	public DbSet<S5Shooting> S5Shooting => Set<S5Shooting>();
@@ -162,6 +164,13 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithMany(kpic => kpic.RTEntries)
 			.HasForeignKey(kpiRT => kpiRT.KPICID)
 			.OnDelete(DeleteBehavior.Cascade);
+
+		builder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.MetaDataPacket)
+			.WithOne(packet => packet.StationCycle)
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.MetaDataID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
 
 		builder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.Shooting1Packet)

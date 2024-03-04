@@ -208,7 +208,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			{
 				stationCycle.RID = metaData.StationCycleRID;
 				stationCycle.AssignPacket(metaData);
-				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType);
+				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 				stationCycle.Picture1Status = (metaData.Cam01Status == 1) ? 0 : 3;
 				stationCycle.Picture2Status = (metaData.Cam02Status == 1) ? 0 : 3;
 			}

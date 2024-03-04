@@ -14,7 +14,7 @@ public partial class MetaData
 		Status = dtoMetaData.Status;
 		SyncIndex = dtoMetaData.SyncIndex;
 		AnodeSize = dtoMetaData.AnodeSize;
-		AnodeType = dtoMetaData.AnodeType;
+		AnodeType_MD = dtoMetaData.AnodeType;
 		SyncIndex_RW = dtoMetaData.SyncIndex_RW;
 		Double_RW = dtoMetaData.Double_RW;
 		AnodeType_RW = dtoMetaData.AnodeType_RW;
@@ -42,7 +42,7 @@ public partial class MetaData
 
 		SyncIndex = adsStruct.SyncIndex;
 		AnodeSize = adsStruct.AnodeSize;
-		AnodeType = adsStruct.AnodeType;
+		AnodeType_MD = adsStruct.AnodeType;
 		SyncIndex_RW = adsStruct.SyncIndex_RW;
 		Double_RW = adsStruct.Double_RW;
 		AnodeType_RW = adsStruct.AnodeType_RW;

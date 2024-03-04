@@ -28,6 +28,9 @@ public partial class StationCycle
 		SignStatus1 = dtoStationCycle.SignStatus1;
 		SignStatus2 = dtoStationCycle.SignStatus2;
 
+		MetaDataID = dtoStationCycle.MetaDataID;
+		MetaDataPacket = dtoStationCycle.MetaDataPacket?.ToModel();
+
 		Picture1Status = dtoStationCycle.Picture1Status;
 		Shooting1ID = dtoStationCycle.Shooting1ID;
 		Shooting1Packet = dtoStationCycle.Shooting1Packet?.ToModel();

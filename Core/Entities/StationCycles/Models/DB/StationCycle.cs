@@ -1,6 +1,7 @@
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.AlarmLists;
+using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DTO;
@@ -19,6 +20,9 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public DateTimeOffset? TSClosed { get; set; }
 	public SignMatchStatus SignStatus1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus SignStatus2 { get; set; } = SignMatchStatus.NA;
+
+	public int? MetaDataID { get; set; }
+	public MetaData? MetaDataPacket { get; set; }
 
 	public int Picture1Status { get; set; }
 	public int? Shooting1ID { get; set; }

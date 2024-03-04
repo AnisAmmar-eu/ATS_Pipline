@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
+using Core.Entities.Packets.Models.DTO.MetaDatas;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
@@ -25,6 +26,9 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	public DateTimeOffset? TSClosed { get; set; }
 	public SignMatchStatus SignStatus1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus SignStatus2 { get; set; } = SignMatchStatus.NA;
+
+	public int? MetaDataID { get; set; }
+	public DTOMetaData? MetaDataPacket { get; set; }
 
 	public int Picture1Status { get; set; }
 	public int? Shooting1ID { get; set; }

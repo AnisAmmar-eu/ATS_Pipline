@@ -19,7 +19,7 @@ public partial class DTOMetaData
 		TwinCatStatus = metaData.TwinCatStatus;
 		SyncIndex = metaData.SyncIndex;
 		AnodeSize = metaData.AnodeSize;
-		AnodeType = metaData.AnodeType;
+		AnodeType = metaData.AnodeType_MD;
 		SyncIndex_RW = metaData.SyncIndex_RW;
 		Double_RW = metaData.Double_RW;
 		AnodeType_RW = metaData.AnodeType_RW;
