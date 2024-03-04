@@ -23,11 +23,11 @@ namespace ApiSign.Endpoints
             RouteGroupBuilder group = app.MapGroup("apiSign").WithTags(nameof(SignEndpoint));
 
             group.MapGet("status", () => new ApiResponse().Status);
-            group.MapGet("sign/{anodeID:string}", SignAnode);
+            group.MapGet("sign/{anodeID}", SignAnode);
         }
 
         private static Task<JsonHttpResult<ApiResponse>> SignAnode(
-            [FromRoute] string anodeID,
+            string anodeID,
             ISignServices signServices,
             ILogService logService,
             HttpContext httpContext)

@@ -5,6 +5,7 @@ using Core.Entities.BI.BITemperatures.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Services;
+using Core.Entities.SignMatch.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.DLLvision;
@@ -18,6 +19,7 @@ using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
@@ -74,6 +76,12 @@ builder.Services.AddAuthentication(
 builder.Services.AddDbContext<AnodeCTX>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<ISignServices, SignServices>();
+builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
+
 builder.Services.AddCarter();
 
 WebApplication app = builder.Build();
@@ -100,6 +108,7 @@ app.UseAuthorization();
 
 app.MapCarter();
 
+DLLvision.SetDllDirectory(builder.Configuration.GetValue<string>("DllPath")!);
 DLLvision.fcx_init(string.Empty);
 
 app.Run();
