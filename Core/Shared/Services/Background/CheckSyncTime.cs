@@ -55,39 +55,38 @@ public class CheckSyncTimeService : BackgroundService
                 CancellationToken cancel = CancellationToken.None;
                 await Task.Run(
                     async () =>
-                    {
-                        using HttpClient httpClient = new();
-                        HttpResponseMessage response = await httpClient.GetAsync(api2Url, cancel);
+					{
+						using HttpClient httpClient = new();
+						HttpResponseMessage response = await httpClient.GetAsync(api2Url, cancel);
 
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            throw new("Get time to server failed with status code:"
-                                + $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
-                        }
+						if (!response.IsSuccessStatusCode)
+						{
+							throw new("Get time to server failed with status code:"
+								+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+						}
 
-                        // Delta Time station and server Check
-                        ApiResponse? apiResponse
-                        = JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
-                        if (apiResponse is null)
-                            throw new ApplicationException("Could not deserialize ApiIOT response");
+						// Delta Time station and server Check
+						ApiResponse? apiResponse
+						= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
+						if (apiResponse is null)
+							throw new ApplicationException("Could not deserialize ApiIOT response");
 
-                        if (apiResponse.Result is not JsonElement jsonElement)
-                            throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
+						if (apiResponse.Result is not JsonElement jsonElement)
+							throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
 
-                        DateTimeOffset serverTime = jsonElement.Deserialize<DateTimeOffset>();
-                        DateTimeOffset stationTime = DateTimeOffset.Now;
-                        TimeSpan delta = serverTime - stationTime;
+						DateTimeOffset serverTime = jsonElement.Deserialize<DateTimeOffset>();
+						DateTimeOffset stationTime = DateTimeOffset.Now;
+						TimeSpan delta = serverTime - stationTime;
 
-                        if (Math.Abs(delta.TotalSeconds) > deltaTimeSec)
-                        {
-                            //AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, stoppingToken);
+						if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
+							return;
 
-                            // Trigger an alarm
-                            //uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.AlarmTime);
-                            //tcClient.WriteAny(alarmTimeHandle, 1);
-                        }
-                    }
-                    ,
+						AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
+						// Trigger an alarm
+						uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.AlarmTime);
+						tcClient.WriteAny(alarmTimeHandle, 1);
+					}
+					,
                     cancel);
             }
 			catch (Exception ex)

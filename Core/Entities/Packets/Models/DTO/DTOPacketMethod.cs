@@ -4,6 +4,7 @@ using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DTO.Furnaces.OutFurnaces;
+using Core.Entities.Packets.Models.DTO.MetaDatas;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Shared.Exceptions;
 using Microsoft.AspNetCore.Http;
@@ -56,10 +57,11 @@ public partial class DTOPacket
 			throw new EntityNotFoundException("Packet type is null");
 
 		return type switch {
-			PacketType.AlarmList => typeof(DTOAlarmList),
-			PacketType.Shooting => typeof(DTOShooting),
-			PacketType.InFurnace => typeof(DTOInFurnace),
-			PacketType.OutFurnace => typeof(DTOOutFurnace),
+			PacketTypes.AlarmList => typeof(DTOAlarmList),
+			PacketTypes.MetaData => typeof(DTOMetaData),
+			PacketTypes.Shooting => typeof(DTOShooting),
+			PacketTypes.InFurnace => typeof(DTOInFurnace),
+			PacketTypes.OutFurnace => typeof(DTOOutFurnace),
 			_ => typeof(DTOPacket),
 		};
 	}

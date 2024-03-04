@@ -28,11 +28,14 @@ public partial class DTOStationCycle
 		SignStatus1 = stationCycle.SignStatus1;
 		SignStatus2 = stationCycle.SignStatus2;
 
-		ShootingStatus = stationCycle.ShootingStatus;
-		ShootingID = stationCycle.ShootingID;
-		ShootingPacket = stationCycle.ShootingPacket?.ToDTO();
+		Picture1Status = stationCycle.Picture1Status;
+		Shooting1ID = stationCycle.Shooting1ID;
+		Shooting1Packet = stationCycle.Shooting1Packet?.ToDTO();
 
-		AlarmListStatus = stationCycle.AlarmListStatus;
+		Picture2Status = stationCycle.Picture2Status;
+		Shooting2ID = stationCycle.Shooting2ID;
+		Shooting2Packet = stationCycle.Shooting2Packet?.ToDTO();
+
 		AlarmListID = stationCycle.AlarmListID;
 		AlarmListPacket = stationCycle.AlarmListPacket?.ToDTO();
 	}

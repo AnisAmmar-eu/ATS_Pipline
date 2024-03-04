@@ -6,7 +6,6 @@ using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
@@ -35,7 +34,6 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		group.MapPost("images", ReceiveImage);
 		group.MapPost("{stationName}/alarmPacket/{cycleRID}", ReceiveAlarmPacket);
 		group.MapPost("logs", ReceiveLog);
-		group.MapGet("time", () => new ApiResponse(DateTimeOffset.Now).SuccessResult());
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(
@@ -71,7 +69,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceivePacket(
-		[FromBody] [Required] DTOPacket packet,
+		[Required] DTOPacket packet,
 		[FromRoute] string stationName,
 		IPacketService packetService,
 		ILogService logService,
@@ -101,7 +99,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmPacket(
-		[FromBody] [Required] List<DTOAlarmCycle> dtoAlarmsCycle,
+		[FromBody] List<DTOAlarmCycle> dtoAlarmsCycle,
 		[FromRoute] string stationName,
 		[FromRoute] string cycleRID,
 		IPacketService packetService,

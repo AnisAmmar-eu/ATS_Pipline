@@ -225,8 +225,8 @@ public static class IOTTagPath
 	public const string DiagCam2LedOn = "VA_HMI.Cam02_Led_ON";
 	public const string DiagCam2LedOff = "VA_HMI.Cam02_Led_OFF";
 
-	public const string Cam1StatusWrite = "VA_IT.CAM01_Status";
-	public const string Cam2StatusWrite = "VA_IT.CAM02_Status";
+	public const string Cam1StatusWrite = "VA_IT.CAM01_StatusOK";
+	public const string Cam2StatusWrite = "VA_IT.CAM01_StatusOK";
 	public const string Cam1StatusRead = "VA_HMI.Cam01_Status";
 	public const string Cam2StatusRead = "VA_HMI.Cam02_Status";
 

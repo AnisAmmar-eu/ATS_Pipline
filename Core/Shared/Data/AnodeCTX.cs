@@ -164,9 +164,16 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Entity<StationCycle>()
-			.HasOne(stationCycle => stationCycle.ShootingPacket)
+			.HasOne(stationCycle => stationCycle.Shooting1Packet)
 			.WithOne(packet => packet.StationCycle)
-			.HasForeignKey<StationCycle>(stationCycle => stationCycle.ShootingID)
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.Shooting1ID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+
+		builder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.Shooting2Packet)
+			.WithOne(packet => packet.StationCycleShooting2)
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.Shooting2ID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 

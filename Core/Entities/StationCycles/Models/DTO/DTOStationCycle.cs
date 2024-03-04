@@ -26,11 +26,14 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	public SignMatchStatus SignStatus1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus SignStatus2 { get; set; } = SignMatchStatus.NA;
 
-	public PacketStatus? ShootingStatus { get; set; }
-	public int? ShootingID { get; set; }
-	public DTOShooting? ShootingPacket { get; set; }
+	public int Picture1Status { get; set; }
+	public int? Shooting1ID { get; set; }
+	public DTOShooting? Shooting1Packet { get; set; }
 
-	public PacketStatus? AlarmListStatus { get; set; }
+	public int Picture2Status { get; set; }
+	public int? Shooting2ID { get; set; }
+	public DTOShooting? Shooting2Packet { get; set; }
+
 	public int? AlarmListID { get; set; }
 	public DTOAlarmList? AlarmListPacket { get; set; }
 }

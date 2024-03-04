@@ -8,10 +8,11 @@ public enum PacketStatus
 	Sent = 4,
 }
 
-public static class PacketType
+public static class PacketTypes
 {
 	public const string AlarmList = "AlarmList";
 	public const string Shooting = "Shooting";
+	public const string MetaData = "MetaData";
 	public const string InFurnace = "InFurnace";
 	public const string OutFurnace = "OutFurnace";
 }

@@ -37,14 +37,21 @@ public partial class Shooting
 		int camera,
 		string extension)
 	{
-		DateTimeOffset ridTS
-			= DateTimeOffset.ParseExact(rid[2..], AnodeFormat.RIDFormat, CultureInfo.InvariantCulture);
-		string filename
-			= $"S{stationID:00}T{anodeType}C{camera:00}T{rid[2..]}.{extension}";
-		string path
-			= $@"S{stationID:00}\T{anodeType}\Y{ridTS.Year.ToString()}\M{ridTS.Month:00}\D{
-				ridTS.Day:00}\C{camera:00}\";
-		return new($@"{root}\{path}\{filename}");
+		try
+		{
+			DateTimeOffset ridTS
+				= DateTimeOffset.ParseExact(rid[2..], AnodeFormat.RIDFormat, CultureInfo.InvariantCulture);
+			string filename
+				= $"S{stationID:00}T{anodeType}C{camera:00}T{rid[2..]}.{extension}";
+			string path
+				= $@"S{stationID:00}\T{anodeType}\Y{ridTS.Year.ToString()}\M{ridTS.Month:00}\D{
+					ridTS.Day:00}\C{camera:00}\";
+			return new($@"{root}\{path}\{filename}");
+		}
+		catch (Exception)
+		{
+			return new("undefined");
+		}
 	}
 
 	[GeneratedRegex("S(?<stationID>[0-9]{2})T(?<anodeType>.*)C(?<camera>[0-9]{2})T(?<TS>.*)\\..*")]

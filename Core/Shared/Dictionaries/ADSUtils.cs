@@ -38,10 +38,10 @@ public static class ADSUtils
 
 	#endregion
 
-	#region ShootingNotification
+	#region MetaDataNotification
 
-	public const string ShootingNewMsg = "VA_P05.MsgNew";
-	public const string ShootingToRead = "VA_P05.Out";
+	public const string MetaDataNewMsg = "VA_P05.MsgNew";
+	public const string MetaDataToRead = "VA_P05.Out";
 
 	#endregion
 

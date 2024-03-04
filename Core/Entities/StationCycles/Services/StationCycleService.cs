@@ -34,24 +34,24 @@ public class StationCycleService : BaseEntityService<IStationCycleRepository, St
 	public async Task<List<DTOReducedStationCycle>> GetAllRIDs()
 	{
 		return (await AnodeUOW.StationCycle
-			.GetAll(withTracking: false, includes: [nameof(StationCycle.ShootingPacket)]))
+			.GetAll(withTracking: false, includes: [nameof(StationCycle.Shooting1Packet)]))
 			.ConvertAll(cycle => cycle.Reduce());
 	}
 
 	public async Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera)
 	{
-		StationCycle stationCycle
-			= await AnodeUOW.StationCycle.GetById(
-				id,
-				includes: nameof(StationCycle.ShootingPacket));
-		if (stationCycle.ShootingPacket is null)
+		string includeProperty = (camera == 1) ? nameof(StationCycle.Shooting1Packet) : nameof(StationCycle.Shooting2Packet);
+		StationCycle stationCycle = await AnodeUOW.StationCycle.GetById(id, includes: includeProperty);
+
+		Shooting? shootingPacket = (camera == 1) ? stationCycle.Shooting1Packet : stationCycle.Shooting2Packet;
+		if (shootingPacket is null)
 			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 		string extenstion = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
 		return Shooting.GetImagePathFromRoot(
-			stationCycle.ShootingPacket.StationCycleRID,
+			shootingPacket.StationCycleRID,
 			stationCycle.StationID,
 			thumbnailsPath,
 			stationCycle.AnodeType,

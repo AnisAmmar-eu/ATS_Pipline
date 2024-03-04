@@ -8,13 +8,13 @@ public partial class DTOAlarmList
 {
 	public DTOAlarmList()
 	{
-		Type = PacketType.AlarmList;
+		Type = PacketTypes.AlarmList;
 		AlarmCycles = new List<DTOAlarmCycle>();
 	}
 
 	public DTOAlarmList(AlarmList packet) : base(packet)
 	{
-		Type = PacketType.AlarmList;
+		Type = PacketTypes.AlarmList;
 		AlarmCycles = packet.AlarmCycles.ToList().ConvertAll(alarmCycle => alarmCycle.ToDTO());
 	}
 

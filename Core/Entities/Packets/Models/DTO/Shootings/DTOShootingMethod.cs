@@ -7,12 +7,12 @@ public partial class DTOShooting
 {
 	public DTOShooting()
 	{
-		Type = PacketType.Shooting;
+		Type = PacketTypes.Shooting;
 	}
 
 	public DTOShooting(Shooting shooting) : base(shooting)
 	{
-		Type = PacketType.Shooting;
+		Type = PacketTypes.Shooting;
 		ShootingTS = shooting.ShootingTS;
 		AnodeType = shooting.AnodeType;
 		Cam01Status = shooting.Cam01Status;

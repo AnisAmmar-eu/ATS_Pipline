@@ -7,12 +7,12 @@ public partial class DTOOutFurnace
 {
 	public DTOOutFurnace()
 	{
-		Type = PacketType.OutFurnace;
+		Type = PacketTypes.OutFurnace;
 	}
 
 	public DTOOutFurnace(OutFurnace outFurnace) : base(outFurnace)
 	{
-		Type = PacketType.OutFurnace;
+		Type = PacketTypes.OutFurnace;
 		OutAnnounceID = outFurnace.OutAnnounceID;
 		FTAPickUp = outFurnace.FTAPickUp;
 		PickUpTS = outFurnace.PickUpTS;

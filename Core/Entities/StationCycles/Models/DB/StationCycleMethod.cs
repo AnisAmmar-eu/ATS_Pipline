@@ -28,11 +28,14 @@ public partial class StationCycle
 		SignStatus1 = dtoStationCycle.SignStatus1;
 		SignStatus2 = dtoStationCycle.SignStatus2;
 
-		ShootingStatus = dtoStationCycle.ShootingStatus;
-		ShootingID = dtoStationCycle.ShootingID;
-		ShootingPacket = dtoStationCycle.ShootingPacket?.ToModel();
+		Picture1Status = dtoStationCycle.Picture1Status;
+		Shooting1ID = dtoStationCycle.Shooting1ID;
+		Shooting1Packet = dtoStationCycle.Shooting1Packet?.ToModel();
 
-		AlarmListStatus = dtoStationCycle.AlarmListStatus;
+		Picture2Status = dtoStationCycle.Picture2Status;
+		Shooting2ID = dtoStationCycle.Shooting2ID;
+		Shooting2Packet = dtoStationCycle.Shooting2Packet?.ToModel();
+
 		AlarmListID = dtoStationCycle.AlarmListID;
 		AlarmListPacket = dtoStationCycle.AlarmListPacket?.ToModel();
 	}
@@ -52,7 +55,7 @@ public partial class StationCycle
 		PropertyInfo? property = Array.Find(
 			this.GetType()
 				.GetProperties(BindingFlags.Instance | BindingFlags.Public),
-			info => info.GetValue(this)?.GetType() == packet.GetType());
+			info => info.PropertyType == packet.GetType());
 		if (property is null)
 			throw new ArgumentException($"Cycle of RID {RID} has no packet of type {packet.GetType()}");
 
@@ -160,7 +163,7 @@ public partial class StationCycle
 			RID = RID,
 			AnodeSize = null,
 			AnodeType = AnodeType,
-			ShootingTS = ShootingPacket?.ShootingTS,
+			ShootingTS = Shooting1Packet?.ShootingTS,
 		};
 	}
 

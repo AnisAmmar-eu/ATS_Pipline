@@ -9,28 +9,17 @@ namespace Core.Entities.Anodes.Models.DB;
 
 public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>, IBaseKPI<Anode>
 {
-	public string S1S2CycleRID { get; set; } = string.Empty;
+	public string CycleRID { get; set; } = string.Empty;
 	public PacketStatus Status { get; set; } = PacketStatus.Initialized;
 	public DateTimeOffset? ClosedTS { get; set; }
 
-	public int S1S2CycleID { get; set; }
-	public int S1S2CycleStationID { get; set; }
-	public DateTimeOffset S1S2CycleTS { get; set; }
+	public int? S1S2CycleID { get; set; }
+	public int? S1S2CycleStationID { get; set; }
+	public DateTimeOffset? S1S2CycleTS { get; set; }
+	public S1S2Cycle? S1S2Cycle { get; set; }
+
 	public int? S3S4CycleID { get; set; }
 	public int? S3S4CycleStationID { get; set; }
 	public DateTimeOffset? S3S4CycleTS { get; set; }
-
 	public S3S4Cycle? S3S4Cycle { get; set; }
-
-	#region NavProperties
-
-	private S1S2Cycle? _s1S2Cycle;
-
-	public S1S2Cycle S1S2Cycle
-	{
-		set => _s1S2Cycle = value;
-		get => _s1S2Cycle ?? throw new InvalidOperationException("Uninitialized property: " + nameof(S1S2Cycle));
-	}
-
-	#endregion
 }

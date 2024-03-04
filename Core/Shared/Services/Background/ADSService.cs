@@ -63,6 +63,12 @@ public class ADSService : BackgroundService
 					InFurnaceNotification
 					OutFurnaceNotification
 				*/
+				(uint metaDataNewmsg, uint metaDataOldEntry) = CreateVarADS(
+					tcClient,
+					ADSUtils.MetaDataNewMsg,
+					ADSUtils.MetaDataToRead);
+				MetaDataNotification metaDataNotification = new(metaDataNewmsg, metaDataOldEntry, _logger);
+
 				(uint alarmNewmsg, uint alarmOldEntry) = CreateVarADS(
 					tcClient,
 					ADSUtils.AlarmNewMsg,

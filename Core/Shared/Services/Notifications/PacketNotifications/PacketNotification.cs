@@ -1,5 +1,6 @@
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
+using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
@@ -38,14 +39,12 @@ public class PacketNotification<TStruct> : BaseNotification<Packet, TStruct>
 		IConfiguration configuration = services.GetRequiredService<IConfiguration>();
 		IHubContext<StationCycleHub, IStationCycleHub> hubContext
 			= services.GetRequiredService<IHubContext<StationCycleHub, IStationCycleHub>>();
-		if (entity is Shooting shooting)
+		if (entity is MetaData metaData)
 		{
-			shooting.ImagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-			shooting.Extension = configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
-			await packetService.BuildPacket(shooting);
+			await packetService.BuildPacket(metaData);
 			Packet alarmList = new AlarmList {
-				StationCycleRID = shooting.StationCycleRID,
-				StationCycle = shooting.StationCycle,
+				StationCycleRID = metaData.StationCycleRID,
+				StationCycle = metaData.StationCycle,
 			};
 			await packetService.BuildPacket(alarmList);
 		}
