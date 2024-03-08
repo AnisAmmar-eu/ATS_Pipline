@@ -73,27 +73,29 @@ public partial class Shooting
 
 	public async Task SendImages(string imagesPath, string extension, ILogger logger)
 	{
+		int cameraNumber = (Cam01Status == 1) ? 1 : 2;
 		MultipartFormDataContent formData = new();
 		formData.Headers.ContentType!.MediaType = "multipart/form-data";
-		for (int i = 1; i <= 2; ++i)
-		{
-			logger.LogInformation(
-				"{StationCycleRID} {Station.ID} {imagesPath} {AnodeType} {i} {extension}",
-				StationCycleRID,
-				Station.ID,
-				imagesPath,
-				AnodeType,
-				i,
-				extension);
-			FileInfo image
-				= GetImagePathFromRoot(StationCycleRID, Station.ID, imagesPath, AnodeType, i, extension);
-			if (!image.Exists)
-				continue;
+		logger.LogInformation(
+			"{StationCycleRID} {Station.ID} {imagesPath} {AnodeType} {i} {extension}",
+			StationCycleRID,
+			Station.ID,
+			imagesPath,
+			AnodeType,
+			cameraNumber,
+			extension);
 
-			StreamContent content = new(image.Open(FileMode.Open));
-			content.Headers.ContentType = new("image/jpeg");
+			FileInfo image
+				= GetImagePathFromRoot(StationCycleRID, Station.ID, imagesPath, AnodeType, cameraNumber, extension);
+
+			logger.LogInformation("Sending images to the server ? {image.Exists} {name}", image.Exists, image.FullName);
+			if (!image.Exists)
+				return;
+
+			StreamContent content = new(image.OpenRead());
+			content.Headers.ContentType = new($"image/{extension}");
+			content.Headers.ContentLength = image.Length;
 			formData.Add(content, image.Name, image.Name);
-		}
 
 		logger.LogInformation("Sending images to the server ? {formData}", formData.Any());
 
@@ -126,7 +128,9 @@ public partial class Shooting
 			HasSecondShoot = image.Exists;
 		}
 
-		HasError = HasError || (!HasFirstShoot && !HasSecondShoot);
+		HasError = HasError
+			|| (Cam01Status.Equals(1) && Cam02Status.Equals(1))
+			|| (Cam01Status.Equals(0) && Cam02Status.Equals(0));
 		return Task.CompletedTask;
 	}
 }

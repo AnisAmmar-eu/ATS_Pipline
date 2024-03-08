@@ -1,4 +1,5 @@
 using Core.Entities.IOT.IOTDevices.Services;
+using Core.Shared.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,18 +14,20 @@ public class IOTService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<IOTService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
+	private readonly IConfiguration _configuration;
 	private int _executionCount;
 
-	public IOTService(ILogger<IOTService> logger, IServiceScopeFactory factory)
+	public IOTService(ILogger<IOTService> logger, IServiceScopeFactory factory, IConfiguration configuration)
 	{
 		_logger = logger;
 		_factory = factory;
+		_configuration = configuration;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		using PeriodicTimer timer = new(_period);
+		int delayMS = _configuration.GetValueWithThrow<int>("IOTMS");
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IIOTDeviceService iotDeviceService
 			= asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();

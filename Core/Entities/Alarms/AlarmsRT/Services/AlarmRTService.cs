@@ -45,7 +45,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 				{
 					if (await AnodeUOW.AlarmRT
 						.ExecuteUpdateAsync(
-							a => a.IRID == alarmRT.IRID,
+							alarm => alarm.IRID == alarmRT.IRID,
 							s => s
 								.SetProperty(a => a.IsActive, alarmRT.IsActive)
 								.SetProperty(a => a.TS, alarmRT.TS)
@@ -58,13 +58,21 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 				}
 				catch (EntityNotFoundException)
 				{
-					alarmRT.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == RIDAlarmStruct]);
-					await AnodeUOW.AlarmRT.Add(alarmRT);
-					AnodeUOW.Commit();
-					alarms = alarms.Where(alarm => alarm.IRID != RIDAlarmStruct).ToList();
+					try
+					{
+						alarmRT.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == RIDAlarmStruct]);
+						await AnodeUOW.AlarmRT.Add(alarmRT);
+						AnodeUOW.Commit();
+						alarms = alarms.Where(alarm => alarm.IRID != RIDAlarmStruct).ToList();
+					}
+					catch (EntityNotFoundException)
+					{
+						_logger.LogWarning($"Alarm {RIDAlarmStruct} is not in the alarm list.");
+					}
 				}
 			}
 
+			alarms.ForEach(alarm => _logger.LogWarning($"Alarm {alarm.IRID} is not in the alarm list anymore."));
 			await AnodeUOW.AlarmRT.ExecuteDeleteAsync(alarm => alarms.Select(alarm => alarm.IRID).Contains(alarm.IRID));
 		}
 		catch (Exception e)

@@ -17,11 +17,9 @@ public partial class DTOS3S4Cycle
 		MatchingCamera1 = s3S4Cycle.MatchingCamera1;
 		MatchingCamera2 = s3S4Cycle.MatchingCamera2;
 
-		InFurnaceStatus = s3S4Cycle.InFurnaceStatus;
 		InFurnaceID = s3S4Cycle.InFurnaceID;
 		InFurnacePacket = s3S4Cycle.InFurnacePacket?.ToDTO();
 
-		OutFurnaceStatus = s3S4Cycle.OutFurnaceStatus;
 		OutFurnaceID = s3S4Cycle.OutFurnaceID;
 		OutFurnacePacket = s3S4Cycle.OutFurnacePacket?.ToDTO();
 	}

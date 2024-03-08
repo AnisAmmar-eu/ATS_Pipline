@@ -13,6 +13,5 @@ public partial class DTOAlarmRT : DTOBaseEntity, IDTO<AlarmRT, DTOAlarmRT>
 	public int StationID { get; set; } = Station.ID;
 	public bool IsActive { get; set; }
 	public DateTimeOffset TSRaised { get; set; }
-	public DateTimeOffset? TSClear { get; set; }
 	public DTOAlarmC Alarm { get; set; }
 }

@@ -10,6 +10,7 @@ obj
 
 # Images, .zips and user specific configs.
 *.jpg
+*.jpeg
 *.user
 *.userosscache
 *.sln.docstates

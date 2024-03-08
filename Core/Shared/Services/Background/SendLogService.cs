@@ -1,4 +1,6 @@
 using Core.Shared.Services.System.Logs;
+using Core.Shared.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,18 +14,20 @@ public class SendLogService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendLogService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
+	private readonly IConfiguration _configuration;
 	private int _executionCount;
 
-	public SendLogService(ILogger<SendLogService> logger, IServiceScopeFactory factory)
+	public SendLogService(ILogger<SendLogService> logger, IServiceScopeFactory factory, IConfiguration configuration)
 	{
 		_logger = logger;
 		_factory = factory;
+		_configuration = configuration;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		using PeriodicTimer timer = new(_period);
+		int delayMS = _configuration.GetValueWithThrow<int>("SendLogMS");
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		ILogService logService
 			= asyncScope.ServiceProvider.GetRequiredService<ILogService>();

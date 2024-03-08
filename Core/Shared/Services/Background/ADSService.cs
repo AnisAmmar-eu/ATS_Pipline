@@ -95,6 +95,7 @@ public class ADSService : BackgroundService
 				{
 					return Task.WhenAll(
 						alarmNotification.GetElement(tcClient, asyncScope.ServiceProvider),
+						metaDataNotification.GetElement(tcClient, asyncScope.ServiceProvider),
 						alarmRTService.Collect(tcClient, alarmListHandle),
 						(Station.Type == StationType.S3S4)
 							? Task.WhenAll(

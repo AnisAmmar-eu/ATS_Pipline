@@ -10,11 +10,9 @@ public partial class DTOS3S4Cycle : DTOMatchingCycle, IDTO<S3S4Cycle, DTOS3S4Cyc
 {
 	public string? AnnounceID { get; set; }
 
-	public PacketStatus? InFurnaceStatus { get; set; }
 	public int? InFurnaceID { get; set; }
 	public DTOInFurnace? InFurnacePacket { get; set; }
 
-	public PacketStatus? OutFurnaceStatus { get; set; }
 	public int? OutFurnaceID { get; set; }
 	public DTOOutFurnace? OutFurnacePacket { get; set; }
 }

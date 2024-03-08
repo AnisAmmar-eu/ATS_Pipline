@@ -24,6 +24,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Stemmer.Cvb;
 
 namespace Core.Entities.Packets.Services;
 
@@ -94,20 +95,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			{
 				using HttpClient http = new();
 
-				if (packet is Shooting shooting)
-				{
-					await shooting.SendImages(imagesPath, extension, _logger);
-					HttpResponseMessage response = await http.PostAsJsonAsync(
-						$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
-						shooting.ToDTO(),
-						ApiResponse.JsonOptions);
-					if (response.StatusCode != HttpStatusCode.OK)
-					{
-						throw new("Send packet to server failed with status code:"
-							+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
-					}
-				}
-
 				if (packet is AlarmList alarmLists)
 				{
 					// Get all alarmCycle
@@ -134,10 +121,25 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 							+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
 					}
 				}
+				else
+				{
+					if (packet is Shooting shooting)
+						await shooting.SendImages(imagesPath, extension, _logger);
 
-                await AnodeUOW.Packet.ExecuteUpdateByIdAsync(
-                             packet,
-                             setters => setters.SetProperty(packet => packet.Status, PacketStatus.Sent));
+					HttpResponseMessage response = await http.PostAsJsonAsync(
+						$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
+						packet.ToDTO(),
+						ApiResponse.JsonOptions);
+					if (response.StatusCode != HttpStatusCode.OK)
+					{
+						throw new("Send packet to server failed with status code:"
+							+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+					}
+				}
+
+				await AnodeUOW.Packet.ExecuteUpdateByIdAsync(
+					packet,
+					setters => setters.SetProperty(packet => packet.Status, PacketStatus.Sent));
 				_logger.LogInformation("Packet sent: {packetID}", packet.ID);
 			}
 			catch (Exception e)
@@ -154,6 +156,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	{
 		Packet packet = dtoPacket.ToModel();
 		packet.ID = 0;
+		packet.Status = PacketStatus.Sent;
 		await AnodeUOW.StartTransaction();
 		await AnodeUOW.Packet.Add(packet);
 		AnodeUOW.Commit();
@@ -235,19 +238,20 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	public Task ReceiveStationImage(IFormFileCollection formFiles)
 	{
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{
+			_logger.LogInformation("image Name: {formFile.Name}", formFile.Name);
 			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
 			FileInfo thumbnail = Shooting.GetImagePathFromFilename(thumbnailsPath, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);
 			Directory.CreateDirectory(thumbnail.DirectoryName!);
+
 			await using FileStream imageStream = new(image.FullName, FileMode.Create);
 			await formFile.CopyToAsync(imageStream);
-			// Image savedImage = Image.FromFile(image.FullName);
-			// savedImage.Save(thumbnail.FullName, 0.2);
+			Image savedImage = Image.FromFile(image.FullName);
+			savedImage.Save(thumbnail.FullName, 0.2);
 		});
 		return Task.WhenAll(tasks);
 	}
@@ -268,11 +272,28 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		await AnodeUOW.AlarmCycle.AddRange(alarmCycles);
 		AnodeUOW.Commit();
 
-		StationCycle stationCycle
-				= await AnodeUOW.StationCycle.GetBy([cycle => cycle.RID == alarmList.StationCycleRID], withTracking: false);
-		stationCycle.AssignPacket(alarmList);
-		AnodeUOW.StationCycle.Update(stationCycle);
-		AnodeUOW.Commit();
+		try
+		{
+			StationCycle stationCycle
+				= await AnodeUOW.StationCycle.GetBy([cycle => cycle.RID == cycleRID], withTracking: false);
+			stationCycle.AssignPacket(alarmList);
+			AnodeUOW.StationCycle.Update(stationCycle);
+			AnodeUOW.Commit();
+		}
+		catch (EntityNotFoundException)
+		{
+			StationCycle stationCycle = StationCycle.Create(stationName);
+			stationCycle.StationID = Station.StationNameToID(stationName);
+			stationCycle.RID = cycleRID;
+			stationCycle.AssignPacket(alarmList);
+			await AnodeUOW.StationCycle.Add(stationCycle);
+			AnodeUOW.Commit();
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+
 		await AnodeUOW.CommitTransaction();
 	}
 }

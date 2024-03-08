@@ -17,6 +17,15 @@ public static class AnodeTypeDict
 			_ => Undefined,
 		};
 	}
+
+	public static string AnodeTypeToString(string anodeType)
+	{
+		return anodeType switch {
+			"D20" => D20,
+			"DX" => DX,
+			_ => Undefined,
+		};
+	}
 }
 
 /// <summary>

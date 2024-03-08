@@ -23,8 +23,6 @@ using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
 using Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces;
 using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.Packets.Models.DB.Shootings.S3S4Shootings;
-using Core.Entities.Packets.Models.DB.Shootings.S5Shootings;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
@@ -87,8 +85,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<OutFurnace> OutFurnace => Set<OutFurnace>();
 	public DbSet<MetaData> MetaData => Set<MetaData>();
 	public DbSet<Shooting> Shooting => Set<Shooting>();
-	public DbSet<S3S4Shooting> S3S4Shooting => Set<S3S4Shooting>();
-	public DbSet<S5Shooting> S5Shooting => Set<S5Shooting>();
 
 	#endregion
 

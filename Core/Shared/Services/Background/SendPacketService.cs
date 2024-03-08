@@ -16,18 +16,20 @@ public class SendPacketService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendPacketService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromSeconds(1);
+	private readonly IConfiguration _configuration;
 	private int _executionCount;
 
-	public SendPacketService(ILogger<SendPacketService> logger, IServiceScopeFactory factory)
+	public SendPacketService(ILogger<SendPacketService> logger, IServiceScopeFactory factory, IConfiguration configuration)
 	{
 		_logger = logger;
 		_factory = factory;
+		_configuration = configuration;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		using PeriodicTimer timer = new(_period);
+		int delayMS = _configuration.GetValueWithThrow<int>("SendPacketMS");
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		string imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);

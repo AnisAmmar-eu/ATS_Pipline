@@ -3,7 +3,6 @@ namespace Core.Entities.Packets.Dictionaries;
 public enum PacketStatus
 {
 	Initialized = 1,
-	Running = 2,
 	Completed = 3,
 	Sent = 4,
 }
@@ -19,7 +18,7 @@ public static class PacketTypes
 
 public static class ShootingUtils
 {
-	public const string TestFilename = "TestImage.jpg";
+	public const string TestFilename = "TestImage.jpeg";
 
 	public const string CameraTest1 = @"C:\.ats\CameraTest1\";
 	public const string CameraTest2 = @"C:\.ats\CameraTest2\";

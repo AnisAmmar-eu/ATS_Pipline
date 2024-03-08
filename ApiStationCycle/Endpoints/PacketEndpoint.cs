@@ -22,7 +22,7 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
 		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
 
 		group.MapGet("mostRecent", GetMostRecent);
-		group.MapGet("{stationCycleRID:string}/{cameraID:int}/image", GetImageFromIDAndCamera);
+		group.MapGet("{stationCycleRID}/{cameraID:int}/image", GetImageFromIDAndCamera);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetMostRecent(

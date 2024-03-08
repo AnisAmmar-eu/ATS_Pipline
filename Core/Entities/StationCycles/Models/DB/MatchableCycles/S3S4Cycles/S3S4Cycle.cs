@@ -10,11 +10,9 @@ public partial class S3S4Cycle : MatchableCycle, IBaseEntity<S3S4Cycle, DTOS3S4C
 {
 	public string? AnnounceID { get; set; }
 
-	public PacketStatus? InFurnaceStatus { get; set; }
 	public int? InFurnaceID { get; set; }
 	public InFurnace? InFurnacePacket { get; set; }
 
-	public PacketStatus? OutFurnaceStatus { get; set; }
 	public int? OutFurnaceID { get; set; }
 	public OutFurnace? OutFurnacePacket { get; set; }
 }
