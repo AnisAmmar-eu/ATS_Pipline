@@ -1,8 +1,11 @@
 using System.Configuration;
 using System.Text;
 using Carter;
+using Core.Entities.Alarms.AlarmsC.Services;
+using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
+using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -78,8 +81,16 @@ builder.Services.AddScoped<ISignalRService, SignalRService>();
 builder.Services.AddScoped<IIOTDeviceService, IOTDeviceService>();
 builder.Services.AddScoped<IIOTTagService, IOTTagService>();
 
+builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
+builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<IPacketService, PacketService>();
+builder.Services.AddScoped<IAlarmCService, AlarmCService>();
+
 builder.Services.AddSingleton<IOTService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
+
+builder.Services.AddSingleton<PurgeService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
