@@ -1,3 +1,5 @@
+using Core.Shared.UnitOfWork;
+
 namespace Sign
 {
     public class Worker : BackgroundService
