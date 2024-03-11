@@ -34,6 +34,7 @@ public struct Alarm : IBaseADS<Alarm>
 	public TimestampStruct TS;
 
 	public int RID;
+	public uint Index;
 
 	/// <summary>
 	///     This is tricky but other notifications are supposed to be converted to something before being processed.

@@ -50,7 +50,6 @@ public class CheckSyncTimeService : BackgroundService
         {
             try
 			{
-				_logger.LogInformation("Calling CheckSyncTimes");
 				string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/time";
                 CancellationToken cancel = CancellationToken.None;
                 await Task.Run(

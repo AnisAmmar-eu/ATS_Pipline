@@ -48,22 +48,18 @@ public class BaseHourlyKPIRTService<T, TDTO, TRepository, TValue> : BackgroundSe
 		{
 			try
 			{
-				_logger.LogInformation("BaseKPIRTService running at: {time}", DateTimeOffset.Now);
-
 				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 				IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 				IKPIRTService kpirtService = asyncScope.ServiceProvider.GetRequiredService<IKPIRTService>();
 
-				_logger.LogInformation("Calling ComputeKPIRTs");
 				await kpirtService.ComputeKPIRTs<T, TDTO, TRepository, TValue>(
 					(anodeUOW.GetRepoByType(typeof(TRepository)) as TRepository)!);
 
 				_executionCount++;
-				_logger.LogInformation("Executed BaseKPIRTService - Count: {count}", _executionCount);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogInformation(
+				_logger.LogError(
 					"Failed to execute BaseKPIRTService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}

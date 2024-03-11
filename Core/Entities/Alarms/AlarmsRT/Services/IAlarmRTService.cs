@@ -7,7 +7,7 @@ namespace Core.Entities.Alarms.AlarmsRT.Services;
 
 public interface IAlarmRTService : IBaseEntityService<AlarmRT, DTOAlarmRT>
 {
-	public  Task Collect(AdsClient adsClient, uint alarmListHandle);
+	public Task Collect(AdsClient adsClient, uint alarmListHandle);
 
 	/// <summary>
 	///     This function returns the statistics of AlarmRT. The result will always be an array of length 3.

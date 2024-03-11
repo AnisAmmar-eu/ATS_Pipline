@@ -40,19 +40,15 @@ public class LoadMatchService : BackgroundService
 		{
 			try
 			{
-				_logger.LogInformation("LoadMatchService: Starting next load...");
 				LoadableQueue?[] loadables = await loadableQueueService.LoadNextCycles(
 					[(DataSetID.S3S4, s3S4Delay),
 					(DataSetID.S5, s5Delay),
 				]);
-				_logger.LogInformation("LoadMatchService: Loading completed, onto matching");
 
-				_logger.LogInformation("LoadMatchService: Starting next matching...");
 				await matchableStackService.MatchNextCycles([
 					(DataSetID.S3S4, s3S4Delay, loadables[0]),
 					(DataSetID.S5, s5Delay, loadables[1]),
 				]);
-				_logger.LogInformation("LoadMatchService: Matching completed, onto next iteration...");
 			}
 			catch (Exception e)
 			{

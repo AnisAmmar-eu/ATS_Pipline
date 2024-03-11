@@ -68,10 +68,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
 				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID.ToString()]);
 			if (alarm.Value)
-			{
-				_logger.LogWarning($"Alarm with RID {alarm.RID.ToString()} is already active");
 				return; // alarmLog is already active.
-			}
 
 			alarmWithStatus.IsActive = false;
 			alarmWithStatus.TSClear = alarm.TS.GetTimestamp();
@@ -81,7 +78,6 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			AnodeUOW.AlarmLog.Update(alarmWithStatus);
 			AnodeUOW.Commit();
 			await AnodeUOW.CommitTransaction();
-			_logger.LogInformation($"Updated alarmLog with ID {alarmWithStatus.ID.ToString()}");
 		}
 		catch (EntityNotFoundException)
 		{
@@ -177,10 +173,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 				false);
 
 			if (dtoAlarmLog.IsActive)
-			{
-				_logger.LogWarning($"Alarm with RID {dtoAlarmLog.AlarmRID} is already active");
 				return; // alarmLog is already active.
-			}
 
 			alarmWithStatus.IsActive = false;
 			alarmWithStatus.TSClear = dtoAlarmLog.TSClear;

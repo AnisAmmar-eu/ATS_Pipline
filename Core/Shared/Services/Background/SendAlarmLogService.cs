@@ -17,7 +17,6 @@ public class SendAlarmLogService : BackgroundService
 	private readonly ILogger<SendAlarmLogService> _logger;
 
 	private readonly IConfiguration _configuration;
-	private int _executionCount;
 
 	public SendAlarmLogService(
 		ILogger<SendAlarmLogService> logger,
@@ -43,14 +42,8 @@ public class SendAlarmLogService : BackgroundService
         {
             try
 			{
-				_logger.LogInformation("Calling SendAlarmLogs");
 				await alarmLogService.SendLogsToServer();
-				_logger.LogInformation("Calling SendAlarmRT");
 				await alarmRTService.SendRTsToServer();
-
-				_executionCount++;
-				_logger.LogInformation(
-					"Executed PeriodicSendService - Count: {count}", _executionCount);
 			}
 			catch (Exception ex)
 			{

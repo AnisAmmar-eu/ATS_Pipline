@@ -15,7 +15,6 @@ public class IOTService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<IOTService> _logger;
 	private readonly IConfiguration _configuration;
-	private int _executionCount;
 
 	public IOTService(ILogger<IOTService> logger, IServiceScopeFactory factory, IConfiguration configuration)
 	{
@@ -41,17 +40,11 @@ public class IOTService : BackgroundService
         {
             try
 			{
-				_logger.LogInformation("IOTService running at: {time}", DateTimeOffset.Now);
-				_logger.LogInformation("Calling CheckAllConnectionsAndApplyTags");
-
 				await iotDeviceService.CheckAllConnectionsAndApplyTags(rids);
-
-				_executionCount++;
-				_logger.LogInformation("Executed PeriodicIOTService - Count: {count}", _executionCount);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogInformation(
+				_logger.LogError(
 					"Failed to execute PeriodicIOTService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}

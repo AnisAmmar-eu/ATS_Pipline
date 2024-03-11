@@ -140,7 +140,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				await AnodeUOW.Packet.ExecuteUpdateByIdAsync(
 					packet,
 					setters => setters.SetProperty(packet => packet.Status, PacketStatus.Sent));
-				_logger.LogInformation("Packet sent: {packetID}", packet.ID);
 			}
 			catch (Exception e)
 			{
@@ -242,7 +241,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{
-			_logger.LogInformation("image Name: {formFile.Name}", formFile.Name);
 			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
 			FileInfo thumbnail = Shooting.GetImagePathFromFilename(thumbnailsPath, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);

@@ -15,7 +15,6 @@ public class SendLogService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendLogService> _logger;
 	private readonly IConfiguration _configuration;
-	private int _executionCount;
 
 	public SendLogService(ILogger<SendLogService> logger, IServiceScopeFactory factory, IConfiguration configuration)
 	{
@@ -37,17 +36,11 @@ public class SendLogService : BackgroundService
         {
             try
 			{
-				_logger.LogInformation("SendLogService running at: {time}", DateTimeOffset.Now);
-				_logger.LogInformation("Calling SendLog");
-				await logService.SendLogs(await logService.GetAllUnsent());
-
-				_executionCount++;
-				_logger.LogInformation(
-					"Executed PeriodicSendLogService - Count: {count}", _executionCount);
+				// await logService.SendLogs(await logService.GetAllUnsent());
 			}
 			catch (Exception ex)
 			{
-				_logger.LogInformation(
+				_logger.LogError(
 					"Failed to execute PeriodicSendLogService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}

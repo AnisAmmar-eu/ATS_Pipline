@@ -39,21 +39,14 @@ public class TemperatureService : BackgroundService
 		{
 			try
 			{
-				_logger.LogInformation("TemperatureService running at: {time}", DateTimeOffset.Now);
-
-				_logger.LogInformation("TemperatureService registering all temperatures.");
 				await biTemperatureService.LogNewValues();
-
-				_logger.LogInformation("TemperatureService purging temperatures.");
 				await biTemperatureService.RemoveByLifeSpan(TimeSpan.FromHours(2));
 
 				_executionCount++;
-				_logger.LogInformation(
-					"Executed PeriodicTemperatureService - Count: {count}", _executionCount);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogInformation(
+				_logger.LogError(
 					"Failed to execute PeriodicTemperatureService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}

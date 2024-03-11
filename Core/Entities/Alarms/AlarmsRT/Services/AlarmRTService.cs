@@ -50,11 +50,11 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 								.SetProperty(a => a.IsActive, alarmRT.IsActive)
 								.SetProperty(a => a.TS, alarmRT.TS)
 						) == 0)
-				{
-					throw new EntityNotFoundException();
-				}
+					{
+						throw new EntityNotFoundException();
+					}
 
-				alarms = alarms.Where(alarm => alarm.IRID != RIDAlarmStruct).ToList();
+					alarms = alarms.Where(alarm => alarm.IRID != RIDAlarmStruct).ToList();
 				}
 				catch (EntityNotFoundException)
 				{
@@ -67,13 +67,13 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 					}
 					catch (EntityNotFoundException)
 					{
-						_logger.LogWarning($"Alarm {RIDAlarmStruct} is not in the alarm list.");
+						_logger.LogWarning($"Alarm {RIDAlarmStruct} | {alarmStruct.RID.ToString()} is not in the alarm list.");
 					}
 				}
 			}
 
-			alarms.ForEach(alarm => _logger.LogWarning($"Alarm {alarm.IRID} is not in the alarm list anymore."));
 			await AnodeUOW.AlarmRT.ExecuteDeleteAsync(alarm => alarms.Select(alarm => alarm.IRID).Contains(alarm.IRID));
+			await _hubContext.Clients.All.RefreshAlarmRT();
 		}
 		catch (Exception e)
 		{

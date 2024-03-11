@@ -53,7 +53,6 @@ public class ADSService : BackgroundService
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			_logger.LogInformation("Create ADSService");
 			try
 			{
 				AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
@@ -89,7 +88,6 @@ public class ADSService : BackgroundService
 					ADSUtils.OutFurnaceToRead);
 				OutFurnaceNotification outFurnaceNotification = new(outFurnaceNewMsg, outFurnaceOldEntry, _logger);
 
-				_logger.LogInformation("ADS Loop started");
 				// Define a task that retrieves all the elements asynchronously
 				Task GetAllElements()
 				{
@@ -110,20 +108,17 @@ public class ADSService : BackgroundService
 					if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
 						throw new AdsException("Error while reading variable");
 
-					_logger.LogInformation("Time to get elements");
 					await GetAllElements();
 				}
 			}
 			catch (Exception e)
 			{
-				_logger.LogInformation(
+				_logger.LogError(
 					"PeriodicADSService lost connection with path {ConnectionPath} to the TwinCat with error message: {error}",
 					ADSUtils.ConnectionPath,
 					e);
 
 				_executionCount++;
-				_logger.LogInformation(
-					"Executed PeriodicADSService - Count: {count}", _executionCount);
 			}
         }
     }

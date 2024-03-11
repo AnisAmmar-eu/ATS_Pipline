@@ -63,7 +63,6 @@ public class CameraService : BackgroundService
 		_thumbnailsPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 		_extension = configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
-		_logger.LogInformation("isStationS5 ? {isStationS5}", Station.Type == StationType.S5);
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
@@ -225,13 +224,10 @@ public class CameraService : BackgroundService
 
 	private void Disconnect(object? sender, NotifyEventArgs e)
 	{
-		_logger.LogInformation("disconnected");
 	}
 
 	private void Reconnect(object? sender, NotifyEventArgs e)
 	{
-		_logger.LogInformation("reconnected");
-
 		Device? device = (Device?)sender?.GetType().GetProperty("Parent")?.GetValue(sender);
 
 		if (device is null)
@@ -243,11 +239,11 @@ public class CameraService : BackgroundService
 			if (isOk)
 				device.Stream.Start();
 			else
-				_logger.LogInformation("Could not stop the stream!");
+				_logger.LogError("Could not stop the stream!");
 		}
 		catch (Exception ex)
 		{
-			_logger.LogInformation("Error: " + ex.Message);
+			_logger.LogError("Error: " + ex.Message);
 		}
 	}
 

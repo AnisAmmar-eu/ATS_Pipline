@@ -17,7 +17,6 @@ public class SendPacketService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<SendPacketService> _logger;
 	private readonly IConfiguration _configuration;
-	private int _executionCount;
 
 	public SendPacketService(ILogger<SendPacketService> logger, IServiceScopeFactory factory, IConfiguration configuration)
 	{
@@ -42,13 +41,7 @@ public class SendPacketService : BackgroundService
         {
             try
 			{
-				_logger.LogInformation("SendService running at: {time}", DateTimeOffset.Now);
-				_logger.LogInformation("Calling SendPackets");
 				await packetService.SendCompletedPackets(imagesPath);
-
-				_executionCount++;
-				_logger.LogInformation(
-					"Executed PeriodicSendService - Count: {count}", _executionCount);
 			}
 			catch (Exception ex)
 			{
