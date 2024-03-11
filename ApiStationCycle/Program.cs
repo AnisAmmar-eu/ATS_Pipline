@@ -77,7 +77,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 	.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<ILogService, LogService>();
-
+builder.Services.AddScoped<IBenchmarkTestService, BenchmarkTestService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 

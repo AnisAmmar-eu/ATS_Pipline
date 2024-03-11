@@ -7,7 +7,7 @@ namespace Core.Entities.Alarms.AlarmsCycle.Models.Repositories;
 
 public class AlarmCycleRepository : BaseEntityRepository<AnodeCTX, AlarmCycle, DTOAlarmCycle>, IAlarmCycleRepository
 {
-	public AlarmCycleRepository(AnodeCTX context) : base(context)
+	public AlarmCycleRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

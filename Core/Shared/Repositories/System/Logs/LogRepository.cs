@@ -8,7 +8,7 @@ namespace Core.Shared.Repositories.System.Logs;
 
 public class LogRepository : BaseEntityRepository<AnodeCTX, Log, DTOLog>, ILogRepository
 {
-	public LogRepository(AnodeCTX context) : base(context)
+	public LogRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 

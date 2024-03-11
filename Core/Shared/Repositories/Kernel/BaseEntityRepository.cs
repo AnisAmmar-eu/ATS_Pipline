@@ -24,16 +24,26 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {
-	private readonly ICollection<Expression<Func<T, bool>>> _importFilters = new List<Expression<Func<T, bool>>>();
+	protected readonly ICollection<Expression<Func<T, bool>>> ImportFilters = new List<Expression<Func<T, bool>>>();
+	private readonly string[] _baseIncludes;
+	private readonly Dictionary<string, string[]> _baseConcatIncludes;
+
 	protected readonly TContext Context;
 
 	/// <summary>
 	///     Constructor
 	/// </summary>
 	/// <param name="context"><see cref="DbContext" /> of the project</param>
-	protected BaseEntityRepository(TContext context)
+    /// <param name="baseIncludes">All includes made in the ..WithIncludes methods</param>
+    /// <param name="baseConcatIncludes">All includes made within foreign relations (eg: WorkingOrder.EquipmentI.EquipmentC)</param>
+    public BaseEntityRepository(
+        TContext context,
+        string[] baseIncludes,
+        Dictionary<string, string[]> baseConcatIncludes)
 	{
 		Context = context;
+		_baseIncludes = baseIncludes;
+		_baseConcatIncludes = baseConcatIncludes;
 	}
 
 	/// <summary>
@@ -55,7 +65,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			filters,
 			null,
 			withTracking,
-			includes: new Dictionary<string, string[]> { { string.Empty, includes } }
+			includes: new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } }
 				)
 			.FirstOrDefaultAsync(x => x.ID == id);
 		if (t is null)
@@ -75,8 +85,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			filters,
 			null,
 			withTracking,
-			includes: includes
-				)
+			includes: GetMergedIncludes(includes))
 			.FirstOrDefaultAsync(x => x.ID == id);
 		if (t is null)
 			throw new EntityNotFoundException(typeof(T).Name, id);
@@ -103,7 +112,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			filters,
 			orderBy,
 			withTracking,
-			includes: new Dictionary<string, string[]> { { string.Empty, includes } })
+			includes: new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } })
 			.FirstOrDefaultAsync();
 		if (t is null)
 			throw new EntityNotFoundException(typeof(T).Name + " not found");
@@ -118,7 +127,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		Dictionary<string, string[]>? includes = null
 		)
 	{
-		T? t = await Query(filters, orderBy, withTracking, includes: includes).FirstOrDefaultAsync();
+		T? t = await Query(filters, orderBy, withTracking, includes: GetMergedIncludes(includes)).FirstOrDefaultAsync();
 		if (t is null)
 			throw new EntityNotFoundException(typeof(T).Name + " not found");
 
@@ -147,7 +156,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			orderBy,
 			withTracking,
 			maxCount,
-			new Dictionary<string, string[]> { { string.Empty, includes } })
+			new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } })
 			.ToListAsync();
 	}
 
@@ -167,11 +176,9 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		// No split query because we are using .Take();
 		// No tracking as this is used for back to front purposes and thus useless.
 		// First line is aggregating every include
-		IOrderedQueryable<T> query = pagination.Includes
-			.Aggregate(
-				Context.Set<T>()
-					.AsQueryable(),
-				(current, value) => current.Include(value))
+		IOrderedQueryable<T> query = QueryIncludes(
+			Context.Set<T>().AsQueryable(),
+			GetMergedIncludes(new() { { string.Empty, _baseIncludes.Concat(pagination.Includes).ToArray() } }))
 			.AsNoTracking()
 			.FilterFromPagination<T, TDTO>(pagination)
 			.TextSearchFromPagination<T, TDTO>(pagination)
@@ -248,7 +255,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	public async Task Remove(int id, params string[] includes)
 	{
 		IQueryable<T> query = Context.Set<T>().AsQueryable();
-		query = includes.Aggregate(query, (current, include) => current.Include(include));
+		query = _baseIncludes.Concat(includes).Aggregate(query, (current, include) => current.Include(include));
 		if (includes.Length != 0)
 			query = query.AsNoTracking();
 
@@ -365,7 +372,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			null,
 			withTracking,
 			null,
-			new Dictionary<string, string[]> { { string.Empty, includes } }
+			new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } }
 				)
 			.AnyAsync(predicate);
 	}
@@ -380,36 +387,13 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	{
 		IQueryable<T> query = Context.Set<T>().AsQueryable();
 		if (includes is not null)
-		{
-			{
-				foreach (KeyValuePair<string, string[]> include in includes)
-				{
-					if (include.Key != string.Empty)
-					{
-						query = query.Include(include.Key);
-						query = include.Value.Aggregate(
-							query,
-							(current, value) => current.Include(include.Key + "." + value));
-					}
-					else
-					{
-						query = include.Value.Aggregate(query, (current, value) => current.Include(value));
-					}
-				}
-
-				if (includes.Count > 0)
-				{
-					// WARNING - https://learn.microsoft.com/fr-fr/ef/core/querying/single-split-queries
-					query = query.AsSplitQuery();
-				}
-			}
-		}
+			query = QueryIncludes(query, includes);
 
 		if (!withTracking)
 			query = query.AsNoTracking();
 
-		if (_importFilters.Count > 0)
-			query = _importFilters.Aggregate(query, (current, filter) => current.Where(filter));
+		if (ImportFilters.Count > 0)
+			query = ImportFilters.Aggregate(query, (current, filter) => current.Where(filter));
 
 		if (filters is not null)
 			query = filters.Aggregate(query, (current, filter) => current.Where(filter));
@@ -421,5 +405,48 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			return orderBy(query);
 
 		return query;
+	}
+
+	private static IQueryable<T> QueryIncludes(IQueryable<T> query, Dictionary<string, string[]> includes)
+	{
+		foreach (KeyValuePair<string, string[]> include in includes)
+		{
+			if (include.Key != string.Empty)
+			{
+				query = query.Include(include.Key);
+				query = include.Value.Aggregate(
+					query,
+					(current, value) => current.Include(include.Key + "." + value));
+			}
+			else
+			{
+				query = include.Value.Aggregate(query, (current, value) => current.Include(value));
+			}
+		}
+
+		if (includes.Count > 0)
+		{
+			// WARNING - https://learn.microsoft.com/fr-fr/ef/core/querying/single-split-queries
+			query = query.AsSplitQuery();
+		}
+
+		return query;
+	}
+
+	private Dictionary<string, string[]> GetMergedIncludes(Dictionary<string, string[]>? includes)
+	{
+		// Here, we copy the dictionary as user-defined includes should override baseConcatIncludes when needed and not otherwise.
+		Dictionary<string, string[]> mergedIncludes
+			= _baseConcatIncludes.ToDictionary(entry => entry.Key, entry => entry.Value);
+		mergedIncludes.Add(string.Empty, _baseIncludes);
+		foreach ((string? key, string[]? value) in includes ?? [])
+		{
+			if (mergedIncludes.TryGetValue(key, out string[]? existingValue))
+				mergedIncludes[key] = existingValue.Concat(value).ToArray();
+			else
+				mergedIncludes[key] = value;
+		}
+
+		return mergedIncludes;
 	}
 }

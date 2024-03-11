@@ -9,7 +9,7 @@ namespace Core.Entities.Alarms.AlarmsLog.Repositories;
 
 public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAlarmLog>, IAlarmLogRepository
 {
-	public AlarmLogRepository(AnodeCTX context) : base(context)
+	public AlarmLogRepository(AnodeCTX context) : base(context, [nameof(AlarmLog.Alarm)], [])
 	{
 	}
 

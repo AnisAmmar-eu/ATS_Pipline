@@ -10,7 +10,7 @@ namespace Core.Entities.Vision.SignedCycles.Repositories.LoadableQueues;
 public class LoadableQueueRepository : BaseEntityRepository<AnodeCTX, LoadableQueue, DTOLoadableQueue>,
 	ILoadableQueueRepository
 {
-	public LoadableQueueRepository(AnodeCTX context) : base(context)
+	public LoadableQueueRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 

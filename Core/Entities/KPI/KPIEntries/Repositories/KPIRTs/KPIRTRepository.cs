@@ -7,7 +7,7 @@ namespace Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
 
 public class KPIRTRepository : BaseEntityRepository<AnodeCTX, KPIRT, DTOKPIRT>, IKPIRTRepository
 {
-	public KPIRTRepository(AnodeCTX context) : base(context)
+	public KPIRTRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

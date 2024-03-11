@@ -51,9 +51,10 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			.ToDTO();
 	}
 
-	public async Task<FileInfo> GetImageFromCycleRIDAndCamera(string stationCycleRID, int cameraID)
+	public async Task<FileInfo> GetImageFromCycleRIDAndCamera(int ShootingID, int cameraID)
 	{
-		Shooting shooting = await AnodeUOW.Packet.GetBy([packet => packet.StationCycleRID == stationCycleRID]) as Shooting
+		Shooting shooting = await AnodeUOW.Packet
+			.GetBy([packet => packet.ID == ShootingID]) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);

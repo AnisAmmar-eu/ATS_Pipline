@@ -7,7 +7,7 @@ namespace Core.Entities.KPI.KPICs.Repositories;
 
 public class KPICRepository : BaseEntityRepository<AnodeCTX, KPIC, DTOKPIC>, IKPICRepository
 {
-	public KPICRepository(AnodeCTX context) : base(context)
+	public KPICRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

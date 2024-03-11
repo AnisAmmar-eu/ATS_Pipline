@@ -10,7 +10,7 @@ namespace Core.Entities.Vision.SignedCycles.Repositories.MatchableStacks;
 public class MatchableStackRepository : BaseEntityRepository<AnodeCTX, MatchableStack, DTOMatchableStack>,
 	IMatchableStackRepository
 {
-	public MatchableStackRepository(AnodeCTX context) : base(context)
+	public MatchableStackRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 

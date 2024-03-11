@@ -8,7 +8,7 @@ namespace Core.Entities.Alarms.AlarmsRT.Repositories;
 
 public class AlarmRTRepository : BaseEntityRepository<AnodeCTX, AlarmRT, DTOAlarmRT>, IAlarmRTRepository
 {
-	public AlarmRTRepository(AnodeCTX context) : base(context)
+	public AlarmRTRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 

@@ -7,7 +7,7 @@ namespace Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
 
 public class KPILogRepository : BaseEntityRepository<AnodeCTX, KPILog, DTOKPILog>, IKPILogRepository
 {
-	public KPILogRepository(AnodeCTX context) : base(context)
+	public KPILogRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

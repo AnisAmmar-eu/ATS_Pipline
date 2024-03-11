@@ -9,7 +9,7 @@ namespace Core.Entities.User.Repositories.Acts.ActEntities;
 
 public class ActEntityRepository : BaseEntityRepository<AnodeCTX, ActEntity, DTOActEntity>, IActEntityRepository
 {
-	public ActEntityRepository(AnodeCTX context) : base(context)
+	public ActEntityRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 

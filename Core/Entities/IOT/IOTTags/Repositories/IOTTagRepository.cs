@@ -7,7 +7,7 @@ namespace Core.Entities.IOT.IOTTags.Repositories;
 
 public class IOTTagRepository : BaseEntityRepository<AnodeCTX, IOTTag, DTOIOTTag>, IIOTTagRepository
 {
-	public IOTTagRepository(AnodeCTX context) : base(context)
+	public IOTTagRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }
