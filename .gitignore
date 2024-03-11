@@ -16,3 +16,4 @@ obj
 *.sln.docstates
 *.pubxml
 *.zip
+DLLvision/*
