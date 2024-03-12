@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entities.SignMatch.Models.DB.ToDo
+namespace Core.Entities.SignMatch.Models.DB.ToDoTable
 {
-    internal class ToLoad
+    internal class Load
     {
     }
 }
