@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiVision", "ApiVision\ApiV
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiMonitor", "ApiMonitor\ApiMonitor.csproj", "{F277058E-6DA1-435D-8339-42C9805E6275}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sign", "Sign\Sign.csproj", "{FE01A495-18FA-4A11-B61A-98E08B775F58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sign", "Sign\Sign.csproj", "{FE01A495-18FA-4A11-B61A-98E08B775F58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Match", "Match\Match.csproj", "{338BC06B-8212-4185-8A6E-366B535BD395}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{FE01A495-18FA-4A11-B61A-98E08B775F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE01A495-18FA-4A11-B61A-98E08B775F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE01A495-18FA-4A11-B61A-98E08B775F58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{338BC06B-8212-4185-8A6E-366B535BD395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{338BC06B-8212-4185-8A6E-366B535BD395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{338BC06B-8212-4185-8A6E-366B535BD395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{338BC06B-8212-4185-8A6E-366B535BD395}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
