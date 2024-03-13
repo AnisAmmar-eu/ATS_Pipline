@@ -14,6 +14,7 @@ public static class IOTTagType
 public static class IOTTagRID
 {
 	public const string TestMode = "__TestMode";
+	public const string MsgInit = "MsgInit";
 
 	#region Camera
 
@@ -244,6 +245,7 @@ public static class IOTTagPath
 	#region TestMode
 
 	public const string TestMode = "VA_HMI.TestMode";
+	public const string MsgInit = "VA_HMI.MsgInit";
 
 	public const string Shoot1 = "VA_HMI.Cam01";
 	public const string Shoot2 = "VA_HMI.Cam02";

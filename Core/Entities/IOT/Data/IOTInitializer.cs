@@ -498,6 +498,20 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.MsgInit,
+			Name = IOTTagRID.MsgInit,
+			Description = "MsgInit reset sequence",
+			CurrentValue = "false",
+			NewValue = "false",
+			ValueType = IOTTagType.Bool,
+			HasNewValue = false,
+			Path = IOTTagPath.MsgInit,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
 		anodeCTX.SaveChanges();
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
@@ -1257,7 +1271,7 @@ public static class IOTInitializer
 			Description = "Luminosity Check Frequency Cam1 Led On",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Int,
 			HasNewValue = false,
 			Path = IOTTagPath.LuminosityCheckFrequencyCam1LedOn,
 			IOTDeviceID = twinCat.ID,

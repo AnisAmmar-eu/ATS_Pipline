@@ -237,9 +237,16 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			Directory.CreateDirectory(thumbnail.DirectoryName!);
 
 			await using FileStream imageStream = new(image.FullName, FileMode.Create);
-			await formFile.CopyToAsync(imageStream);
-			Image savedImage = Image.FromFile(image.FullName);
-			savedImage.Save(thumbnail.FullName, 0.2);
+			try
+			{
+				await formFile.CopyToAsync(imageStream);
+				Image savedImage = Image.FromFile(image.FullName);
+				savedImage.Save(thumbnail.FullName, 0.2);
+			}
+			catch (Exception)
+			{
+				throw new InvalidOperationException("Error while saving image");
+			}
 		});
 		return Task.WhenAll(tasks);
 	}

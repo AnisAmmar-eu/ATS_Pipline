@@ -116,21 +116,10 @@ public partial class Shooting
 
 	protected override Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
-		if (Cam01Status == 1)
-		{
-			FileInfo image = GetImagePathFromRoot(StationCycleRID, Station.ID, ImagesPath, AnodeType, 1, Extension);
-			HasFirstShoot = image.Exists;
-		}
-
-		if (Cam02Status == 1)
-		{
-			FileInfo image = GetImagePathFromRoot(StationCycleRID, Station.ID, ImagesPath, AnodeType, 2, Extension);
-			HasSecondShoot = image.Exists;
-		}
-
 		HasError = HasError
-			|| (Cam01Status.Equals(1) && Cam02Status.Equals(1))
-			|| (Cam01Status.Equals(0) && Cam02Status.Equals(0));
+			|| (Cam01Status == 0 && Cam02Status == 0)
+			|| (Cam01Status == 1 && Cam02Status == 1);
+
 		return Task.CompletedTask;
 	}
 }

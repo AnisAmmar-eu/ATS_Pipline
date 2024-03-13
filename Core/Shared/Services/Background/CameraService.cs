@@ -139,6 +139,7 @@ public class CameraService : BackgroundService
 							RIDStruct rid = tcClient.ReadAny<RIDStruct>(ridStructHandle);
 							uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
 							string anodeType = AnodeTypeDict.AnodeTypeIntToString(tcClient.ReadAny<int>(anodeTypeHandle));
+							_logger.LogInformation("AnodeType: {anodeType}", anodeType);
 							int cameraID = GetCameraID(cameraNb, tcClient);
 
 							FileInfo imagePath
@@ -165,9 +166,12 @@ public class CameraService : BackgroundService
 								ShootingTS = DateTimeOffset.Now,
 								Cam01Status = (cameraID == (int)CameraNb.Camera1) ? 1 : 0,
 								Cam02Status = (cameraID == (int)CameraNb.Camera2) ? 1 : 0,
+								HasError = false,
 							};
 
 							await packetService.BuildPacket(shooting);
+
+							await _hubContext.Clients.All.RefreshTestImages();
 						}
 					}
 					catch (Exception e)
