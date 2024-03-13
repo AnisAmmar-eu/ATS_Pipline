@@ -77,13 +77,13 @@ public class CheckSyncTimeService : BackgroundService
 						DateTimeOffset stationTime = DateTimeOffset.Now;
 						TimeSpan delta = serverTime - stationTime;
 
-						if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
-							return;
-
 						AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
 						// Trigger an alarm
 						uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.AlarmTime);
-						tcClient.WriteAny(alarmTimeHandle, 1);
+						if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
+							tcClient.WriteAny(alarmTimeHandle, 1);
+						else
+							tcClient.WriteAny(alarmTimeHandle, 2);
 					}
 					,
                     cancel);
