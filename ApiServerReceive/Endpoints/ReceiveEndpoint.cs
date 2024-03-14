@@ -31,7 +31,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		group.MapPost("alarmsRT", ReceiveAlarmRT);
 		group.MapPost("{stationName}/packets", ReceivePacket);
 		// This one needs more information due to CustomModelBinding requiring the removal of [FromBody]
-		group.MapPost("images", ReceiveImage);
+		group.MapPost("images/{isImage}", ReceiveImage);
 		group.MapPost("{stationName}/alarmPacket/{cycleRID}", ReceiveAlarmPacket);
 		group.MapPost("logs", ReceiveLog);
 	}
@@ -82,6 +82,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveImage(
+		[FromRoute] bool isImage,
 		IPacketService packetService,
 		ILogService logService,
 		HttpContext httpContext)
@@ -92,7 +93,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 				FormFileCollection images = [];
 				images.AddRange(
 					httpContext.Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
-				return packetService.ReceiveStationImage(images);
+				return packetService.ReceiveStationImage(images, isImage);
 			},
 			logService,
 			httpContext);

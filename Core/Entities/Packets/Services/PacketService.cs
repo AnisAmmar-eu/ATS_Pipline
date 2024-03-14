@@ -81,7 +81,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		return packet.ToDTO();
 	}
 
-	public async Task SendCompletedPackets(string imagesPath)
+	public async Task SendCompletedPackets()
 	{
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		IEnumerable<Packet> packets
@@ -124,7 +124,11 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				else
 				{
 					if (packet is Shooting shooting)
-						await shooting.SendImages(imagesPath, extension, _logger);
+					{
+						string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+						string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
+						await shooting.SendImages(imagesPath, thumbnailsPath, extension, _logger);
+					}
 
 					HttpResponseMessage response = await http.PostAsJsonAsync(
 						$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
@@ -224,29 +228,20 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public Task ReceiveStationImage(IFormFileCollection formFiles)
+	public Task ReceiveStationImage(IFormFileCollection formFiles, bool isImage)
 	{
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{
-			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
-			FileInfo thumbnail = Shooting.GetImagePathFromFilename(thumbnailsPath, formFile.Name);
+			string path = isImage ? imagesPath : thumbnailsPath;
+			FileInfo image = Shooting.GetImagePathFromFilename(path, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);
-			Directory.CreateDirectory(thumbnail.DirectoryName!);
 
 			await using FileStream imageStream = new(image.FullName, FileMode.Create);
-			try
-			{
-				await formFile.CopyToAsync(imageStream);
-				Image savedImage = Image.FromFile(image.FullName);
-				savedImage.Save(thumbnail.FullName, 0.2);
-			}
-			catch (Exception)
-			{
-				throw new InvalidOperationException("Error while saving image");
-			}
+			await formFile.CopyToAsync(imageStream);
+			_logger.LogInformation("Saving image 1 imageName: {name}", image.FullName);
 		});
 		return Task.WhenAll(tasks);
 	}

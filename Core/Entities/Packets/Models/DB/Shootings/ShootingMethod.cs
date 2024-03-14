@@ -71,22 +71,16 @@ public partial class Shooting
 		return new($@"{root}\{path}\{filename}");
 	}
 
-	public async Task SendImages(string imagesPath, string extension, ILogger logger)
+	public async Task SendImages(string imagesPath, string thumbnailsPath, string extension, ILogger logger)
 	{
-		int cameraNumber = (Cam01Status == 1) ? 1 : 2;
-		MultipartFormDataContent formData = new();
-		formData.Headers.ContentType!.MediaType = "multipart/form-data";
-		logger.LogInformation(
-			"{StationCycleRID} {Station.ID} {imagesPath} {AnodeType} {i} {extension}",
-			StationCycleRID,
-			Station.ID,
-			imagesPath,
-			AnodeType,
-			cameraNumber,
-			extension);
+		foreach (string path in (List<string>)([imagesPath, thumbnailsPath]))
+		{
+			int cameraNumber = (Cam01Status == 1) ? 1 : 2;
+			MultipartFormDataContent formData = new();
+			formData.Headers.ContentType!.MediaType = "multipart/form-data";
 
 			FileInfo image
-				= GetImagePathFromRoot(StationCycleRID, Station.ID, imagesPath, AnodeType, cameraNumber, extension);
+				= GetImagePathFromRoot(StationCycleRID, Station.ID, path, AnodeType, cameraNumber, extension);
 
 			logger.LogInformation("Sending images to the server ? {image.Exists} {name}", image.Exists, image.FullName);
 			if (!image.Exists)
@@ -97,21 +91,25 @@ public partial class Shooting
 			content.Headers.ContentLength = image.Length;
 			formData.Add(content, image.Name, image.Name);
 
-		logger.LogInformation("Sending images to the server ? {formData}", formData.Any());
+			logger.LogInformation("Sending images to the server ? {formData}", formData.Any());
 
-		if (!formData.Any())
-			return;
+			if (!formData.Any())
+				return;
 
-		using HttpClient httpClient = new();
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+			using HttpClient httpClient = new();
+			httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
 
-		logger.LogInformation("Sending images to the server: http");
-		HttpResponseMessage response
-			= await httpClient.PostAsync($"{ITApisDict.ServerReceiveAddress}/apiServerReceive/images", formData);
-		if (!response.IsSuccessStatusCode)
-			throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
+			logger.LogInformation("Sending images to the server: http");
+			bool isImage = path == imagesPath;
+			HttpResponseMessage response
+				= await httpClient.PostAsync(
+					$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/images/{isImage.ToString()}",
+					formData);
+			if (!response.IsSuccessStatusCode)
+				throw new HttpRequestException("Could not send images to the server: " + response.ReasonPhrase);
 
-		logger.LogInformation("Sending images to the server: {reponse}", response.ToString());
+			logger.LogInformation("Sending images to the server: {reponse}", response.ToString());
+		}
 	}
 
 	protected override Task InheritedBuild(IAnodeUOW anodeUOW)

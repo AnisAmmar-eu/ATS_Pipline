@@ -155,6 +155,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 			// If an alarmRT doesn't exist, this alarm just raised.
 			AlarmRT newAlarmRT = dtoAlarmRT.ToModel();
 			newAlarmRT.ID = 0;
+			newAlarmRT.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == newAlarmRT.IRID]);
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmRT.Add(newAlarmRT);
 			AnodeUOW.Commit();

@@ -33,9 +33,8 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// Sends all packets given in argument to the given serverAddress, returns all packets which were successfully sent
 	/// with their status as "Sent".
 	/// </summary>
-	/// <param name="imagesPath"></param>
 	/// <returns></returns>
-	public Task SendCompletedPackets(string imagesPath);
+	public Task SendCompletedPackets();
 
 	/// <summary>
 	/// Receives a <see cref="Packet"/> from a station and saves it in the database. If needed, creates its corresponding <see cref="StationCycle"/>
@@ -50,8 +49,9 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// However, receiving the <see cref="Shooting"/> packet is managed by <see cref="ReceivePacket"/>
 	/// </summary>
 	/// <param name="formFiles"></param>
+	/// <param name="isImage"></param>
 	/// <returns></returns>
-	public Task ReceiveStationImage(IFormFileCollection formFiles);
+	public Task ReceiveStationImage(IFormFileCollection formFiles, bool isImage);
 
 	/// <summary>
 	/// Receives the alarm cycles.

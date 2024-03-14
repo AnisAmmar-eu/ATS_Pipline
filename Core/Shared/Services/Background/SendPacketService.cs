@@ -31,7 +31,6 @@ public class SendPacketService : BackgroundService
 		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 
 		IPacketService packetService
 			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
@@ -41,7 +40,7 @@ public class SendPacketService : BackgroundService
         {
             try
 			{
-				await packetService.SendCompletedPackets(imagesPath);
+				await packetService.SendCompletedPackets();
 			}
 			catch (Exception ex)
 			{
