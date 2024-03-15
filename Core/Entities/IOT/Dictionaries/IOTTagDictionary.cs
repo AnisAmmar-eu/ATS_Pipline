@@ -323,19 +323,19 @@ public static class IOTTagPath
 	#region Health
 
 	//public const string DelayFV01 = "";
-	public const string DurationFV01 = "VA_SETTINGS.Health_Clean_Cam.Duration";
+	public const string DurationFV01 = "VA_SETTINGS.Health_Cam_Cooling_FV01.Duration";
 	//public const string DelayFV02 = "";
-	public const string DurationFV02 = "VA_SETTINGS.Health_Clean_Led.Duration";
+	public const string DurationFV02 = "VA_SETTINGS.Health_Cam_Led_Blowing_FV02.Duration";
 	public const string DelayFV03 = "VA_SETTINGS.Clean_Waitting_Delay";
 	// TODO: Implement this
 	//public const string DurationFV03 = "VA_SETTINGS.Health_Cool_Cam.Duration";
 
 	//public const string RetentiveAnodeEntranceTimerZT04 = "";
-	public const string CameraCoolingFrequencyNormal = "VA_SETTINGS.Health_Clean_Cam.SP";
-	public const string CameraCoolingFrequencyHot = "VA_SETTINGS.Health_Clean_Cam.SP_Warning";
-	public const string LEDBarsCleaningFrequencyNormal = "VA_SETTINGS.Health_Clean_Led.SP";
-	public const string LEDBarsCleaningFrequencyHot = "VA_SETTINGS.Health_Clean_Led.SP_Warning";
-	public const string HotAnodeTT02 = "VA_SETTINGS.Health_Cool_AnodeTemp_SP";
+	public const string CameraCoolingFrequencyNormal = "VA_SETTINGS.Health_Cam_Cooling_FV01.SP";
+	public const string CameraCoolingFrequencyHot = "VA_SETTINGS.Health_Cam_Cooling_FV01.SP_Warning";
+	public const string LEDBarsCleaningFrequencyNormal = "VA_SETTINGS.Health_Cam_Led_Blowing_FV02.SP";
+	public const string LEDBarsCleaningFrequencyHot = "VA_SETTINGS.Health_Cam_Led_Blowing_FV02.SP_Warning";
+	public const string HotAnodeTT02 = "VA_SETTINGS.Health_S5_Cool_AnodeTemp_SP";
 
 	#endregion
 
