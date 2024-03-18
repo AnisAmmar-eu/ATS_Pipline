@@ -92,8 +92,8 @@ public partial class OTTwinCat
 					updatedTags.Add(tag);
 
 				tag.CurrentValue = readValue?.ToString()!;
-				if (!tag.HasNewValue)
-					tag.NewValue = readValue?.ToString()!;
+				//if (!tag.HasNewValue)
+				//	tag.NewValue = readValue?.ToString()!;
 			}
 			catch (Exception e)
 			{
@@ -121,12 +121,10 @@ public partial class OTTwinCat
 	{
 		return tag.ValueType switch {
 			IOTTagType.Int => ReadAndCheck<int>(tcClient, varHandle, tag, cancel),
-			IOTTagType.UInt => ReadAndCheck<uint>(tcClient, varHandle, tag, cancel),
 			IOTTagType.UShort => ReadAndCheck<ushort>(tcClient, varHandle, tag, cancel),
 			IOTTagType.String => ReadAndCheck<string>(tcClient, varHandle, tag, cancel),
 			IOTTagType.Bool => ReadAndCheck<bool>(tcClient, varHandle, tag, cancel),
 			IOTTagType.Float => ReadAndCheck<float>(tcClient, varHandle, tag, cancel),
-			IOTTagType.Double => ReadAndCheck<double>(tcClient, varHandle, tag, cancel),
 			_ => throw new InvalidOperationException(Name + " tag has an invalid type for TwinCat"),
 		};
 	}
@@ -149,12 +147,10 @@ public partial class OTTwinCat
 	{
 		return tag.ValueType switch {
 			IOTTagType.Int => await tcClient.WriteAnyAsync(varHandle, int.Parse(tag.NewValue), cancel),
-			IOTTagType.UInt => await tcClient.WriteAnyAsync(varHandle, uint.Parse(tag.NewValue), cancel),
 			IOTTagType.UShort => await tcClient.WriteAnyAsync(varHandle, ushort.Parse(tag.NewValue), cancel),
 			IOTTagType.String => await tcClient.WriteAnyAsync(varHandle, tag.NewValue, cancel),
 			IOTTagType.Bool => await tcClient.WriteAnyAsync(varHandle, bool.Parse(tag.NewValue), cancel),
 			IOTTagType.Float => await tcClient.WriteAnyAsync(varHandle, float.Parse(tag.NewValue), cancel),
-			IOTTagType.Double => await tcClient.WriteAnyAsync(varHandle, double.Parse(tag.NewValue), cancel),
 			_ => throw new InvalidOperationException(Name + " tag has an invalid tag.ValueType for TwinCat"),
 		};
 	}
