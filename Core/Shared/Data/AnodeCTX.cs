@@ -33,8 +33,8 @@ using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.FileSettings.Models.DB;
-using Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues;
-using Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks;
+using Core.Entities.Vision.SignedCycles.Models.DB.ToLoads;
+using Core.Entities.Vision.SignedCycles.Models.DB.ToMatchs;
 using Core.Shared.Models.DB.System.Logs;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -55,8 +55,8 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	#region Vision
 
 	public DbSet<FileSetting> FileSetting => Set<FileSetting>();
-	public DbSet<MatchableStack> MatchableStack => Set<MatchableStack>();
-	public DbSet<LoadableQueue> LoadableQueue => Set<LoadableQueue>();
+	public DbSet<ToMatch> MatchableStack => Set<ToMatch>();
+	public DbSet<ToLoad> LoadableQueue => Set<ToLoad>();
 
 	#endregion
 
@@ -233,20 +233,20 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithOne(b => b.CameraTest)
 			.HasForeignKey(b => b.CameraID);
 
-		builder.Entity<MatchableStack>()
+		builder.Entity<ToMatch>()
 			.HasOne(matchableStack => matchableStack.MatchableCycle)
 			.WithMany(matchableCycle => matchableCycle.MatchableStacks)
 			.HasForeignKey(matchableStack => matchableStack.MatchableCycleID);
 
-		builder.Entity<MatchableStack>()
+		builder.Entity<ToMatch>()
 			.HasIndex(matchableStack => matchableStack.CycleTS);
 
-		builder.Entity<LoadableQueue>()
+		builder.Entity<ToLoad>()
 			.HasOne(loadableQueue => loadableQueue.LoadableCycle)
 			.WithMany(loadableCycle => loadableCycle.LoadableQueues)
 			.HasForeignKey(loadableQueue => loadableQueue.LoadableCycleID);
 
-		builder.Entity<LoadableQueue>()
+		builder.Entity<ToLoad>()
 			.HasIndex(loadableQueue => loadableQueue.CycleTS);
 	}
 }

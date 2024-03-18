@@ -18,8 +18,8 @@ using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
 using Core.Entities.Vision.FileSettings.Repositories;
-using Core.Entities.Vision.SignedCycles.Repositories.LoadableQueues;
-using Core.Entities.Vision.SignedCycles.Repositories.MatchableStacks;
+using Core.Entities.Vision.SignedCycles.Repositories.ToLoads;
+using Core.Entities.Vision.SignedCycles.Repositories.ToMatchs;
 using Core.Shared.Data;
 using Core.Shared.Repositories.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -60,8 +60,8 @@ public class AnodeUOW : IAnodeUOW
 	public IIOTTagRepository IOTTag { get; }
 
 	public IFileSettingRepository FileSetting { get; }
-	public IMatchableStackRepository MatchableStack { get; }
-	public ILoadableQueueRepository LoadableQueue { get; }
+	public IToMatchRepository ToMatch { get; }
+	public IToLoadRepository ToLoad { get; }
 
 	public AnodeUOW(AnodeCTX anodeCTX)
 	{
@@ -96,8 +96,8 @@ public class AnodeUOW : IAnodeUOW
 		Roles = new RoleRepository();
 
 		FileSetting = new FileSettingRepository(_anodeCTX);
-		MatchableStack = new MatchableStackRepository(_anodeCTX);
-		LoadableQueue = new LoadableQueueRepository(_anodeCTX);
+		ToMatch = new ToMatchRepository(_anodeCTX);
+		ToLoad = new ToLoadRepository(_anodeCTX);
 	}
 
 	public object? GetRepoByType(Type repo)
@@ -129,8 +129,8 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IRoleRepository) => Roles,
 
 			_ when repo == typeof(IFileSettingRepository) => FileSetting,
-			_ when repo == typeof(IMatchableStackRepository) => MatchableStack,
-			_ when repo == typeof(ILoadableQueueRepository) => LoadableQueue,
+			_ when repo == typeof(IToMatchRepository) => ToMatch,
+			_ when repo == typeof(IToLoadRepository) => ToLoad,
 
 			_ when repo == typeof(ILogRepository) => Log,
 			_ => null,

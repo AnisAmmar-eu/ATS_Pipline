@@ -9,6 +9,9 @@
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Entities\BI\" />
+        <Folder Include="Entities\Vision\ToDo\Dictionnaries\" />
+        <Folder Include="Entities\Vision\ToDo\Services\" />
+        <Folder Include="Entities\Vision\ToDo\Repositories\" />
         <Folder Include="Shared\Models\DB\System\" />
         <Folder Include="Shared\Models\DTO\System\" />
         <Folder Include="Shared\Repositories\System\" />

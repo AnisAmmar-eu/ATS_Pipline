@@ -1,7 +1,6 @@
 using Carter;
 using Core.Entities.Vision.FileSettings.Services;
-using Core.Entities.Vision.SignedCycles.Services.LoadableQueues;
-using Core.Entities.Vision.SignedCycles.Services.MatchableStacks;
+using Core.Entities.Vision.SignedCycles.Services.ToLoads;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -36,8 +35,8 @@ builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IFileSettingService, FileSettingService>();
-builder.Services.AddScoped<ILoadableQueueService, LoadableQueueService>();
-builder.Services.AddScoped<IMatchableStackService, MatchableStackService>();
+builder.Services.AddScoped<IToLoadService, ToLoadService>();
+builder.Services.AddScoped<IToMatchService, ToMatchService>();
 
 builder.Services.AddSingleton<LoadMatchService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<LoadMatchService>());
