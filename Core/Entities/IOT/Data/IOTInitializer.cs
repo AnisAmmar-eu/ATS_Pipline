@@ -647,18 +647,6 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.SequenceCoolingCam,
-			Name = "Sequence Cooling Cam",
-			Description = "Sequence Cooling Cam",
-			CurrentValue = "false",
-			NewValue = "false",
-			ValueType = IOTTagType.Bool,
-			HasNewValue = false,
-			Path = IOTTagPath.SequenceCoolingCam,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.SequenceCleanLed,
 			Name = "Sequence Cooling Led On",
 			Description = "Sequence Cooling Led On",
