@@ -27,7 +27,8 @@ public static class ConfigDictionary
 
 	public const string ThumbnailsPath = "CameraConfig:ThumbnailsPath";
 	public const string ImagesPath = "CameraConfig:ImagesPath";
-	public const string CameraExtension = "CameraConfig:Extension";
+	public const string ImagesOutputPath = "CameraConfig:ImagesOutputPath";
+    public const string CameraExtension = "CameraConfig:Extension";
 
 	#endregion
 

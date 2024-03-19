@@ -51,10 +51,27 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			.ToDTO();
 	}
 
-	public async Task<FileInfo> GetImageFromCycleRIDAndCamera(int ShootingID, int cameraID)
+	//Same logic as above
+	//This function checks oldest not sent packet timestamp for monitoring
+    public async Task<DateTimeOffset> GetOldestNotSentTimestamp()
+    {
+		try
+		{
+            return (await AnodeUOW.Packet
+                .GetBy([packet => packet is Shooting && packet.Status != PacketStatus.Sent]) as Shooting)
+                ?.ShootingTS
+                ?? DateTimeOffset.Now;
+        }
+		catch (EntityNotFoundException)
+		{
+			return DateTimeOffset.Now;
+		}
+    }
+
+    public async Task<FileInfo> GetThumbnailFromCycleRIDAndCamera(string stationCycleRID, int cameraID)
 	{
 		Shooting shooting = await AnodeUOW.Packet
-			.GetBy([packet => packet.ID == ShootingID]) as Shooting
+			.GetBy([packet => packet.StationCycleRID == stationCycleRID]) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
@@ -69,7 +86,25 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			extension);
 	}
 
-	public async Task<DTOPacket> BuildPacket(Packet packet)
+    public async Task<FileInfo> GetImageFromCycleRIDAndCamera(string stationCycleRID, int cameraID)
+    {
+        Shooting shooting = await AnodeUOW.Packet
+            .GetBy([packet => packet.StationCycleRID == stationCycleRID]) as Shooting
+            ?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
+
+        string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+        string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+
+        return Shooting.GetImagePathFromRoot(
+            shooting.StationCycleRID,
+            Station.ID,
+            imagesPath,
+            shooting.AnodeType,
+            cameraID,
+            extension);
+    }
+
+    public async Task<DTOPacket> BuildPacket(Packet packet)
 	{
 		await AnodeUOW.StartTransaction();
 
