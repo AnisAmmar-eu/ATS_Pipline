@@ -92,6 +92,9 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTSer
 builder.Services.AddSingleton<PurgeService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 
+builder.Services.AddSingleton<DiskCheckService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<DiskCheckService>());
+
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();

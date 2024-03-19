@@ -1,6 +1,0 @@
-@ApiSign_HostAddress = http://localhost:5277
-
-GET {{ApiSign_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
