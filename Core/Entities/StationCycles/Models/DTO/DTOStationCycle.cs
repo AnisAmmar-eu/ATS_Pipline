@@ -23,7 +23,7 @@ public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStat
 	public string RID { get; set; } = string.Empty;
 	public PacketStatus Status { get; set; } = PacketStatus.Initialized;
 	public string CycleType { get; set; } = string.Empty;
-	public DateTimeOffset? TSClosed { get; set; }
+	public DateTimeOffset? TSFirstShooting { get; set; }
 	public SignMatchStatus SignStatus1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus SignStatus2 { get; set; } = SignMatchStatus.NA;
 

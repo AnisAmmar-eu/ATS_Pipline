@@ -24,7 +24,7 @@ public partial class DTOStationCycle
 		AnodeType = stationCycle.AnodeType;
 		RID = stationCycle.RID;
 		Status = stationCycle.Status;
-		TSClosed = stationCycle.TSClosed;
+		TSFirstShooting = stationCycle.TSFirstShooting;
 		SignStatus1 = stationCycle.SignStatus1;
 		SignStatus2 = stationCycle.SignStatus2;
 

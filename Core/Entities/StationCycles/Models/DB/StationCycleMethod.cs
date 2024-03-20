@@ -24,7 +24,7 @@ public partial class StationCycle
 		StationID = dtoStationCycle.StationID;
 		RID = dtoStationCycle.RID;
 		Status = dtoStationCycle.Status;
-		TSClosed = dtoStationCycle.TSClosed;
+		TSFirstShooting = dtoStationCycle.TSFirstShooting;
 		SignStatus1 = dtoStationCycle.SignStatus1;
 		SignStatus2 = dtoStationCycle.SignStatus2;
 

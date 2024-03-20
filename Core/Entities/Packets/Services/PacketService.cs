@@ -120,7 +120,10 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	{
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		IEnumerable<Packet> packets
-			= await AnodeUOW.Packet.GetAll([packet => packet.Status == PacketStatus.Completed], withTracking: false);
+			= await AnodeUOW.Packet.GetAll(
+				[packet => packet.Status == PacketStatus.Completed],
+				query => query.OrderByDescending(packet => packet.ID),
+				withTracking: false);
 		if (!packets.Any())
 			return;
 
@@ -229,17 +232,16 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			if (packet is Shooting shooting)
 			{
 				stationCycle.AnodeType = shooting.AnodeType;
+				stationCycle.TSFirstShooting = shooting.ShootingTS;
 				if (shooting.Cam01Status == 1)
 				{
 					stationCycle.Picture1Status = 1;
 					stationCycle.Shooting1Packet = shooting;
-					//stationCycle.Shooting1ID = shooting.ID;
 				}
 				else
 				{
 					stationCycle.Picture2Status = 1;
 					stationCycle.Shooting2Packet = shooting;
-					//stationCycle.Shooting2ID = shooting.ID;
 				}
 			}
 			else if (packet is MetaData metaData)
