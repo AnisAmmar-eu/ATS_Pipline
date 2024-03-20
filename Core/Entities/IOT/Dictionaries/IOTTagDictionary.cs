@@ -131,8 +131,11 @@ public static class IOTTagRID
 
 	#region Announcement
 
-	public const string EGAMetaDataWait = "EGAMetaDataWait";
-	public const string RetentiveAnodeDetectionTimerZT04 = "RetentiveAnodeDetectionTimerZT04";
+	public const string CleanTopDetectDelay = "CleanTopDetectDelay";
+	public const string CleanTopDelay = "CleanTopDelay";
+	public const string CleanTopDuration = "CleanTopDuration";
+
+	public const string SyncEmptyStackDelay = "SyncEmptyStackDelay";
 
 	#endregion
 
@@ -149,10 +152,6 @@ public static class IOTTagRID
 	public const string LedBlowingTempWarning = "LedBlowingTempWarning";
 	public const string LedBlowingFrequencyHot = "LedBlowingFrequencyHot";
 	public const string LedBlowingDuration = "LedBlowingDuration";
-
-	public const string CleanTopDetectDelay = "CleanTopDetectDelay";
-	public const string CleanTopDelay = "CleanTopDelay";
-	public const string CleanTopDuration = "CleanTopDuration";
 
 	public const string HotAnodeTT02 = "HotAnodeTT02";
 	public const string WarnCam01Temp = "WarnCam01Temp";
@@ -313,6 +312,16 @@ public static class IOTTagPath
 
 	#endregion
 
+	#region Announcement
+
+	public const string CleanTopDetectDelay = "VA_SETTINGS.Clean_Top_Dectection_Delay";
+	public const string CleanTopDelay = "VA_SETTINGS.Clean_Waitting_Delay";
+	public const string CleanTopDuration = "VA_SETTINGS.Clean_Duration";
+
+	public const string SyncEmptyStackDelay = "VA_SETTINGS.SyncEmptyStack_Delay";
+
+	#endregion
+
 	#region Health
 
 	public const string CameraCoolingPeriod = "VA_SETTINGS.Health_Cam_Cooling_FV01.Period";
@@ -327,9 +336,6 @@ public static class IOTTagPath
 	public const string LedBlowingTempWarning = "VA_SETTINGS.Health_Cam_Led_Blowing_FV02.Temp_Warning";
 	public const string LedBlowingDuration = "VA_SETTINGS.Health_Cam_Led_Blowing_FV02.Duration";
 
-	public const string CleanTopDetectDelay = "VA_SETTINGS.Clean_Top_Dectection_Delay";
-	public const string CleanTopDelay = "VA_SETTINGS.Clean_Waitting_Delay";
-	public const string CleanTopDuration = "VA_SETTINGS.Clean_Duration";
 	public const string HotAnodeTT02 = "VA_SETTINGS.Health_S5_Cool_AnodeTemp_SP";
 	public const string WarnCam01Temp = "VA_SETTINGS.CAM01_Temp_H";
 	public const string WarnCam02Temp = "VA_SETTINGS.CAM02_Temp_H";

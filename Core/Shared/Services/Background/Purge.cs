@@ -84,17 +84,17 @@ public class PurgeService : BackgroundService
                     if (paquet is Shooting)
                     {
                         FileInfo thumbnail1 = await paquetService.GetThumbnailFromCycleRIDAndCamera(
-                            paquet.StationCycleRID,
+                            paquet.ID,
                             1);
                         FileInfo thumbnail2 = await paquetService.GetThumbnailFromCycleRIDAndCamera(
-                            paquet.StationCycleRID,
+                            paquet.ID,
                             2);
 
                         FileInfo image1 = await paquetService.GetImageFromCycleRIDAndCamera(
-                            paquet.StationCycleRID,
+                            paquet.ID,
                             1);
                         FileInfo image2 = await paquetService.GetImageFromCycleRIDAndCamera(
-                            paquet.StationCycleRID,
+                            paquet.ID,
                             2);
 
                         if (File.Exists(image1.FullName))

@@ -22,7 +22,7 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
 		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
 
 		group.MapGet("mostRecent", GetMostRecent);
-		group.MapGet("{stationCycleRID}/{cameraID:int}/image", GetImageFromIDAndCamera);
+		group.MapGet("{shootingID}/{cameraID:int}/image", GetImageFromIDAndCamera);
 		group.MapGet("oldest", GetOldest);
 	}
 
@@ -43,7 +43,7 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
     }
 
     private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetImageFromIDAndCamera(
-        string stationCycleRID,
+        int shootingID,
         int cameraID,
         IPacketService packetService,
         ILogService logService,
@@ -53,7 +53,7 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
 		DateTimeOffset ts;
 		try
 		{
-			FileInfo imageFile = await packetService.GetImageFromCycleRIDAndCamera(stationCycleRID, cameraID);
+			FileInfo imageFile = await packetService.GetImageFromCycleRIDAndCamera(shootingID, cameraID);
 			ts = imageFile.CreationTime;
 			image = await File.ReadAllBytesAsync(imageFile.FullName);
 		}

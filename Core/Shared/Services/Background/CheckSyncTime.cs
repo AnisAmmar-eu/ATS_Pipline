@@ -79,7 +79,7 @@ public class CheckSyncTimeService : BackgroundService
 
 						AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
 						// Trigger an alarm
-						uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.AlarmTime);
+						uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.SyncTime);
 						if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
 							tcClient.WriteAny(alarmTimeHandle, 1);
 						else

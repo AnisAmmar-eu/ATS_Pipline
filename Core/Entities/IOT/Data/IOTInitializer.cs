@@ -19,19 +19,20 @@ public static class IOTInitializer
 		InitializeCamera(anodeCTX, DeviceRID.Camera1, "First", 1);
 		InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
 
-		// APIs
-		string[] rids = [
-			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.IOTRID, ITApisDict.StationCycleRID,
-		];
-		string[] addresses = [
-			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.IOTAddress, ITApisDict
-				.StationCycleAddress,
-		];
-		string[] paths = [
-			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.IOTPath, ITApisDict.StationCyclePath,
-		];
-		for (int i = 0; i < rids.Length; ++i)
-			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
+		var apis = new[]
+		{
+			new { Rid = ITApisDict.ADSRID, Address = ITApisDict.ADSAddress, Path = ITApisDict.ADSPath },
+			new { Rid = ITApisDict.AlarmRID, Address = ITApisDict.AlarmAddress, Path = ITApisDict.AlarmPath },
+			new { Rid = ITApisDict.CameraRID, Address = ITApisDict.CameraAddress, Path = ITApisDict.CameraPath },
+			new { Rid = ITApisDict.IOTRID, Address = ITApisDict.IOTAddress, Path = ITApisDict.IOTPath },
+			new { Rid = ITApisDict.StationCycleRID, Address = ITApisDict.StationCycleAddress,
+					Path = ITApisDict.StationCyclePath, },
+			new { Rid = ITApisDict.ServerReceiveRID, Address = ITApisDict.ServerReceiveAddress,
+					Path = ITApisDict.ServerReceivePath, },
+		};
+
+		foreach (var api in apis)
+			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
 
 		// TODO Path.
 		InitializeTwinCat(anodeCTX, DeviceRID.TwinCat, ADSUtils.AdsPort.ToString(), ADSUtils.ConnectionPath);
@@ -42,22 +43,22 @@ public static class IOTInitializer
 		if (anodeCTX.IOTDevice.Any())
 			return;
 
-		// No need for test mode in server.
-		string[] rids = [
-			ITApisDict.IOTRID, ITApisDict.AlarmRID, ITApisDict.KPIRID, ITApisDict.MonitorRID, ITApisDict.ServerReceiveRID,
-			ITApisDict.StationCycleRID, ITApisDict.UserRID, ITApisDict.VisionRID,
-		];
-		string[] addresses = [
-			ITApisDict.IOTAddress, ITApisDict.AlarmAddress, ITApisDict.KPIAddress, ITApisDict.MonitorAddress,
-			ITApisDict.ServerReceiveAddress, ITApisDict.StationCycleAddress, ITApisDict.UserAddress,
-			ITApisDict.VisionAddress,
-		];
-		string[] paths = [
-			ITApisDict.IOTPath, ITApisDict.AlarmPath, ITApisDict.KPIPath, ITApisDict.MonitorPath,
-			ITApisDict.ServerReceivePath, ITApisDict.StationCyclePath, ITApisDict.UserPath, ITApisDict.VisionPath,
-		];
-		for (int i = 0; i < rids.Length; ++i)
-			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
+		var serverApis = new[]
+			{
+				new { Rid = ITApisDict.IOTRID, Address = ITApisDict.IOTAddress, Path = ITApisDict.IOTPath },
+				new { Rid = ITApisDict.AlarmRID, Address = ITApisDict.AlarmAddress, Path = ITApisDict.AlarmPath },
+				new { Rid = ITApisDict.KPIRID, Address = ITApisDict.KPIAddress, Path = ITApisDict.KPIPath },
+				new { Rid = ITApisDict.MonitorRID, Address = ITApisDict.MonitorAddress, Path = ITApisDict.MonitorPath },
+				new { Rid = ITApisDict.ServerReceiveRID,
+					Address = ITApisDict.ServerReceiveAddress, Path = ITApisDict.ServerReceivePath, },
+				new { Rid = ITApisDict.StationCycleRID,
+					Address = ITApisDict.StationCycleAddress, Path = ITApisDict.StationCyclePath, },
+				new { Rid = ITApisDict.UserRID, Address = ITApisDict.UserAddress, Path = ITApisDict.UserPath },
+				new { Rid = ITApisDict.VisionRID, Address = ITApisDict.VisionAddress, Path = ITApisDict.VisionPath },
+		};
+
+		foreach (var api in serverApis)
+			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
@@ -891,6 +892,60 @@ public static class IOTInitializer
 
 		#endregion
 
+		#region Announcement
+
+		// Cleaning and Temperature Fields
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.CleanTopDetectDelay,
+			Name = "Clean Top Detect Delay",
+			Description = "Delay for clean top detection",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CleanTopDetectDelay,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.CleanTopDelay,
+			Name = "Clean Top Delay",
+			Description = "Delay before clean top starts",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CleanTopDelay,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.CleanTopDuration,
+			Name = "Clean Top Duration",
+			Description = "Duration of the clean top process",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CleanTopDuration,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.SyncEmptyStackDelay,
+			Name = "Sync Empty Stack Delay",
+			Description = "Waiting Delay before taking into account MSG from PLC RW - seconds",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.SyncEmptyStackDelay,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		#endregion
+
 		#region Anode
 
 		#region D20
@@ -1199,43 +1254,6 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		// Cleaning and Temperature Fields
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.CleanTopDetectDelay,
-			Name = "Clean Top Detect Delay",
-			Description = "Delay for clean top detection",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Int,
-			HasNewValue = false,
-			Path = IOTTagPath.CleanTopDetectDelay,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.CleanTopDelay,
-			Name = "Clean Top Delay",
-			Description = "Delay before clean top starts",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Int,
-			HasNewValue = false,
-			Path = IOTTagPath.CleanTopDelay,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.CleanTopDuration,
-			Name = "Clean Top Duration",
-			Description = "Duration of the clean top process",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Int,
-			HasNewValue = false,
-			Path = IOTTagPath.CleanTopDuration,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.HotAnodeTT02,
 			Name = "Hot Anode TT02",
