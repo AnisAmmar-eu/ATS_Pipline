@@ -8,5 +8,5 @@ public enum BaseEndpointFlags : short
 	Read = 2,
 	Update = 4,
 	Delete = 8,
-	NoLogs = 16,
+	ToLogs = 16,
 }
