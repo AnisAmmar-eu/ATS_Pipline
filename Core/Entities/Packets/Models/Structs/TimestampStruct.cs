@@ -25,7 +25,7 @@ public struct TimestampStruct
 				Hour,
 				Minutes,
 				Sec,
-				MS,
+				(MS >= 1000) ? MS / 1000 : MS,
 				new GregorianCalendar(GregorianCalendarTypes.Localized),
 				TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow));
 		}

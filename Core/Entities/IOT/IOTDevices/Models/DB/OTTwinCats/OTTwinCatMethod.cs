@@ -75,7 +75,7 @@ public partial class OTTwinCat
 				{
 					ResultWrite resultWrite = await WriteFromType(tcClient, varHandle, otTagTwinCat, cancelSource.Token);
 					if (resultWrite.ErrorCode != AdsErrorCode.NoError)
-						return []; // Same as above
+						continue; // Same as above
 
 					tag.HasNewValue = false;
 					hasBeenUpdated = true;

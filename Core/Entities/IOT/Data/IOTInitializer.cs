@@ -1301,7 +1301,7 @@ public static class IOTInitializer
 			Description = "Luminosity Check Frequency Cam1 Led On",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.Int,
+			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
 			Path = IOTTagPath.LuminosityCheckFrequencyCam1LedOn,
 			IOTDeviceID = twinCat.ID,

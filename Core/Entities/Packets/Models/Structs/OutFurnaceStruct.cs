@@ -27,5 +27,5 @@ public struct OutFurnaceRWStruct
 	public TimestampStruct PitPickup;
 	public TimestampStruct PitDeposit;
 	public int InvalidPacket;
-	public int BackedConvPos;
+	public int BakedConvPos;
 }

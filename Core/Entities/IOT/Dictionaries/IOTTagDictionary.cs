@@ -350,18 +350,18 @@ public static class IOTTagPath
 	public const string DurationLuxCheckCam1LedOn = "VA_SETTINGS.CAM01_LED_ON.Duration";
 
 	// Cam1 LEDOFF
-	public const string ThresholdLuminosityCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.SP";
 	public const string LuminosityCheckFrequencyCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.Counter_SP";
+	public const string ThresholdLuminosityCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.SP";
 	public const string DurationLuxCheckCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.Duration";
 
 	// Cam2 LEDON
-	public const string ThresholdLuminosityCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.SP";
 	public const string LuminosityCheckFrequencyCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.Counter_SP";
+	public const string ThresholdLuminosityCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.SP";
 	public const string DurationLuxCheckCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.Duration";
 
 	// Cam2 LEDOFF
-	public const string ThresholdLuminosityCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.SP";
 	public const string LuminosityCheckFrequencyCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.Counter_SP";
+	public const string ThresholdLuminosityCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.SP";
 	public const string DurationLuxCheckCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.Duration";
 
 	#endregion
