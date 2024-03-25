@@ -1,4 +1,4 @@
-﻿using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
@@ -59,7 +59,7 @@ namespace Core.Shared.Services.Background
 						if (d.IsReady)
 						{
 							// only returns free space of current user
-							long freeSpaceMB = d.AvailableFreeSpace / 1024*1024;
+							long freeSpaceMB = d.AvailableFreeSpace / (1024*1024);
 							string msg = string.Format(
 								"{0}MB free space left for Drive {1}",
 								freeSpaceMB,
