@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiMonitor", "ApiMonitor\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sign", "Sign\Sign.csproj", "{FE01A495-18FA-4A11-B61A-98E08B775F58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Match", "Match\Match.csproj", "{338BC06B-8212-4185-8A6E-366B535BD395}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Match", "Match\Match.csproj", "{338BC06B-8212-4185-8A6E-366B535BD395}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

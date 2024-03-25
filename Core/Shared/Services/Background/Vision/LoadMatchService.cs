@@ -30,21 +30,21 @@ public class LoadMatchService : BackgroundService
 		TimeSpan s3S4Delay = TimeSpan.Parse(configuration.GetValueWithThrow<string>(ConfigDictionary.S3S4Delay));
 		TimeSpan s5Delay = TimeSpan.Parse(configuration.GetValueWithThrow<string>(ConfigDictionary.S5Delay));
 
-		ToLoadService loadableQueueService
+		ToLoadService ToLoad
 			= asyncScope.ServiceProvider.GetRequiredService<ToLoadService>();
-		IToMatchService matchableStackService
+		IToMatchService ToMatch
 			= asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
 		using PeriodicTimer timer = new(_period);
 		do
 		{
 			try
 			{
-				ToLoad?[] loadables = await loadableQueueService.LoadNextCycles(
+				ToLoad?[] loadables = await ToLoad.LoadNextCycles(
 					[(DataSetID.S3S4, s3S4Delay),
 					(DataSetID.S5, s5Delay),
 				]);
 
-				await matchableStackService.MatchNextCycles([
+				await ToMatch.MatchNextCycles([
 					(DataSetID.S3S4, s3S4Delay, loadables[0]),
 					(DataSetID.S5, s5Delay, loadables[1]),
 				]);
