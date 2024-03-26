@@ -17,3 +17,4 @@ obj
 *.pubxml
 *.zip
 Core/Shared/Dllvision/dll/*
+*/temp

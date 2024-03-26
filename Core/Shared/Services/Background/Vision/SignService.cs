@@ -1,25 +1,12 @@
-﻿using Core.Entities.Alarms.AlarmsC.Services;
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.BI.BITemperatures.Services;
-using Core.Entities.Packets.Services;
-using Core.Shared.Configuration;
+﻿using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
-using Core.Shared.DLLVision;
-using Core.Shared.Models.ApiResponses;
-using Core.Shared.Models.TwinCat;
-using Core.Shared.Services.Background.BI.BITemperature;
-using Core.Shared.Services.System.Logs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using TwinCAT.Ads;
+using System.IO;
+using System.Runtime.InteropServices;
+using DLLVision;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -39,11 +26,6 @@ public class SignService : BackgroundService
         _configuration = configuration;
     }
 
-	const string sig_static_params_file = "C:\\d\\ADSVision\\DLLVision\\dll\\ConfigStatic\\sign_params_static_01.xml";
-
-    const string sig_dynamic_params_file
-        = "C:\\d\\ADSVision\\apialarms\\ApiSign\\dll\\ConfigDynamic\\signature_dynamic_CT.xml";
-
     const string image_folder = "C:\\d\\ADSVision\\images";
     const string signature_folder = "C:\\d\\ADSVision\\sign";
 
@@ -51,12 +33,19 @@ public class SignService : BackgroundService
     {
         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
-        int signTimer = _configuration.GetValueWithThrow<int>("SignTimer");
-        using PeriodicTimer timer = new (TimeSpan.FromSeconds(signTimer));
+        string DLLPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+        string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
+        string signDynamicParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
+        int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
+        using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
+
+        DLLVisionImport.SetDllDirectory(DLLPath);
 
         int retInit = DLLVisionImport.fcx_init();
-        int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, sig_static_params_file);
-        int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, sig_dynamic_params_file);
+
+        int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
+
+        int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParams);
 
         while (await timer.WaitForNextTickAsync(stoppingToken)
             && !stoppingToken.IsCancellationRequested)
@@ -68,13 +57,13 @@ public class SignService : BackgroundService
                     string filename = new FileInfo(image).Name;
                     string anodeId = Path.GetFileNameWithoutExtension(filename);
                     int returnSigner = DLLVisionImport.fcx_sign(0, 0, image_folder, anodeId, signature_folder);
-                    _logger.LogInformation("Return code de la signature: " + returnSigner);
+                    _logger.LogInformation("Return code de la signature: " + returnSigner + " pour anode " + anodeId);
                 }
 			}
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "Failed to execute PurgeService with exception message {message}.",
+                    "Failed to execute SignService with exception message {message}.",
                     ex.Message);
             }
         }

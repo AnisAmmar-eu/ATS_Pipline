@@ -1,11 +1,13 @@
 ﻿using Core.Shared.Configuration;
-using Core.Shared.DLLVision;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices;
 using System.IO;
+using Core.Shared.Dictionaries;
+using System.Configuration;
+using DLLVision;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -25,16 +27,7 @@ public class MatchService : BackgroundService
         _configuration = configuration;
     }
 
-    const string sig_static_params_file = "C:\\d\\ADSVision\\DLLVision\\dll\\ConfigStatic\\sign_params_static_01.xml";
-    const string sig_static_params_file1 = "C:\\d\\ADSVision\\DLLVision\\params\\signature_static.xml";
-
-	const string sig_dynamic_params_file
-		= "C:\\d\\ADSVision\\apialarms\\ApiSign\\dll\\ConfigDynamic\\signature_dynamic_CT.xml";
-
-    const string match_dynamic_params_file = "C:\\d\\ADSVision\\DLLVision\\dll\\ConfigDynamic\\match_params_dyn_00.xml";
-
     const string match_image_folder = "C:\\d\\ADSVision\\ToMatch";
-
 	const string sign_folder = "C:\\d\\ADSVision\\sign";
 
 	const int dataset = 0;
@@ -43,16 +36,24 @@ public class MatchService : BackgroundService
     {
         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
-        int signTimer = _configuration.GetValueWithThrow<int>("SignTimer");
-        using PeriodicTimer timer = new (TimeSpan.FromSeconds(signTimer));
+        string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
+        string signDynParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
+        string matchDynParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.MatchDynParams);
+        string DLLPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+        int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
+        using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
+
+        DLLVisionImport.SetDllDirectory(DLLPath);
 
         int retInit = DLLVisionImport.fcx_init();
-        int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, sig_static_params_file);
+        int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
 
-        int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, sig_dynamic_params_file);
+        int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynParams);
 
-        int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(0, match_dynamic_params_file);
+        int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(0, matchDynParams);
         int datasetRegister = DLLVisionImport.fcx_register_dataset(dataset, 0, 0);
+
+        Directory.CreateDirectory("temp");
 
         while (await timer.WaitForNextTickAsync(stoppingToken)
             && !stoppingToken.IsCancellationRequested)
@@ -79,7 +80,7 @@ public class MatchService : BackgroundService
 				//int bestScore = DLLVisionImport.fcx_matchRet_bestScore(matchRet);
 				double mean = DLLVisionImport.fcx_matchRet_mean(matchRet);
 				double variance = DLLVisionImport.fcx_matchRet_variance(matchRet);
-				long elasped = DLLVisionImport.fcx_matchRet_elapsed(matchRet);
+				long elasped =  DLLVisionImport.fcx_matchRet_elapsed(matchRet);
 				int threshold = DLLVisionImport.fcx_matchRet_threshold(matchRet);
 				int cardinality = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(matchRet);
 				_logger.LogInformation("Return code de la signature: " + matchErrorCode);
