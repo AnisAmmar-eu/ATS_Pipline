@@ -1,0 +1,11 @@
+using Core.Entities.StationCycles.Models.DB.MatchableCycles;
+using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
+using Core.Shared.Models.DTO.Kernel.Interfaces;
+
+namespace Core.Entities.Vision.ToDos.Models.DTO.ToMatchs;
+
+public partial class DTOToMatch : DTOToDo, IDTO<ToMatch, DTOToMatch>
+{
+	public int MatchableCycleID { get; set; }
+	public MatchableCycle? MatchableCycle { get; set; }
+}

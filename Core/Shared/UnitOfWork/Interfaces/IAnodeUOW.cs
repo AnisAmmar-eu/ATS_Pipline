@@ -17,8 +17,8 @@ using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
 using Core.Entities.Vision.FileSettings.Repositories;
-using Core.Entities.Vision.SignedCycles.Repositories.ToLoads;
-using Core.Entities.Vision.SignedCycles.Repositories.ToMatchs;
+using Core.Entities.Vision.ToDos.Repositories.ToLoads;
+using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
 using Core.Shared.Repositories.System.Logs;
 
 namespace Core.Shared.UnitOfWork.Interfaces;

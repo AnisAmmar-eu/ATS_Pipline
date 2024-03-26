@@ -33,8 +33,8 @@ using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.FileSettings.Models.DB;
-using Core.Entities.Vision.SignedCycles.Models.DB.ToLoads;
-using Core.Entities.Vision.SignedCycles.Models.DB.ToMatchs;
+using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
+using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 using Core.Shared.Models.DB.System.Logs;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -239,7 +239,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasForeignKey(matchableStack => matchableStack.MatchableCycleID);
 
 		builder.Entity<ToMatch>()
-			.HasIndex(matchableStack => matchableStack.CycleTS);
+			.HasIndex(matchableStack => matchableStack.ShootingTS);
 
 		builder.Entity<ToLoad>()
 			.HasOne(loadableQueue => loadableQueue.LoadableCycle)
@@ -247,6 +247,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasForeignKey(loadableQueue => loadableQueue.LoadableCycleID);
 
 		builder.Entity<ToLoad>()
-			.HasIndex(loadableQueue => loadableQueue.CycleTS);
+			.HasIndex(loadableQueue => loadableQueue.ShootingTS);
 	}
 }
