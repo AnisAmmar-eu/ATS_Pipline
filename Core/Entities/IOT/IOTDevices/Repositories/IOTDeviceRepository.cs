@@ -8,7 +8,7 @@ namespace Core.Entities.IOT.IOTDevices.Repositories;
 
 public class IOTDeviceRepository : BaseEntityRepository<AnodeCTX, IOTDevice, DTOIOTDevice>, IIOTDeviceRepository
 {
-	public IOTDeviceRepository(AnodeCTX context) : base(context)
+	public IOTDeviceRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 

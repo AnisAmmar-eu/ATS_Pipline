@@ -46,7 +46,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		string dtoName = typeof(TDTO).Name;
 		string tName = typeof(T).Name;
 		_includes = includes;
-		_isLogged = !flags.HasFlag(BaseEndpointFlags.NoLogs);
+		_isLogged = flags.HasFlag(BaseEndpointFlags.ToLogs);
 		group = group.MapGroup(tName);
 
 		if (flags.HasFlag(BaseEndpointFlags.Create))

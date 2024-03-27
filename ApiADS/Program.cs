@@ -8,6 +8,7 @@ using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.IOTHub;
@@ -100,7 +101,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>("ClientHost");
+string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>(ConfigDictionary.ClientHost);
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()

@@ -12,8 +12,8 @@ public static class AnodeTypeDict
 	public static string AnodeTypeIntToString(int anodeType)
 	{
 		return anodeType switch {
-			1 => D20,
-			2 => DX,
+			1 => DX,
+			2 => D20,
 			_ => Undefined,
 		};
 	}

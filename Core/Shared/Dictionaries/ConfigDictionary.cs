@@ -5,6 +5,12 @@ namespace Core.Shared.Dictionaries;
 /// </summary>
 public static class ConfigDictionary
 {
+	#region Program
+
+	public const string ClientHost = "ClientHost";
+
+	#endregion
+
 	#region Api Addresses
 
 	public const string ApiADSAddress = "ApiAddresses:ApiADS";
@@ -49,6 +55,38 @@ public static class ConfigDictionary
     public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
     public const string SANpath = "VisionSettings:SANpath";
     public const string AllowSignMatch = "VisionSettings:AllowSignMatch";
+
+	#endregion
+
+	#region CheckSyncTime
+
+	public const string DeltaTimeSec = "DeltaTimeSec";
+
+	#endregion
+
+	#region DiskCheck
+
+	public const string DiskCheckThreshold = "DiskCheckThreshold";
+	public const string DiskCheckLabel = "DiskCheckLabel";
+
+	#endregion
+
+	#region Purge
+
+	public const string PurgeTimerSec = "PurgeTimerSec";
+	public const string PurgeThreshold = "PurgeThreshold";
+
+	#endregion
+
+	#region MS settings
+
+	public const string CycleMS = "CycleMS";
+	public const string RetryMS = "RetryMS";
+	public const string CheckSyncTimeMS = "CheckSyncTimeMS";
+	public const string IOTMS = "IOTMS";
+	public const string SendAlarmCycleMS = "SendAlarmCycleMS";
+	public const string SendPacketMS = "SendPacketMS";
+	public const string SendLogMS = "SendLogMS";
 
 	#endregion
 }

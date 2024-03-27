@@ -51,9 +51,27 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			.ToDTO();
 	}
 
-	public async Task<FileInfo> GetImageFromCycleRIDAndCamera(string stationCycleRID, int cameraID)
+	//Same logic as above
+	//This function checks oldest not sent packet timestamp for monitoring
+	public async Task<DateTimeOffset> GetOldestNotSentTimestamp()
 	{
-		Shooting shooting = await AnodeUOW.Packet.GetBy([packet => packet.StationCycleRID == stationCycleRID]) as Shooting
+		try
+		{
+			return (await AnodeUOW.Packet
+				.GetBy([packet => packet is Shooting && packet.Status != PacketStatus.Sent]) as Shooting)
+				?.ShootingTS
+				?? DateTimeOffset.Now;
+		}
+		catch (EntityNotFoundException)
+		{
+			return DateTimeOffset.Now;
+		}
+	}
+
+	public async Task<FileInfo> GetThumbnailFromCycleRIDAndCamera(int shootingID, int cameraID)
+	{
+		Shooting shooting = await AnodeUOW.Packet
+			.GetBy([packet => packet.ID == shootingID]) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
@@ -63,6 +81,24 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			shooting.StationCycleRID,
 			Station.ID,
 			thumbnailsPath,
+			shooting.AnodeType,
+			cameraID,
+			extension);
+	}
+
+	public async Task<FileInfo> GetImageFromCycleRIDAndCamera(int shootingID, int cameraID)
+	{
+		Shooting shooting = await AnodeUOW.Packet
+			.GetBy([packet => packet.ID == shootingID]) as Shooting
+			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
+
+		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+
+		return Shooting.GetImagePathFromRoot(
+			shooting.StationCycleRID,
+			Station.ID,
+			imagesPath,
 			shooting.AnodeType,
 			cameraID,
 			extension);
@@ -80,15 +116,17 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		return packet.ToDTO();
 	}
 
-	public async Task SendCompletedPackets(string imagesPath)
+	public async Task SendCompletedPackets()
 	{
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		IEnumerable<Packet> packets
-			= await AnodeUOW.Packet.GetAll([packet => packet.Status == PacketStatus.Completed], withTracking: false);
+			= await AnodeUOW.Packet.GetAll(
+				[packet => packet.Status == PacketStatus.Completed],
+				query => query.OrderByDescending(packet => packet.ID),
+				withTracking: false);
 		if (!packets.Any())
 			return;
 
-		await AnodeUOW.StartTransaction();
 		foreach (Packet packet in packets)
 		{
 			try
@@ -124,7 +162,11 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				else
 				{
 					if (packet is Shooting shooting)
-						await shooting.SendImages(imagesPath, extension, _logger);
+					{
+						string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+						string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
+						await shooting.SendImages(imagesPath, thumbnailsPath, extension, _logger);
+					}
 
 					HttpResponseMessage response = await http.PostAsJsonAsync(
 						$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
@@ -146,9 +188,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				_logger.LogError("Error when sending packet: {e}", e);
 			}
 		}
-
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
 	}
 
 	public async Task ReceivePacket(DTOPacket dtoPacket, string stationName)
@@ -189,26 +228,25 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		{
 			StationCycle stationCycle = StationCycle.Create(stationName);
 			stationCycle.StationID = Station.StationNameToID(stationName);
+			stationCycle.RID = packet.StationCycleRID;
 			if (packet is Shooting shooting)
 			{
 				stationCycle.AnodeType = shooting.AnodeType;
-				stationCycle.RID = shooting.StationCycleRID;
+				stationCycle.TSFirstShooting = shooting.ShootingTS;
 				if (shooting.Cam01Status == 1)
 				{
 					stationCycle.Picture1Status = 1;
 					stationCycle.Shooting1Packet = shooting;
-					//stationCycle.Shooting1ID = shooting.ID;
 				}
 				else
 				{
 					stationCycle.Picture2Status = 1;
 					stationCycle.Shooting2Packet = shooting;
-					//stationCycle.Shooting2ID = shooting.ID;
 				}
 			}
 			else if (packet is MetaData metaData)
 			{
-				stationCycle.RID = metaData.StationCycleRID;
+				_logger.LogInformation("MetaData packet received");
 				stationCycle.AssignPacket(metaData);
 				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 				stationCycle.Picture1Status = (metaData.Cam01Status == 1) ? 0 : 3;
@@ -216,17 +254,10 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			}
 			else
 			{
-				stationCycle.RID = packet.StationCycleRID;
+				_logger.LogInformation("Other packet received");
 				stationCycle.AssignPacket(packet);
 			}
 
-			// Every "orphan" packet is aggregated to this stationCycle.
-			//List<Packet> packets
-			//	= await AnodeUOW.Packet
-			//		.GetAll(
-			//			[packet => !(packet is Shooting), packet1 => packet1.StationCycleRID == stationCycle.RID],
-			//			withTracking: false);
-			//packets.ForEach(stationCycle.AssignPacket);
 			await AnodeUOW.StationCycle.Add(stationCycle);
 			AnodeUOW.Commit();
 		}
@@ -234,22 +265,20 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public Task ReceiveStationImage(IFormFileCollection formFiles)
+	public Task ReceiveStationImage(IFormFileCollection formFiles, bool isImage)
 	{
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
 		{
-			FileInfo image = Shooting.GetImagePathFromFilename(imagesPath, formFile.Name);
-			FileInfo thumbnail = Shooting.GetImagePathFromFilename(thumbnailsPath, formFile.Name);
+			string path = isImage ? imagesPath : thumbnailsPath;
+			FileInfo image = Shooting.GetImagePathFromFilename(path, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);
-			Directory.CreateDirectory(thumbnail.DirectoryName!);
 
 			await using FileStream imageStream = new(image.FullName, FileMode.Create);
 			await formFile.CopyToAsync(imageStream);
-			Image savedImage = Image.FromFile(image.FullName);
-			savedImage.Save(thumbnail.FullName, 0.2);
+			_logger.LogInformation("Saving image 1 imageName: {name}", image.FullName);
 		});
 		return Task.WhenAll(tasks);
 	}

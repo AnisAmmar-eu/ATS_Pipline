@@ -1,6 +1,11 @@
 using System.Net;
+using System.Text.Json;
+using Core.Entities.IOT.IOTDevices.Models.DB.Stations;
 using Core.Entities.IOT.IOTDevices.Models.DTO.ITApis;
+using Core.Entities.IOT.IOTDevices.Models.DTO.Stations;
 using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Shared.Models.ApiResponses;
+using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +32,7 @@ public partial class ITApi
 		try
 		{
 			HttpResponseMessage response = await httpClient.GetAsync(Address + ConnectionPath);
-			return response.StatusCode == HttpStatusCode.OK;
+            return response.StatusCode == HttpStatusCode.OK;
 		}
 		catch (Exception e)
 		{

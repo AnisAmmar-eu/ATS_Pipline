@@ -237,6 +237,15 @@ public static class AlarmInitializer
 			});
 		anodeCTX.Add(new AlarmC
 			{
+				RID = "3006",
+				Name = "DISK_SPACE",
+				Description = "Disk space is almost full",
+				TS = DateTimeOffset.Now,
+				Severity = 3,
+				Category = "GENERAL",
+			});
+		anodeCTX.Add(new AlarmC
+			{
 				RID = "4000",
 				Name = "SYNC_INDEX",
 				Description = "Synchronisation Index Alarm",

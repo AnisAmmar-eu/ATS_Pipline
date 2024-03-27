@@ -108,7 +108,7 @@ public class CameraService : BackgroundService
 					{
 						if (!device.ConnectionState.HasFlag(ConnectionState.Connected))
 						{
-							Debug.WriteLine("connection lost");
+							_logger.LogError("connection lost");
 							Thread.Sleep(1000);
 							continue;
 						}
@@ -120,6 +120,7 @@ public class CameraService : BackgroundService
 						if (status != WaitStatus.Ok)
 							throw new($"Exception: {status.ToString()}");
 
+						DateTimeOffset ShootingDate = DateTimeOffset.Now;
 						if (await IsTestModeOn(_logger))
 						{
 							// testDir2 != null means that we are in a S5 Cycle.
@@ -139,6 +140,7 @@ public class CameraService : BackgroundService
 							RIDStruct rid = tcClient.ReadAny<RIDStruct>(ridStructHandle);
 							uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
 							string anodeType = AnodeTypeDict.AnodeTypeIntToString(tcClient.ReadAny<int>(anodeTypeHandle));
+							_logger.LogInformation("AnodeType: {anodeType}", anodeType);
 							int cameraID = GetCameraID(cameraNb, tcClient);
 
 							FileInfo imagePath
@@ -162,12 +164,15 @@ public class CameraService : BackgroundService
 							{
 								StationCycleRID = rid.ToRID(),
 								AnodeType = anodeType,
-								ShootingTS = DateTimeOffset.Now,
+								ShootingTS = ShootingDate,
 								Cam01Status = (cameraID == (int)CameraNb.Camera1) ? 1 : 0,
 								Cam02Status = (cameraID == (int)CameraNb.Camera2) ? 1 : 0,
+								HasError = false,
 							};
 
 							await packetService.BuildPacket(shooting);
+
+							await _hubContext.Clients.All.RefreshTestImages();
 						}
 					}
 					catch (Exception e)

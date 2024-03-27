@@ -19,9 +19,7 @@ public partial class InFurnace
 		PitSectionNumber = dtoInFurnace.PitSectionNumber;
 		PitHeight = dtoInFurnace.PitHeight;
 		FTAPlace = dtoInFurnace.FTAPlace;
-		FTASuck = dtoInFurnace.FTASuck;
 		GreenConvPos = dtoInFurnace.GreenConvPos;
-		BakedConvPos = dtoInFurnace.BakedConvPos;
 		PitLoadTS = dtoInFurnace.PitLoadTS;
 	}
 

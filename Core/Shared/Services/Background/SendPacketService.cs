@@ -27,11 +27,10 @@ public class SendPacketService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		int delayMS = _configuration.GetValueWithThrow<int>("SendPacketMS");
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
+		int sendPacketMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.SendPacketMS);
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(sendPacketMS));
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-		string imagesPath = configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 
 		IPacketService packetService
 			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
@@ -41,7 +40,7 @@ public class SendPacketService : BackgroundService
         {
             try
 			{
-				await packetService.SendCompletedPackets(imagesPath);
+				await packetService.SendCompletedPackets();
 			}
 			catch (Exception ex)
 			{

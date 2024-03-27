@@ -12,30 +12,38 @@ namespace Core.Entities.Packets.Services;
 public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 {
 	public Task<DTOShooting> GetMostRecentShooting();
+    public Task<DateTimeOffset> GetOldestNotSentTimestamp();
 
-	/// <summary>
-	/// This photo returns the FileInfo of the image gotten through the shooting packet. It works only on the station.
-	/// </summary>
-	/// <param name="stationCycleRID"></param>
-	/// <param name="cameraID"></param>
-	/// <returns></returns>
-	public Task<FileInfo> GetImageFromCycleRIDAndCamera(string stationCycleRID, int cameraID);
+    /// <summary>
+    /// This photo returns the FileInfo of the thumbnail gotten through the shooting packet. It works only on the station.
+    /// </summary>
+    /// <param name="shootingID"></param>
+    /// <param name="cameraID"></param>
+    /// <returns></returns>
+    public Task<FileInfo> GetThumbnailFromCycleRIDAndCamera(int shootingID, int cameraID);
 
-	/// <summary>
-	/// Executes side effects on a packet when called. Allows a packet to update itself on other factors determined by
-	/// the implementation of a InheritedBuild function.
-	/// </summary>
-	/// <param name="packet"></param>
-	/// <returns></returns>
-	public Task<DTOPacket> BuildPacket(Packet packet);
+    /// <summary>
+    /// This photo returns the FileInfo of the image gotten through the shooting packet. It works only on the station.
+    /// </summary>
+    /// <param name="shootingID"></param>
+    /// <param name="cameraID"></param>
+    /// <returns></returns>
+    public Task<FileInfo> GetImageFromCycleRIDAndCamera(int shootingID, int cameraID);
+
+    /// <summary>
+    /// Executes side effects on a packet when called. Allows a packet to update itself on other factors determined by
+    /// the implementation of a InheritedBuild function.
+    /// </summary>
+    /// <param name="packet"></param>
+    /// <returns></returns>
+    public Task<DTOPacket> BuildPacket(Packet packet);
 
 	/// <summary>
 	/// Sends all packets given in argument to the given serverAddress, returns all packets which were successfully sent
 	/// with their status as "Sent".
 	/// </summary>
-	/// <param name="imagesPath"></param>
 	/// <returns></returns>
-	public Task SendCompletedPackets(string imagesPath);
+	public Task SendCompletedPackets();
 
 	/// <summary>
 	/// Receives a <see cref="Packet"/> from a station and saves it in the database. If needed, creates its corresponding <see cref="StationCycle"/>
@@ -50,8 +58,9 @@ public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 	/// However, receiving the <see cref="Shooting"/> packet is managed by <see cref="ReceivePacket"/>
 	/// </summary>
 	/// <param name="formFiles"></param>
+	/// <param name="isImage"></param>
 	/// <returns></returns>
-	public Task ReceiveStationImage(IFormFileCollection formFiles);
+	public Task ReceiveStationImage(IFormFileCollection formFiles, bool isImage);
 
 	/// <summary>
 	/// Receives the alarm cycles.

@@ -16,6 +16,7 @@ public partial class OutFurnace
 		PickUpTS = dtoOutFurnace.PickUpTS;
 		DepositTS = dtoOutFurnace.DepositTS;
 		InvalidPacket = dtoOutFurnace.InvalidPacket;
+		BakedConvPos = dtoOutFurnace.BakedConvPos;
 	}
 
 	public OutFurnace(OutFurnaceStruct adsStruct)
@@ -28,6 +29,7 @@ public partial class OutFurnace
 		PickUpTS = adsStruct.MD.PitPickup.GetTimestamp();
 		DepositTS = adsStruct.MD.PitDeposit.GetTimestamp();
 		InvalidPacket = adsStruct.MD.InvalidPacket;
+		BakedConvPos = adsStruct.MD.BakedConvPos;
 	}
 
 	public override DTOOutFurnace ToDTO()

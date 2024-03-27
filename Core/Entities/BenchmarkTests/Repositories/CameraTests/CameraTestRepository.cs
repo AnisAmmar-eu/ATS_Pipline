@@ -7,7 +7,7 @@ namespace Core.Entities.BenchmarkTests.Repositories.CameraTests;
 
 public class CameraTestRepository : BaseEntityRepository<AnodeCTX, CameraTest, DTOCameraTest>, ICameraTestRepository
 {
-	public CameraTestRepository(AnodeCTX context) : base(context)
+	public CameraTestRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

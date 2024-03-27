@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<Match_batchsize>500</Match_batchsize>
+<Match_inlierRansacDistanceThreshold>3.0</Match_inlierRansacDistanceThreshold>
+<Match_nbIterationMaxRANSAC>2000</Match_nbIterationMaxRANSAC>
+<Match_FilterBFDistEuclidMinCoeff>3.0</Match_FilterBFDistEuclidMinCoeff>
+<Match_FilterRansacDistGeoValue>100</Match_FilterRansacDistGeoValue>
+<Match_thresholdScore>6</Match_thresholdScore>
+<Match_timeout_ms>60000</Match_timeout_ms>
+</opencv_storage>

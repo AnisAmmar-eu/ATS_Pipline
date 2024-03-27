@@ -15,7 +15,7 @@ public class BaseEndpoint
 		Func<Task<TReturn>> func,
 		ILogService logService,
 		HttpContext httpContext,
-		bool isLogged = true)
+		bool isLogged = false)
 	{
 		TReturn ans;
 		try
@@ -37,7 +37,7 @@ public class BaseEndpoint
 		Func<Task> func,
 		ILogService logService,
 		HttpContext httpContext,
-		bool isLogged = true)
+		bool isLogged = false)
 	{
 		try
 		{

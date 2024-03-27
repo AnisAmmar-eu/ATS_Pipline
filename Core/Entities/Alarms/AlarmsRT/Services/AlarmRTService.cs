@@ -39,6 +39,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 			foreach (Alarm alarmStruct in alarmStructs)
 			{
 				AlarmRT alarmRT = new(alarmStruct);
+				_logger.LogInformation($"AlarmRT: {alarmRT.TSRaised.ToString()}");
 				string RIDAlarmStruct = alarmStruct.RID.ToString();
 
 				try
@@ -48,7 +49,8 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 							alarm => alarm.IRID == alarmRT.IRID,
 							s => s
 								.SetProperty(a => a.IsActive, alarmRT.IsActive)
-								.SetProperty(a => a.TS, alarmRT.TS)
+								.SetProperty(a => a.TSRaised, alarmRT.TSRaised)
+								.SetProperty(a => a.TS, DateTimeOffset.Now)
 						) == 0)
 					{
 						throw new EntityNotFoundException();
@@ -131,12 +133,13 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 
 	public async Task ReceiveAlarmRT(DTOAlarmRT dtoAlarmRT)
 	{
+		_logger.LogInformation($"Receiving AlarmRT: {dtoAlarmRT.IRID} | {dtoAlarmRT.StationID.ToString()}");
 		List<AlarmRT> alarms = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
 		try
 		{
 			if (await AnodeUOW.AlarmRT
 				.ExecuteUpdateAsync(
-					a => a.IRID == dtoAlarmRT.IRID,
+					a => a.IRID == dtoAlarmRT.IRID && a.StationID == dtoAlarmRT.StationID,
 					s => s
 						.SetProperty(a => a.IsActive, dtoAlarmRT.IsActive)
 						.SetProperty(a => a.TSRaised, dtoAlarmRT.TSRaised)
@@ -152,6 +155,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 			// If an alarmRT doesn't exist, this alarm just raised.
 			AlarmRT newAlarmRT = dtoAlarmRT.ToModel();
 			newAlarmRT.ID = 0;
+			newAlarmRT.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == newAlarmRT.IRID]);
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmRT.Add(newAlarmRT);
 			AnodeUOW.Commit();

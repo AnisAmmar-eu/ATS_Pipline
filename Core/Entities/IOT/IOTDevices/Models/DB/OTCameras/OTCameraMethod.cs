@@ -140,8 +140,8 @@ public partial class OTCamera
 				updatedTags.Add(tag);
 
 			tag.CurrentValue = readValue;
-			if (!tag.HasNewValue)
-				tag.NewValue = readValue;
+			//if (!tag.HasNewValue)
+			//	tag.NewValue = readValue;
 		}
 
 		//var nodeMap = device.NodeMaps[NodeMapNames.Device];

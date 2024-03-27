@@ -34,7 +34,8 @@ public partial class AlarmList
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{
-		List<AlarmRT> alarmRTs = await anodeUOW.AlarmRT.GetAllWithInclude(withTracking: false);
+		List<AlarmRT> alarmRTs = await anodeUOW.AlarmRT.GetAllWithInclude(
+			[alarm => alarm.IsActive], withTracking: false);
 		foreach (AlarmRT alarmRT in alarmRTs)
 		{
 			AlarmCycle alarmCycle = new(alarmRT) {

@@ -13,8 +13,6 @@ public partial class DTOInFurnace : DTOFurnace, IDTO<InFurnace, DTOInFurnace>
 	public int PitSectionNumber { get; set; }
 	public int PitHeight { get; set; }
 	public int FTAPlace { get; set; }
-	public int FTASuck { get; set; }
 	public int GreenConvPos { get; set; }
-	public int BakedConvPos { get; set; }
 	public DateTimeOffset PitLoadTS { get; set; }
 }

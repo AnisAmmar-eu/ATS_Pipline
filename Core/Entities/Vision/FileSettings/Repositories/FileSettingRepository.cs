@@ -7,7 +7,7 @@ namespace Core.Entities.Vision.FileSettings.Repositories;
 
 public class FileSettingRepository : BaseEntityRepository<AnodeCTX, FileSetting, DTOFileSetting>, IFileSettingRepository
 {
-	public FileSettingRepository(AnodeCTX context) : base(context)
+	public FileSettingRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

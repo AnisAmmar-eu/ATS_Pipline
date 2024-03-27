@@ -19,19 +19,20 @@ public static class IOTInitializer
 		InitializeCamera(anodeCTX, DeviceRID.Camera1, "First", 1);
 		InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
 
-		// APIs
-		string[] rids = [
-			ITApisDict.ADSRID, ITApisDict.AlarmRID, ITApisDict.CameraRID, ITApisDict.IOTRID, ITApisDict.StationCycleRID,
-		];
-		string[] addresses = [
-			ITApisDict.ADSAddress, ITApisDict.AlarmAddress, ITApisDict.CameraAddress, ITApisDict.IOTAddress, ITApisDict
-				.StationCycleAddress,
-		];
-		string[] paths = [
-			ITApisDict.ADSPath, ITApisDict.AlarmPath, ITApisDict.CameraPath, ITApisDict.IOTPath, ITApisDict.StationCyclePath,
-		];
-		for (int i = 0; i < rids.Length; ++i)
-			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
+		var apis = new[]
+		{
+			new { Rid = ITApisDict.ADSRID, Address = ITApisDict.ADSAddress, Path = ITApisDict.ADSPath },
+			new { Rid = ITApisDict.AlarmRID, Address = ITApisDict.AlarmAddress, Path = ITApisDict.AlarmPath },
+			new { Rid = ITApisDict.CameraRID, Address = ITApisDict.CameraAddress, Path = ITApisDict.CameraPath },
+			new { Rid = ITApisDict.IOTRID, Address = ITApisDict.IOTAddress, Path = ITApisDict.IOTPath },
+			new { Rid = ITApisDict.StationCycleRID, Address = ITApisDict.StationCycleAddress,
+					Path = ITApisDict.StationCyclePath, },
+			new { Rid = ITApisDict.ServerReceiveRID, Address = ITApisDict.ServerReceiveAddress,
+					Path = ITApisDict.ServerReceivePath, },
+		};
+
+		foreach (var api in apis)
+			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
 
 		// TODO Path.
 		InitializeTwinCat(anodeCTX, DeviceRID.TwinCat, ADSUtils.AdsPort.ToString(), ADSUtils.ConnectionPath);
@@ -42,22 +43,22 @@ public static class IOTInitializer
 		if (anodeCTX.IOTDevice.Any())
 			return;
 
-		// No need for test mode in server.
-		string[] rids = [
-			ITApisDict.IOTRID, ITApisDict.AlarmRID, ITApisDict.KPIRID, ITApisDict.MonitorRID, ITApisDict.ServerReceiveRID,
-			ITApisDict.StationCycleRID, ITApisDict.UserRID, ITApisDict.VisionRID,
-		];
-		string[] addresses = [
-			ITApisDict.IOTAddress, ITApisDict.AlarmAddress, ITApisDict.KPIAddress, ITApisDict.MonitorAddress,
-			ITApisDict.ServerReceiveAddress, ITApisDict.StationCycleAddress, ITApisDict.UserAddress,
-			ITApisDict.VisionAddress,
-		];
-		string[] paths = [
-			ITApisDict.IOTPath, ITApisDict.AlarmPath, ITApisDict.KPIPath, ITApisDict.MonitorPath,
-			ITApisDict.ServerReceivePath, ITApisDict.StationCyclePath, ITApisDict.UserPath, ITApisDict.VisionPath,
-		];
-		for (int i = 0; i < rids.Length; ++i)
-			InitializeApi(anodeCTX, rids[i], addresses[i], paths[i]);
+		var serverApis = new[]
+			{
+				new { Rid = ITApisDict.IOTRID, Address = ITApisDict.IOTAddress, Path = ITApisDict.IOTPath },
+				new { Rid = ITApisDict.AlarmRID, Address = ITApisDict.AlarmAddress, Path = ITApisDict.AlarmPath },
+				new { Rid = ITApisDict.KPIRID, Address = ITApisDict.KPIAddress, Path = ITApisDict.KPIPath },
+				new { Rid = ITApisDict.MonitorRID, Address = ITApisDict.MonitorAddress, Path = ITApisDict.MonitorPath },
+				new { Rid = ITApisDict.ServerReceiveRID,
+					Address = ITApisDict.ServerReceiveAddress, Path = ITApisDict.ServerReceivePath, },
+				new { Rid = ITApisDict.StationCycleRID,
+					Address = ITApisDict.StationCycleAddress, Path = ITApisDict.StationCyclePath, },
+				new { Rid = ITApisDict.UserRID, Address = ITApisDict.UserAddress, Path = ITApisDict.UserPath },
+				new { Rid = ITApisDict.VisionRID, Address = ITApisDict.VisionAddress, Path = ITApisDict.VisionPath },
+		};
+
+		foreach (var api in serverApis)
+			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
@@ -275,32 +276,7 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		//anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-		//	RID = IOTTagRID.TemperatureOkWarnThreshold,
-		//	Name = "Ok - Warn Threshold",
-		//	Description = "Ok - Warn temperature threshold",
-		//	CurrentValue = "42.0",
-		//	NewValue = string.Empty,
-		//	ValueType = IOTTagType.Float,
-		//	HasNewValue = false,
-		//	IsReadOnly = true,
-		//	Path = IOTTagPath.TemperatureOkWarnThreshold,
-		//	IOTDeviceID = twinCat.ID,
-		//	IOTDevice = twinCat,
-		//});
-		//anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-		//	RID = IOTTagRID.TemperatureWarnErrorThreshold,
-		//	Name = "Warn - Error Threshold",
-		//	Description = "Warn - Error temperature threshold",
-		//	CurrentValue = "70.0",
-		//	NewValue = string.Empty,
-		//	ValueType = IOTTagType.Float,
-		//	HasNewValue = false,
-		//	IsReadOnly = true,
-		//	Path = IOTTagPath.TemperatureWarnErrorThreshold,
-		//	IOTDeviceID = twinCat.ID,
-		//	IOTDevice = twinCat,
-		//});
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.TemperatureStatusCam1,
 			Name = "Cam1 temperature status",
@@ -498,6 +474,20 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.MsgInit,
+			Name = IOTTagRID.MsgInit,
+			Description = "MsgInit reset sequence",
+			CurrentValue = "false",
+			NewValue = "false",
+			ValueType = IOTTagType.Bool,
+			HasNewValue = false,
+			Path = IOTTagPath.MsgInit,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
 		anodeCTX.SaveChanges();
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
@@ -658,21 +648,9 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.SequenceCoolingCam,
-			Name = "Sequence Cooling Cam",
-			Description = "Sequence Cooling Cam",
-			CurrentValue = "false",
-			NewValue = "false",
-			ValueType = IOTTagType.Bool,
-			HasNewValue = false,
-			Path = IOTTagPath.SequenceCoolingCam,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.SequenceCleanLed,
-			Name = "Sequence Cooling Led",
-			Description = "Sequence Cooling Led",
+			Name = "Sequence Cooling Led On",
+			Description = "Sequence Cooling Led On",
 			CurrentValue = "false",
 			NewValue = "false",
 			ValueType = IOTTagType.Bool,
@@ -734,20 +712,8 @@ public static class IOTInitializer
 
 		#region Shooting
 
-		/*
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.RetentiveShootingWaitTimer,
-			Name = "Retentive Shooting Wait Timer",
-			Description = "Retentive Shooting Wait Timer",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.RetentiveShootingWaitTimer,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		*/
+		#region D20
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayFlashD20,
 			Name = "Delay Flash D20",
@@ -760,31 +726,6 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayFlashDX,
-			Name = "Delay Flash DX",
-			Description = "Delay Flash DX",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Int,
-			HasNewValue = false,
-			Path = IOTTagPath.DelayFlashDX,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		/*
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayFlashInvalid,
-			Name = "Delay Flash Invalid",
-			Description = "Delay Flash Invalid",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.DelayFlashInvalid,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationFlashD20,
 			Name = "Duration Flash D20",
@@ -810,6 +751,83 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HightTopD20,
+			Name = "Height Top D20",
+			Description = "Height Top D20",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HightTopD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HightMinD20,
+			Name = "Height Min D20",
+			Description = "Height Min D20",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HightMinD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HoleMaxD20,
+			Name = "Hole Max D20",
+			Description = "Hole Max D20",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HoleMaxD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HoleMinD20,
+			Name = "Hole Min D20",
+			Description = "Hole Min D20",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HoleMinD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		#endregion
+
+		#region DX
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DelayFlashDX,
+			Name = "Delay Flash DX",
+			Description = "Delay Flash DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DelayFlashDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DurationFlashDX,
+			Name = "Duration Flash DX",
+			Description = "Duration Flash DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DurationFlashDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DelayCamDX,
 			Name = "Delay Cam DX",
 			Description = "Delay Cam DX",
@@ -821,135 +839,117 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayCamInvalid,
-			Name = "Delay Cam Invalid",
-			Description = "Delay Cam Invalid",
+			RID = IOTTagRID.HightTopDX,
+			Name = "Height Top DX",
+			Description = "Height Top DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HightTopDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HightMinDX,
+			Name = "Height Min DX",
+			Description = "Height Min DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HightMinDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HoleMaxDX,
+			Name = "Hole Max DX",
+			Description = "Hole Max DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HoleMaxDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HoleMinDX,
+			Name = "Hole Min DX",
+			Description = "Hole Min DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HoleMinDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		#endregion
+
+		#endregion
+
+		#region Announcement
+
+		// Cleaning and Temperature Fields
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.CleanTopDetectDelay,
+			Name = "Clean Top Detect Delay",
+			Description = "Delay for clean top detection",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CleanTopDetectDelay,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.CleanTopDelay,
+			Name = "Clean Top Delay",
+			Description = "Delay before clean top starts",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CleanTopDelay,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.CleanTopDuration,
+			Name = "Clean Top Duration",
+			Description = "Duration of the clean top process",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CleanTopDuration,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.SyncEmptyStackDelay,
+			Name = "Sync Empty Stack Delay",
+			Description = "Waiting Delay before taking into account MSG from PLC RW - seconds",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
-			Path = IOTTagPath.DelayCamInvalid,
+			Path = IOTTagPath.SyncEmptyStackDelay,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		*/
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TriggerThreshold1DX,
-			Name = "Trigger Threshold1 DX",
-			Description = "Trigger Threshold1 DX",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.TriggerThreshold1DX,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TriggerThreshold1D20,
-			Name = "Trigger Threshold1 D20",
-			Description = "Trigger Threshold1 D20",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.TriggerThreshold1D20,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TriggerThreshold2DX,
-			Name = "Trigger Threshold2 DX",
-			Description = "Trigger Threshold2 DX",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.TriggerThreshold2DX,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TriggerThreshold2D20,
-			Name = "Trigger Threshold2 D20",
-			Description = "Trigger Threshold3 D20",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.TriggerThreshold2D20,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TriggerThreshold3DX,
-			Name = "Trigger Threshold3 DX",
-			Description = "Trigger Threshold3 DX",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.TriggerThreshold3DX,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TriggerThreshold3D20,
-			Name = "Trigger Threshold3 D20",
-			Description = "Trigger Threshold3 D20",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.TriggerThreshold3D20,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		/*
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayValidLaser,
-			Name = "Delay Valid Laser",
-			Description = "Delay Valid Laser",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.DelayValidLaser,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.TransferTimer,
-			Name = "Transfer Timer",
-			Description = "Transfer Timer",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.TransferTimer,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		*/
 
 		#endregion
 
 		#region Anode
 
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LengthMinD20,
-			Name = "Length Min D20",
-			Description = "Length Min D20",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.LengthMinD20,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
+		#region D20
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LengthMaxD20,
 			Name = "Length Max D20",
@@ -963,38 +963,14 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LengthMinDX,
-			Name = "Length Min DX",
-			Description = "Length Min DX",
+			RID = IOTTagRID.LengthMinD20,
+			Name = "Length Min D20",
+			Description = "Length Min D20",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.LengthMinDX,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LengthMaxDX,
-			Name = "Length Max DX",
-			Description = "Length Max DX",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.LengthMaxDX,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.WidthMinD20,
-			Name = "Width Min D20",
-			Description = "Width Min D20",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Float,
-			HasNewValue = false,
-			Path = IOTTagPath.WidthMinD20,
+			Path = IOTTagPath.LengthMinD20,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -1011,14 +987,79 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.WidthMinDX,
-			Name = "Width Min DX",
-			Description = "Width Min DX",
+			RID = IOTTagRID.WidthMinD20,
+			Name = "Width Min D20",
+			Description = "Width Min D20",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.WidthMinDX,
+			Path = IOTTagPath.WidthMinD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.InHoleDelayD20,
+			Name = "In Hole Delay D20",
+			Description = "In Hole Delay D20",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.InHoleDelayD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.WidthDelayMaxD20,
+			Name = "Width Delay Max D20",
+			Description = "Width Delay Max D20",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.WidthDelayMaxD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LengthDelayMaxD20,
+			Name = "Length Delay Max D20",
+			Description = "Length Delay Max D20",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.LengthDelayMaxD20,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		#endregion
+
+		#region DX
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LengthMaxDX,
+			Name = "Length Max DX",
+			Description = "Length Max DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.LengthMaxDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LengthMinDX,
+			Name = "Length Min DX",
+			Description = "Length Min DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.LengthMinDX,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -1034,162 +1075,78 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.RetentiveAnodeTypeWaitTimer,
-			Name = "Retentive Anode Type Wait Timer",
-			Description = "Retentive Anode Type Wait Timer",
+			RID = IOTTagRID.WidthMinDX,
+			Name = "Width Min DX",
+			Description = "Width Min DX",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.RetentiveAnodeTypeWaitTimer,
+			Path = IOTTagPath.WidthMinDX,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LengthPresenceAnodeLimit,
-			Name = "Length Presence Anode Limit",
-			Description = "Length Presence Anode Limit",
+			RID = IOTTagRID.InHoleDelayDX,
+			Name = "In Hole Delay DX",
+			Description = "In Hole Delay DX",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Int,
 			HasNewValue = false,
-			Path = IOTTagPath.LengthPresenceAnodeLimit,
+			Path = IOTTagPath.InHoleDelayDX,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.WidthPresenceAnodeLimit,
-			Name = "Width Presence Anode Limit",
-			Description = "Width Presence Anode Limit",
+			RID = IOTTagRID.WidthDelayMaxDX,
+			Name = "Width Delay Max DX",
+			Description = "Width Delay Max DX",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Int,
 			HasNewValue = false,
-			Path = IOTTagPath.WidthPresenceAnodeLimit,
+			Path = IOTTagPath.WidthDelayMaxDX,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		*/
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LengthDelayMaxDX,
+			Name = "Length Delay Max DX",
+			Description = "Length Delay Max DX",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.LengthDelayMaxDX,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
 
 		#endregion
-
-		#region Announcement
-
-		/*
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.EGAMetaDataWait,
-			Name = "EGA Meta Data Wait",
-			Description = "EGA Meta Data Wait",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.EGAMetaDataWait,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.RetentiveAnodeDetectionTimerZT04,
-			Name = "Retentive Anode Detection Timer ZT04",
-			Description = "Retentive Anode Detection Timer ZT04",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.RetentiveAnodeDetectionTimerZT04,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		*/
 
 		#endregion
 
 		#region Health
 
-		/*
+		// Camera Cooling Fields
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayFV01,
-			Name = "Delay FV01",
-			Description = "Delay FV01",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.DelayFV01,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		*/
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DurationFV01,
-			Name = "Duration FV01",
-			Description = "Duration FV01",
+			RID = IOTTagRID.CameraCoolingPeriod,
+			Name = "FV01 - Camera Cooling Period",
+			Description = "Period of the camera cooling cycle",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Int,
 			HasNewValue = false,
-			Path = IOTTagPath.DurationFV01,
+			Path = IOTTagPath.CameraCoolingPeriod,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		/*
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayFV02,
-			Name = "Delay FV02",
-			Description = "Delay FV02",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.DelayFV02,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		*/
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DurationFV02,
-			Name = "Duration FV02",
-			Description = "Duration FV02",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Int,
-			HasNewValue = false,
-			Path = IOTTagPath.DurationFV02,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayFV03,
-			Name = "Delay FV03",
-			Description = "Delay FV03",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.Int,
-			HasNewValue = false,
-			Path = IOTTagPath.DelayFV03,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		/*
-		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.RetentiveAnodeEntranceTimerZT04,
-			Name = "Retentive Anode Entrance Timer ZT04",
-			Description = "Retentive Anode Entrance Timer ZT04",
-			CurrentValue = "0",
-			NewValue = "0",
-			ValueType = IOTTagType.UShort,
-			HasNewValue = false,
-			Path = IOTTagPath.RetentiveAnodeEntranceTimerZT04,
-			IOTDeviceID = twinCat.ID,
-			IOTDevice = twinCat,
-		});
-		*/
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingFrequencyNormal,
-			Name = "Camera Cooling Frequency Normal",
-			Description = "Camera Cooling Frequency Normal",
+			Name = "FV01 - Camera Cooling Frequency Normal",
+			Description = "Normal frequency for camera cooling",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
@@ -1200,8 +1157,8 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingFrequencyHot,
-			Name = "Camera Cooling Frequency Hot",
-			Description = "Camera Cooling Frequency Hot",
+			Name = "FV01 - Camera Cooling Frequency Hot",
+			Description = "Frequency for camera cooling when hot",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
@@ -1211,33 +1168,108 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LEDBarsCleaningFrequencyNormal,
-			Name = "LED Bars Cleaning Frequency Normal",
-			Description = "LED Bars Cleaning Frequency Normal",
+			RID = IOTTagRID.CameraCoolingTempWarning,
+			Name = "FV01 - Camera Cooling Temp Warning",
+			Description = "Warning temperature for camera cooling",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.LEDBarsCleaningFrequencyNormal,
+			Path = IOTTagPath.CameraCoolingTempWarning,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LEDBarsCleaningFrequencyHot,
-			Name = "LED Bars Cleaning Frequency Hot",
-			Description = "LED Bars Cleaning Frequency Hot",
+			RID = IOTTagRID.CameraCoolingDuration,
+			Name = "FV01 - Camera Cooling Duration",
+			Description = "Duration of the camera cooling",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CameraCoolingDuration,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		// LED Blowing Fields
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LedBlowingPeriod,
+			Name = "FV02 - LED Blowing Period",
+			Description = "Period of the LED blowing cycle",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.LedBlowingPeriod,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LedBlowingFrequencyNormal,
+			Name = "FV02 - LED Blowing Frequency Normal",
+			Description = "Normal frequency for LED blowing",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
-			Path = IOTTagPath.LEDBarsCleaningFrequencyHot,
+			Path = IOTTagPath.LedBlowingFrequencyNormal,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LedBlowingFrequencyHot,
+			Name = "FV02 - LED Blowing Frequency Hot",
+			Description = "Frequency for LED blowing when hot",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.LedBlowingFrequencyHot,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LedBlowingTempWarning,
+			Name = "FV02 - LED Blowing Temp Warning",
+			Description = "Warning temperature for LED blowing",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.LedBlowingTempWarning,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LedBlowingDuration,
+			Name = "FV02 - LED Blowing Duration",
+			Description = "Duration of the LED blowing",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.LedBlowingDuration,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HotAnodeTT01,
+			Name = "Anode Ambient TT01",
+			Description = "Temperature set point for hot anode ambient",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HotAnodeTT01,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.HotAnodeTT02,
-			Name = "Hot Anode TT02",
-			Description = "Hot Anode TT02",
+			Name = "Anode Surface TT02",
+			Description = "Temperature set point for hot anode surface",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
@@ -1246,84 +1278,186 @@ public static class IOTInitializer
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.WarnCam01Temp,
+			Name = "Alert CAM01 Temp",
+			Description = "Warning temperature for CAM01",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.WarnCam01Temp,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.WarnCam02Temp,
+			Name = "Alert CAM02 Temp",
+			Description = "Warning temperature for CAM02",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.WarnCam02Temp,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
 
 		#endregion
 
 		#region Diagnostic
 
-		/*
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DelayLuxCheck,
-			Name = "Delay Lux Check",
-			Description = "Delay Lux Check",
+			RID = IOTTagRID.LuminosityCheckFrequencyCam1LedOn,
+			Name = "Cam1 Led On Luminosity Check Frequency",
+			Description = "Cam1 Led On Luminosity Check Frequency",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
-			Path = IOTTagPath.DelayLuxCheck,
+			Path = IOTTagPath.LuminosityCheckFrequencyCam1LedOn,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		*/
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.DurationLuxCheck,
-			Name = "Duration Lux Check",
-			Description = "Duration Lux Check",
+			RID = IOTTagRID.ThresholdLuminosityCam1LedOn,
+			Name = "Cam1 Led On Threshold Luminosity",
+			Description = "Cam1 Led On Threshold Luminosity",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.ThresholdLuminosityCam1LedOn,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DurationLuxCheckCam1LedOn,
+			Name = "Cam1 Led On Duration Lux Check",
+			Description = "Cam1 Led On Duration Lux Check",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Int,
 			HasNewValue = false,
-			Path = IOTTagPath.DurationLuxCheck,
+			Path = IOTTagPath.DurationLuxCheckCam1LedOn,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.ThresholdLuminosityLED,
-			Name = "Threshold Luminosity LED",
-			Description = "Threshold Luminosity LED",
+			RID = IOTTagRID.ThresholdLuminosityCam1LedOff,
+			Name = "Cam1 Led Off Threshold Luminosity",
+			Description = "Cam1 Led Off Threshold Luminosity",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.ThresholdLuminosityLED,
+			Path = IOTTagPath.ThresholdLuminosityCam1LedOff,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.ThresholdLuminosityNoLED,
-			Name = "Threshold Luminosity No LED",
-			Description = "Threshold Luminosity No LED",
+			RID = IOTTagRID.LuminosityCheckFrequencyCam1LedOff,
+			Name = "Cam1 Led Off Luminosity Check Frequency",
+			Description = "Cam1 Led Off Luminosity Check Frequency",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.LuminosityCheckFrequencyCam1LedOff,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DurationLuxCheckCam1LedOff,
+			Name = "Cam1 Led Off Duration Lux Check",
+			Description = "Cam1 Led Off Duration Lux Check",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DurationLuxCheckCam1LedOff,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LuminosityCheckFrequencyCam2LedOn,
+			Name = "Cam2 Led On Luminosity Check Frequency",
+			Description = "Cam2 Led On Luminosity Check Frequency",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.UShort,
+			HasNewValue = false,
+			Path = IOTTagPath.LuminosityCheckFrequencyCam2LedOn,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.ThresholdLuminosityCam2LedOn,
+			Name = "Cam2 Led On Threshold Luminosity",
+			Description = "Cam2 Led On Threshold Luminosity",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
-			Path = IOTTagPath.ThresholdLuminosityNoLED,
+			Path = IOTTagPath.ThresholdLuminosityCam2LedOn,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DurationLuxCheckCam2LedOn,
+			Name = "Cam2 Led On Duration Lux Check",
+			Description = "Cam2 Led On Duration Lux Check",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DurationLuxCheckCam2LedOn,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		/*
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LuminosityWaitTimer,
-			Name = "Luminosity Wait Timer",
-			Description = "Luminosity Wait Timer",
+			RID = IOTTagRID.ThresholdLuminosityCam2LedOff,
+			Name = "Cam2 Led Off Threshold Luminosity",
+			Description = "Cam2 Led Off Threshold Luminosity",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.ThresholdLuminosityCam2LedOff,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.LuminosityCheckFrequencyCam2LedOff,
+			Name = "Cam2 Led Off Luminosity Check Frequency",
+			Description = "Cam2 Led Off Luminosity Check Frequency",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
-			Path = IOTTagPath.LuminosityWaitTimer,
+			Path = IOTTagPath.LuminosityCheckFrequencyCam2LedOff,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
-		*/
+
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
-			RID = IOTTagRID.LuminosityCheckFrequency,
-			Name = "Luminosity Check Frequency",
-			Description = "Luminosity Check Frequency",
+			RID = IOTTagRID.DurationLuxCheckCam2LedOff,
+			Name = "Cam2 Led Off Duration Lux Check",
+			Description = "Cam2 Led Off Duration Lux Check",
 			CurrentValue = "0",
 			NewValue = "0",
-			ValueType = IOTTagType.UShort,
+			ValueType = IOTTagType.Int,
 			HasNewValue = false,
-			Path = IOTTagPath.LuminosityCheckFrequency,
+			Path = IOTTagPath.DurationLuxCheckCam2LedOff,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -1377,6 +1511,31 @@ public static class IOTInitializer
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.ZT4,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		// AT01 AT02
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.AT01,
+			Name = "Luminosity AT01",
+			Description = "Luminosity AT01",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.AT01,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.AT02,
+			Name = "Luminosity AT02",
+			Description = "Luminosity AT02",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.AT02,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});

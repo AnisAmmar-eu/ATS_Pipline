@@ -10,7 +10,7 @@ namespace Core.Entities.StationCycles.Repositories;
 public class StationCycleRepository : BaseEntityRepository<AnodeCTX, StationCycle, DTOStationCycle>,
 	IStationCycleRepository
 {
-	public StationCycleRepository(AnodeCTX context) : base(context)
+	public StationCycleRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 

@@ -34,7 +34,8 @@ public static class ADSUtils
 	#region AlarmRT
 
 	public const string AlarmList = "VA_ALM.List";
-	public const string AlarmTime = "VA_IT.AlarmTime";
+	public const string SyncTime = "VA_IT.PLC_TT_SER";
+	public const string DiskSpace = "VA_IT.DISK_SPACE";
 
 	#endregion
 

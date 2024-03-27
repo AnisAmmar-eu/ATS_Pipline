@@ -7,7 +7,7 @@ namespace Core.Entities.Anodes.Repositories;
 
 public class AnodeRepository : BaseEntityRepository<AnodeCTX, Anode, DTOAnode>, IAnodeRepository
 {
-	public AnodeRepository(AnodeCTX context) : base(context)
+	public AnodeRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

@@ -1,6 +1,7 @@
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,8 +32,8 @@ public class SendAlarmLogService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		int delayMS = _configuration.GetValueWithThrow<int>("SendAlarmCycleMS");
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
+		int sendAlarmCycleMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.SendAlarmCycleMS);
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(sendAlarmCycleMS));
 		IAlarmLogService alarmLogService
 			= asyncScope.ServiceProvider.GetRequiredService<IAlarmLogService>();
 		IAlarmRTService alarmRTService

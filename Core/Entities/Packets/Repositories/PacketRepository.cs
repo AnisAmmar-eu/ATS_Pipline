@@ -7,7 +7,7 @@ namespace Core.Entities.Packets.Repositories;
 
 public class PacketRepository : BaseEntityRepository<AnodeCTX, Packet, DTOPacket>, IPacketRepository
 {
-	public PacketRepository(AnodeCTX context) : base(context)
+	public PacketRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

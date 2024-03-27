@@ -8,7 +8,7 @@ namespace Core.Entities.BI.BITemperatures.Repositories;
 public class BITemperatureRepository : BaseEntityRepository<AnodeCTX, BITemperature, DTOBITemperature>,
 	IBITemperatureRepository
 {
-	public BITemperatureRepository(AnodeCTX context) : base(context)
+	public BITemperatureRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 }

@@ -10,4 +10,5 @@ public partial class OutFurnace : Furnace, IBaseEntity<OutFurnace, DTOOutFurnace
 	public DateTimeOffset? PickUpTS { get; set; }
 	public DateTimeOffset? DepositTS { get; set; }
 	public int InvalidPacket { get; set; }
+	public int BakedConvPos { get; set; }
 }

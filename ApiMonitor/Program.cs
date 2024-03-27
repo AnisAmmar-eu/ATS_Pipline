@@ -92,6 +92,9 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTSer
 builder.Services.AddSingleton<PurgeService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 
+builder.Services.AddSingleton<DiskCheckService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<DiskCheckService>());
+
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
@@ -111,7 +114,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>("ClientHost");
+string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>(ConfigDictionary.ClientHost);
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()

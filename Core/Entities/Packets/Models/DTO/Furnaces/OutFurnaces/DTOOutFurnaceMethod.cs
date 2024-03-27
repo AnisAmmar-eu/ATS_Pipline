@@ -18,6 +18,7 @@ public partial class DTOOutFurnace
 		PickUpTS = outFurnace.PickUpTS;
 		DepositTS = outFurnace.DepositTS;
 		InvalidPacket = outFurnace.InvalidPacket;
+		BakedConvPos = outFurnace.BakedConvPos;
 	}
 
 	public override OutFurnace ToModel()

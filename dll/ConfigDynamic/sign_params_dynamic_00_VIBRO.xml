@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<Sig_paramId>"9223372036854775804"</Sig_paramId>
+<Sig_AnodeOrientationAngleMax>0.5</Sig_AnodeOrientationAngleMax>
+<Sig_detBorder_Gauss_KernelSize>9</Sig_detBorder_Gauss_KernelSize>
+<Sig_detBorder_SideDetection>0</Sig_detBorder_SideDetection>
+<Sig_detBorder_GrayScaleMax>140</Sig_detBorder_GrayScaleMax>
+<Sig_detBorder_GrayScaleMin>60</Sig_detBorder_GrayScaleMin>
+<Sig_detBorder_AngleSpan>8.7266462599716474e-002</Sig_detBorder_AngleSpan>
+<Sig_detBorder_AngleStep>3.4906585039886592e-003</Sig_detBorder_AngleStep>
+<Sig_detBorder_HoughThreshold>900</Sig_detBorder_HoughThreshold>
+<Sig_detFlutes_OuterRingDistFromStubhole>30</Sig_detFlutes_OuterRingDistFromStubhole>
+<Sig_detFlutes_InnerRingDistFromStubhole>15</Sig_detFlutes_InnerRingDistFromStubhole>
+<Sig_detFlutes_BlobDetectMaxInertiaRatio>7.5000000000000000e-001</Sig_detFlutes_BlobDetectMaxInertiaRatio>
+<Sig_detFlutes_BlobDetectMaxThreshold>200</Sig_detFlutes_BlobDetectMaxThreshold>
+<Sig_detFlutes_BlobDetectMinArea>1.0000000000000000e-003</Sig_detFlutes_BlobDetectMinArea>
+<Sig_detFlutes_BlobDetectMinConvexity>8.3999999999999997e-001</Sig_detFlutes_BlobDetectMinConvexity>
+<Sig_detFlutes_BlobDetectMinThreshold>10</Sig_detFlutes_BlobDetectMinThreshold>
+<Sig_detFlutes_GrayScaleMax>255</Sig_detFlutes_GrayScaleMax>
+<Sig_detFlutes_GrayScaleMin>0</Sig_detFlutes_GrayScaleMin>
+<Sig_detStubhole_FirstDetectionStop>0</Sig_detStubhole_FirstDetectionStop>
+<Sig_detStubhole_SearchRegion>600 750 900 900</Sig_detStubhole_SearchRegion>
+<Sig_detStubhole_maxRadius>288</Sig_detStubhole_maxRadius>
+<Sig_detStubhole_minRadius>282</Sig_detStubhole_minRadius>
+<Sig_detStubhole_CannyHighThreshold>130</Sig_detStubhole_CannyHighThreshold>
+<Sig_detStubhole_CircularHoughThreshold>35</Sig_detStubhole_CircularHoughThreshold>
+<Sig_BorderToStubholeDistMinMax>800 1300</Sig_BorderToStubholeDistMinMax>
+<Sig_ROI_RectangleDimCoeff>4.766667 3.177778</Sig_ROI_RectangleDimCoeff>
+<Sig_ROI_StubholeMaskDefinition>2.383333 1.588889 1.30</Sig_ROI_StubholeMaskDefinition>
+<Sig_ROI_RectangleMaskDefinition>0.00 0.00 0.00 0.00</Sig_ROI_RectangleMaskDefinition>
+<Sig_ROI_AnchorPointPosCoeff>1.00 -2.383333 1.00 -1.588889</Sig_ROI_AnchorPointPosCoeff>
+<Sig_FluteNb>8</Sig_FluteNb>
+<Sig_ROI_LineDetection>60 70 2070 180</Sig_ROI_LineDetection>
+<Sig_detBorder_Gauss_Sigma>2</Sig_detBorder_Gauss_Sigma>
+<Sig_detBorder_Canny_LowThreshold>25</Sig_detBorder_Canny_LowThreshold>
+<Sig_detBorder_Canny_HighThreshold>75</Sig_detBorder_Canny_HighThreshold>
+<Sig_detBorder_Canny_ApertureSize>3</Sig_detBorder_Canny_ApertureSize>
+<Sig_SIFT_Gauss_KernelSize>7</Sig_SIFT_Gauss_KernelSize>
+<Sig_SIFT_Gauss_Sigma>1.0</Sig_SIFT_Gauss_Sigma>
+<Sig_detStubhole_Gauss_KernelSize>9</Sig_detStubhole_Gauss_KernelSize>
+<Sig_detStubhole_Gauss_Sigma>2.0</Sig_detStubhole_Gauss_Sigma>
+<Sig_detFlutes_Gauss_KernelSize>9</Sig_detFlutes_Gauss_KernelSize>
+<Sig_detFlutes_Gauss_Sigma>2.0</Sig_detFlutes_Gauss_Sigma>
+<Sig_imageExtension>".jpg"</Sig_imageExtension>
+<Sig_imageSizeRows>2054</Sig_imageSizeRows>
+<Sig_imageSizeCols>2456</Sig_imageSizeCols>
+</opencv_storage>

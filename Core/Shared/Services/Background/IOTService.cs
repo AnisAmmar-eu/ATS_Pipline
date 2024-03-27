@@ -1,5 +1,6 @@
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,8 +26,8 @@ public class IOTService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		int delayMS = _configuration.GetValueWithThrow<int>("IOTMS");
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
+		int IOTMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.IOTMS);
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(IOTMS));
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IIOTDeviceService iotDeviceService
 			= asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();

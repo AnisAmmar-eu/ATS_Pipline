@@ -121,10 +121,7 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 
 	public async Task RemoveByLifeSpan(TimeSpan lifeSpan)
 	{
-		await AnodeUOW.StartTransaction();
 		await _repository.RemoveByLifeSpan(lifeSpan);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
 	}
 
 	public async Task RemoveAll(IEnumerable<T> entities)

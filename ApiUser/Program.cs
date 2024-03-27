@@ -155,7 +155,7 @@ builder.Services.AddSwaggerGen(
 
 WebApplication app = builder.Build();
 
-string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>("ClientHost");
+string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>(ConfigDictionary.ClientHost);
 app.UseCors(policyBuilder => policyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()

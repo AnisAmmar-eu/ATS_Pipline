@@ -40,10 +40,10 @@ public class CheckSyncTimeService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		int delayMS = _configuration.GetValueWithThrow<int>("CheckSyncTimeMS");
-		int deltaTimeSec = _configuration.GetValueWithThrow<int>("DeltaTimeSec");
-		int retryMS = _configuration.GetValueWithThrow<int>("RetryMS");
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
+		int CheckSyncTimeMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.CheckSyncTimeMS);
+		int deltaTimeSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.DeltaTimeSec);
+		int retryMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.RetryMS);
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(CheckSyncTimeMS));
 
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
@@ -75,15 +75,20 @@ public class CheckSyncTimeService : BackgroundService
 
 						DateTimeOffset serverTime = jsonElement.Deserialize<DateTimeOffset>();
 						DateTimeOffset stationTime = DateTimeOffset.Now;
+						_logger.LogInformation(
+							"Server time is {serverTime}, station time is {stationTime}",
+							serverTime,
+							stationTime);
 						TimeSpan delta = serverTime - stationTime;
-
-						if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
-							return;
-
+						_logger.LogInformation("Delta time between server and station is {delta}", delta);
 						AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
 						// Trigger an alarm
-						uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.AlarmTime);
-						tcClient.WriteAny(alarmTimeHandle, 1);
+						uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.SyncTime);
+						_logger.LogInformation("Delt IS superior ? {delta}", Math.Abs(delta.TotalSeconds) <= deltaTimeSec);
+						if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
+							tcClient.WriteAny(alarmTimeHandle, 1);
+						else
+							tcClient.WriteAny(alarmTimeHandle, 2);
 					}
 					,
                     cancel);
