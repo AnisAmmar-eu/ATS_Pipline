@@ -35,6 +35,9 @@ using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.FileSettings.Models.DB;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
+using Core.Entities.Vision.ToDos.Models.DB.ToNotifys;
+using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
+using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Shared.Models.DB.System.Logs;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -55,8 +58,11 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	#region Vision
 
 	public DbSet<FileSetting> FileSetting => Set<FileSetting>();
-	public DbSet<ToMatch> MatchableStack => Set<ToMatch>();
-	public DbSet<ToLoad> LoadableQueue => Set<ToLoad>();
+	public DbSet<ToMatch> ToMatch => Set<ToMatch>();
+	public DbSet<ToLoad> ToLoad => Set<ToLoad>();
+	public DbSet<ToNotify> ToNotify => Set<ToNotify>();
+	public DbSet<ToSign> ToSign => Set<ToSign>();
+	public DbSet<ToUnload> ToUnload => Set<ToUnload>();
 
 	#endregion
 
@@ -234,19 +240,19 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasForeignKey(b => b.CameraID);
 
 		builder.Entity<ToMatch>()
-			.HasOne(matchableStack => matchableStack.MatchableCycle)
-			.WithMany(matchableCycle => matchableCycle.MatchableStacks)
-			.HasForeignKey(matchableStack => matchableStack.MatchableCycleID);
+			.HasOne(ToMatch => ToMatch.MatchableCycle)
+			.WithMany(ToMatch => ToMatch.MatchableStacks)
+			.HasForeignKey(ToMatch => ToMatch.MatchableCycleID);
 
 		builder.Entity<ToMatch>()
-			.HasIndex(matchableStack => matchableStack.ShootingTS);
+			.HasIndex(ToMatch => ToMatch.ShootingTS);
 
 		builder.Entity<ToLoad>()
-			.HasOne(loadableQueue => loadableQueue.LoadableCycle)
-			.WithMany(loadableCycle => loadableCycle.LoadableQueues)
-			.HasForeignKey(loadableQueue => loadableQueue.LoadableCycleID);
+			.HasOne(ToLoad => ToLoad.LoadableCycle)
+			.WithMany(ToLoad => ToLoad.LoadableQueues)
+			.HasForeignKey(ToLoad => ToLoad.LoadableCycleID);
 
 		builder.Entity<ToLoad>()
-			.HasIndex(loadableQueue => loadableQueue.ShootingTS);
+			.HasIndex(ToLoad => ToLoad.ShootingTS);
 	}
 }

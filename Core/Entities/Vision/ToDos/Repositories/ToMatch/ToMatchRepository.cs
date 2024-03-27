@@ -20,7 +20,7 @@ public class ToMatchRepository : BaseEntityRepository<AnodeCTX, ToMatch, DTOToMa
 		{
 			return await GetBy(
 				filters: [matchable => matchable.DataSetID == dataSetID],
-				orderBy: query => query.OrderBy(matchable => matchable.CycleTS),
+				orderBy: query => query.OrderBy(matchable => matchable.ShootingTS),
 				withTracking: false,
 				includes: nameof(ToMatch.MatchableCycle));
 		}

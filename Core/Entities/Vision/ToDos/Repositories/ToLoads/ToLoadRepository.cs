@@ -20,7 +20,7 @@ public class ToLoadRepository : BaseEntityRepository<AnodeCTX, ToLoad, DTOToLoad
 		{
 			return await GetBy(
 				filters: [loadable => loadable.DataSetID == dataSetID],
-				orderBy: query => query.OrderBy(loadable => loadable.CycleTS),
+				orderBy: query => query.OrderBy(loadable => loadable.ShootingTS),
 				withTracking: false,
 				includes: nameof(ToLoad.LoadableCycle));
 		}
