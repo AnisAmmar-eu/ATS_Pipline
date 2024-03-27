@@ -41,6 +41,7 @@ namespace Core.Shared.Services.Background
 			int cycleMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.CycleMS);
 			long diskCheckThreshold = _configuration.GetValueWithThrow<long>(ConfigDictionary.DiskCheckThreshold);
 			int retryMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.RetryMS);
+			string DiskCheckLabel = _configuration.GetValueWithThrow<string>(ConfigDictionary.DiskCheckLabel);
 			CancellationToken cancel = CancellationToken.None;
 			_logger.LogInformation(
 				"DiskCheckService started with cycleMS {cycleMS}"
@@ -56,8 +57,8 @@ namespace Core.Shared.Services.Background
 				{
 					foreach (DriveInfo d in DriveInfo.GetDrives())
 					{
-						// Check only local physical storage mount
-						if (!d.DriveType.ToString().Equals("Fixed"))
+						// Check only local physical storage mount with the correct name
+						if (!d.DriveType.ToString().Equals("Fixed") || !d.Name.Equals(DiskCheckLabel + ":\\"))
 							continue;
 
 						if (d.IsReady)
@@ -67,7 +68,7 @@ namespace Core.Shared.Services.Background
 							string msg = string.Format(
 								"{0}MB free space left for Drive {1}",
 								freeSpaceMB,
-								d.VolumeLabel);
+								d.Name);
 
 							AdsClient tcClient = await TwinCatConnectionManager.Connect(
 								851,

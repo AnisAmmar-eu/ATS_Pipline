@@ -5,6 +5,7 @@ using Core.Entities.Vision.SignedCycles.Services.MatchableStacks;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
+using Core.Shared.Services.Background;
 using Core.Shared.Services.Background.Vision;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.SignalR;
@@ -24,6 +25,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Configuration.LoadBaseConfiguration();
 
+/*
 if (!Station.IsServer)
 	throw new("¨This API can only run on the server. Please update appsettings.json");
 
@@ -62,6 +64,11 @@ builder.Services.AddCors(
 			});
 	});
 
+*/
+
+builder.Services.AddSingleton<DiskCheckService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<DiskCheckService>());
+
 WebApplication app = builder.Build();
 
 app.UseCors("AllowOrigin");
@@ -79,6 +86,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapCarter();
+//app.MapCarter();
 
 app.Run();

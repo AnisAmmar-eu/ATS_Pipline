@@ -60,6 +60,7 @@ public static class ConfigDictionary
 	#region DiskCheck
 
 	public const string DiskCheckThreshold = "DiskCheckThreshold";
+	public const string DiskCheckLabel = "DiskCheckLabel";
 
 	#endregion
 
