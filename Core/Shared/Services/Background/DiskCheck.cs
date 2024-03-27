@@ -57,11 +57,7 @@ namespace Core.Shared.Services.Background
 				{
 					foreach (DriveInfo d in DriveInfo.GetDrives())
 					{
-						// Check only local physical storage mount with the correct name
-						if (!d.DriveType.ToString().Equals("Fixed") || !d.Name.Equals(DiskCheckLabel + ":\\"))
-							continue;
-
-						if (d.IsReady)
+						if (d.Name.Equals(DiskCheckLabel + ":\\") && d.IsReady)
 						{
 							// only returns free space of current user
 							long freeSpaceMB = d.AvailableFreeSpace / (1024*1024);
@@ -76,6 +72,7 @@ namespace Core.Shared.Services.Background
 								retryMS,
 								cancel);
 							uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.DiskSpace);
+
 
 							if (freeSpaceMB <= diskCheckThreshold)
 							{
