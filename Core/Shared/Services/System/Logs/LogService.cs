@@ -8,7 +8,7 @@ using Core.Shared.Repositories.System.Logs;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
-namespace Core.Shared.Services.System.Logs;
+namespace Core.Shared.Services.SystemApp.Logs;
 
 public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogService
 {

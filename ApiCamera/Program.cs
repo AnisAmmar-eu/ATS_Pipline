@@ -10,7 +10,7 @@ using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background;
 using Core.Shared.Services.Background.BI.BITemperature;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.SignalR.CameraHub;
 using Core.Shared.SignalR.IOTHub;

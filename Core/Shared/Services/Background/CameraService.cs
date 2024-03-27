@@ -52,6 +52,7 @@ public class CameraService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
+		await Task.Delay(20000);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		_hubContext = asyncScope.ServiceProvider.GetRequiredService<IHubContext<CameraHub, ICameraHub>>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -233,23 +234,40 @@ public class CameraService : BackgroundService
 
 	private void Reconnect(object? sender, NotifyEventArgs e)
 	{
-		Device? device = (Device?)sender?.GetType().GetProperty("Parent")?.GetValue(sender);
-
-		if (device is null)
-			return;
-
+		_logger.LogError("Reconnecting camera");
 		try
 		{
-			bool isOk = device.Stream.TryStop();
-			if (isOk)
-				device.Stream.Start();
-			else
-				_logger.LogError("Could not stop the stream!");
+			using System.Diagnostics.Process process = new();
+			process.StartInfo = new() {
+				WindowStyle = ProcessWindowStyle.Normal,
+				FileName = "cmd.exe",
+				Arguments = "/C %SYSTEMROOT%\\System32\\inetsrv\\appcmd recycle apppool /apppool.name:\"ApiCameraLocal\"",
+			};
+			process.Start();
+			_logger.LogError("Recycling the app pool");
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError("Error: " + ex.Message);
+			_logger.LogError("Error while recycling the app pool: {ex}", ex.Message);
 		}
+
+		//Device? device = (Device?)sender?.GetType().GetProperty("Parent")?.GetValue(sender);
+
+		//if (device is null)
+		//	return;
+
+		//try
+		//{
+		//	bool isOk = device.Stream.TryStop();
+		//	if (isOk)
+		//		device.Stream.Start();
+		//	else
+		//		_logger.LogError("Could not stop the stream!");
+		//}
+		//catch (Exception ex)
+		//{
+		//	_logger.LogError("Error: " + ex.Message);
+		//}
 	}
 
 	#endregion

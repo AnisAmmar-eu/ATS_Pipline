@@ -73,7 +73,6 @@ namespace Core.Shared.Services.Background
 								cancel);
 							uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.DiskSpace);
 
-
 							if (freeSpaceMB <= diskCheckThreshold)
 							{
 								_logger.LogCritical(msg);

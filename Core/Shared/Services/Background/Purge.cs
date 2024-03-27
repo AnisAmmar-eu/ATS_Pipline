@@ -7,7 +7,7 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
