@@ -36,8 +36,9 @@ public class SignService : BackgroundService
         string DLLPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
         string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
         string signDynamicParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
-        int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
-        using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
+        bool allowSignMatch = _configuration.GetValueWithThrow<bool>(ConfigDictionary.AllowSignMatch);
+		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
+		using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
 
         DLLVisionImport.SetDllDirectory(DLLPath);
 
@@ -52,13 +53,10 @@ public class SignService : BackgroundService
         {
             try
             {
-                foreach (string image in Directory.GetFiles(image_folder, "*.jpg"))
+                if (allowSignMatch)
                 {
-                    string filename = new FileInfo(image).Name;
-                    string anodeId = Path.GetFileNameWithoutExtension(filename);
-                    int returnSigner = DLLVisionImport.fcx_sign(0, 0, image_folder, anodeId, signature_folder);
-                    _logger.LogInformation("Return code de la signature: " + returnSigner + " pour anode " + anodeId);
-                }
+                    // TODO signing
+				}
 			}
             catch (Exception ex)
             {

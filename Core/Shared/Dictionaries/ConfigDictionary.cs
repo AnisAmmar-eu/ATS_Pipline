@@ -48,6 +48,7 @@ public static class ConfigDictionary
     public const string DLLPath = "VisionSettings:DLLPath";
     public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
     public const string SANpath = "VisionSettings:SANpath";
+    public const string AllowSignMatch = "VisionSettings:AllowSignMatch";
 
 	#endregion
 }
