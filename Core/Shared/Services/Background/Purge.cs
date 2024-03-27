@@ -6,6 +6,7 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
 using Core.Shared.Services.System.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -36,18 +37,14 @@ public class PurgeService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		int purgeThresholdSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeThreshold);
+		int purgeTimerSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeTimerSec);
+		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
+		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
-		int purgeThreshold = _configuration.GetValueWithThrow<int>("PurgeThreshold");
-		int purgeTimer = _configuration.GetValueWithThrow<int>("PurgeTimer");
-		using PeriodicTimer timer = new (TimeSpan.FromSeconds(purgeTimer));
-
-		IAlarmLogService alarmLogService
-   			= asyncScope.ServiceProvider.GetRequiredService<IAlarmLogService>();
-   		ILogService logService
-   			= asyncScope.ServiceProvider.GetRequiredService<ILogService>();
-   		IPacketService paquetService
-   			= asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
+		TimeSpan purgeThreshold = TimeSpan.FromSeconds(purgeThresholdSec);
+		using PeriodicTimer timer = new (TimeSpan.FromSeconds(purgeTimerSec));
 
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
@@ -55,67 +52,52 @@ public class PurgeService : BackgroundService
 			try
 			{
 				_logger.LogInformation("PurgeService running at: {time}", DateTimeOffset.Now);
-				DateTimeOffset threshold = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(purgeThreshold));
+				_logger.LogError("PurgeService threshold: {threshold}", purgeThreshold.ToString());
 
-				_logger.LogInformation("alarmLogService purging.");
-				List<AlarmLog> alarmLogs = (await alarmLogService.GetAll(
-					[alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent],
-					withTracking: false))
-					.ConvertAll(alarmLog => alarmLog.ToModel());
+				DateTimeOffset threshold = DateTimeOffset.Now.Subtract(purgeThreshold);
+				_logger.LogError("PurgeService threshold date: {threshold}", threshold.ToString());
 
-				await alarmLogService.RemoveAll(alarmLogs);
+				// Delete AlarmLog
+				await _anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
 
-				_logger.LogInformation("paquetService with images and alarmCycle purging.");
-				List<Packet> paquets = (await paquetService.GetAll(
-					[paquet => paquet.TS < threshold],
-					withTracking: false))
-					.ConvertAll(paquet => paquet.ToModel());
+				// Delete Log
+				await _anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
 
-				foreach (Packet paquet in paquets)
+				// Delete Packet
+				List<Packet> packets = await _anodeUOW.Packet.GetAll(
+					[paquet => paquet.TS < threshold && paquet.Status == PacketStatus.Sent],
+					withTracking: false);
+
+				foreach (Packet packet in packets)
 				{
-					if (paquet.Status != PacketStatus.Sent)
+					_logger.LogError("PurgeService packet: {packet}", packet.ID);
+					// Delete images
+					if (packet is Shooting shooting)
 					{
-						paquets.Remove(paquet);
-						continue;
+						string cycleRID = shooting.StationCycleRID;
+						string anodeType = shooting.AnodeType;
+						int stationID = Station.ID;
+
+						FileInfo thumbnail1 = Shooting.GetImagePathFromRoot(cycleRID, stationID, thumbnailsPath, anodeType, 1, extension);
+						FileInfo thumbnail2 = Shooting.GetImagePathFromRoot(cycleRID, stationID, thumbnailsPath, anodeType, 2, extension);
+						FileInfo image1 = Shooting.GetImagePathFromRoot(cycleRID, stationID, imagesPath, anodeType, 1, extension);
+						FileInfo image2 = Shooting.GetImagePathFromRoot(cycleRID, stationID, imagesPath, anodeType, 2, extension);
+
+						DeleteFileIfExists(thumbnail1);
+						DeleteFileIfExists(thumbnail2);
+						DeleteFileIfExists(image1);
+						DeleteFileIfExists(image2);
 					}
 
-					if (paquet is Shooting)
-					{
-						FileInfo thumbnail1 = await paquetService.GetThumbnailFromCycleRIDAndCamera(
-							paquet.ID,
-							1);
-						FileInfo thumbnail2 = await paquetService.GetThumbnailFromCycleRIDAndCamera(
-							paquet.ID,
-							2);
-
-						FileInfo image1 = await paquetService.GetImageFromCycleRIDAndCamera(
-							paquet.ID,
-							1);
-						FileInfo image2 = await paquetService.GetImageFromCycleRIDAndCamera(
-							paquet.ID,
-							2);
-
-						if (File.Exists(image1.FullName))
-							File.Delete(image1.FullName);
-
-						if (File.Exists(image2.FullName))
-							File.Delete(image2.FullName);
-
-						if (File.Exists(thumbnail1.FullName))
-							File.Delete(thumbnail1.FullName);
-
-						if (File.Exists(thumbnail2.FullName))
-							File.Delete(thumbnail2.FullName);
-					}
-
-					if (paquet is AlarmList)
-						await _anodeUOW.AlarmCycle.ExecuteDeleteAsync(alarm => alarm.AlarmListPacketID == paquet.ID);
+					// Delete AlarmCycle
+					if (packet is AlarmList alarmList)
+						await _anodeUOW.AlarmCycle.ExecuteDeleteAsync(alarm => alarm.AlarmListPacketID == alarmList.ID);
 				}
 
-				await paquetService.RemoveAll(paquets);
-
-				_logger.LogInformation("logService purging.");
-				await logService.RemoveByLifeSpan(TimeSpan.FromSeconds(purgeThreshold));
+				await _anodeUOW.StartTransaction();
+				_anodeUOW.Packet.RemoveRange(packets);
+				_anodeUOW.Commit();
+				await _anodeUOW.CommitTransaction();
 			}
 			catch (Exception ex)
 			{
@@ -123,6 +105,19 @@ public class PurgeService : BackgroundService
 					"Failed to execute PurgeService with exception message {message}.",
 					ex.Message);
 			}
+		}
+	}
+
+	private static void DeleteFileIfExists(FileInfo file)
+	{
+		try
+		{
+			if (file.Exists)
+				file.Delete();
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Failed to delete file {file.FullName} with exception message {ex.Message}.");
 		}
 	}
 }

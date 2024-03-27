@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Core.Shared.Dictionaries;
 
 namespace Core.Shared.Services.Background;
 
@@ -25,8 +26,8 @@ public class SendLogService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		int delayMS = _configuration.GetValueWithThrow<int>("SendLogMS");
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
+		int sendLogMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.SendLogMS);
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(sendLogMS));
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		ILogService logService
 			= asyncScope.ServiceProvider.GetRequiredService<ILogService>();

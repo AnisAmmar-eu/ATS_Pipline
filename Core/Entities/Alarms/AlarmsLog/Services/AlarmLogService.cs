@@ -167,6 +167,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 	{
 		try
 		{
+			_logger.LogInformation($"New alarm log received with AlarmRID: {dtoAlarmLog.AlarmRID}");
 			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
 				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == dtoAlarmLog.AlarmRID],
 				query => query.OrderByDescending(alarmLog => alarmLog.ID),
@@ -191,6 +192,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		{
 			// If an alarmLog doesn't exist, this alarm just raised.
 			AlarmLog newAlarmLog = dtoAlarmLog.ToModel();
+			_logger.LogInformation($"Not found alarm log with AlarmRID: {dtoAlarmLog.AlarmRID}");
 			newAlarmLog.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
 			newAlarmLog.ID = 0;
 			await AnodeUOW.StartTransaction();

@@ -21,11 +21,11 @@ namespace Core.Shared.Services.Background
 	public class DiskCheckService : BackgroundService
 	{
 		private readonly IServiceScopeFactory _factory;
-		private readonly ILogger<SendAlarmLogService> _logger;
+		private readonly ILogger<DiskCheckService> _logger;
 		private readonly IConfiguration _configuration;
 
 		public DiskCheckService(
-			ILogger<SendAlarmLogService> logger,
+			ILogger<DiskCheckService> logger,
 			IServiceScopeFactory factory,
 			IConfiguration configuration
 			)
@@ -38,12 +38,16 @@ namespace Core.Shared.Services.Background
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-			int checkTimer = _configuration.GetValueWithThrow<int>("DiskCheckTimer");
-			long checkThreshold= _configuration.GetValueWithThrow<long>("DiskCheckThreshold");
-			int retryMS = _configuration.GetValueWithThrow<int>("RetryMS");
+			int cycleMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.CycleMS);
+			long diskCheckThreshold = _configuration.GetValueWithThrow<long>(ConfigDictionary.DiskCheckThreshold);
+			int retryMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.RetryMS);
 			CancellationToken cancel = CancellationToken.None;
-
-			using PeriodicTimer timer = new(TimeSpan.FromSeconds(checkTimer));
+			_logger.LogInformation(
+				"DiskCheckService started with cycleMS {cycleMS}"
+					+ "and diskCheckThreshold {diskCheckThreshold}MB",
+				cycleMS,
+				diskCheckThreshold);
+			using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(cycleMS));
 
 			while (await timer.WaitForNextTickAsync(stoppingToken)
 				&& !stoppingToken.IsCancellationRequested)
@@ -72,7 +76,7 @@ namespace Core.Shared.Services.Background
 								cancel);
 							uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.DiskSpace);
 
-							if (freeSpaceMB <= checkThreshold)
+							if (freeSpaceMB <= diskCheckThreshold)
 							{
 								_logger.LogCritical(msg);
 								tcClient.WriteAny(alarmTimeHandle, 2);

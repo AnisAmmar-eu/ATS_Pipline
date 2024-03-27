@@ -116,7 +116,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>("ClientHost");
+string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>(ConfigDictionary.ClientHost);
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)
 	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
 	.AllowAnyHeader()

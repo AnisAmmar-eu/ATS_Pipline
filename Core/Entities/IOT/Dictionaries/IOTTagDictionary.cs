@@ -153,6 +153,7 @@ public static class IOTTagRID
 	public const string LedBlowingFrequencyHot = "LedBlowingFrequencyHot";
 	public const string LedBlowingDuration = "LedBlowingDuration";
 
+	public const string HotAnodeTT01 = "HotAnodeTT01";
 	public const string HotAnodeTT02 = "HotAnodeTT02";
 	public const string WarnCam01Temp = "WarnCam01Temp";
 	public const string WarnCam02Temp = "WarnCam02Temp";
@@ -185,6 +186,8 @@ public static class IOTTagRID
 	public const string ZT2 = "ZT2";
 	public const string ZT3 = "ZT3";
 	public const string ZT4 = "ZT4";
+	public const string AT01 = "AT01";
+	public const string AT02 = "AT02";
 
 	#endregion
 }
@@ -336,6 +339,7 @@ public static class IOTTagPath
 	public const string LedBlowingTempWarning = "VA_SETTINGS.Health_Cam_Led_Blowing_FV02.Temp_Warning";
 	public const string LedBlowingDuration = "VA_SETTINGS.Health_Cam_Led_Blowing_FV02.Duration";
 
+	public const string HotAnodeTT01 = "VA_SETTINGS.Health_S5_Cool_AmbientTemp_SP";
 	public const string HotAnodeTT02 = "VA_SETTINGS.Health_S5_Cool_AnodeTemp_SP";
 	public const string WarnCam01Temp = "VA_SETTINGS.CAM01_Temp_H";
 	public const string WarnCam02Temp = "VA_SETTINGS.CAM02_Temp_H";
@@ -372,6 +376,8 @@ public static class IOTTagPath
 	public const string ZT2 = "VA_HMI.ZT02";
 	public const string ZT3 = "VA_HMI.ZT03";
 	public const string ZT4 = "VA_HMI.ZT04";
+	public const string AT01 = "VA_DM.AT01.DM.PV";
+	public const string AT02 = "VA_DM.AT02.DM.PV";
 
 	#endregion
 }

@@ -47,9 +47,9 @@ public class ADSService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IAlarmRTService alarmRTService = asyncScope.ServiceProvider.GetRequiredService<IAlarmRTService>();
 		CancellationToken cancel = CancellationToken.None;
-		int delayMS = _configuration.GetValueWithThrow<int>("CycleMS");
-		int retryMS = _configuration.GetValueWithThrow<int>("RetryMS");
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(delayMS));
+		int cycleMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.CycleMS);
+		int retryMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.RetryMS);
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(cycleMS));
 
 		while (!stoppingToken.IsCancellationRequested)
 		{

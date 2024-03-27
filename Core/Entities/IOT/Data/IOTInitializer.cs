@@ -1133,7 +1133,7 @@ public static class IOTInitializer
 		// Camera Cooling Fields
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingPeriod,
-			Name = "Camera Cooling Period",
+			Name = "FV01 - Camera Cooling Period",
 			Description = "Period of the camera cooling cycle",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1145,7 +1145,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingFrequencyNormal,
-			Name = "Camera Cooling Frequency Normal",
+			Name = "FV01 - Camera Cooling Frequency Normal",
 			Description = "Normal frequency for camera cooling",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1157,7 +1157,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingFrequencyHot,
-			Name = "Camera Cooling Frequency Hot",
+			Name = "FV01 - Camera Cooling Frequency Hot",
 			Description = "Frequency for camera cooling when hot",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1169,7 +1169,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingTempWarning,
-			Name = "Camera Cooling Temp Warning",
+			Name = "FV01 - Camera Cooling Temp Warning",
 			Description = "Warning temperature for camera cooling",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1181,7 +1181,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.CameraCoolingDuration,
-			Name = "Camera Cooling Duration",
+			Name = "FV01 - Camera Cooling Duration",
 			Description = "Duration of the camera cooling",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1195,7 +1195,7 @@ public static class IOTInitializer
 		// LED Blowing Fields
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LedBlowingPeriod,
-			Name = "LED Blowing Period",
+			Name = "FV02 - LED Blowing Period",
 			Description = "Period of the LED blowing cycle",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1207,7 +1207,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LedBlowingFrequencyNormal,
-			Name = "LED Blowing Frequency Normal",
+			Name = "FV02 - LED Blowing Frequency Normal",
 			Description = "Normal frequency for LED blowing",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1219,7 +1219,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LedBlowingFrequencyHot,
-			Name = "LED Blowing Frequency Hot",
+			Name = "FV02 - LED Blowing Frequency Hot",
 			Description = "Frequency for LED blowing when hot",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1231,7 +1231,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LedBlowingTempWarning,
-			Name = "LED Blowing Temp Warning",
+			Name = "FV02 - LED Blowing Temp Warning",
 			Description = "Warning temperature for LED blowing",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1243,7 +1243,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LedBlowingDuration,
-			Name = "LED Blowing Duration",
+			Name = "FV02 - LED Blowing Duration",
 			Description = "Duration of the LED blowing",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1255,9 +1255,21 @@ public static class IOTInitializer
 		});
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.HotAnodeTT01,
+			Name = "Anode Ambient TT01",
+			Description = "Temperature set point for hot anode ambient",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.HotAnodeTT01,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.HotAnodeTT02,
-			Name = "Hot Anode TT02",
-			Description = "Temperature set point for hot anode",
+			Name = "Anode Surface TT02",
+			Description = "Temperature set point for hot anode surface",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
@@ -1268,7 +1280,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.WarnCam01Temp,
-			Name = "Warn CAM01 Temp",
+			Name = "Alert CAM01 Temp",
 			Description = "Warning temperature for CAM01",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1280,7 +1292,7 @@ public static class IOTInitializer
 		});
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.WarnCam02Temp,
-			Name = "Warn CAM02 Temp",
+			Name = "Alert CAM02 Temp",
 			Description = "Warning temperature for CAM02",
 			CurrentValue = "0",
 			NewValue = "0",
@@ -1297,8 +1309,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LuminosityCheckFrequencyCam1LedOn,
-			Name = "Luminosity Check Frequency Cam1 Led On",
-			Description = "Luminosity Check Frequency Cam1 Led On",
+			Name = "Cam1 Led On Luminosity Check Frequency",
+			Description = "Cam1 Led On Luminosity Check Frequency",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
@@ -1310,8 +1322,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.ThresholdLuminosityCam1LedOn,
-			Name = "Threshold Luminosity Cam1 Led On",
-			Description = "Threshold Luminosity Cam1 Led On",
+			Name = "Cam1 Led On Threshold Luminosity",
+			Description = "Cam1 Led On Threshold Luminosity",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
@@ -1323,8 +1335,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationLuxCheckCam1LedOn,
-			Name = "Duration Lux CheckCam1 Led On",
-			Description = "Duration Lux CheckCam1 Led On",
+			Name = "Cam1 Led On Duration Lux Check",
+			Description = "Cam1 Led On Duration Lux Check",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Int,
@@ -1336,8 +1348,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.ThresholdLuminosityCam1LedOff,
-			Name = "Threshold Luminosity Cam1 Led Off",
-			Description = "Threshold Luminosity Cam1 Led Off",
+			Name = "Cam1 Led Off Threshold Luminosity",
+			Description = "Cam1 Led Off Threshold Luminosity",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
@@ -1349,8 +1361,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LuminosityCheckFrequencyCam1LedOff,
-			Name = "Luminosity Check Frequency Cam1 Led Off",
-			Description = "Luminosity Check Frequency Cam1 Led Off",
+			Name = "Cam1 Led Off Luminosity Check Frequency",
+			Description = "Cam1 Led Off Luminosity Check Frequency",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
@@ -1362,8 +1374,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationLuxCheckCam1LedOff,
-			Name = "Duration Lux Check Cam1 Led Off",
-			Description = "Duration Lux Check Cam1 Led Off",
+			Name = "Cam1 Led Off Duration Lux Check",
+			Description = "Cam1 Led Off Duration Lux Check",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Int,
@@ -1375,8 +1387,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LuminosityCheckFrequencyCam2LedOn,
-			Name = "Luminosity Check Frequency Cam2 Led On",
-			Description = "Luminosity Check Frequency Cam2 Led On",
+			Name = "Cam2 Led On Luminosity Check Frequency",
+			Description = "Cam2 Led On Luminosity Check Frequency",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
@@ -1388,8 +1400,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.ThresholdLuminosityCam2LedOn,
-			Name = "Threshold Luminosity Cam2 Led On",
-			Description = "Threshold Luminosity Cam2 Led On",
+			Name = "Cam2 Led On Threshold Luminosity",
+			Description = "Cam2 Led On Threshold Luminosity",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
@@ -1400,8 +1412,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationLuxCheckCam2LedOn,
-			Name = "Duration Lux Check Cam2 Led On",
-			Description = "Duration Lux Check Cam2 Led On",
+			Name = "Cam2 Led On Duration Lux Check",
+			Description = "Cam2 Led On Duration Lux Check",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Int,
@@ -1413,8 +1425,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.ThresholdLuminosityCam2LedOff,
-			Name = "Threshold Luminosity Cam2 Led Off",
-			Description = "Threshold Luminosity Cam2 Led Off",
+			Name = "Cam2 Led Off Threshold Luminosity",
+			Description = "Cam2 Led Off Threshold Luminosity",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Float,
@@ -1426,8 +1438,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.LuminosityCheckFrequencyCam2LedOff,
-			Name = "Luminosity Check Frequency Cam2 Led Off",
-			Description = "Luminosity Check Frequency Cam2 Led Off",
+			Name = "Cam2 Led Off Luminosity Check Frequency",
+			Description = "Cam2 Led Off Luminosity Check Frequency",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.UShort,
@@ -1439,8 +1451,8 @@ public static class IOTInitializer
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.DurationLuxCheckCam2LedOff,
-			Name = "Duration Lux Check Cam2 Led Off",
-			Description = "Duration Lux Check Cam2 Led Off",
+			Name = "Cam2 Led Off Duration Lux Check",
+			Description = "Cam2 Led Off Duration Lux Check",
 			CurrentValue = "0",
 			NewValue = "0",
 			ValueType = IOTTagType.Int,
@@ -1499,6 +1511,31 @@ public static class IOTInitializer
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.ZT4,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		// AT01 AT02
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.AT01,
+			Name = "Luminosity AT01",
+			Description = "Luminosity AT01",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.AT01,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.AT02,
+			Name = "Luminosity AT02",
+			Description = "Luminosity AT02",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Float,
+			HasNewValue = false,
+			Path = IOTTagPath.AT02,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
