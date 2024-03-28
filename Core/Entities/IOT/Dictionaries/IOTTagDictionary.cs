@@ -158,24 +158,30 @@ public static class IOTTagRID
 	public const string WarnCam01Temp = "WarnCam01Temp";
 	public const string WarnCam02Temp = "WarnCam02Temp";
 
+	public const string CamRestartDelay = "CamRestartDelay";
+
 	#endregion
 
 	#region Diagnostic
 
 	public const string LuminosityCheckFrequencyCam1LedOn = "LuminosityCheckFrequencyCam1LedOn";
 	public const string ThresholdLuminosityCam1LedOn = "ThresholdLuminosityCam1LedOn";
+	public const string DelayCheckCam1LedOn = "DelayCheckCam1LedOn";
 	public const string DurationLuxCheckCam1LedOn = "DurationLuxCheckCam1LedOn";
 
-	public const string ThresholdLuminosityCam1LedOff = "ThresholdLuminosityCam1LedOff";
 	public const string LuminosityCheckFrequencyCam1LedOff = "LuminosityCheckFrequencyCam1LedOff";
+	public const string ThresholdLuminosityCam1LedOff = "ThresholdLuminosityCam1LedOff";
+	public const string DelayCheckCam1LedOff = "DelayCheckCam1LedOff";
 	public const string DurationLuxCheckCam1LedOff = "DurationLuxCheckCam1LedOff";
 
 	public const string LuminosityCheckFrequencyCam2LedOn = "LuminosityCheckFrequencyCam2LedOn";
 	public const string ThresholdLuminosityCam2LedOn = "ThresholdLuminosityCam2LedOn";
+	public const string DelayCheckCam2LedOn = "DelayCheckCam2LedOn";
 	public const string DurationLuxCheckCam2LedOn = "DurationLuxCheckCam2LedOn";
 
-	public const string ThresholdLuminosityCam2LedOff = "ThresholdLuminosityCam2LedOff";
 	public const string LuminosityCheckFrequencyCam2LedOff = "LuminosityCheckFrequencyCam2LedOff";
+	public const string ThresholdLuminosityCam2LedOff = "ThresholdLuminosityCam2LedOff";
+	public const string DelayCheckCam2LedOff = "DelayCheckCam2LedOff";
 	public const string DurationLuxCheckCam2LedOff = "DurationLuxCheckCam2LedOff";
 
 	#endregion
@@ -343,6 +349,7 @@ public static class IOTTagPath
 	public const string HotAnodeTT02 = "VA_SETTINGS.Health_S5_Cool_AnodeTemp_SP";
 	public const string WarnCam01Temp = "VA_SETTINGS.CAM01_Temp_H";
 	public const string WarnCam02Temp = "VA_SETTINGS.CAM02_Temp_H";
+	public const string CamRestartDelay = "VA_SETTINGS.CAM0X_ReStartDelay";
 
 	#endregion
 
@@ -351,21 +358,25 @@ public static class IOTTagPath
 	// Cam1LedOn
 	public const string LuminosityCheckFrequencyCam1LedOn = "VA_SETTINGS.CAM01_LED_ON.Counter_SP";
 	public const string ThresholdLuminosityCam1LedOn = "VA_SETTINGS.CAM01_LED_ON.SP";
+	public const string DelayCheckCam1LedOn = "VA_SETTINGS.CAM01_LED_ON.Delay";
 	public const string DurationLuxCheckCam1LedOn = "VA_SETTINGS.CAM01_LED_ON.Duration";
 
 	// Cam1 LEDOFF
 	public const string LuminosityCheckFrequencyCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.Counter_SP";
 	public const string ThresholdLuminosityCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.SP";
+	public const string DelayCheckCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.Delay";
 	public const string DurationLuxCheckCam1LedOff = "VA_SETTINGS.CAM01_LED_OFF.Duration";
 
 	// Cam2 LEDON
 	public const string LuminosityCheckFrequencyCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.Counter_SP";
 	public const string ThresholdLuminosityCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.SP";
+	public const string DelayCheckCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.Delay";
 	public const string DurationLuxCheckCam2LedOn = "VA_SETTINGS.CAM02_LED_ON.Duration";
 
 	// Cam2 LEDOFF
 	public const string LuminosityCheckFrequencyCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.Counter_SP";
 	public const string ThresholdLuminosityCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.SP";
+	public const string DelayCheckCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.Delay";
 	public const string DurationLuxCheckCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.Duration";
 
 	#endregion
@@ -376,8 +387,8 @@ public static class IOTTagPath
 	public const string ZT2 = "VA_HMI.ZT02";
 	public const string ZT3 = "VA_HMI.ZT03";
 	public const string ZT4 = "VA_HMI.ZT04";
-	public const string AT01 = "VA_DM.AT01.DM.PV";
-	public const string AT02 = "VA_DM.AT02.DM.PV";
+	public const string AT01 = "VA_HMI.AT01";
+	public const string AT02 = "VA_HMI.AT02";
 
 	#endregion
 }

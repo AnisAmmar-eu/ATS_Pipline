@@ -1303,6 +1303,19 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.CamRestartDelay,
+			Name = "Cam Restart Delay",
+			Description = "Delay before restarting the camera after health shutdown",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.CamRestartDelay,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
 		#endregion
 
 		#region Diagnostic
@@ -1329,6 +1342,19 @@ public static class IOTInitializer
 			ValueType = IOTTagType.Float,
 			HasNewValue = false,
 			Path = IOTTagPath.ThresholdLuminosityCam1LedOn,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DelayCheckCam1LedOn,
+			Name = "Cam1 Led On Delay Check",
+			Description = "Cam1 Led On Delay Check",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DelayCheckCam1LedOn,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -1368,6 +1394,19 @@ public static class IOTInitializer
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
 			Path = IOTTagPath.LuminosityCheckFrequencyCam1LedOff,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DelayCheckCam1LedOff,
+			Name = "Cam1 Led Off Delay Check",
+			Description = "Cam1 Led Off Delay Check",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DelayCheckCam1LedOff,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
@@ -1424,6 +1463,19 @@ public static class IOTInitializer
 		});
 
 		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DurationLuxCheckCam2LedOn,
+			Name = "Cam2 Led On Duration Lux Check",
+			Description = "Cam2 Led On Duration Lux Check",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DurationLuxCheckCam2LedOn,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
 			RID = IOTTagRID.ThresholdLuminosityCam2LedOff,
 			Name = "Cam2 Led Off Threshold Luminosity",
 			Description = "Cam2 Led Off Threshold Luminosity",
@@ -1445,6 +1497,19 @@ public static class IOTInitializer
 			ValueType = IOTTagType.UShort,
 			HasNewValue = false,
 			Path = IOTTagPath.LuminosityCheckFrequencyCam2LedOff,
+			IOTDeviceID = twinCat.ID,
+			IOTDevice = twinCat,
+		});
+
+		anodeCTX.OTTagTwinCat.Add(new OTTagTwinCat {
+			RID = IOTTagRID.DelayCheckCam2LedOff,
+			Name = "Cam2 Led Off Delay Check",
+			Description = "Cam2 Led Off Delay Check",
+			CurrentValue = "0",
+			NewValue = "0",
+			ValueType = IOTTagType.Int,
+			HasNewValue = false,
+			Path = IOTTagPath.DelayCheckCam2LedOff,
 			IOTDeviceID = twinCat.ID,
 			IOTDevice = twinCat,
 		});
