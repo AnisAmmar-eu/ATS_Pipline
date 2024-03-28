@@ -14,10 +14,10 @@ public class ToLoadService : BaseEntityService<IToLoadRepository, ToLoad, DTOToL
 	{
 	}
 
-	public async Task<ToLoad?[]> LoadNextCycles(IEnumerable<(DataSetID, TimeSpan)> datasets)
+	public async Task<ToLoad?[]> LoadNextCycles(IEnumerable<(int, TimeSpan)> datasets)
 	{
 		List<(ToLoad?, TimeSpan)> loadables = [];
-		foreach ((DataSetID, TimeSpan) valueTuple in datasets)
+		foreach ((int, TimeSpan) valueTuple in datasets)
             loadables.Add((await AnodeUOW.ToLoad.Peek(valueTuple.Item1), valueTuple.Item2));
 
 		ToLoad?[] toUpdate = await Task.WhenAll(loadables.Select(tuple => LoadCycle(tuple.Item1, tuple.Item2)));

@@ -7,5 +7,5 @@ namespace Core.Entities.Vision.ToDos.Services.ToLoads;
 
 public interface IToLoadService : IBaseEntityService<ToLoad, DTOToLoad>
 {
-	public Task<ToLoad?[]> LoadNextCycles(IEnumerable<(DataSetID, TimeSpan)> datasets);
+	public Task<ToLoad?[]> LoadNextCycles(IEnumerable<(int, TimeSpan)> datasets);
 }

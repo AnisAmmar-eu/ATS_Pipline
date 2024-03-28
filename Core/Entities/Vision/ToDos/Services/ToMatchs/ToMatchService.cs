@@ -6,7 +6,7 @@ using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 
-namespace Core.Entities.Vision.ToDos.Services.ToLoads;
+namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
 public class ToMatchService : BaseEntityService<IToMatchRepository, ToMatch, DTOToMatch>,
 	IToMatchService
@@ -15,10 +15,10 @@ public class ToMatchService : BaseEntityService<IToMatchRepository, ToMatch, DTO
 	{
 	}
 
-	public async Task MatchNextCycles(IEnumerable<(DataSetID, TimeSpan, ToLoad?)> datasets)
+	public async Task MatchNextCycles(IEnumerable<(int, TimeSpan, ToLoad?)> datasets)
 	{
 		List<(ToMatch?, TimeSpan, ToLoad?)> matchables = [];
-		foreach ((DataSetID, TimeSpan, ToLoad?) valueTuple in datasets)
+		foreach ((int, TimeSpan, ToLoad?) valueTuple in datasets)
             matchables.Add((await AnodeUOW.ToMatch.Peek(valueTuple.Item1), valueTuple.Item2, valueTuple.Item3));
 
 		ToMatch?[] toUpdate = await Task.WhenAll(

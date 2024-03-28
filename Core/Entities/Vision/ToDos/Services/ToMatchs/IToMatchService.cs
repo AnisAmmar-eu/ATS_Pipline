@@ -4,9 +4,9 @@ using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 using Core.Entities.Vision.ToDos.Models.DTO.ToMatchs;
 using Core.Shared.Services.Kernel.Interfaces;
 
-namespace Core.Entities.Vision.ToDos.Services.ToLoads;
+namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
 public interface IToMatchService : IBaseEntityService<ToMatch, DTOToMatch>
 {
-	public Task MatchNextCycles(IEnumerable<(DataSetID, TimeSpan, ToLoad?)> datasets);
+	public Task MatchNextCycles(IEnumerable<(int, TimeSpan, ToLoad?)> datasets);
 }

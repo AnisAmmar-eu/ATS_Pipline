@@ -10,16 +10,16 @@ namespace Core.Entities.Vision.ToDos.Repositories.ToMatchs;
 public class ToMatchRepository : BaseEntityRepository<AnodeCTX, ToMatch, DTOToMatch>,
 	IToMatchRepository
 {
-	public ToMatchRepository(AnodeCTX context) : base(context)
+	public ToMatchRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 
-	public async Task<ToMatch?> Peek(DataSetID dataSetID)
+	public async Task<ToMatch?> Peek(int stationID)
 	{
 		try
 		{
 			return await GetBy(
-				filters: [matchable => matchable.DataSetID == dataSetID],
+				filters: [matchable => matchable.StationID == stationID],
 				orderBy: query => query.OrderBy(matchable => matchable.ShootingTS),
 				withTracking: false,
 				includes: nameof(ToMatch.MatchableCycle));

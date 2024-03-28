@@ -8,7 +8,7 @@ namespace Core.Entities.Vision.ToDos.Models.DTO;
 public partial class DTOToDo : DTOBaseEntity, IDTO<ToDo, DTOToDo>
 {
 	public int CycleID { get; set; }
-	public int CycleRID { get; set; }
+	public string CycleRID { get; set; }
 	public int CameraID { get; set; }
 	public int StationID { get; set; }
 	public string AnodeType { get; set; }
