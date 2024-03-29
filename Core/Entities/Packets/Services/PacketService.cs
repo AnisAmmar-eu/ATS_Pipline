@@ -15,6 +15,7 @@ using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
@@ -215,6 +216,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					stationCycle.Picture2Status = 1;
 					stationCycle.Shooting2Packet = shooting;
 				}
+
+				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting));
+				AnodeUOW.Commit();
 			}
 			else
 			{
@@ -243,6 +247,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					stationCycle.Picture2Status = 1;
 					stationCycle.Shooting2Packet = shooting;
 				}
+
+				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting));
+				AnodeUOW.Commit();
 			}
 			else if (packet is MetaData metaData)
 			{

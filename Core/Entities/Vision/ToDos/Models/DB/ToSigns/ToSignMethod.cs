@@ -1,6 +1,9 @@
 using Core.Entities.Anodes.Dictionaries;
+using Core.Entities.Anodes.Models.DB;
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Vision.ToDos.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
+using Core.Migrations;
 using Core.Shared.Dictionaries;
 using Mapster;
 using System.ComponentModel.Composition;
@@ -18,12 +21,23 @@ public partial class ToSign
 		return this.Adapt<DTOToSign>();
 	}
 
-	public bool IsMatchStation(int stationId)
+	public static ToSign ShootingToSign(Shooting shooting)
 	{
-		return stationId >= Station.StationNameToID(Station.Station3);
+		TypeAdapterConfig<Shooting, ToSign>.NewConfig()
+			.Map(dest => dest.CycleRID, src => src.StationCycleRID)
+			.Map(dest => dest.CycleID, src => src.StationCycle!.ID)
+			.Map(dest => dest.StationID, src => src.StationCycle!.StationID)
+			.Map(dest => dest.CameraID, src => (src.Cam01Status == 1) ? 1 : (src.Cam02Status == 1) ? 2 : 0);
+
+		return shooting.Adapt<ToSign>();
 	}
 
-	public List<DataSetID> GetDestinations()
+	public bool IsMatchStation()
+	{
+		return StationID >= Station.StationNameToID(Station.Station3);
+	}
+
+	public List<DataSetID> GetLoadDestinations()
 	{
 		List<DataSetID> destinations = new();
 

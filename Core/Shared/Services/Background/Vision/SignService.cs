@@ -21,6 +21,8 @@ using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.Anodes.Dictionaries;
 using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.Anodes.Models.DB.AnodesD20;
+using Core.Entities.Vision.ToDos.Models.DB;
+using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -45,7 +47,7 @@ public class SignService : BackgroundService
         _anodeUOW = anodeUOW;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
@@ -68,11 +70,20 @@ public class SignService : BackgroundService
         int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
         int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParams);
 
-        while (await timer.WaitForNextTickAsync(stoppingToken)
-            && !stoppingToken.IsCancellationRequested)
+		TypeAdapterConfig.GlobalSettings.AllowImplicitSourceInheritance = true;
+		TypeAdapterConfig.GlobalSettings.AllowImplicitDestinationInheritance = true;
+		TypeAdapterConfig<(ToDo todo, StationCycle cycle), Anode>.NewConfig()
+			.Map(dest => dest.CycleRID, src => src.todo.CycleRID)
+			.Map(dest => dest.S1S2Cycle, src => src.cycle)
+			.Map(dest => dest.S1S2CycleID, src => src.todo.CycleID);
+
+		while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested)
         {
-            try
-            {
+			await _anodeUOW.StartTransaction();
+
+			try
+			{
                 List<ToSign> toSigns = await _anodeUOW.ToSign.GetAll(
                              [sign => sign.StationID == Station.ID],
                              withTracking: false);
@@ -90,29 +101,32 @@ public class SignService : BackgroundService
 					int retSign = DLLVisionImport.fcx_sign(0, 0, image.DirectoryName, image.Name, image.DirectoryName);
 
 					if (retSign == 0)
-					{
 						_logger.LogInformation("{0} signé avec succès", image.Name);
-					}
 					else
-					{
-						_logger.LogWarning(
-							"Return code de la signature: " + retSign + " pour anode " + image.Name);
-					}
+						_logger.LogWarning("Return code de la signature: " + retSign + " pour anode " + image.Name);
 
 					_anodeUOW.ToSign.Remove(toSign);
-
-					foreach (DataSetID id in toSign.GetDestinations())
-					{
-						ToLoad load = toSign.Adapt<ToLoad>();
-						load.DataSetID = id;
-						await _anodeUOW.ToLoad.Add(load);
-					}
-
 					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
 					if (toSign.AnodeType == AnodeTypes.DX)
 						await _anodeUOW.Anode.Add((toSign, cycle).Adapt<AnodeDX>());
 					else if (toSign.AnodeType == AnodeTypes.D20)
 						await _anodeUOW.Anode.Add((toSign, cycle).Adapt<AnodeD20>());
+
+					_anodeUOW.Commit();
+
+					foreach (DataSetID id in toSign.GetLoadDestinations())
+					{
+						ToLoad load = toSign.Adapt<ToLoad>();
+						load.DataSetID = id;
+						await _anodeUOW.ToLoad.Add(load);
+						_anodeUOW.Commit();
+					}
+
+					if (toSign.IsMatchStation())
+					{
+						await _anodeUOW.ToMatch.Add(toSign.Adapt<ToMatch>());
+						_anodeUOW.Commit();
+					}
 				}
 			}
 			catch (Exception ex)
@@ -121,7 +135,8 @@ public class SignService : BackgroundService
                     "Failed to execute SignService with exception message {message}.",
                     ex.Message);
             }
-        }
-    }
 
+			await _anodeUOW.CommitTransaction();
+		}
+	}
 }
