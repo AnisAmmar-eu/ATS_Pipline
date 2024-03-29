@@ -1,3 +1,5 @@
+using Core.Entities.StationCycles.Dictionaries;
+using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.Vision.ToDos.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
@@ -13,5 +15,30 @@ public class ToSignService : BaseEntityService<IToSignRepository, ToSign, DTOToS
 {
 	public ToSignService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
+	}
+
+	public async Task<StationCycle> UpdateCycle(ToSign toSign, int retSign)
+	{
+		StationCycle cycle = await AnodeUOW.StationCycle.GetById(toSign.CycleID);
+
+		if (retSign == 0)
+		{
+			if (toSign.CameraID == 1)
+				cycle.SignStatus1 = SignMatchStatus.Ok;
+
+			if (toSign.CameraID == 2)
+				cycle.SignStatus2 = SignMatchStatus.Ok;
+		}
+		else
+		{
+			if (toSign.CameraID == 1)
+				cycle.SignStatus1 = SignMatchStatus.NotOk;
+
+			if (toSign.CameraID == 2)
+				cycle.SignStatus2 = SignMatchStatus.NotOk;
+		}
+
+		AnodeUOW.StationCycle.Update(cycle);
+		return cycle;
 	}
 }

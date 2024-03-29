@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Core.Entities.Anodes.Dictionaries;
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Anodes.Models.DTO.AnodesD20;
 using Core.Entities.Anodes.Models.DTO.AnodesDX;
@@ -16,18 +17,11 @@ public partial class DTOAnode : DTOBaseEntity, IDTO<Anode, DTOAnode>,
 	IExtensionBinder<DTOAnode>
 {
 	public string CycleRID { get; set; } = string.Empty;
-	public PacketStatus Status { get; set; } = PacketStatus.Initialized;
-	public DateTimeOffset? ClosedTS { get; set; }
-
-	public string AnodeType { get; set; } = string.Empty;
+	public string AnodeType { get; set; } = AnodeTypes.UNDEFINED;
 
 	public int? S1S2CycleID { get; set; }
-	public int? S1S2CycleStationID { get; set; }
 	public DTOS1S2Cycle? S1S2Cycle { get; set; }
-	public DateTimeOffset? S1S2CycleTS { get; set; }
 
 	public int? S3S4CycleID { get; set; }
-	public int? S3S4CycleStationID { get; set; }
-	public DateTimeOffset? S3S4CycleTS { get; set; }
 	public DTOS3S4Cycle? S3S4Cycle { get; set; }
 }

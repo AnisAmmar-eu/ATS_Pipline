@@ -12,7 +12,15 @@ using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Entities.Packets.Models.DB.Shootings;
 using System.Configuration;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
-using Core.Entities.Vision.ToDos.Mapper;
+using Mapster;
+using Core.Entities.Vision.ToDos.Dictionaries;
+using Core.Entities.Alarms.AlarmsLog.Services;
+using Core.Entities.Vision.ToDos.Services.ToSigns;
+using Core.Entities.Anodes.Models.DB;
+using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.Anodes.Dictionaries;
+using Core.Entities.Anodes.Models.DB.AnodesDX;
+using Core.Entities.Anodes.Models.DB.AnodesD20;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -22,6 +30,8 @@ public class SignService : BackgroundService
     private readonly ILogger<SignService> _logger;
     private readonly IConfiguration _configuration;
 	private readonly IAnodeUOW _anodeUOW;
+	private  string _imagesPath;
+	private string _extension;
 
 	public SignService(
 		ILogger<SignService> logger,
@@ -43,14 +53,16 @@ public class SignService : BackgroundService
         string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
         string signDynamicParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
         bool allowSignMatch = _configuration.GetValueWithThrow<bool>(ConfigDictionary.AllowSignMatch);
-        int stationID = Station.StationNameToID(_configuration.GetValueWithThrow<string>(ConfigDictionary.StationName));
-		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+		_imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		_extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 		using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
 
-        DLLVisionImport.SetDllDirectory(DLLPath);
+		IToSignService toSignService
+	   = asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
+
+		DLLVisionImport.SetDllDirectory(DLLPath);
 
         int retInit = DLLVisionImport.fcx_init();
         int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
@@ -62,42 +74,46 @@ public class SignService : BackgroundService
             try
             {
                 List<ToSign> toSigns = await _anodeUOW.ToSign.GetAll(
-                             [sign => sign.StationID == stationID],
+                             [sign => sign.StationID == Station.ID],
                              withTracking: false);
 
-                List<ToSign> results = new();
+				foreach (ToSign toSign in toSigns)
+				{
+					FileInfo image = Shooting.GetImagePathFromRoot(
+						toSign.CycleRID,
+						toSign.StationID,
+						_imagesPath,
+						toSign.AnodeType,
+						toSign.CameraID,
+						_extension);
 
-                foreach (ToSign toSign in toSigns)
-                {
-                    FileInfo image = Shooting.GetImagePathFromRoot(
-                                    toSign.CycleRID,
-                                    toSign.StationID,
-                                    imagesPath,
-                                    toSign.AnodeType,
-                                    toSign.CameraID,
-                                    extension);
+					int retSign = DLLVisionImport.fcx_sign(0, 0, image.DirectoryName, image.Name, image.DirectoryName);
 
-					if (allowSignMatch)
-                    {
-						int retSign = DLLVisionImport.fcx_sign(0, 0, image.DirectoryName, image.Name, image.DirectoryName);
-
-						if (retSign == 0)
-						{
-							_logger.LogInformation(
-								"{0} signé avec succès", image.Name);
-                            results.Add(toSign);
-						}
-						else
-						{
-							_logger.LogWarning(
-								"Return code de la signature: " + retSign + " pour anode " + image.Name);
-						}
+					if (retSign == 0)
+					{
+						_logger.LogInformation("{0} signé avec succès", image.Name);
 					}
-				}
+					else
+					{
+						_logger.LogWarning(
+							"Return code de la signature: " + retSign + " pour anode " + image.Name);
+					}
 
-				_anodeUOW.ToSign.RemoveRange(results);
-				ToDoMapper mapper = new();
-				await _anodeUOW.ToLoad.AddRange(results.ConvertAll(mapper.SignToLoad));
+					_anodeUOW.ToSign.Remove(toSign);
+
+					foreach (DataSetID id in toSign.GetDestinations())
+					{
+						ToLoad load = toSign.Adapt<ToLoad>();
+						load.DataSetID = id;
+						await _anodeUOW.ToLoad.Add(load);
+					}
+
+					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
+					if (toSign.AnodeType == AnodeTypes.DX)
+						await _anodeUOW.Anode.Add((toSign, cycle).Adapt<AnodeDX>());
+					else if (toSign.AnodeType == AnodeTypes.D20)
+						await _anodeUOW.Anode.Add((toSign, cycle).Adapt<AnodeD20>());
+				}
 			}
 			catch (Exception ex)
             {
@@ -107,4 +123,5 @@ public class SignService : BackgroundService
             }
         }
     }
+
 }

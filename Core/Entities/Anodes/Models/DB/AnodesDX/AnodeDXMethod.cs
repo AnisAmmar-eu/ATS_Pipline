@@ -13,7 +13,6 @@ public partial class AnodeDX
 	public AnodeDX(DTOAnodeDX dtoAnodeDX) : base(dtoAnodeDX)
 	{
 		S5CycleID = dtoAnodeDX.S5CycleID;
-		S5CycleTS = dtoAnodeDX.S5CycleTS;
 		S5Cycle = dtoAnodeDX.S5Cycle?.ToModel();
 	}
 
@@ -30,6 +29,5 @@ public partial class AnodeDX
 	{
 		S5Cycle = cycle;
 		S5CycleID = cycle.ID;
-		S5CycleTS = cycle.TS;
 	}
 }
