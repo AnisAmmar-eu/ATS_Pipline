@@ -2,7 +2,7 @@
 using Core.Shared.Models.DTO.System.Logs;
 using Core.Shared.Services.Kernel.Interfaces;
 
-namespace Core.Shared.Services.System.Logs;
+namespace Core.Shared.Services.SystemApp.Logs;
 
 public interface ILogService : IBaseEntityService<Log, DTOLog>
 {

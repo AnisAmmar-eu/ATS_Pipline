@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Core.Shared.Exceptions;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core.Shared.Models.HttpResponse;

@@ -1,5 +1,5 @@
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 

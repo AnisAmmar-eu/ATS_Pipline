@@ -5,7 +5,7 @@ using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiAlarm.Endpoints;

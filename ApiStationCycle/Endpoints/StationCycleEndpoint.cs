@@ -9,7 +9,7 @@ using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

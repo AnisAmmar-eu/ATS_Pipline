@@ -6,7 +6,7 @@ using Core.Entities.Vision.FileSettings.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

@@ -11,7 +11,7 @@ using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Models.DTO.System.Logs;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

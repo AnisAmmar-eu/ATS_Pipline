@@ -15,7 +15,7 @@ using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Jwt;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

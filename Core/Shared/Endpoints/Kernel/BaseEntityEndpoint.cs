@@ -5,7 +5,7 @@ using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Paginations;
 using Core.Shared.Paginations.Filtering;
 using Core.Shared.Services.Kernel.Interfaces;
-using Core.Shared.Services.System.Logs;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
