@@ -7,5 +7,4 @@ namespace Core.Entities.Vision.ToDos.Repositories.ToLoads;
 
 public interface IToLoadRepository : IBaseEntityRepository<ToLoad, DTOToLoad>
 {
-	public Task<ToLoad?> Peek(int stationID);
 }

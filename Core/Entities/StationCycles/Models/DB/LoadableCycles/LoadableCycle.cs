@@ -6,5 +6,4 @@ namespace Core.Entities.StationCycles.Models.DB.LoadableCycles;
 
 public abstract partial class LoadableCycle : StationCycle, IBaseEntity<LoadableCycle, DTOLoadableCycle>
 {
-	public List<ToLoad> LoadableQueues { get; set; } = [];
 }

@@ -13,20 +13,4 @@ public class ToLoadRepository : BaseEntityRepository<AnodeCTX, ToLoad, DTOToLoad
 	public ToLoadRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
-
-	public async Task<ToLoad?> Peek(int stationID)
-	{
-		try
-		{
-			return await GetBy(
-				filters: [loadable => loadable.StationID == stationID],
-				orderBy: query => query.OrderBy(loadable => loadable.ShootingTS),
-				withTracking: false,
-				includes: nameof(ToLoad.LoadableCycle));
-		}
-		catch (EntityNotFoundException)
-		{
-			return null;
-		}
-	}
 }

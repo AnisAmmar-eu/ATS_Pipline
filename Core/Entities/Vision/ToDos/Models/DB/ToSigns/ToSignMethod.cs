@@ -41,7 +41,7 @@ public partial class ToSign
 	{
 		List<DataSetID> destinations = new();
 
-		if (StationID == 1 || StationID == 2)
+		if (!IsMatchStation())
 		{
 			destinations.Add(DataSetID.S3);
 			destinations.Add(DataSetID.S4);

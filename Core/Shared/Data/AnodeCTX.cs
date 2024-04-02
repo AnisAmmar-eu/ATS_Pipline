@@ -242,21 +242,5 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasMany(c => c.BenchmarkTests)
 			.WithOne(b => b.CameraTest)
 			.HasForeignKey(b => b.CameraID);
-
-		builder.Entity<ToMatch>()
-			.HasOne(ToMatch => ToMatch.MatchableCycle)
-			.WithMany(ToMatch => ToMatch.MatchableStacks)
-			.HasForeignKey(ToMatch => ToMatch.MatchableCycleID);
-
-		builder.Entity<ToMatch>()
-			.HasIndex(ToMatch => ToMatch.ShootingTS);
-
-		builder.Entity<ToLoad>()
-			.HasOne(ToLoad => ToLoad.LoadableCycle)
-			.WithMany(ToLoad => ToLoad.LoadableQueues)
-			.HasForeignKey(ToLoad => ToLoad.LoadableCycleID);
-
-		builder.Entity<ToLoad>()
-			.HasIndex(ToLoad => ToLoad.ShootingTS);
 	}
 }

@@ -7,7 +7,4 @@ namespace Core.Entities.Vision.ToDos.Models.DTO.ToLoads;
 
 public partial class DTOToLoad : DTOToDo, IDTO<ToLoad, DTOToLoad>
 {
-	public int LoadableCycleID { get; set; }
-	public LoadableCycle? LoadableCycle { get; set; }
-	public DataSetID DataSetID { get; set; }
 }

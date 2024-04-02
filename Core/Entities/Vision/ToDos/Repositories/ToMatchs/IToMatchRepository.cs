@@ -7,5 +7,4 @@ namespace Core.Entities.Vision.ToDos.Repositories.ToMatchs;
 
 public interface IToMatchRepository : IBaseEntityRepository<ToMatch, DTOToMatch>
 {
-	public Task<ToMatch?> Peek(int stationID);
 }

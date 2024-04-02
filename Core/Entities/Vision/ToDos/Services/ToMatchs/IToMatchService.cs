@@ -8,5 +8,4 @@ namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
 public interface IToMatchService : IBaseEntityService<ToMatch, DTOToMatch>
 {
-	public Task MatchNextCycles(IEnumerable<(int, TimeSpan, ToLoad?)> datasets);
 }

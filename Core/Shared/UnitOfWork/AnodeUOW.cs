@@ -140,8 +140,9 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IRoleRepository) => Roles,
 
 			_ when repo == typeof(IFileSettingRepository) => FileSetting,
-			_ when repo == typeof(IToSignRepository) => ToMatch,
-			_ when repo == typeof(IToLoadRepository) => ToLoad,
+			_ when repo == typeof(IToSignRepository) => ToSign,
+			_ when repo == typeof(IToMatchRepository) => ToMatch,
+            _ when repo == typeof(IToLoadRepository) => ToLoad,
 			_ when repo == typeof(IToSignRepository) => ToSign,
 			_ when repo == typeof(IToUnloadRepository) => ToUnload,
 			_ when repo == typeof(IToNotifyRepository) => ToNotify,

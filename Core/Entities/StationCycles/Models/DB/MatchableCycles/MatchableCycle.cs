@@ -9,5 +9,4 @@ public abstract partial class MatchableCycle : StationCycle, IBaseEntity<Matchab
 {
 	public SignMatchStatus MatchingCamera1 { get; set; }
 	public SignMatchStatus MatchingCamera2 { get; set; }
-	public List<ToMatch> MatchableStacks { get; set; } = [];
 }

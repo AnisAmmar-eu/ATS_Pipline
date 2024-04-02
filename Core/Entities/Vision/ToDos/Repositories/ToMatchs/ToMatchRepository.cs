@@ -13,20 +13,4 @@ public class ToMatchRepository : BaseEntityRepository<AnodeCTX, ToMatch, DTOToMa
 	public ToMatchRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
-
-	public async Task<ToMatch?> Peek(int stationID)
-	{
-		try
-		{
-			return await GetBy(
-				filters: [matchable => matchable.StationID == stationID],
-				orderBy: query => query.OrderBy(matchable => matchable.ShootingTS),
-				withTracking: false,
-				includes: nameof(ToMatch.MatchableCycle));
-		}
-		catch (EntityNotFoundException)
-		{
-			return null;
-		}
-	}
 }
