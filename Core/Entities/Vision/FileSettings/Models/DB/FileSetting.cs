@@ -12,4 +12,5 @@ public partial class FileSetting : BaseEntity, IBaseEntity<FileSetting, DTOFileS
 	public string LastUsername { get; set; } = string.Empty;
 	public string LastUploadName { get; set; } = string.Empty;
 	public string LastComment { get; set; } = string.Empty;
+	public bool ToApply { get; set; } = true;
 }

@@ -25,6 +25,7 @@ public static class VisionInitializer
 			LastUsername = "init",
 			LastUploadName = string.Empty,
 			LastComment = "init",
+			ToApply = true,
 		});
 	}
 }
