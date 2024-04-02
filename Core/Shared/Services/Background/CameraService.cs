@@ -52,7 +52,7 @@ public class CameraService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await Task.Delay(20000);
+		await Task.Delay(30000, stoppingToken);
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		_hubContext = asyncScope.ServiceProvider.GetRequiredService<IHubContext<CameraHub, ICameraHub>>();
 		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
