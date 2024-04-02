@@ -17,17 +17,11 @@ public abstract partial class Anode
 	protected Anode(DTOAnode dtoAnode)
 	{
 		CycleRID = dtoAnode.CycleRID;
-		Status = dtoAnode.Status;
-		ClosedTS = dtoAnode.ClosedTS;
 
 		S1S2CycleID = dtoAnode.S1S2CycleID;
-		S1S2CycleStationID = dtoAnode.S1S2CycleStationID;
-		S1S2CycleTS = dtoAnode.S1S2CycleTS;
 		S1S2Cycle = dtoAnode.S1S2Cycle?.ToModel();
 
 		S3S4CycleID = dtoAnode.S3S4CycleID;
-		S3S4CycleStationID = dtoAnode.S3S4CycleStationID;
-		S3S4CycleTS = dtoAnode.S3S4CycleTS;
 		S3S4Cycle = dtoAnode.S3S4Cycle?.ToModel();
 	}
 
@@ -35,8 +29,6 @@ public abstract partial class Anode
 	{
 		S1S2Cycle = cycle;
 		S1S2CycleID = cycle.ID;
-		S1S2CycleTS = cycle.TS;
-		S1S2CycleStationID = cycle.StationID;
 		CycleRID = cycle.RID;
 	}
 
@@ -76,7 +68,5 @@ public abstract partial class Anode
 	{
 		S3S4Cycle = cycle;
 		S3S4CycleID = cycle.ID;
-		S3S4CycleTS = cycle.TS;
-		S3S4CycleStationID = cycle.StationID;
 	}
 }

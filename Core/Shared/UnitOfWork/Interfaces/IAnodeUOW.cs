@@ -17,8 +17,12 @@ using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
 using Core.Entities.Vision.FileSettings.Repositories;
-using Core.Entities.Vision.SignedCycles.Repositories.LoadableQueues;
-using Core.Entities.Vision.SignedCycles.Repositories.MatchableStacks;
+using Core.Entities.Vision.ToDos.Repositories.Datasets;
+using Core.Entities.Vision.ToDos.Repositories.ToLoads;
+using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
+using Core.Entities.Vision.ToDos.Repositories.ToNotifys;
+using Core.Entities.Vision.ToDos.Repositories.ToSigns;
+using Core.Entities.Vision.ToDos.Repositories.ToUnloads;
 using Core.Shared.Repositories.System.Logs;
 
 namespace Core.Shared.UnitOfWork.Interfaces;
@@ -52,8 +56,12 @@ public interface IAnodeUOW : IDisposable
 	IAlarmCycleRepository AlarmCycle { get; }
 
 	IFileSettingRepository FileSetting { get; }
-	IMatchableStackRepository MatchableStack { get; }
-	ILoadableQueueRepository LoadableQueue { get; }
+	IToMatchRepository ToMatch { get; }
+	IToLoadRepository ToLoad { get; }
+	IToNotifyRepository ToNotify { get; }
+	IToSignRepository ToSign { get; }
+	IToUnloadRepository ToUnload { get; }
+	IDatasetRepository Dataset { get; }
 
 	public object? GetRepoByType(Type repo);
 

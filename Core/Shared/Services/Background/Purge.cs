@@ -21,23 +21,24 @@ public class PurgeService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<PurgeService> _logger;
 	private readonly IConfiguration _configuration;
-	private readonly IAnodeUOW _anodeUOW;
+	private IAnodeUOW _anodeUOW;
 
 	public PurgeService(
 		ILogger<PurgeService> logger,
 		IServiceScopeFactory factory,
-		IConfiguration configuration,
-		IAnodeUOW anodeUOW)
+		IConfiguration configuration)
 	{
 		_logger = logger;
 		_factory = factory;
 		_configuration = configuration;
-		_anodeUOW = anodeUOW;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		int purgeThresholdSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeThreshold);
+        await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+        _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+
+        int purgeThresholdSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeThreshold);
 		int purgeTimerSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeTimerSec);
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);

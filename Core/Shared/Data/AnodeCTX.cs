@@ -34,8 +34,12 @@ using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.FileSettings.Models.DB;
-using Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues;
-using Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks;
+using Core.Entities.Vision.ToDos.Models.DB.Datasets;
+using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
+using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
+using Core.Entities.Vision.ToDos.Models.DB.ToNotifys;
+using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
+using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Shared.Models.DB.System.Logs;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -56,8 +60,12 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	#region Vision
 
 	public DbSet<FileSetting> FileSetting => Set<FileSetting>();
-	public DbSet<MatchableStack> MatchableStack => Set<MatchableStack>();
-	public DbSet<LoadableQueue> LoadableQueue => Set<LoadableQueue>();
+	public DbSet<ToMatch> ToMatch => Set<ToMatch>();
+	public DbSet<ToLoad> ToLoad => Set<ToLoad>();
+	public DbSet<ToSign> ToSign => Set<ToSign>();
+	public DbSet<ToUnload> ToUnload => Set<ToUnload>();
+	public DbSet<ToNotify> ToNotify => Set<ToNotify>();
+	public DbSet<Dataset> Dataset => Set<Dataset>();
 
 	#endregion
 
@@ -234,21 +242,5 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasMany(c => c.BenchmarkTests)
 			.WithOne(b => b.CameraTest)
 			.HasForeignKey(b => b.CameraID);
-
-		builder.Entity<MatchableStack>()
-			.HasOne(matchableStack => matchableStack.MatchableCycle)
-			.WithMany(matchableCycle => matchableCycle.MatchableStacks)
-			.HasForeignKey(matchableStack => matchableStack.MatchableCycleID);
-
-		builder.Entity<MatchableStack>()
-			.HasIndex(matchableStack => matchableStack.CycleTS);
-
-		builder.Entity<LoadableQueue>()
-			.HasOne(loadableQueue => loadableQueue.LoadableCycle)
-			.WithMany(loadableCycle => loadableCycle.LoadableQueues)
-			.HasForeignKey(loadableQueue => loadableQueue.LoadableCycleID);
-
-		builder.Entity<LoadableQueue>()
-			.HasIndex(loadableQueue => loadableQueue.CycleTS);
 	}
 }

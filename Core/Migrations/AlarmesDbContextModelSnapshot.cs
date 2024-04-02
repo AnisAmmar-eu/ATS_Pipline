@@ -54,7 +54,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("AlarmC", (string)null);
+                    b.ToTable("AlarmC");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsCycle.Models.DB.AlarmCycle", b =>
@@ -82,7 +82,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmListPacketID");
 
-                    b.ToTable("AlarmCycle", (string)null);
+                    b.ToTable("AlarmCycle");
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsLog.Models.DB.AlarmLog", b =>
@@ -130,7 +130,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmID");
 
-                    b.ToTable("AlarmLog", null, t =>
+                    b.ToTable("AlarmLog", t =>
                         {
                             t.HasTrigger("trigger");
                         });
@@ -170,7 +170,7 @@ namespace Core.Migrations
                     b.HasIndex("AlarmID")
                         .IsUnique();
 
-                    b.ToTable("AlarmRT", (string)null);
+                    b.ToTable("AlarmRT");
                 });
 
             modelBuilder.Entity("Core.Entities.Anodes.Models.DB.Anode", b =>
@@ -180,9 +180,6 @@ namespace Core.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<DateTimeOffset?>("ClosedTS")
-                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CycleRID")
                         .IsRequired()
@@ -196,22 +193,7 @@ namespace Core.Migrations
                     b.Property<int?>("S1S2CycleID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("S1S2CycleStationID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("S1S2CycleTS")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<int?>("S3S4CycleID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("S3S4CycleStationID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("S3S4CycleTS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("TS")
@@ -227,7 +209,7 @@ namespace Core.Migrations
                         .IsUnique()
                         .HasFilter("[S3S4CycleID] IS NOT NULL");
 
-                    b.ToTable("Anode", (string)null);
+                    b.ToTable("Anode");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Anode");
 
@@ -257,7 +239,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("BITemperature", (string)null);
+                    b.ToTable("BITemperature");
                 });
 
             modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.BenchmarkTest", b =>
@@ -298,7 +280,7 @@ namespace Core.Migrations
 
                     b.HasIndex("TSIndex");
 
-                    b.ToTable("BenchmarkTest", (string)null);
+                    b.ToTable("BenchmarkTest");
                 });
 
             modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.CameraTests.CameraTest", b =>
@@ -314,7 +296,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("CameraTest", (string)null);
+                    b.ToTable("CameraTest");
                 });
 
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>
@@ -358,7 +340,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("IOTDevice", (string)null);
+                    b.ToTable("IOTDevice");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("IOTDevice");
 
@@ -424,7 +406,7 @@ namespace Core.Migrations
 
                     b.HasIndex("IOTDeviceID");
 
-                    b.ToTable("IOTTag", (string)null);
+                    b.ToTable("IOTTag");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("IOTTag");
 
@@ -456,7 +438,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("KPIC", (string)null);
+                    b.ToTable("KPIC");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPILogs.KPILog", b =>
@@ -485,7 +467,7 @@ namespace Core.Migrations
 
                     b.HasIndex("KPICID");
 
-                    b.ToTable("KPILog", (string)null);
+                    b.ToTable("KPILog");
                 });
 
             modelBuilder.Entity("Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs.KPIRT", b =>
@@ -514,7 +496,7 @@ namespace Core.Migrations
 
                     b.HasIndex("KPICID");
 
-                    b.ToTable("KPIRT", (string)null);
+                    b.ToTable("KPIRT");
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Packet", b =>
@@ -548,7 +530,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Packet", (string)null);
+                    b.ToTable("Packet");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Packet");
 
@@ -630,7 +612,7 @@ namespace Core.Migrations
                         .IsUnique()
                         .HasFilter("[Shooting2ID] IS NOT NULL");
 
-                    b.ToTable("StationCycle", (string)null);
+                    b.ToTable("StationCycle");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("StationCycle");
 
@@ -660,7 +642,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Acts", (string)null);
+                    b.ToTable("Acts");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>
@@ -694,7 +676,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActID");
 
-                    b.ToTable("ActEntities", (string)null);
+                    b.ToTable("ActEntities");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles.ActEntityRole", b =>
@@ -730,7 +712,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActEntityID");
 
-                    b.ToTable("ActEntityRoles", (string)null);
+                    b.ToTable("ActEntityRoles");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Roles.ApplicationRole", b =>
@@ -878,10 +860,10 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("FileSetting", (string)null);
+                    b.ToTable("FileSetting");
                 });
 
-            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues.LoadableQueue", b =>
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.Datasets.Dataset", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -889,8 +871,59 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTimeOffset>("CycleTS")
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CameraID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CycleRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SANfile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ShootingTS")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("StationID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Dataset");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToLoads.ToLoad", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CameraID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CycleRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DataSetID")
                         .HasColumnType("int");
@@ -898,27 +931,25 @@ namespace Core.Migrations
                     b.Property<int>("LoadableCycleID")
                         .HasColumnType("int");
 
-                    b.Property<string>("SAN1Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTimeOffset?>("ShootingTS")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("SAN2Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("StationID")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CycleTS");
-
                     b.HasIndex("LoadableCycleID");
 
-                    b.ToTable("LoadableQueue", (string)null);
+                    b.HasIndex("ShootingTS");
+
+                    b.ToTable("ToLoad");
                 });
 
-            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks.MatchableStack", b =>
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToMatchs.ToMatch", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -926,21 +957,50 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTimeOffset>("CycleTS")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DataSetID")
+                    b.Property<int>("CameraID")
                         .HasColumnType("int");
+
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CycleRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MatchableCycleID")
                         .HasColumnType("int");
 
-                    b.Property<string>("SAN1Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTimeOffset?>("ShootingTS")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("SAN2Path")
-                        .IsRequired()
+                    b.Property<int>("StationID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MatchableCycleID");
+
+                    b.HasIndex("ShootingTS");
+
+                    b.ToTable("ToMatch");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToNotifys.ToNotify", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("SynchronisationKey")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("TS")
@@ -948,11 +1008,82 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CycleTS");
+                    b.ToTable("ToNotify");
+                });
 
-                    b.HasIndex("MatchableCycleID");
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToSigns.ToSign", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.ToTable("MatchableStack", (string)null);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CameraID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CycleRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ShootingTS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("StationID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ToSign");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToUnloads.ToUnload", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CameraID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CycleRID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SANfile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ShootingTS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("StationID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ToUnload");
                 });
 
             modelBuilder.Entity("Core.Shared.Models.DB.System.Logs.Log", b =>
@@ -998,7 +1129,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Log", (string)null);
+                    b.ToTable("Log");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1120,9 +1251,6 @@ namespace Core.Migrations
 
                     b.Property<int?>("S5CycleID")
                         .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("S5CycleTS")
-                        .HasColumnType("datetimeoffset");
 
                     b.HasIndex("S5CycleID")
                         .IsUnique()
@@ -1331,7 +1459,7 @@ namespace Core.Migrations
                     b.Property<DateTimeOffset>("ShootingTS")
                         .HasColumnType("datetimeoffset");
 
-                    b.ToTable("Packet", null, t =>
+                    b.ToTable("Packet", t =>
                         {
                             t.Property("Cam01Status")
                                 .HasColumnName("Shooting_Cam01Status");
@@ -1547,7 +1675,7 @@ namespace Core.Migrations
                     b.Navigation("ActEntity");
                 });
 
-            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.LoadableQueues.LoadableQueue", b =>
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToLoads.ToLoad", b =>
                 {
                     b.HasOne("Core.Entities.StationCycles.Models.DB.LoadableCycles.LoadableCycle", "LoadableCycle")
                         .WithMany("LoadableQueues")
@@ -1558,7 +1686,7 @@ namespace Core.Migrations
                     b.Navigation("LoadableCycle");
                 });
 
-            modelBuilder.Entity("Core.Entities.Vision.SignedCycles.Models.DB.MatchableStacks.MatchableStack", b =>
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToMatchs.ToMatch", b =>
                 {
                     b.HasOne("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle", "MatchableCycle")
                         .WithMany("MatchableStacks")

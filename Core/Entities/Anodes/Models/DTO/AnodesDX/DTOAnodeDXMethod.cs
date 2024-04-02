@@ -14,7 +14,6 @@ public partial class DTOAnodeDX
 	{
 		AnodeType = AnodeTypes.DX;
 		S5CycleID = anodeDX.S5CycleID;
-		S5CycleTS = anodeDX.S5CycleTS;
 		S5Cycle = anodeDX.S5Cycle?.ToDTO();
 	}
 

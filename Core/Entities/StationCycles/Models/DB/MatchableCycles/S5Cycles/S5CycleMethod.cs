@@ -12,7 +12,9 @@ public partial class S5Cycle
 	{
 		MatchingCamera1 = dtoS5Cycle.MatchingCamera1;
 		MatchingCamera2 = dtoS5Cycle.MatchingCamera2;
-	}
+        ChainMatchingCamera1 = dtoS5Cycle.ChainMatchingCamera1;
+        ChainMatchingCamera2 = dtoS5Cycle.ChainMatchingCamera2;
+    }
 
 	public override DTOS5Cycle ToDTO()
 	{

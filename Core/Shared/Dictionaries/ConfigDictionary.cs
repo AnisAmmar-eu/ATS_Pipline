@@ -48,6 +48,13 @@ public static class ConfigDictionary
 
 	public const string S3S4Delay = "VisionSettings:S3S4Delay";
 	public const string S5Delay = "VisionSettings:S5Delay";
+    public const string SignStaticParams = "VisionSettings:SignStaticParams";
+    public const string SignDynParams = "VisionSettings:SignDynParams";
+    public const string MatchDynParams = "VisionSettings:MatchDynParams";
+    public const string DLLPath = "VisionSettings:DLLPath";
+    public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
+    public const string SANpath = "VisionSettings:SANpath";
+    public const string AllowSignMatch = "VisionSettings:AllowSignMatch";
 
 	#endregion
 
