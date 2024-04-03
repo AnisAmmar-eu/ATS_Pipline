@@ -17,7 +17,6 @@ using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
-using Core.Entities.Vision.FileSettings.Repositories;
 using Core.Entities.Vision.ToDos.Repositories.Datasets;
 using Core.Entities.Vision.ToDos.Repositories.ToLoads;
 using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
@@ -63,7 +62,6 @@ public class AnodeUOW : IAnodeUOW
 	public IIOTDeviceRepository IOTDevice { get; }
 	public IIOTTagRepository IOTTag { get; }
 
-	public IFileSettingRepository FileSetting { get; }
 	public IToMatchRepository ToMatch { get; }
 	public IToLoadRepository ToLoad { get; }
 	public IToSignRepository ToSign { get; }
@@ -103,7 +101,6 @@ public class AnodeUOW : IAnodeUOW
 		ActEntities = new ActEntityRepository(_anodeCTX);
 		Roles = new RoleRepository();
 
-		FileSetting = new FileSettingRepository(_anodeCTX);
 		ToMatch = new ToMatchRepository(_anodeCTX);
 		ToLoad = new ToLoadRepository(_anodeCTX);
 		ToSign = new ToSignRepository(_anodeCTX);
@@ -139,7 +136,6 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
 			_ when repo == typeof(IRoleRepository) => Roles,
 
-			_ when repo == typeof(IFileSettingRepository) => FileSetting,
 			_ when repo == typeof(IToSignRepository) => ToSign,
 			_ when repo == typeof(IToMatchRepository) => ToMatch,
             _ when repo == typeof(IToLoadRepository) => ToLoad,

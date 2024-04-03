@@ -108,10 +108,10 @@ public class SignService : BackgroundService
 
                     StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
 
-                    foreach (DataSetID id in toSign.GetLoadDestinations())
+                    foreach (InstanceMatchID id in toSign.GetLoadDestinations())
 					{
 						ToLoad load = toSign.Adapt<ToLoad>();
-						load.DataSetID = id;
+						load.InstanceMatchID = id;
 						await _anodeUOW.ToLoad.Add(load);
 						_anodeUOW.Commit();
 					}
