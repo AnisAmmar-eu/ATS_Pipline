@@ -58,6 +58,13 @@ public static class ConfigDictionary
 
 	#endregion
 
+	#region Vision File settings
+
+    public const string FileSettingTimer = "VisionSettings:FileSettingTimer";
+	public const string ArchivePath = "VisionSettings:ArchivePath";
+
+	#endregion
+
 	#region CheckSyncTime
 
 	public const string DeltaTimeSec = "DeltaTimeSec";

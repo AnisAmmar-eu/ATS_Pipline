@@ -13,7 +13,7 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using System.Configuration;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Mapster;
-using Core.Entities.Vision.ToDos.Dictionaries;
+using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Entities.Anodes.Models.DB;
@@ -34,7 +34,7 @@ public class SignService : BackgroundService
     private readonly ILogger<SignService> _logger;
     private readonly IConfiguration _configuration;
 	private IAnodeUOW _anodeUOW;
-	private  string _imagesPath;
+	private string _imagesPath;
 	private string _extension;
 
 	public SignService(

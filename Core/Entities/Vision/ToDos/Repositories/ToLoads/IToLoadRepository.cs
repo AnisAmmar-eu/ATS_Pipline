@@ -1,4 +1,4 @@
-using Core.Entities.Vision.ToDos.Dictionaries;
+using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DTO.ToLoads;
 using Core.Shared.Repositories.Kernel.Interfaces;

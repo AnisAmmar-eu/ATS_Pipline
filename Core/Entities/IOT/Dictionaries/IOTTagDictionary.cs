@@ -250,6 +250,9 @@ public static class IOTTagPath
 	public const string Cam1StatusRead = "VA_HMI.Cam01_Status";
 	public const string Cam2StatusRead = "VA_HMI.Cam02_Status";
 
+	public const string ServerStatusWrite = "VA_IT.ServerOK";
+	public const string ApiStatusWrite = "VA_IT.ApiOK";
+
 	#endregion
 
 	#region TestMode

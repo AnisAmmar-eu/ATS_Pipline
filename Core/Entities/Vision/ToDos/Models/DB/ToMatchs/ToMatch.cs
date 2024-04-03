@@ -1,5 +1,5 @@
 using Core.Entities.StationCycles.Models.DB.MatchableCycles;
-using Core.Entities.Vision.ToDos.Dictionaries;
+using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DTO.ToMatchs;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 

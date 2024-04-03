@@ -1,14 +1,18 @@
+using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Shared.Dictionaries;
+using Core.Shared.Models.TwinCat;
 using Core.Shared.Services.Kernel;
 using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using TwinCAT.Ads;
 
 namespace Core.Entities.IOT.IOTDevices.Services;
 
@@ -97,6 +101,14 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
 		disconnectedDevices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
+		bool ITApiDisconnected
+			= disconnectedDevices.Any(device => device is ITApi itApi && itApi.RID != ITApisDict.ServerReceiveRID);
+
+		AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, _logger, 1000, CancellationToken.None);
+		uint statusHandle
+			= tcClient.CreateVariableHandle(IOTTagPath.ApiStatusWrite);
+		tcClient.WriteAny(statusHandle, !ITApiDisconnected);
+
 		if (updatedDevices.Length == 0)
 			return connectedDevices;
 

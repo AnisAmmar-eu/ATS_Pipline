@@ -1,13 +1,17 @@
 using System.Net;
 using System.Text.Json;
+using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB.Stations;
 using Core.Entities.IOT.IOTDevices.Models.DTO.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DTO.Stations;
 using Core.Entities.IOT.IOTTags.Models.DB;
+using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
+using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Logging;
+using TwinCAT.Ads;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 
@@ -29,16 +33,28 @@ public partial class ITApi
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{
 		using HttpClient httpClient = new();
+		CancellationTokenSource cancelSource = new();
+		bool isConnected;
 		try
 		{
 			HttpResponseMessage response = await httpClient.GetAsync(Address + ConnectionPath);
-            return response.StatusCode == HttpStatusCode.OK;
+			isConnected = response.StatusCode == HttpStatusCode.OK;
 		}
 		catch (Exception e)
 		{
 			logger.LogInformation("Error while trying to connect to {name}:\n{error}", RID, e);
-			return false;
+			isConnected = false;
 		}
+
+		if (RID == ITApisDict.ServerReceiveRID)
+		{
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, logger, 1000, cancelSource.Token);
+			uint statusHandle
+				= tcClient.CreateVariableHandle(IOTTagPath.ServerStatusWrite);
+			tcClient.WriteAny(statusHandle, isConnected);
+		}
+
+		return isConnected;
 	}
 
 	public override Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger)

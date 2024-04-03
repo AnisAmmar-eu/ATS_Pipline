@@ -4,6 +4,7 @@ using Core.Shared.Services.Background.Vision;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.Services.Background;
 using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Entities.User.Models.DB.Roles;
@@ -39,6 +40,9 @@ builder.Services.AddScoped<IToSignService, ToSignService>();
 
 builder.Services.AddSingleton<SignService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<SignService>());
+
+builder.Services.AddSingleton<SignFileSettingService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<SignFileSettingService>());
 
 var host = builder.Build();
 

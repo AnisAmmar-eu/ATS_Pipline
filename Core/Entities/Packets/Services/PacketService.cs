@@ -206,6 +206,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 			if (packet is Shooting shooting)
 			{
+				if (stationCycle.AnodeType is "")
+					stationCycle.AnodeType = shooting.AnodeType;
+
 				if (shooting.Cam01Status == 1)
 				{
 					stationCycle.Picture1Status = 1;
