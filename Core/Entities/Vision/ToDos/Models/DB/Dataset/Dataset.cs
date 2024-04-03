@@ -1,5 +1,5 @@
 using Core.Entities.StationCycles.Models.DB.LoadableCycles;
-using Core.Entities.Vision.ToDos.Dictionaries;
+using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DTO.Datasets;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 

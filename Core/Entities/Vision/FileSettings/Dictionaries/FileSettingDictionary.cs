@@ -69,7 +69,7 @@ public static class FileSettingRID
 	// Station S5 with Match
 	public const string S5MatchCam1DXDynamic = "S5MatchCam1DXDynamic";
 
-	public static List<string> fileSettingRIDs
+	public static readonly List<string> fileSettingRIDs
 		= [
 			// Station S1 with Sign
 			S1SignCam1DXStatic,
@@ -137,7 +137,6 @@ public static class FileSettingPath
 	// Station S1 with Sign
 	public const string S1SignCam1DXStatic = @"C:\atsVision\S1SignCam1DXStatic.txt";
 	public const string S1SignCam1D20Static = @"C:\atsVision\S1SignCam1D20Static.txt";
-
 	public const string S1SignCam1DXDynamic = @"C:\atsVision\S1SignCam1DXDynamic.txt";
 	public const string S1SignCam1D20Dynamic = @"C:\atsVision\S1SignCam1D20Dynamic.txt";
 	public const string S1SignCam2DXStatic = @"C:\atsVision\S1SignCam2DXStatic.txt";

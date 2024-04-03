@@ -1,7 +1,7 @@
 using Core.Entities.Anodes.Dictionaries;
 using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.Vision.ToDos.Dictionaries;
+using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
 using Core.Migrations;
 using Core.Shared.Dictionaries;
@@ -37,22 +37,22 @@ public partial class ToSign
 		return StationID >= Station.StationNameToID(Station.Station3);
 	}
 
-	public List<DataSetID> GetLoadDestinations()
+	public List<InstanceMatchID> GetLoadDestinations()
 	{
-		List<DataSetID> destinations = new();
+		List<InstanceMatchID> destinations = new();
 
 		if (!IsMatchStation())
 		{
-			destinations.Add(DataSetID.S3);
-			destinations.Add(DataSetID.S4);
+			destinations.Add(InstanceMatchID.S3);
+			destinations.Add(InstanceMatchID.S4);
 		}
 
 		if (AnodeType.Equals(AnodeTypes.DX))
 		{
 			if (StationID == 3 || StationID == 4)
-				destinations.Add(DataSetID.S5);
+				destinations.Add(InstanceMatchID.S5);
 			else if (StationID == 1 || StationID == 2)
-				destinations.Add(DataSetID.S5_C);
+				destinations.Add(InstanceMatchID.S5_C);
 		}
 
 		return destinations;

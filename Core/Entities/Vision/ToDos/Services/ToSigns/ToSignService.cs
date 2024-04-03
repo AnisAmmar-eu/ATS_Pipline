@@ -1,6 +1,6 @@
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.Vision.ToDos.Dictionaries;
+using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
