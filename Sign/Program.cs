@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background.KPI.KPILogs;
+using Core.Shared.Services.SystemApp.Logs;
+using DLLVision;
+using Microsoft.Extensions.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options =>
@@ -53,7 +56,10 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
     IServiceProvider services = scope.ServiceProvider;
     AnodeCTX context = services.GetRequiredService<AnodeCTX>();
     UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-
 }
+
+string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+DLLVisionImport.SetDllDirectory(DLLPath);
+int retInit = DLLVisionImport.fcx_init();
 
 host.Run();
