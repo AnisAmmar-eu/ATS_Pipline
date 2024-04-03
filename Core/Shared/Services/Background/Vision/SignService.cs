@@ -52,7 +52,6 @@ public class SignService : BackgroundService
         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
         _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
-        string DLLPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
         string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
         string signDynamicParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
         bool allowSignMatch = _configuration.GetValueWithThrow<bool>(ConfigDictionary.AllowSignMatch);
@@ -65,16 +64,15 @@ public class SignService : BackgroundService
 		IToSignService toSignService
 	   = asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
 
-		DLLVisionImport.SetDllDirectory(DLLPath);
-
-        int retInit = DLLVisionImport.fcx_init();
         int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
         int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParams);
 
         TypeAdapterConfig<ToSign, ToLoad>.NewConfig()
-               .Ignore(dest => dest.ID);
+               .Ignore(dest => dest.ID)
+               .Ignore(dest => dest.StationCycle);
         TypeAdapterConfig<ToSign, ToMatch>.NewConfig()
-               .Ignore(dest => dest.ID);
+               .Ignore(dest => dest.ID)
+               .Ignore(dest => dest.StationCycle);
 
         while (await timer.WaitForNextTickAsync(stoppingToken)
                && !stoppingToken.IsCancellationRequested)
@@ -108,10 +106,11 @@ public class SignService : BackgroundService
 						_logger.LogWarning("Return code de la signature: " + retSign + " pour anode " + image.Name);
 
 					_anodeUOW.ToSign.Remove(toSign);
-					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
 					_anodeUOW.Commit();
 
-					foreach (DataSetID id in toSign.GetLoadDestinations())
+                    StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
+
+                    foreach (DataSetID id in toSign.GetLoadDestinations())
 					{
 						ToLoad load = toSign.Adapt<ToLoad>();
 						load.DataSetID = id;
@@ -119,12 +118,11 @@ public class SignService : BackgroundService
 						_anodeUOW.Commit();
 					}
 
+                    // S1 and S2 (sign stations) are the only station to add an Anode
                     if (toSign.IsMatchStation())
                         await _anodeUOW.ToMatch.Add(toSign.Adapt<ToMatch>());
-                    else if (toSign.AnodeType == AnodeTypes.DX)
-                        await _anodeUOW.Anode.Add(new AnodeDX((S1S2Cycle)cycle));
-                    else if (toSign.AnodeType == AnodeTypes.D20)
-                        await _anodeUOW.Anode.Add(new AnodeDX((S1S2Cycle)cycle));
+                    else
+                        toSignService.AddAnode(cycle);
 
                     _anodeUOW.Commit();
                 }

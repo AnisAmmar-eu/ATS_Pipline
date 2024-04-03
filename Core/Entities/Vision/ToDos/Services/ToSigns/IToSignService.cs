@@ -8,5 +8,6 @@ namespace Core.Entities.Vision.ToDos.Services.ToSigns;
 
 public interface IToSignService : IBaseEntityService<ToSign, DTOToSign>
 {
+	void AddAnode(StationCycle cycle);
 	Task<StationCycle> UpdateCycle(ToSign toSign, int retSign);
 }

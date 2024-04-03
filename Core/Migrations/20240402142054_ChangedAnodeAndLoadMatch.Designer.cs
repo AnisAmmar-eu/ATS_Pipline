@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240402142054_ChangedAnodeAndLoadMatch")]
+    partial class ChangedAnodeAndLoadMatch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -878,6 +881,9 @@ namespace Core.Migrations
                     b.Property<int>("CameraID")
                         .HasColumnType("int");
 
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
                     b.Property<string>("CycleRID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -920,6 +926,9 @@ namespace Core.Migrations
                     b.Property<int>("CameraID")
                         .HasColumnType("int");
 
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
                     b.Property<string>("CycleRID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -959,6 +968,9 @@ namespace Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CameraID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CycleID")
                         .HasColumnType("int");
 
                     b.Property<string>("CycleRID")
@@ -1018,6 +1030,9 @@ namespace Core.Migrations
                     b.Property<int>("CameraID")
                         .HasColumnType("int");
 
+                    b.Property<int>("CycleID")
+                        .HasColumnType("int");
+
                     b.Property<string>("CycleRID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1054,6 +1069,9 @@ namespace Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CameraID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CycleID")
                         .HasColumnType("int");
 
                     b.Property<string>("CycleRID")

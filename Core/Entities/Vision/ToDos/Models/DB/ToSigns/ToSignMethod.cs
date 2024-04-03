@@ -25,7 +25,7 @@ public partial class ToSign
 	{
 		TypeAdapterConfig<Shooting, ToSign>.NewConfig()
 			.Map(dest => dest.CycleRID, src => src.StationCycleRID)
-			.Map(dest => dest.CycleID, src => src.StationCycle!.ID)
+			.Map(dest => dest.StationCycleID, src => src.StationCycle!.ID)
 			.Map(dest => dest.StationID, src => src.StationCycle!.StationID)
 			.Map(dest => dest.CameraID, src => (src.Cam01Status == 1) ? 1 : (src.Cam02Status == 1) ? 2 : 0);
 
@@ -50,9 +50,9 @@ public partial class ToSign
 		if (AnodeType.Equals(AnodeTypes.DX))
 		{
 			if (StationID == 3 || StationID == 4)
-				destinations.Add(DataSetID.S5);
-			else if (StationID == 1 || StationID == 2)
 				destinations.Add(DataSetID.S5_C);
+			else if (StationID == 1 || StationID == 2)
+				destinations.Add(DataSetID.S5);
 		}
 
 		return destinations;

@@ -4,7 +4,6 @@ using Core.Shared.Services.Background.Vision;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using Core.Shared.Services.System.Logs;
 using Core.Shared.Services.Background;
 using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Entities.User.Models.DB.Roles;
@@ -13,6 +12,9 @@ using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background.KPI.KPILogs;
+using Core.Shared.Services.SystemApp.Logs;
+using DLLVision;
+using Microsoft.Extensions.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options =>
@@ -50,7 +52,12 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
     IServiceProvider services = scope.ServiceProvider;
     AnodeCTX context = services.GetRequiredService<AnodeCTX>();
     UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-
 }
+
+string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+
+DLLVisionImport.SetDllDirectory(DLLPath);
+int retInit = DLLVisionImport.fcx_init();
+Console.WriteLine("retinit DLL: "+retInit);
 
 host.Run();
