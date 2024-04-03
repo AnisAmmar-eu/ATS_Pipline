@@ -33,7 +33,6 @@ using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
-using Core.Entities.Vision.FileSettings.Models.DB;
 using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
@@ -59,7 +58,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	#region Vision
 
-	public DbSet<FileSetting> FileSetting => Set<FileSetting>();
 	public DbSet<ToMatch> ToMatch => Set<ToMatch>();
 	public DbSet<ToLoad> ToLoad => Set<ToLoad>();
 	public DbSet<ToSign> ToSign => Set<ToSign>();

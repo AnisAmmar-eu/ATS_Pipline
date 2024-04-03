@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240403091800_ChangedToDo")]
+    partial class ChangedToDo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -900,6 +903,8 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("StationCycleID");
+
                     b.ToTable("Dataset");
                 });
 
@@ -939,6 +944,8 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("StationCycleID");
+
                     b.ToTable("ToLoad");
                 });
 
@@ -974,6 +981,8 @@ namespace Core.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("StationCycleID");
 
                     b.ToTable("ToMatch");
                 });
@@ -1030,6 +1039,8 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("StationCycleID");
+
                     b.ToTable("ToSign");
                 });
 
@@ -1068,6 +1079,8 @@ namespace Core.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("StationCycleID");
 
                     b.ToTable("ToUnload");
                 });
@@ -1661,6 +1674,61 @@ namespace Core.Migrations
                         .IsRequired();
 
                     b.Navigation("ActEntity");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.Datasets.Dataset", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.StationCycle", "StationCycle")
+                        .WithMany()
+                        .HasForeignKey("StationCycleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToLoads.ToLoad", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.StationCycle", "StationCycle")
+                        .WithMany()
+                        .HasForeignKey("StationCycleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToMatchs.ToMatch", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.StationCycle", "StationCycle")
+                        .WithMany()
+                        .HasForeignKey("StationCycleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToSigns.ToSign", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.StationCycle", "StationCycle")
+                        .WithMany()
+                        .HasForeignKey("StationCycleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StationCycle");
+                });
+
+            modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToUnloads.ToUnload", b =>
+                {
+                    b.HasOne("Core.Entities.StationCycles.Models.DB.StationCycle", "StationCycle")
+                        .WithMany()
+                        .HasForeignKey("StationCycleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StationCycle");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -25,7 +25,7 @@ public partial class ToSign
 	{
 		TypeAdapterConfig<Shooting, ToSign>.NewConfig()
 			.Map(dest => dest.CycleRID, src => src.StationCycleRID)
-			.Map(dest => dest.CycleID, src => src.StationCycle!.ID)
+			.Map(dest => dest.StationCycleID, src => src.StationCycle!.ID)
 			.Map(dest => dest.StationID, src => src.StationCycle!.StationID)
 			.Map(dest => dest.CameraID, src => (src.Cam01Status == 1) ? 1 : (src.Cam02Status == 1) ? 2 : 0);
 

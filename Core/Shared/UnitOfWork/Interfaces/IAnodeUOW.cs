@@ -16,7 +16,6 @@ using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
 using Core.Entities.User.Repositories.Roles;
-using Core.Entities.Vision.FileSettings.Repositories;
 using Core.Entities.Vision.ToDos.Repositories.Datasets;
 using Core.Entities.Vision.ToDos.Repositories.ToLoads;
 using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
@@ -55,7 +54,6 @@ public interface IAnodeUOW : IDisposable
 	IPacketRepository Packet { get; }
 	IAlarmCycleRepository AlarmCycle { get; }
 
-	IFileSettingRepository FileSetting { get; }
 	IToMatchRepository ToMatch { get; }
 	IToLoadRepository ToLoad { get; }
 	IToNotifyRepository ToNotify { get; }
