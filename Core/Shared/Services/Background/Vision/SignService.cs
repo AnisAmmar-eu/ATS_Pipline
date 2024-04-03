@@ -68,11 +68,9 @@ public class SignService : BackgroundService
         int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParams);
 
         TypeAdapterConfig<ToSign, ToLoad>.NewConfig()
-               .Ignore(dest => dest.ID)
-               .Ignore(dest => dest.StationCycle);
+               .Ignore(dest => dest.ID);
         TypeAdapterConfig<ToSign, ToMatch>.NewConfig()
-               .Ignore(dest => dest.ID)
-               .Ignore(dest => dest.StationCycle);
+               .Ignore(dest => dest.ID);
 
         while (await timer.WaitForNextTickAsync(stoppingToken)
                && !stoppingToken.IsCancellationRequested)

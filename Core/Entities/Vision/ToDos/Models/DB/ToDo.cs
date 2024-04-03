@@ -16,13 +16,4 @@ public partial class ToDo : BaseEntity, IBaseEntity<ToDo, DTOToDo>
 	public DateTimeOffset? ShootingTS { get; set; }
 
     public int StationCycleID { get; set; }
-
-    public StationCycle StationCycle
-    {
-        set => _StationCycle = value;
-        get => _StationCycle
-            ?? throw new InvalidOperationException("Uninitialized property: " + nameof(StationCycle));
-    }
-
-    private StationCycle? _StationCycle;
 }

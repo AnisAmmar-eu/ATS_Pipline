@@ -55,9 +55,7 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
 }
 
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
-
 DLLVisionImport.SetDllDirectory(DLLPath);
 int retInit = DLLVisionImport.fcx_init();
-Console.WriteLine("retinit DLL: "+retInit);
 
 host.Run();
