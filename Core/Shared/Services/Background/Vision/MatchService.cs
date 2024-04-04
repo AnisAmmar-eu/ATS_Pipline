@@ -39,7 +39,6 @@ public class MatchService : BackgroundService
         string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
         string signDynParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
         string matchDynParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.MatchDynParams);
-        bool allowSignMatch = _configuration.GetValueWithThrow<bool>(ConfigDictionary.AllowSignMatch);
         string DLLPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
         using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
@@ -67,11 +66,6 @@ public class MatchService : BackgroundService
 					string filename = new FileInfo(signature_file).Name;
 					string anodeId = Path.GetFileNameWithoutExtension(filename);
 					int loadAnodeCode = DLLVisionImport.fcx_load_anode(0, sign_folder, anodeId);
-				}
-
-				if (allowSignMatch)
-				{
-					// TODO matching
 				}
 
 				int returnSigner = DLLVisionImport.fcx_sign(0, 0, match_image_folder, "toto", "temp");
