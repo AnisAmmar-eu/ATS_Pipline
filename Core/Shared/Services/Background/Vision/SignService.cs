@@ -33,9 +33,6 @@ public class SignService : BackgroundService
     private readonly IServiceScopeFactory _factory;
     private readonly ILogger<SignService> _logger;
     private readonly IConfiguration _configuration;
-	private IAnodeUOW _anodeUOW;
-	private string _imagesPath;
-	private string _extension;
 
 	public SignService(
 		ILogger<SignService> logger,
@@ -50,13 +47,13 @@ public class SignService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-        _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+        IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
         string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
         string signDynamicParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
         bool allowSignMatch = _configuration.GetValueWithThrow<bool>(ConfigDictionary.AllowSignMatch);
-		_imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-		_extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 		using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
