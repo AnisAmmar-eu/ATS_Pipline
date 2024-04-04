@@ -69,14 +69,18 @@ public class SignFileSettingService : BackgroundService
 					&& ((responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0)
 					&& ((responseStatic = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParamsFile)) == 0))
 				{
-					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
+					File.Delete(Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
+                    File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
 				}
 
 				int responseDynamic = 1000;
-				if (!File.Exists(signDynamicParamsFile)
-					|| ((responseDynamic = DLLVisionImport.fcx_unregister_sign_params_dynamic(0)) != 0)
-					|| ((responseDynamic = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParamsFile)) != 0))
+				if (File.Exists(signDynamicParamsFile)
+					&& ((responseDynamic = DLLVisionImport.fcx_unregister_sign_params_dynamic(0)) == 0)
+					&& ((responseDynamic = DLLVisionImport.fcx_register_sign_params_dynamic(
+						0,
+						signDynamicParamsFile)) == 0))
 				{
+					File.Delete(Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
 					File.Move(signDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
 				}
 

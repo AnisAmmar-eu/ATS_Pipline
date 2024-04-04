@@ -52,20 +52,18 @@ public class SignService : BackgroundService
         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
         _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
-        string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
-        string signDynamicParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
-        bool allowSignMatch = _configuration.GetValueWithThrow<bool>(ConfigDictionary.AllowSignMatch);
 		_imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		_extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+        List<InstanceMatchID> LoadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
+               ConfigDictionary.LoadDestinations);
+        string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
+        int cameraID = _configuration.GetValueWithThrow<int>(ConfigDictionary.CameraID);
 
-		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
+        int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 		using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
 
 		IToSignService toSignService
 	   = asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
-
-        int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
-        int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParams);
 
         TypeAdapterConfig<ToSign, ToLoad>.NewConfig()
                .Ignore(dest => dest.ID);
@@ -80,7 +78,7 @@ public class SignService : BackgroundService
 			try
 			{
                 List<ToSign> toSigns = await _anodeUOW.ToSign.GetAll(
-                    [sign => sign.StationID == Station.ID],
+                    [sign => sign.StationID == Station.ID && sign.CameraID == cameraID && sign.AnodeType == anodeType],
                     withTracking: false);
 
 				foreach (ToSign toSign in toSigns)
@@ -108,7 +106,7 @@ public class SignService : BackgroundService
 
                     StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
 
-                    foreach (InstanceMatchID id in toSign.GetLoadDestinations())
+                    foreach (InstanceMatchID id in LoadDestinations)
 					{
 						ToLoad load = toSign.Adapt<ToLoad>();
 						load.InstanceMatchID = id;
@@ -120,7 +118,7 @@ public class SignService : BackgroundService
                     if (toSign.IsMatchStation())
                         await _anodeUOW.ToMatch.Add(toSign.Adapt<ToMatch>());
                     else
-                        toSignService.AddAnode(cycle);
+                        toSignService.AddAnode((S1S2Cycle)cycle);
 
                     _anodeUOW.Commit();
                 }
