@@ -53,15 +53,16 @@ public static class ConfigDictionary
     public const string MatchDynParams = "VisionSettings:MatchDynParams";
     public const string DLLPath = "VisionSettings:DLLPath";
     public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
-    public const string SANpath = "VisionSettings:SANpath";
-    public const string AllowSignMatch = "VisionSettings:AllowSignMatch";
+    public const string LoadDestinations = "VisionSettings:LoadDestinations";
+    public const string CameraID = "VisionSettings:CameraID";
+    public const string AnodeType = "VisionSettings:AnodeType";
 
-	#endregion
+    #endregion
 
-	#region Vision File settings
+    #region Vision File settings
 
-    public const string FileSettingTimer = "VisionSettings:FileSettingTimer";
-	public const string ArchivePath = "VisionSettings:ArchivePath";
+    public const string FileSettingTimer = "FileSettings:FileSettingTimer";
+	public const string ArchivePath = "FileSettings:ArchivePath";
 
 	#endregion
 

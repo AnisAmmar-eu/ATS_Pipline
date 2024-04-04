@@ -59,7 +59,12 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
 }
 
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+string signStaticParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
+string signDynamicParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
+
 DLLVisionImport.SetDllDirectory(DLLPath);
 int retInit = DLLVisionImport.fcx_init();
+int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
+int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParams);
 
 host.Run();

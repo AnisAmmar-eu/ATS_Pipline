@@ -9,6 +9,7 @@ using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
 using Core.Entities.Vision.ToDos.Repositories.ToSigns;
+using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork;
@@ -53,7 +54,7 @@ public class ToSignService : BaseEntityService<IToSignRepository, ToSign, DTOToS
         return cycle;
 	}
 
-	public async void AddAnode(StationCycle cycle)
+	public async void AddAnode(S1S2Cycle cycle)
 	{
 		try
 		{
@@ -65,10 +66,10 @@ public class ToSignService : BaseEntityService<IToSignRepository, ToSign, DTOToS
 		{
             await AnodeUOW.StartTransaction();
 
-            if (cycle.AnodeType == AnodeTypes.DX)
-                AnodeUOW.Anode.Add(new AnodeDX((S1S2Cycle)cycle));
-            else if (cycle.AnodeType == AnodeTypes.D20)
-                AnodeUOW.Anode.Add(new AnodeD20((S1S2Cycle)cycle));
+            if (cycle.AnodeType == AnodeTypeDict.DX)
+                await AnodeUOW.Anode.Add(new AnodeDX(cycle));
+            else if (cycle.AnodeType == AnodeTypeDict.D20)
+                await AnodeUOW.Anode.Add(new AnodeD20(cycle));
 
             AnodeUOW.Commit();
             await AnodeUOW.CommitTransaction();
