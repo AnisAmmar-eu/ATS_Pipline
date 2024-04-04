@@ -5,10 +5,11 @@ namespace Core.Entities.Vision.Dictionaries;
 
 public enum InstanceMatchID
 {
-	S4 = 0,
-	S3 = 1,
-	S5 = 2,
-	S5_C = 3,
+	S3 = 0,
+	S4 = 1,
+	S3S4 = 2,
+	S5 = 3,
+	S5_C = 4,
 }
 
 public enum DataSetID
