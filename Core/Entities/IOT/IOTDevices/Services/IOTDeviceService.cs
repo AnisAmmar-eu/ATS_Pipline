@@ -118,4 +118,20 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		await AnodeUOW.CommitTransaction();
 		return connectedDevices;
 	}
+
+	public async Task ActiveReinit()
+	{
+		IOTDevice device = await AnodeUOW.IOTDevice.GetBy([device => device is ITApi], withTracking: true);
+
+		// Uncomment if you want to reinit
+		//ServerRule device = (ServerRule)await AnodeUOW.IOTDevice.GetBy([device => device is ServerRule], withTracking: true);
+		//device.Reinit = true;
+		await AnodeUOW.StartTransaction();
+		AnodeUOW.IOTDevice.Update(device);
+		AnodeUOW.Commit();
+		await AnodeUOW.CommitTransaction();
+
+		await _hubContext.Clients.All.RefreshIOTTag();
+		await _hubContext.Clients.All.RefreshDevices();
+	}
 }

@@ -34,7 +34,6 @@ public static class IOTInitializer
 		foreach (var api in apis)
 			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
 
-		// TODO Path.
 		InitializeTwinCat(anodeCTX, DeviceRID.TwinCat, ADSUtils.AdsPort.ToString(), ADSUtils.ConnectionPath);
 	}
 
@@ -59,6 +58,17 @@ public static class IOTInitializer
 
 		foreach (var api in serverApis)
 			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
+
+		// To Uncomment
+		//anodeCTX.ServerRule.Add(new ServerRule {
+		//	RID = ServerRule.RID,
+		//	Name = ServerRule.RID,
+		//	Description = ServerRule.RID,
+		//	Address = string.Empty,
+		//	ConnectionPath = string.Empty,
+		//	IsConnected = true,
+		//	Reinit = false,
+		//});
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)

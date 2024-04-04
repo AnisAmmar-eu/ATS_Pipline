@@ -65,6 +65,18 @@ public partial class StationCycle
 		property.SetValue(this, packet);
 	}
 
+	public bool CanMatch()
+	{
+		return Station.IsMatchStation(StationID)
+			&& !(Picture1Status == 0 && Picture2Status == 0)
+			&& !(Picture1Status == 1
+				&& (Shooting1Packet is null
+					|| SignStatus1 != SignMatchStatus.Ok))
+			&& !(Picture2Status == 1
+				&& (Shooting2Packet is null
+					|| SignStatus2 != SignMatchStatus.Ok));
+	}
+
 	public static string[] GetKPICRID()
 	{
 		List<string> signMatchRIDs = [

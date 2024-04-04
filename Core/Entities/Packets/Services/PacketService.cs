@@ -14,7 +14,9 @@ using Core.Entities.Packets.Models.DTO;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
+using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
@@ -210,18 +212,39 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					stationCycle.AnodeType = shooting.AnodeType;
 
 				if (shooting.Cam01Status == 1)
-				{
-					stationCycle.Picture1Status = 1;
 					stationCycle.Shooting1Packet = shooting;
-				}
 				else
-				{
-					stationCycle.Picture2Status = 1;
 					stationCycle.Shooting2Packet = shooting;
-				}
 
 				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting));
 				AnodeUOW.Commit();
+			}
+			else if(packet is MetaData metaData)
+			{
+				stationCycle.AssignPacket(metaData);
+				if (stationCycle.AnodeType is "")
+					stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
+
+				stationCycle.Picture1Status = metaData.Cam01Status;
+				stationCycle.Picture2Status = metaData.Cam02Status;
+
+				// Check if the station matches 'matchingStation', if 'picture1' and 'picture2' are not both 0,
+				// if 'picture1' is 1, 'shooting1Packet' is not null, and if 'picture2' is 1, 'shooting2Packet' is not null.
+				bool toMatch = Station.IsMatchStation(stationCycle.StationID)
+					&& !(stationCycle.Picture1Status == 0 && stationCycle.Picture2Status == 0)
+					&& !(stationCycle.Picture1Status == 1
+						&& (stationCycle.Shooting1Packet is null
+							|| stationCycle.SignStatus1 != SignMatchStatus.Ok))
+					&& !(stationCycle.Picture2Status == 1
+						&& (stationCycle.Shooting2Packet is null
+							|| stationCycle.SignStatus2 != SignMatchStatus.Ok));
+
+				if (stationCycle.CanMatch())
+				{
+					_logger.LogInformation("Creating ToMatch");
+					await AnodeUOW.ToMatch.Add(new (stationCycle));
+					AnodeUOW.Commit();
+				}
 			}
 			else
 			{
@@ -241,15 +264,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				stationCycle.AnodeType = shooting.AnodeType;
 				stationCycle.TSFirstShooting = shooting.ShootingTS;
 				if (shooting.Cam01Status == 1)
-				{
-					stationCycle.Picture1Status = 1;
 					stationCycle.Shooting1Packet = shooting;
-				}
 				else
-				{
-					stationCycle.Picture2Status = 1;
 					stationCycle.Shooting2Packet = shooting;
-				}
 
 				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting));
 				AnodeUOW.Commit();
@@ -259,8 +276,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				_logger.LogInformation("MetaData packet received");
 				stationCycle.AssignPacket(metaData);
 				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
-				stationCycle.Picture1Status = (metaData.Cam01Status == 1) ? 0 : 3;
-				stationCycle.Picture2Status = (metaData.Cam02Status == 1) ? 0 : 3;
+				stationCycle.Picture1Status = metaData.Cam01Status;
+				stationCycle.Picture2Status = metaData.Cam02Status;
 			}
 			else
 			{
