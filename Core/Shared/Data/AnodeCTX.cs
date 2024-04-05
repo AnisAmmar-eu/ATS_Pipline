@@ -18,7 +18,6 @@ using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Entities.KPIData.KPIs.Models.DB;
 using Core.Entities.KPIData.TenBestMatchs.Models.DB;
-using Core.Entities.KPIs.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
@@ -159,7 +158,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.IsRequired();
 
         builder.Entity<KPI>()
-               .HasMany(KPI => KPI.tenBestMatches)
+               .HasMany(KPI => KPI.TenBestMatches)
                .WithOne(TenBestMatch => TenBestMatch.KPI)
                .HasForeignKey(TenBestMatch => TenBestMatch.KPIID)
                .IsRequired();
@@ -192,12 +191,19 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 
-		builder.Entity<S3S4Cycle>()
-			.HasOne(s3S4Cycle => s3S4Cycle.InFurnacePacket)
-			.WithOne(packet => packet.StationCycle as S3S4Cycle)
-			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.InFurnaceID)
-			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+        builder.Entity<StationCycle>()
+               .HasOne(stationCycle => stationCycle.KPI)
+               .WithOne(KPI => KPI.StationCycle)
+               .HasForeignKey<StationCycle>(stationCycle => stationCycle.KPIID)
+               .IsRequired(false)
+               .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<S3S4Cycle>()
+               .HasOne(s3S4Cycle => s3S4Cycle.InFurnacePacket)
+               .WithOne(packet => packet.StationCycle as S3S4Cycle)
+               .HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.InFurnaceID)
+               .IsRequired(false)
+               .OnDelete(DeleteBehavior.NoAction);
 
 		builder.Entity<S3S4Cycle>()
 			.HasOne(s3S4Cycle => s3S4Cycle.OutFurnacePacket)

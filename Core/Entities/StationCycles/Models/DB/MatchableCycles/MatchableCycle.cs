@@ -1,4 +1,4 @@
-using Core.Entities.KPIs.Models.DB;
+using Core.Entities.KPIData.KPIs.Models.DB;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;

@@ -7,4 +7,5 @@ namespace Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
 
 public partial class DTOToSign :  DTOToDo, IDTO<ToSign, DTOToSign>
 {
+    public int CameraID { get; set; }
 }

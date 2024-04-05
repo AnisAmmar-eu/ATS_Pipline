@@ -6,7 +6,6 @@ using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
-using Core.Entities.Vision.ToDos.Models.DB.KPIs;
 using Core.Entities.KPIData.KPIs.Models.DTO;
 using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;

@@ -10,14 +10,15 @@ namespace Core.Entities.KPIData.KPIs.Models.DB;
 
 public partial class KPI : BaseEntity, IBaseEntity<KPI, DTOKPI>
 {
-    public int nbCandidats { get; set; }
-    public int threshold { get; set; }
+    public int NbCandidats { get; set; }
+    public int Threshold { get; set; }
     public double MScore { get; set; }
     public double NMminScore { get; set; }
     public double NMmaxScore { get; set; }
     public double NMAvg { get; set; }
     public double NMStdev {  get; set; }
-    public double computeTime {  get; set; }
+    public double ComputeTime {  get; set; }
 
-    public List<TenBestMatch> tenBestMatches { get; set; } = new();
+    public StationCycle StationCycle { get; set; }
+    public List<TenBestMatch> TenBestMatches { get; set; } = new();
 }

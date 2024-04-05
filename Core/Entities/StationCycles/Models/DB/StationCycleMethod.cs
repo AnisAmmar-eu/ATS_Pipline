@@ -69,31 +69,11 @@ public partial class StationCycle
 		return Station.IsMatchStation(StationID)
 			&& !(Picture1Status == 0 && Picture2Status == 0)
 			&& !(Picture1Status == 1
-				&& (Shooting1Packet is null
+				&& (Shooting1ID is null
 					|| SignStatus1 != SignMatchStatus.Ok))
 			&& !(Picture2Status == 1
-				&& (Shooting2Packet is null
+				&& (Shooting2ID is null
 					|| SignStatus2 != SignMatchStatus.Ok));
-	}
-
-	public static string[] GetKPICRID()
-	{
-		List<string> signMatchRIDs = [
-			KPICRID.StationCycleMatched,
-			KPICRID.StationCycleSigned,
-			KPICRID.StationCycleNotSigned,
-			KPICRID.StationCycleMatchingCam1,
-		];
-		List<string> ans = new();
-		// RIDS of the server and every station are added in the following order: rids, rids1, rids2...
-		for (int i = 0; i <= 5; ++i)
-			ans.AddRange(signMatchRIDs.Select(rid => rid + ((i == 0) ? string.Empty : i.ToString())));
-
-		ans.AddRange([KPICRID.D20Anodes, KPICRID.DXAnodes]);
-		for (int i = 1; i <= 5; ++i)
-			ans.Add($"{KPICRID.AnodesStation}{i.ToString()}");
-
-		return ans.ToArray();
 	}
 
 	public Func<List<StationCycle>, string[]> GetComputedValues()

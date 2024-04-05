@@ -22,7 +22,7 @@ public class MonitorEndpoint :  BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIOT
 		group.MapGet("status", () => new ApiResponse().SuccessResult());
 		group.MapGet("status/{rid}", GetStatusByRID).WithSummary("Get a device's STATUS by its RID").WithOpenApi();
 		group.MapPut("rids", GetDevicesByArrayRID).WithSummary("Get devices by their RIDs").WithOpenApi();
-		//group.MapPut("reinit", ActiveReinit).WithSummary("Active mode reinit").WithOpenApi();
+		group.MapPut("reinit", ActiveReinit).WithSummary("Active mode reinit").WithOpenApi();
 	 }
 
 	private static Task<JsonHttpResult<ApiResponse>> GetStatusByRID(
@@ -43,11 +43,11 @@ public class MonitorEndpoint :  BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIOT
 		return GenericEndpoint( () => iotDeviceService.GetStatusByArrayRID(rids), logService, httpContext);
 	}
 
-	//private static Task<JsonHttpResult<ApiResponse>> ActiveReinit(
-	//	IIOTDeviceService iotDeviceService,
-	//	ILogService logService,
-	//	HttpContext httpContext)
-	//{
-	//	return GenericEndpoint(() => iotDeviceService.ActiveReinit(), logService, httpContext);
-	//}
+	private static Task<JsonHttpResult<ApiResponse>> ActiveReinit(
+		IIOTDeviceService iotDeviceService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(() => iotDeviceService.ActiveReinit(), logService, httpContext);
+	}
 }

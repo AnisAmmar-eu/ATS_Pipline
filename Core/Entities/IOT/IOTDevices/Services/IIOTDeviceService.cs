@@ -23,5 +23,5 @@ public interface IIOTDeviceService : IBaseEntityService<IOTDevice, DTOIOTDevice>
 	/// /// Will reinitialize all devices in the active mode.
 	/// </summary>
 	/// <returns></returns>
-	public Task ActiveReinit();
+	public Task<bool> ActiveReinit();
 }

@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240405084501_AddedKPI")]
+    partial class AddedKPI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -421,9 +424,6 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<double>("ComputeTime")
-                        .HasColumnType("float");
-
                     b.Property<double>("MScore")
                         .HasColumnType("float");
 
@@ -439,13 +439,16 @@ namespace Core.Migrations
                     b.Property<double>("NMminScore")
                         .HasColumnType("float");
 
-                    b.Property<int>("NbCandidats")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("Threshold")
+                    b.Property<double>("computeTime")
+                        .HasColumnType("float");
+
+                    b.Property<int>("nbCandidats")
+                        .HasColumnType("int");
+
+                    b.Property<int>("threshold")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
@@ -461,21 +464,21 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("AnodeID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("KPIID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rank")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Score")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("anodeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("rank")
+                        .HasColumnType("int");
+
+                    b.Property<int>("score")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -542,7 +545,7 @@ namespace Core.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<int?>("KPIID")
+                    b.Property<int>("KPIID")
                         .HasColumnType("int");
 
                     b.Property<int?>("MetaDataID")
@@ -589,8 +592,7 @@ namespace Core.Migrations
                         .HasFilter("[AlarmListID] IS NOT NULL");
 
                     b.HasIndex("KPIID")
-                        .IsUnique()
-                        .HasFilter("[KPIID] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("MetaDataID")
                         .IsUnique()
@@ -1556,7 +1558,7 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.KPIData.TenBestMatchs.Models.DB.TenBestMatch", b =>
                 {
                     b.HasOne("Core.Entities.KPIData.KPIs.Models.DB.KPI", "KPI")
-                        .WithMany("TenBestMatches")
+                        .WithMany("tenBestMatches")
                         .HasForeignKey("KPIID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1572,7 +1574,7 @@ namespace Core.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.KPIData.KPIs.Models.DB.KPI", "KPI")
-                        .WithOne("StationCycle")
+                        .WithOne("stationCycle")
                         .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "KPIID")
                         .OnDelete(DeleteBehavior.NoAction);
 
@@ -1722,10 +1724,10 @@ namespace Core.Migrations
 
             modelBuilder.Entity("Core.Entities.KPIData.KPIs.Models.DB.KPI", b =>
                 {
-                    b.Navigation("StationCycle")
+                    b.Navigation("stationCycle")
                         .IsRequired();
 
-                    b.Navigation("TenBestMatches");
+                    b.Navigation("tenBestMatches");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>

@@ -59,16 +59,15 @@ public static class IOTInitializer
 		foreach (var api in serverApis)
 			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
 
-		// To Uncomment
-		//anodeCTX.ServerRule.Add(new ServerRule {
-		//	RID = ServerRule.RID,
-		//	Name = ServerRule.RID,
-		//	Description = ServerRule.RID,
-		//	Address = string.Empty,
-		//	ConnectionPath = string.Empty,
-		//	IsConnected = true,
-		//	Reinit = false,
-		//});
+		anodeCTX.ServerRule.Add(new ServerRule {
+			RID = ServerRuleDict.RID,
+			Name = ServerRuleDict.RID,
+			Description = ServerRuleDict.RID,
+			Address = string.Empty,
+			ConnectionPath = string.Empty,
+			IsConnected = true,
+			Reinit = false,
+		});
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
@@ -235,13 +234,13 @@ public static class IOTInitializer
 		string address,
 		string path)
 	{
-		ServerRule api = new() {
-			RID = rid,
-			Name = rid,
-			Description = rid,
-			Address = address,
-			ConnectionPath = path,
-			IsConnected = false,
+        ServerRule api = new() {
+               RID = rid,
+               Name = rid,
+               Description = rid,
+               Address = address,
+               ConnectionPath = path,
+               IsConnected = false,
 		};
 		anodeCTX.ServerRule.Add(api);
 		anodeCTX.SaveChanges();
