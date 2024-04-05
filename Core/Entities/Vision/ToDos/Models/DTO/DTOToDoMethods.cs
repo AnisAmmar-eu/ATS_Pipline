@@ -9,8 +9,8 @@ public partial class DTOToDo
 	{
 	}
 
-	public override ToDo ToModel()
+	public override DB.ToDo ToModel()
 	{
-		return this.Adapt<ToDo>();
+		return this.Adapt<DB.ToDo>();
 	}
 }

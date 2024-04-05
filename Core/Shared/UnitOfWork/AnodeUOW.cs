@@ -9,9 +9,8 @@ using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Repositories;
-using Core.Entities.KPI.KPICs.Repositories;
-using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
-using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
+using Core.Entities.KPIData.KPIs.Models.DB;
+using Core.Entities.KPIData.KPIs.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
@@ -54,12 +53,10 @@ public class AnodeUOW : IAnodeUOW
 
 	public IStationCycleRepository StationCycle { get; }
 
-	public IKPICRepository KPIC { get; }
-	public IKPILogRepository KPILog { get; }
-	public IKPIRTRepository KPIRT { get; }
 	public IBITemperatureRepository BITemperature { get; }
+	public IKPIRepository KPI { get; }
 
-	public IIOTDeviceRepository IOTDevice { get; }
+    public IIOTDeviceRepository IOTDevice { get; }
 	public IIOTTagRepository IOTTag { get; }
 
 	public IToMatchRepository ToMatch { get; }
@@ -89,10 +86,8 @@ public class AnodeUOW : IAnodeUOW
 
 		StationCycle = new StationCycleRepository(_anodeCTX);
 
-		KPIC = new KPICRepository(_anodeCTX);
-		KPILog = new KPILogRepository(_anodeCTX);
-		KPIRT = new KPIRTRepository(_anodeCTX);
 		BITemperature = new BITemperatureRepository(_anodeCTX);
+		KPI = new KPIRepository(_anodeCTX);
 
 		IOTDevice = new IOTDeviceRepository(_anodeCTX);
 		IOTTag = new IOTTagRepository(_anodeCTX);
@@ -124,12 +119,10 @@ public class AnodeUOW : IAnodeUOW
 
 			_ when repo == typeof(IStationCycleRepository) => StationCycle,
 
-			_ when repo == typeof(IKPICRepository) => KPIC,
-			_ when repo == typeof(IKPILogRepository) => KPILog,
-			_ when repo == typeof(IKPIRTRepository) => KPIRT,
 			_ when repo == typeof(IBITemperatureRepository) => BITemperature,
+			_ when repo == typeof(IKPIRepository) => KPI,
 
-			_ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
+            _ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
 			_ when repo == typeof(IIOTTagRepository) => IOTTag,
 
 			_ when repo == typeof(IActRepository) => Acts,

@@ -1,5 +1,4 @@
 using System.Reflection;
-using Core.Entities.KPI.KPICs.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
@@ -63,26 +62,6 @@ public partial class StationCycle
 			throw new ArgumentException($"Cycle of RID {RID} has no packet of type {packet.GetType()}");
 
 		property.SetValue(this, packet);
-	}
-
-	public static string[] GetKPICRID()
-	{
-		List<string> signMatchRIDs = [
-			KPICRID.StationCycleMatched,
-			KPICRID.StationCycleSigned,
-			KPICRID.StationCycleNotSigned,
-			KPICRID.StationCycleMatchingCam1,
-		];
-		List<string> ans = new();
-		// RIDS of the server and every station are added in the following order: rids, rids1, rids2...
-		for (int i = 0; i <= 5; ++i)
-			ans.AddRange(signMatchRIDs.Select(rid => rid + ((i == 0) ? string.Empty : i.ToString())));
-
-		ans.AddRange([KPICRID.D20Anodes, KPICRID.DXAnodes]);
-		for (int i = 1; i <= 5; ++i)
-			ans.Add($"{KPICRID.AnodesStation}{i.ToString()}");
-
-		return ans.ToArray();
 	}
 
 	public Func<List<StationCycle>, string[]> GetComputedValues()

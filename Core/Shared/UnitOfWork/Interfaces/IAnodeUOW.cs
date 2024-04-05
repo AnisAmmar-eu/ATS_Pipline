@@ -8,9 +8,7 @@ using Core.Entities.BenchmarkTests.Repositories.CameraTests;
 using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Repositories;
-using Core.Entities.KPI.KPICs.Repositories;
-using Core.Entities.KPI.KPIEntries.Repositories.KPILogs;
-using Core.Entities.KPI.KPIEntries.Repositories.KPIRTs;
+using Core.Entities.KPIData.KPIs.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
@@ -43,12 +41,10 @@ public interface IAnodeUOW : IDisposable
 
 	IStationCycleRepository StationCycle { get; }
 
-	IKPICRepository KPIC { get; }
-	IKPILogRepository KPILog { get; }
-	IKPIRTRepository KPIRT { get; }
 	IBITemperatureRepository BITemperature { get; }
+	IKPIRepository KPI { get; }
 
-	IIOTDeviceRepository IOTDevice { get; }
+    IIOTDeviceRepository IOTDevice { get; }
 	IIOTTagRepository IOTTag { get; }
 
 	IPacketRepository Packet { get; }

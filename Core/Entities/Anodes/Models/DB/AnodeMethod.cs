@@ -1,7 +1,6 @@
 using Core.Entities.Anodes.Models.DB.AnodesD20;
 using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.Anodes.Models.DTO;
-using Core.Entities.KPI.KPICs.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 using Core.Shared.Dictionaries;
@@ -44,11 +43,6 @@ public abstract partial class Anode
 	public Anode GetValue()
 	{
 		return this;
-	}
-
-	public static string[] GetKPICRID()
-	{
-		return [KPICRID.AnodesTotalNumber];
 	}
 
 	public Func<List<Anode>, string[]> GetComputedValues()

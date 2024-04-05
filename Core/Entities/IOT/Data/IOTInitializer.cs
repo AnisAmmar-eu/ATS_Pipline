@@ -2,6 +2,7 @@ using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Data;
@@ -47,7 +48,6 @@ public static class IOTInitializer
 			{
 				new { Rid = ITApisDict.IOTRID, Address = ITApisDict.IOTAddress, Path = ITApisDict.IOTPath },
 				new { Rid = ITApisDict.AlarmRID, Address = ITApisDict.AlarmAddress, Path = ITApisDict.AlarmPath },
-				new { Rid = ITApisDict.KPIRID, Address = ITApisDict.KPIAddress, Path = ITApisDict.KPIPath },
 				new { Rid = ITApisDict.MonitorRID, Address = ITApisDict.MonitorAddress, Path = ITApisDict.MonitorPath },
 				new { Rid = ITApisDict.ServerReceiveRID,
 					Address = ITApisDict.ServerReceiveAddress, Path = ITApisDict.ServerReceivePath, },
@@ -225,7 +225,7 @@ public static class IOTInitializer
 		string address,
 		string path)
 	{
-		ITApi api = new() {
+		ServerRule api = new() {
 			RID = rid,
 			Name = rid,
 			Description = rid,
@@ -233,7 +233,7 @@ public static class IOTInitializer
 			ConnectionPath = path,
 			IsConnected = false,
 		};
-		anodeCTX.ITApi.Add(api);
+		anodeCTX.ServerRule.Add(api);
 		anodeCTX.SaveChanges();
 	}
 

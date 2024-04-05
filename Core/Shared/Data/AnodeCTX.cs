@@ -12,12 +12,13 @@ using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.DB.Stations;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
-using Core.Entities.KPI.KPICs.Models.DB;
-using Core.Entities.KPI.KPIEntries.Models.DB.KPILogs;
-using Core.Entities.KPI.KPIEntries.Models.DB.KPIRTs;
+using Core.Entities.KPIData.KPIs.Models.DB;
+using Core.Entities.KPIData.TenBestMatchs.Models.DB;
+using Core.Entities.KPIs.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
@@ -113,15 +114,15 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
 	public DbSet<Station> Station => Set<Station>();
+	public DbSet<ServerRule> ServerRule => Set<ServerRule>();
 
-	#endregion
+    #endregion
 
-	#region KPI
+    #region KPI
 
-	public DbSet<KPIC> KPIC => Set<KPIC>();
-	public DbSet<KPILog> KPILog => Set<KPILog>();
-	public DbSet<KPIRT> KPIRT => Set<KPIRT>();
-	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
+    public DbSet<KPI> KPI => Set<KPI>();
+    public DbSet<TenBestMatch> TenBestMatch => Set<TenBestMatch>();
+    public DbSet<BITemperature> BITemperature => Set<BITemperature>();
 
 	#endregion
 
@@ -157,24 +158,18 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasForeignKey(alarmCycle => alarmCycle.AlarmListPacketID)
 			.IsRequired();
 
-		builder.Entity<KPILog>()
-			.HasOne(kpiLog => kpiLog.KPIC)
-			.WithMany(kpic => kpic.LogEntries)
-			.HasForeignKey(kpiLog => kpiLog.KPICID)
-			.OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<KPI>()
+               .HasMany(KPI => KPI.tenBestMatches)
+               .WithOne(TenBestMatch => TenBestMatch.KPI)
+               .HasForeignKey(TenBestMatch => TenBestMatch.KPIID)
+               .IsRequired();
 
-		builder.Entity<KPIRT>()
-			.HasOne(kpiRT => kpiRT.KPIC)
-			.WithMany(kpic => kpic.RTEntries)
-			.HasForeignKey(kpiRT => kpiRT.KPICID)
-			.OnDelete(DeleteBehavior.Cascade);
-
-		builder.Entity<StationCycle>()
-			.HasOne(stationCycle => stationCycle.MetaDataPacket)
-			.WithOne(packet => packet.StationCycle)
-			.HasForeignKey<StationCycle>(stationCycle => stationCycle.MetaDataID)
-			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+        builder.Entity<StationCycle>()
+               .HasOne(stationCycle => stationCycle.MetaDataPacket)
+               .WithOne(packet => packet.StationCycle)
+               .HasForeignKey<StationCycle>(stationCycle => stationCycle.MetaDataID)
+               .IsRequired(false)
+               .OnDelete(DeleteBehavior.NoAction);
 
 		builder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.Shooting1Packet)

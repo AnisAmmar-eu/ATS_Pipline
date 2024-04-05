@@ -27,7 +27,7 @@ public enum DataSetID
 }
 public static class DataSets
 {
-	public static DataSetID TodoToDataSetID(ToDo todo)
+	public static DataSetID TodoToDataSetID(ToDos.Models.DB.ToDo todo)
 	{
 		return todo switch
 		{

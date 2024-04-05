@@ -1,6 +1,5 @@
 using Core.Entities.Alarms.Data;
 using Core.Entities.IOT.Data;
-using Core.Entities.KPI.Data;
 using Core.Entities.User.Data;
 using Core.Entities.User.Models.DB.Users;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +23,6 @@ public static class DBInitializer
 		IOTInitializer.InitializeServer(anodeCTX);
 		// TODO Don't. RIDs are the same station by station but need to be different on the server
 		AlarmInitializer.InitializeStation(anodeCTX);
-		KPIInitializer.Initialize(anodeCTX);
 		return UserInitializer.Initialize(anodeCTX, userManager);
 	}
 }

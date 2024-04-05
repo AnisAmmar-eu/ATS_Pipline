@@ -12,7 +12,6 @@ using Core.Entities.User.Models.DB.Users;
 using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Core.Shared.Dictionaries;
-using Core.Shared.Services.Background.KPI.KPILogs;
 using Core.Shared.Services.SystemApp.Logs;
 using DLLVision;
 using Microsoft.Extensions.Configuration;

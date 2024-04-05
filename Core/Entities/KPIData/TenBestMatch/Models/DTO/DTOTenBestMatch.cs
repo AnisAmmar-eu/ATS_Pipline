@@ -1,11 +1,11 @@
 using Core.Entities.Vision.Dictionaries;
-using Core.Entities.Vision.ToDos.Models.DB;
+using Core.Entities.KPIData.TenBestMatchs.Models.DB;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 
-namespace Core.Entities.Vision.ToDos.Models.DTO;
+namespace Core.Entities.KPIData.TenBestMatchs.Models.DTO;
 
-public partial class DTOToDo : DTOBaseEntity, IDTO<DB.ToDo, DTOToDo>
+public partial class DTOTenBestMatch : DTOBaseEntity, IDTO<TenBestMatch, DTOTenBestMatch>
 {
 	public int CycleID { get; set; }
 	public string CycleRID { get; set; }

@@ -43,7 +43,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 	public async Task<IEnumerable<string>> GetAllApisRIDs()
 	{
-		return (await AnodeUOW.IOTDevice.GetAll([device => device is ITApi], withTracking: false))
+		return (await AnodeUOW.IOTDevice.GetAll([device => device is ServerRule], withTracking: false))
 			.Select(device => device.RID);
 	}
 
@@ -102,7 +102,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
 		disconnectedDevices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
 		bool ITApiDisconnected
-			= disconnectedDevices.Any(device => device is ITApi itApi && itApi.RID != ITApisDict.ServerReceiveRID);
+			= disconnectedDevices.Any(device => device is ServerRule itApi && itApi.RID != ITApisDict.ServerReceiveRID);
 
 		AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, _logger, 1000, CancellationToken.None);
 		uint statusHandle

@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace Core.Entities.Anodes.Models.DB;
 
-public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>, IBaseKPI<Anode>
+public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>
 {
 	public string CycleRID { get; set; } = string.Empty;
 

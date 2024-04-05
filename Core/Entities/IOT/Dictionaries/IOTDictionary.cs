@@ -31,10 +31,6 @@ public static class ITApisDict
 	public static string IOTAddress = string.Empty; // 7278
 	public const string IOTPath = "/apiIOT/status";
 
-	public const string KPIRID = "ApiKPI";
-	public static string KPIAddress = string.Empty; // 7279
-	public const string KPIPath = "/apiKPI/status";
-
 	public const string MonitorRID = "ApiMonitor";
 	public static string MonitorAddress = string.Empty; // 7280
 	public const string MonitorPath = "/apiMonitor/status";

@@ -13,4 +13,5 @@ public partial class DTOMatchingCycle : DTOStationCycle, IDTO<MatchableCycle, DT
 {
 	public SignMatchStatus MatchingCamera1 { get; set; }
 	public SignMatchStatus MatchingCamera2 { get; set; }
+	public DateTimeOffset? MatchingTS { get; set; }
 }
