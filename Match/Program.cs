@@ -16,8 +16,8 @@ builder.Configuration.LoadBaseConfiguration();
 builder.Services.AddSingleton<MatchService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchService>());
 
-builder.Services.AddSingleton<SignFileSettingService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<SignFileSettingService>());
+builder.Services.AddSingleton<MatchFileSettingService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchFileSettingService>());
 
 var host = builder.Build();
 host.Run();

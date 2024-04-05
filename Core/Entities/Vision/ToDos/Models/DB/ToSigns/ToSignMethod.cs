@@ -32,16 +32,11 @@ public partial class ToSign
 		return shooting.Adapt<ToSign>();
 	}
 
-	public bool IsMatchStation()
-	{
-		return StationID >= Station.StationNameToID(Station.Station3);
-	}
-
 	public List<InstanceMatchID> GetLoadDestinations()
 	{
 		List<InstanceMatchID> destinations = new();
 
-		if (!IsMatchStation())
+		if (!Station.IsMatchStation(StationID))
 		{
 			destinations.Add(InstanceMatchID.S3);
 			destinations.Add(InstanceMatchID.S4);

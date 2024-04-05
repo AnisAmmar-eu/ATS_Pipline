@@ -33,9 +33,6 @@ public class SignService : BackgroundService
     private readonly IServiceScopeFactory _factory;
     private readonly ILogger<SignService> _logger;
     private readonly IConfiguration _configuration;
-	private IAnodeUOW _anodeUOW;
-	private string _imagesPath;
-	private string _extension;
 
 	public SignService(
 		ILogger<SignService> logger,
@@ -50,10 +47,10 @@ public class SignService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-        _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+        IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
-		_imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-		_extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
         List<InstanceMatchID> LoadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
                ConfigDictionary.LoadDestinations);
         string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
@@ -115,9 +112,10 @@ public class SignService : BackgroundService
 					}
 
                     // S1 and S2 (sign stations) are the only station to add an Anode
-                    if (toSign.IsMatchStation())
+                    if (cycle.CanMatch())
                         await _anodeUOW.ToMatch.Add(toSign.Adapt<ToMatch>());
-                    else
+
+					if (!Station.IsMatchStation(cycle.StationID))
                         toSignService.AddAnode((S1S2Cycle)cycle);
 
                     _anodeUOW.Commit();

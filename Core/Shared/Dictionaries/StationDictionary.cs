@@ -73,6 +73,11 @@ public static class Station
 			_ => throw new InvalidOperationException("Unknown station name."),
 		};
 	}
+
+	public static bool IsMatchStation(int StationID)
+	{
+		return StationID >= StationNameToID(Station3);
+	}
 }
 
 public enum StationType

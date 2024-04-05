@@ -18,4 +18,10 @@ public interface IIOTDeviceService : IBaseEntityService<IOTDevice, DTOIOTDevice>
 	/// <param name="rids">RIDs of all devices to monitor and apply tags to.</param>
 	/// <returns></returns>
 	public Task CheckAllConnectionsAndApplyTags(IEnumerable<string> rids);
+
+	/// <summary>
+	/// /// Will reinitialize all devices in the active mode.
+	/// </summary>
+	/// <returns></returns>
+	public Task ActiveReinit();
 }
