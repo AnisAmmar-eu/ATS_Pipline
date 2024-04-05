@@ -1,6 +1,7 @@
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Repositories;
@@ -119,19 +120,18 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		return connectedDevices;
 	}
 
-	public async Task ActiveReinit()
+	public async Task<bool> ActiveReinit()
 	{
-		IOTDevice device = await AnodeUOW.IOTDevice.GetBy([device => device is ITApi], withTracking: true);
-
-		// Uncomment if you want to reinit
-		//ServerRule device = (ServerRule)await AnodeUOW.IOTDevice.GetBy([device => device is ServerRule], withTracking: true);
-		//device.Reinit = true;
+		ServerRule ruleDevice = (ServerRule)await AnodeUOW.IOTDevice
+			.GetBy([device => device is ServerRule], withTracking: true);
+		ruleDevice.Reinit = true;
 		await AnodeUOW.StartTransaction();
-		AnodeUOW.IOTDevice.Update(device);
+		AnodeUOW.IOTDevice.Update(ruleDevice);
 		AnodeUOW.Commit();
 		await AnodeUOW.CommitTransaction();
 
 		await _hubContext.Clients.All.RefreshIOTTag();
 		await _hubContext.Clients.All.RefreshDevices();
+		return true;
 	}
 }

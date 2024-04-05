@@ -5,5 +5,5 @@ namespace Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 
 public partial class ServerRule : IOTDevice, IBaseEntity<ServerRule, DTOServerRule>
 {
-    bool Reinit { get; set; }
+    public bool Reinit { get; set; }
 }

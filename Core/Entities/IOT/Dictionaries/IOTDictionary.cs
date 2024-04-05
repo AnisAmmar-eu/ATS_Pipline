@@ -13,7 +13,7 @@ public static class DeviceRID
 /// <summary>
 /// Provides information about every Api. The Address is given at runtime by loading the base configuration. <see cref="Configuration"/>
 /// </summary>
-public static class ServerRule
+public static class ServerRuleDict
 {
 	public const string RID = "ServerRule";
 }

@@ -51,7 +51,6 @@ public static class Configuration
 		ITApisDict.AlarmAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiAlarmAddress);
 		ITApisDict.CameraAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiCameraAddress);
 		ITApisDict.IOTAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiIOTAddress);
-		ITApisDict.KPIAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiKPIAddress);
 		ITApisDict.ServerReceiveAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiServerReceiveAddress);
 		ITApisDict.StationCycleAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiStationCycleAddress);
 		ITApisDict.UserAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiUserAddress);

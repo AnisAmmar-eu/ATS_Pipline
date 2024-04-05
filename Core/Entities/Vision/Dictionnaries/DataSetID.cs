@@ -29,18 +29,6 @@ public enum DataSetID
 public record ToDoSimple(int CameraID, string AnodeType);
 public static class DataSets
 {
-	public static DataSetID TodoToDataSetID(ToDos.Models.DB.ToDo todo)
-	{
-		return todo switch
-		{
-			{ CameraID: 1, AnodeType: AnodeTypeDict.DX } => DataSetID.Cam1DX,
-			{ CameraID: 1, AnodeType: AnodeTypeDict.D20 } => DataSetID.Cam1D20,
-			{ CameraID: 2, AnodeType: AnodeTypeDict.DX } => DataSetID.Cam2DX,
-			{ CameraID: 2, AnodeType: AnodeTypeDict.D20 } => DataSetID.Cam2D20,
-			_ => throw new NotImplementedException(),
-		};
-	}
-
 	public static DataSetID TodoToDataSetID(ToDoSimple todo)
 	{
 		return todo switch
