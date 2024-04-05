@@ -15,7 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiStationCycle.Endpoints;
 
-public class StationCycleEndpoint : BaseEntityEndpoint<StationCycle, DTOStationCycle, IStationCycleService>,
+public class StationCycleEndpoint :
+	BaseEntityEndpoint<StationCycle, DTOStationCycle, IStationCycleService>,
 	ICarterModule
 {
 	public void AddRoutes(IEndpointRouteBuilder app)

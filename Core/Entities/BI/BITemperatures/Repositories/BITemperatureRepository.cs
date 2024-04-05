@@ -5,7 +5,8 @@ using Core.Shared.Repositories.Kernel;
 
 namespace Core.Entities.BI.BITemperatures.Repositories;
 
-public class BITemperatureRepository : BaseEntityRepository<AnodeCTX, BITemperature, DTOBITemperature>,
+public class BITemperatureRepository :
+	BaseEntityRepository<AnodeCTX, BITemperature, DTOBITemperature>,
 	IBITemperatureRepository
 {
 	public BITemperatureRepository(AnodeCTX context) : base(context, [], [])

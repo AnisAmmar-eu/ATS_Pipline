@@ -4,9 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices;
-using System.IO;
 using Core.Shared.Dictionaries;
-using System.Configuration;
 using DLLVision;
 
 namespace Core.Shared.Services.Background.Vision;
@@ -18,9 +16,9 @@ public class MatchService : BackgroundService
     private readonly IConfiguration _configuration;
 
     public MatchService(
-        ILogger<PurgeService> logger,
-        IServiceScopeFactory factory,
-        IConfiguration configuration)
+    	ILogger<PurgeService> logger,
+    	IServiceScopeFactory factory,
+    	IConfiguration configuration)
     {
         _logger = logger;
         _factory = factory;
@@ -56,7 +54,7 @@ public class MatchService : BackgroundService
         Directory.CreateDirectory("temp");
 
         while (await timer.WaitForNextTickAsync(stoppingToken)
-            && !stoppingToken.IsCancellationRequested)
+        	&& !stoppingToken.IsCancellationRequested)
         {
             try
 			{
@@ -111,8 +109,8 @@ public class MatchService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "Failed to execute PurgeService with exception message {message}.",
-                    ex.Message);
+                	"Failed to execute PurgeService with exception message {message}.",
+                	ex.Message);
             }
         }
     }

@@ -15,7 +15,9 @@ namespace Core.Entities.StationCycles.Models.DTO;
 
 [JsonDerivedType(typeof(DTOLoadableCycle))]
 [JsonDerivedType(typeof(DTOMatchingCycle))]
-public partial class DTOStationCycle : DTOBaseEntity, IDTO<StationCycle, DTOStationCycle>,
+public partial class DTOStationCycle :
+	DTOBaseEntity,
+	IDTO<StationCycle, DTOStationCycle>,
 	IExtensionBinder<DTOStationCycle>
 {
 	public int StationID { get; set; } = Station.ID;

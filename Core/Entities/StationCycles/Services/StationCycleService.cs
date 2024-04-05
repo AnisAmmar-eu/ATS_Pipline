@@ -12,7 +12,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace Core.Entities.StationCycles.Services;
 
-public class StationCycleService : BaseEntityService<IStationCycleRepository, StationCycle, DTOStationCycle>,
+public class StationCycleService :
+	BaseEntityService<IStationCycleRepository, StationCycle, DTOStationCycle>,
 	IStationCycleService
 {
 	private readonly IConfiguration _configuration;

@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiStationCycle.Endpoints;
 
-public class BenchmarkEndpoint : BaseEntityEndpoint<BenchmarkTest, DTOBenchmarkTest, IBenchmarkTestService>,
+public class BenchmarkEndpoint :
+	BaseEntityEndpoint<BenchmarkTest, DTOBenchmarkTest, IBenchmarkTestService>,
 	ICarterModule
 {
 	public void AddRoutes(IEndpointRouteBuilder app)

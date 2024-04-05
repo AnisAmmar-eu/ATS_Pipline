@@ -1,5 +1,3 @@
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.TwinCat;
@@ -7,13 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using TwinCAT.Ads;
 
 namespace Core.Shared.Services.Background

@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Entities.BenchmarkTests.Repositories;
 
-public class BenchmarkTestRepository : BaseEntityRepository<AnodeCTX, BenchmarkTest, DTOBenchmarkTest>,
+public class BenchmarkTestRepository :
+	BaseEntityRepository<AnodeCTX, BenchmarkTest, DTOBenchmarkTest>,
 	IBenchmarkTestRepository
 {
 	public BenchmarkTestRepository(AnodeCTX context) : base(context, [], [])

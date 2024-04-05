@@ -1,4 +1,3 @@
-using System.Dynamic;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;

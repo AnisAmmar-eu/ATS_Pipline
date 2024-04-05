@@ -6,8 +6,9 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.KPIData.TenBestMatchs.Services;
 
-public class TenBestMatchService : BaseEntityService<ITenBestMatchRepository, TenBestMatch, DTOTenBestMatch>,
-    ITenBestMatchService
+public class TenBestMatchService :
+	BaseEntityService<ITenBestMatchRepository, TenBestMatch, DTOTenBestMatch>,
+	ITenBestMatchService
 {
     public TenBestMatchService(IAnodeUOW anodeUOW) : base(anodeUOW)
     {

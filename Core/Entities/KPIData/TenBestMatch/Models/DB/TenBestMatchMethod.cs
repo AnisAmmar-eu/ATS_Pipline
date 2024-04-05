@@ -1,7 +1,4 @@
-using Core.Entities.Anodes.Models.DB;
 using Core.Entities.KPIData.TenBestMatchs.Models.DTO;
-using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Mapster;
 
 namespace Core.Entities.KPIData.TenBestMatchs.Models.DB;

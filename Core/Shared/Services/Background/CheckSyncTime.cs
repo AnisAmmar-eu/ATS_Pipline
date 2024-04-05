@@ -1,10 +1,5 @@
-using System;
 using System.Text.Json;
-using System.Threading.Channels;
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.IOT.Dictionaries;
-using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.ApiResponses;
@@ -53,45 +48,45 @@ public class CheckSyncTimeService : BackgroundService
 				string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/time";
                 CancellationToken cancel = CancellationToken.None;
                 await Task.Run(
-                    async () =>
-					{
-						using HttpClient httpClient = new();
-						HttpResponseMessage response = await httpClient.GetAsync(api2Url, cancel);
+                	async () =>
+                	{
+                		using HttpClient httpClient = new();
+                		HttpResponseMessage response = await httpClient.GetAsync(api2Url, cancel);
 
-						if (!response.IsSuccessStatusCode)
-						{
-							throw new("Get time to server failed with status code:"
-								+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
-						}
+                		if (!response.IsSuccessStatusCode)
+                		{
+                			throw new("Get time to server failed with status code:"
+                				+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+                		}
 
-						// Delta Time station and server Check
-						ApiResponse? apiResponse
-						= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
-						if (apiResponse is null)
-							throw new ApplicationException("Could not deserialize ApiIOT response");
+                		// Delta Time station and server Check
+                		ApiResponse? apiResponse
+                		= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
+                		if (apiResponse is null)
+                			throw new ApplicationException("Could not deserialize ApiIOT response");
 
-						if (apiResponse.Result is not JsonElement jsonElement)
-							throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
+                		if (apiResponse.Result is not JsonElement jsonElement)
+                			throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
 
-						DateTimeOffset serverTime = jsonElement.Deserialize<DateTimeOffset>();
-						DateTimeOffset stationTime = DateTimeOffset.Now;
-						_logger.LogInformation(
-							"Server time is {serverTime}, station time is {stationTime}",
-							serverTime,
-							stationTime);
-						TimeSpan delta = serverTime - stationTime;
-						_logger.LogInformation("Delta time between server and station is {delta}", delta);
-						AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
-						// Trigger an alarm
-						uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.SyncTime);
-						_logger.LogInformation("Delt IS superior ? {delta}", Math.Abs(delta.TotalSeconds) <= deltaTimeSec);
-						if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
-							tcClient.WriteAny(alarmTimeHandle, 1);
-						else
-							tcClient.WriteAny(alarmTimeHandle, 2);
-					}
+                		DateTimeOffset serverTime = jsonElement.Deserialize<DateTimeOffset>();
+                		DateTimeOffset stationTime = DateTimeOffset.Now;
+                		_logger.LogInformation(
+                			"Server time is {serverTime}, station time is {stationTime}",
+                			serverTime,
+                			stationTime);
+                		TimeSpan delta = serverTime - stationTime;
+                		_logger.LogInformation("Delta time between server and station is {delta}", delta);
+                		AdsClient tcClient = await TwinCatConnectionManager.Connect(851, _logger, retryMS, cancel);
+                		// Trigger an alarm
+                		uint alarmTimeHandle = tcClient.CreateVariableHandle(ADSUtils.SyncTime);
+                		_logger.LogInformation("Delt IS superior ? {delta}", Math.Abs(delta.TotalSeconds) <= deltaTimeSec);
+                		if (Math.Abs(delta.TotalSeconds) <= deltaTimeSec)
+                			tcClient.WriteAny(alarmTimeHandle, 1);
+                		else
+                			tcClient.WriteAny(alarmTimeHandle, 2);
+                	}
 					,
-                    cancel);
+                	cancel);
             }
 			catch (Exception ex)
 			{
