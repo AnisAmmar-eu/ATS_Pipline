@@ -1,12 +1,9 @@
 using Core.Entities.Anodes.Dictionaries;
-using Core.Entities.Anodes.Models.DB;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
-using Core.Migrations;
 using Core.Shared.Dictionaries;
 using Mapster;
-using System.ComponentModel.Composition;
 
 namespace Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 

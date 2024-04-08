@@ -114,9 +114,9 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
                     else
                     {
                         dtoActEntityStatus.Visible = actEntity.ActEntityRoles.Any(aer =>
-                            (aer.ApplicationType == ApplicationTypeRID.Role)
-                                ? userRolesID?.Contains(aer.ApplicationID) == true
-                                : aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId
+                        	(aer.ApplicationType == ApplicationTypeRID.Role)
+                        	    ? userRolesID?.Contains(aer.ApplicationID) == true
+                        	    : aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId
                                                 );
                     }
 
@@ -229,7 +229,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 				if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.Role))
                 {
                     foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
-                        a.Type == ApplicationTypeRID.Role))
+                    	a.Type == ApplicationTypeRID.Role))
 					{
 						ApplicationRole? role = (application.Name is null) ? null : await _rolesManager.FindByNameAsync(application.Name);
 						if (role is null)
@@ -242,7 +242,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
                 if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.User))
                 {
                     foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
-                        a.Type == ApplicationTypeRID.User))
+                    	a.Type == ApplicationTypeRID.User))
 					{
 						ApplicationUser? user = (application.Name is null)
 							? null
@@ -273,11 +273,11 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
     /// <param name="parentID" />
     /// <param name="parentID"></param>
     public async Task DeleteActionEntity(
-        string actRID,
-        string? entityType = null,
-        int? entityID = null,
-        string? parentType = null,
-        int? parentID = null)
+    	string actRID,
+    	string? entityType = null,
+    	int? entityID = null,
+    	string? parentType = null,
+    	int? parentID = null)
     {
         Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(actRID, entityType, parentType);
 
@@ -350,10 +350,10 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 		foreach (ActEntityRole actEntityRole in actEntityToDuplicate.ActEntityRoles)
         {
             actEntity.ActEntityRoles.Add(new ActEntityRole {
-                ActEntity = actEntity,
-                ApplicationID = actEntityRole.ApplicationID,
-                ApplicationType = actEntityRole.ApplicationType,
-                });
+            	ActEntity = actEntity,
+            	ApplicationID = actEntityRole.ApplicationID,
+            	ApplicationType = actEntityRole.ApplicationType,
+            	});
         }
 
         AnodeUOW.ActEntities.Update(actEntity);
@@ -422,9 +422,9 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
                     else
                     {
                         authorized = actEntity.ActEntityRoles.Any(aer =>
-                            (aer.ApplicationType == ApplicationTypeRID.Role)
-                                ? userRolesID?.Contains(aer.ApplicationID) == true
-                                : aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId);
+                        	(aer.ApplicationType == ApplicationTypeRID.Role)
+                        	    ? userRolesID?.Contains(aer.ApplicationID) == true
+                        	    : aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId);
                     }
 
                     break;
@@ -436,17 +436,17 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
                         List<string> rolesId = await _authService.GetRolesIdFromUser(otherUser, httpContext);
 
                         if (httpContext.Items.ContainsKey("HasAdminRole")
-                            && (bool?)httpContext.Items["HasAdminRole"] == true)
+                        	&& (bool?)httpContext.Items["HasAdminRole"] == true)
                         {
                             authorized = true;
                         }
                         else
                         {
                             authorized = actEntity.ActEntityRoles.Any(aer =>
-                                (rolesId.Contains(aer.ApplicationID)
-                                    && aer.ApplicationType == ApplicationTypeRID.Role)
-                                    || (aer.ApplicationID == otherUser.Id
-                                        && aer.ApplicationType == ApplicationTypeRID.User));
+                            	(rolesId.Contains(aer.ApplicationID)
+                            		&& aer.ApplicationType == ApplicationTypeRID.Role)
+                            		|| (aer.ApplicationID == otherUser.Id
+                            			&& aer.ApplicationType == ApplicationTypeRID.User));
                         }
                     }
 

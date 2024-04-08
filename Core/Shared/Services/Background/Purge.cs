@@ -1,13 +1,9 @@
-﻿using Core.Entities.Alarms.AlarmsLog.Models.DB;
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Packets.Dictionaries;
+﻿using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.Packets.Services;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
-using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

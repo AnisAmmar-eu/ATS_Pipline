@@ -9,7 +9,6 @@ using Core.Entities.BI.BITemperatures.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Repositories;
-using Core.Entities.KPIData.KPIs.Models.DB;
 using Core.Entities.KPIData.KPIs.Repositories;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;

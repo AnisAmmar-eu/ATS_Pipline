@@ -1,9 +1,5 @@
-using System.Text;
-using System.Text.Json;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
-using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.Alarms.AlarmsRT.Models.DB;
-using Core.Entities.IOT.Dictionaries;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Shared.UnitOfWork.Interfaces;

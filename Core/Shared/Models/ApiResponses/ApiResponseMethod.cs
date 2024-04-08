@@ -157,9 +157,9 @@ public partial class ApiResponse
             return;
 
         List<Type> derivedTypes = jsonTypeInfo.PolymorphismOptions.DerivedTypes
-               .Where(t => Attribute.IsDefined(t.DerivedType, typeof(JsonDerivedTypeAttribute)))
-               .Select(t => t.DerivedType)
-               .ToList();
+        	.Where(t => Attribute.IsDefined(t.DerivedType, typeof(JsonDerivedTypeAttribute)))
+        	.Select(t => t.DerivedType)
+        	.ToList();
 		HashSet<Type> hashset = new(derivedTypes);
 		Queue<Type> queue = new(derivedTypes);
 		while (queue.TryDequeue(out Type? derived))

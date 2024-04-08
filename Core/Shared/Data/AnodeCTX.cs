@@ -115,13 +115,13 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<Station> Station => Set<Station>();
 	public DbSet<ServerRule> ServerRule => Set<ServerRule>();
 
-    #endregion
+	#endregion
 
-    #region KPI
+	#region KPI
 
-    public DbSet<KPI> KPI => Set<KPI>();
-    public DbSet<TenBestMatch> TenBestMatch => Set<TenBestMatch>();
-    public DbSet<BITemperature> BITemperature => Set<BITemperature>();
+	public DbSet<KPI> KPI => Set<KPI>();
+	public DbSet<TenBestMatch> TenBestMatch => Set<TenBestMatch>();
+	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
 
 	#endregion
 
@@ -157,18 +157,18 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasForeignKey(alarmCycle => alarmCycle.AlarmListPacketID)
 			.IsRequired();
 
-        builder.Entity<KPI>()
-               .HasMany(KPI => KPI.TenBestMatches)
-               .WithOne(TenBestMatch => TenBestMatch.KPI)
-               .HasForeignKey(TenBestMatch => TenBestMatch.KPIID)
-               .IsRequired();
+		builder.Entity<KPI>()
+			.HasMany(KPI => KPI.TenBestMatches)
+			.WithOne(TenBestMatch => TenBestMatch.KPI)
+			.HasForeignKey(TenBestMatch => TenBestMatch.KPIID)
+			.IsRequired();
 
-        builder.Entity<StationCycle>()
-               .HasOne(stationCycle => stationCycle.MetaDataPacket)
-               .WithOne(packet => packet.StationCycle)
-               .HasForeignKey<StationCycle>(stationCycle => stationCycle.MetaDataID)
-               .IsRequired(false)
-               .OnDelete(DeleteBehavior.NoAction);
+		builder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.MetaDataPacket)
+			.WithOne(packet => packet.StationCycle)
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.MetaDataID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
 
 		builder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.Shooting1Packet)
@@ -191,19 +191,19 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 
-        builder.Entity<StationCycle>()
-               .HasOne(stationCycle => stationCycle.KPI)
-               .WithOne(KPI => KPI.StationCycle)
-               .HasForeignKey<StationCycle>(stationCycle => stationCycle.KPIID)
-               .IsRequired(false)
-               .OnDelete(DeleteBehavior.NoAction);
+		builder.Entity<StationCycle>()
+			.HasOne(stationCycle => stationCycle.KPI)
+			.WithOne(KPI => KPI.StationCycle)
+			.HasForeignKey<StationCycle>(stationCycle => stationCycle.KPIID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
 
-        builder.Entity<S3S4Cycle>()
-               .HasOne(s3S4Cycle => s3S4Cycle.InFurnacePacket)
-               .WithOne(packet => packet.StationCycle as S3S4Cycle)
-               .HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.InFurnaceID)
-               .IsRequired(false)
-               .OnDelete(DeleteBehavior.NoAction);
+		builder.Entity<S3S4Cycle>()
+			.HasOne(s3S4Cycle => s3S4Cycle.InFurnacePacket)
+			.WithOne(packet => packet.StationCycle as S3S4Cycle)
+			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.InFurnaceID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
 
 		builder.Entity<S3S4Cycle>()
 			.HasOne(s3S4Cycle => s3S4Cycle.OutFurnacePacket)

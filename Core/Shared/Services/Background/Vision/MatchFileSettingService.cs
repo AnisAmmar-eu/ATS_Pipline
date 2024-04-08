@@ -4,27 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.IO;
-using System.Runtime.InteropServices;
 using DLLVision;
-using Core.Shared.UnitOfWork.Interfaces;
-using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
-using Core.Entities.Packets.Models.DB.Shootings;
-using System.Configuration;
-using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
-using Mapster;
-using Core.Entities.Vision.Dictionaries;
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Vision.ToDos.Services.ToSigns;
-using Core.Entities.Anodes.Models.DB;
-using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.Anodes.Dictionaries;
-using Core.Entities.Anodes.Models.DB.AnodesDX;
-using Core.Entities.Anodes.Models.DB.AnodesD20;
-using Core.Entities.Vision.ToDos.Models.DB;
-using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
-using Core.Entities.Alarms.AlarmsRT.Services;
-using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -49,6 +29,7 @@ public class MatchFileSettingService : BackgroundService
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
 		int FileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
+		string signStaticParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
 		string matchDynamicParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.MatchDynParams);
 		string archivePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
 		using PeriodicTimer timer = new (TimeSpan.FromSeconds(FileSettingsTimer));
@@ -62,6 +43,15 @@ public class MatchFileSettingService : BackgroundService
 		{
 			try
 			{
+				int responseStatic = 1000;
+				if (File.Exists(signStaticParamsFile)
+					&& ((responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0)
+					&& ((responseStatic = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParamsFile)) == 0))
+				{
+					File.Delete(Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
+					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
+				}
+
 				int responseDynamic = 1000;
 				if (File.Exists(matchDynamicParamsFile)
 					&& ((responseDynamic = DLLVisionImport.fcx_unregister_match_params_dynamic(0)) == 0)
@@ -70,8 +60,11 @@ public class MatchFileSettingService : BackgroundService
 					File.Move(matchDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(matchDynamicParamsFile)));
 				}
 
-				if (responseDynamic != 0)
-					_logger.LogError($"Failed to execute FileSettingService with responseDynamic {responseDynamic.ToString()}.");
+				if (responseStatic != 0 || responseDynamic != 0)
+				{
+					_logger.LogError("Failed to execute FileSettingService with responseStatic"
+						+ $"{responseStatic.ToString()} and responseDynamic {responseDynamic.ToString()}.");
+				}
 			}
 			catch (Exception ex)
 			{

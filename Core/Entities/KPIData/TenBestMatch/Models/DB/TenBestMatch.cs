@@ -1,9 +1,5 @@
 using Core.Entities.KPIData.KPIs.Models.DB;
 using Core.Entities.KPIData.TenBestMatchs.Models.DTO;
-using Core.Entities.Packets.Models.DB.AlarmLists;
-using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.Vision.ToDos.Models.DTO;
-using Core.Migrations;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -23,6 +19,6 @@ public partial class TenBestMatch : BaseEntity, IBaseEntity<TenBestMatch, DTOTen
     {
         set => _KPI = value;
         get => _KPI
-            ?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPI));
+        	?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPI));
     }
 }

@@ -76,7 +76,7 @@ public partial class StationCycle
 					|| SignStatus2 != SignMatchStatus.Ok));
 	}
 
-	public Func<List<StationCycle>, string[]> GetComputedValues()
+	public static Func<List<StationCycle>, string[]> GetComputedValues()
 	{
 		return stationCycles =>
 		{
@@ -143,7 +143,8 @@ public partial class StationCycle
 	public static StationCycle Create(string stationName)
 	{
 		StationType stationType = Station.StationNameToType(stationName);
-		return stationType switch {
+		return stationType switch
+		{
 			StationType.S1S2 => new S1S2Cycle(),
 			StationType.S3S4 => new S3S4Cycle(),
 			_ => new S5Cycle(),
@@ -152,7 +153,8 @@ public partial class StationCycle
 
 	public DTOReducedStationCycle Reduce()
 	{
-		return new() {
+		return new()
+		{
 			ID = ID,
 			RID = RID,
 			AnodeSize = null,

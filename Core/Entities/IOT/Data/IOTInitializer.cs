@@ -1,5 +1,4 @@
 using Core.Entities.IOT.Dictionaries;
-using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
@@ -235,12 +234,12 @@ public static class IOTInitializer
 		string path)
 	{
         ServerRule api = new() {
-               RID = rid,
-               Name = rid,
-               Description = rid,
-               Address = address,
-               ConnectionPath = path,
-               IsConnected = false,
+        	RID = rid,
+        	Name = rid,
+        	Description = rid,
+        	Address = address,
+        	ConnectionPath = path,
+        	IsConnected = false,
 		};
 		anodeCTX.ServerRule.Add(api);
 		anodeCTX.SaveChanges();
