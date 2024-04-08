@@ -11,5 +11,5 @@ namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 public interface IToMatchService : IBaseEntityService<ToMatch, DTOToMatch>
 {
 	void UpdateAnode(MatchableCycle cycle);
-	Task<MatchableCycle> UpdateCycle(ToMatch toMatch, IntPtr retMatch, int cameraID);
+	Task<MatchableCycle> UpdateCycle(MatchableCycle cycle, nint retMatch, int cameraID);
 }

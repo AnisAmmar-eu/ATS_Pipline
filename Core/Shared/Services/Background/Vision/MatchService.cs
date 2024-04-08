@@ -20,6 +20,8 @@ using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Entities.Packets.Services;
+using Core.Shared.UnitOfWork;
+using System.Text.RegularExpressions;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -59,24 +61,16 @@ public class MatchService : BackgroundService
 		IToMatchService toMatchService
 	   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
 
-		IPacketService paquetService
-	   = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
-
 		TypeAdapterConfig<ToMatch, ToUnload>.NewConfig()
 			.Ignore(dest => dest.ID);
 
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
-        {
+		{
 			await _anodeUOW.StartTransaction();
 
 			try
 			{
-				DateTimeOffset oldestShooting = await paquetService.GetOldestNotSentTimestamp();
-
-				if (oldestShooting.AddDays(stationDelay) > DateTimeOffset.Now)
-					continue;
-
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
 					[match => match.InstanceMatchID == instanceMatchID],
 					withTracking: false);
@@ -90,6 +84,10 @@ public class MatchService : BackgroundService
 
 					for (int cameraID = 1; cameraID <= 2; cameraID++)
 					{
+						MatchableCycle cycle = (MatchableCycle)await _anodeUOW.StationCycle.GetById(toMatch.StationCycleID);
+						if (cycle.TSFirstShooting?.AddDays(stationDelay) > DateTimeOffset.Now)
+							break;
+
 						FileInfo image = Shooting.GetImagePathFromRoot(
 							toMatch.CycleRID,
 							toMatch.StationID,
@@ -109,7 +107,7 @@ public class MatchService : BackgroundService
 						if (matchErrorCode == 0 || matchErrorCode == -106)
 						{
 							_logger.LogInformation("{0} matché avec code d'erreur {1}", image.Name, matchErrorCode);
-							MatchableCycle cycle = await toMatchService.UpdateCycle(toMatch, retMatch, cameraID);
+							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID);
 
 							if (matchErrorCode == 0)
 							{

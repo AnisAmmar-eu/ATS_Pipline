@@ -31,13 +31,11 @@ public class ToMatchService :
 	{
 	}
 
-	public async Task<MatchableCycle> UpdateCycle(ToMatch toMatch, IntPtr retMatch, int cameraID)
+	public async Task<MatchableCycle> UpdateCycle(MatchableCycle cycle, IntPtr retMatch, int cameraID)
 	{
 		await AnodeUOW.StartTransaction();
 
-		MatchableCycle cycle = (MatchableCycle)await AnodeUOW.StationCycle.GetById(toMatch.StationCycleID);
-
-		if (retMatch == 0)
+		if (DLLVisionImport.fcx_matchRet_errorCode(retMatch) == 0)
 		{
 			if (cameraID == 1)
 				cycle.MatchingCamera1 = SignMatchStatus.Ok;
@@ -45,7 +43,7 @@ public class ToMatchService :
 			if (cameraID == 2)
 				cycle.MatchingCamera2 = SignMatchStatus.Ok;
 		}
-		else
+		else //-106
 		{
 			if (cameraID == 1)
 				cycle.MatchingCamera1 = SignMatchStatus.NotOk;

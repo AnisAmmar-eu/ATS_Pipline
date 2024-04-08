@@ -1,4 +1,6 @@
+using Core.Entities.Packets.Services;
 using Core.Entities.User.Models.DB.Users;
+using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -20,6 +22,8 @@ builder.Configuration.LoadBaseConfiguration();
 builder.Services.AddDbContext<AnodeCTX>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
+builder.Services.AddScoped<IToMatchService, ToMatchService>();
+
 builder.Services.AddSingleton<LoadService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<LoadService>());
 
@@ -31,6 +35,8 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Unload
 
 builder.Services.AddSingleton<MatchFileSettingService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchFileSettingService>());
+
+
 
 var host = builder.Build();
 
