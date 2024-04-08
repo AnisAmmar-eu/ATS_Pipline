@@ -1,6 +1,6 @@
 using Core.Entities.KPIData.KPIs.Models.DTO;
 using Core.Entities.KPIData.TenBestMatchs.Models.DB;
-using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -17,6 +17,6 @@ public partial class KPI : BaseEntity, IBaseEntity<KPI, DTOKPI>
     public double NMStdev {  get; set; }
     public double ComputeTime {  get; set; }
 
-    public StationCycle StationCycle { get; set; }
+    public MatchableCycle StationCycle { get; set; }
     public List<TenBestMatch> TenBestMatches { get; set; } = new();
 }

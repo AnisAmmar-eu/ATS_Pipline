@@ -26,6 +26,7 @@ using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Entities.User.Models.DB.Acts;
@@ -191,10 +192,10 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 
-		builder.Entity<StationCycle>()
+		builder.Entity<MatchableCycle>()
 			.HasOne(stationCycle => stationCycle.KPI)
 			.WithOne(KPI => KPI.StationCycle)
-			.HasForeignKey<StationCycle>(stationCycle => stationCycle.KPIID)
+			.HasForeignKey<MatchableCycle>(stationCycle => stationCycle.KPIID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);
 

@@ -1,5 +1,4 @@
 using Core.Entities.Anodes.Models.DB;
-using Core.Entities.KPIData.KPIs.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.MetaDatas;
@@ -37,15 +36,4 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public AlarmList? AlarmListPacket { get; set; }
 
 	public Anode? Anode { get; set; }
-
-    public int? KPIID { get; set; }
-
-    private KPI? _KPI;
-
-    public KPI KPI
-    {
-        set => _KPI = value;
-        get => _KPI
-        	?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPI));
-    }
 }

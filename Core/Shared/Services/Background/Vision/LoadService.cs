@@ -87,7 +87,6 @@ public class LoadService : BackgroundService
 					}
 
 					Dataset dataset = toLoad.Adapt<Dataset>();
-					dataset.SANfile = SANFile;
 					await _anodeUOW.Dataset.Add(dataset);
 					_anodeUOW.Commit();
 
