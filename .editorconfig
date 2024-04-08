@@ -1,8 +1,16 @@
 root = true
 
+[*]
+tab_width = 4
+indent_style = tab
+indent_size = 4
+
 [*.cs]
 
 # Analyzers
+
+# IDE0005: Using directive is unnecessary
+dotnet_diagnostic.IDE0005.severity = error
 
 # IDE1006: Naming Styles Uppercase
 dotnet_diagnostic.IDE1006.severity = error

@@ -11,12 +11,10 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
@@ -27,7 +25,6 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Stemmer.Cvb;
 
 namespace Core.Entities.Packets.Services;
 
@@ -219,7 +216,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting));
 				AnodeUOW.Commit();
 			}
-			else if(packet is MetaData metaData)
+			else if (packet is MetaData metaData)
 			{
 				stationCycle.AssignPacket(metaData);
 				if (stationCycle.AnodeType is "")
@@ -231,7 +228,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				if (stationCycle.CanMatch())
 				{
 					_logger.LogInformation("Creating ToMatch");
-					await AnodeUOW.ToMatch.Add(new (stationCycle));
+					await AnodeUOW.ToMatch.Add(new(stationCycle));
 					AnodeUOW.Commit();
 				}
 			}

@@ -37,9 +37,9 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
     /// <param name="baseIncludes">All includes made in the ..WithIncludes methods</param>
     /// <param name="baseConcatIncludes">All includes made within foreign relations (eg: WorkingOrder.EquipmentI.EquipmentC)</param>
     public BaseEntityRepository(
-        TContext context,
-        string[] baseIncludes,
-        Dictionary<string, string[]> baseConcatIncludes)
+    	TContext context,
+    	string[] baseIncludes,
+    	Dictionary<string, string[]> baseConcatIncludes)
 	{
 		Context = context;
 		_baseIncludes = baseIncludes;

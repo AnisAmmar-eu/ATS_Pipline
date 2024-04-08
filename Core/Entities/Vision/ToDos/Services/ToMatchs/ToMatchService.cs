@@ -23,7 +23,8 @@ using Core.Entities.KPIData.TenBestMatchs.Models.DB;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
-public class ToMatchService : BaseEntityService<IToMatchRepository, ToMatch, DTOToMatch>,
+public class ToMatchService :
+	BaseEntityService<IToMatchRepository, ToMatch, DTOToMatch>,
 	IToMatchService
 {
 	public ToMatchService(IAnodeUOW anodeUOW) : base(anodeUOW)

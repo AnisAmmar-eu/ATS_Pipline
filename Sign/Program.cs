@@ -5,16 +5,13 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Core.Shared.Services.SystemApp.Logs;
-using Core.Shared.Services.Background;
 using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Core.Shared.Dictionaries;
-using Core.Shared.Services.SystemApp.Logs;
 using DLLVision;
-using Microsoft.Extensions.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options =>

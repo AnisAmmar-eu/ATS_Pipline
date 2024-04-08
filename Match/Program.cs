@@ -11,7 +11,7 @@ using System.Configuration;
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options =>
 {
-    options.ServiceName = "Match service";
+	options.ServiceName = "Match service";
 });
 
 
@@ -20,8 +20,14 @@ builder.Configuration.LoadBaseConfiguration();
 builder.Services.AddDbContext<AnodeCTX>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
+builder.Services.AddSingleton<LoadService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<LoadService>());
+
 builder.Services.AddSingleton<MatchService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchService>());
+
+builder.Services.AddSingleton<UnloadService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<UnloadService>());
 
 builder.Services.AddSingleton<MatchFileSettingService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchFileSettingService>());

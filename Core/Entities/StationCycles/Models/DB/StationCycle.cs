@@ -46,6 +46,6 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
     {
         set => _KPI = value;
         get => _KPI
-            ?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPI));
+        	?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPI));
     }
 }

@@ -1,4 +1,3 @@
-using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Shared.Models.DTO.Kernel.Interfaces;

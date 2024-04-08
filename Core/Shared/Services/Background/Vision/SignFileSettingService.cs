@@ -4,27 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.IO;
-using System.Runtime.InteropServices;
 using DLLVision;
-using Core.Shared.UnitOfWork.Interfaces;
-using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
-using Core.Entities.Packets.Models.DB.Shootings;
-using System.Configuration;
-using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
-using Mapster;
-using Core.Entities.Vision.Dictionaries;
-using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Entities.Vision.ToDos.Services.ToSigns;
-using Core.Entities.Anodes.Models.DB;
-using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.Anodes.Dictionaries;
-using Core.Entities.Anodes.Models.DB.AnodesDX;
-using Core.Entities.Anodes.Models.DB.AnodesD20;
-using Core.Entities.Vision.ToDos.Models.DB;
-using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
-using Core.Entities.Alarms.AlarmsRT.Services;
-using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 
 namespace Core.Shared.Services.Background.Vision;
 

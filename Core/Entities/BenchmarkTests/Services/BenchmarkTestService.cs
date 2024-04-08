@@ -9,7 +9,8 @@ using Core.Shared.UnitOfWork.Interfaces;
 
 namespace Core.Entities.BenchmarkTests.Services;
 
-public class BenchmarkTestService : BaseEntityService<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>,
+public class BenchmarkTestService :
+	BaseEntityService<IBenchmarkTestRepository, BenchmarkTest, DTOBenchmarkTest>,
 	IBenchmarkTestService
 {
 	private readonly Random _random = new();

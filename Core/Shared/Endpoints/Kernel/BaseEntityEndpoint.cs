@@ -79,9 +79,9 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		if (flags.HasFlag(BaseEndpointFlags.Update))
         {
             group.MapPut("update", Update)
-                .WithSummary($"Update the {dtoName} in the body if it already exist")
-                .Accepts<TDTO>("application/json")
-                .WithOpenApi();
+            	.WithSummary($"Update the {dtoName} in the body if it already exist")
+            	.Accepts<TDTO>("application/json")
+            	.WithOpenApi();
         }
 
         if (!flags.HasFlag(BaseEndpointFlags.Delete))

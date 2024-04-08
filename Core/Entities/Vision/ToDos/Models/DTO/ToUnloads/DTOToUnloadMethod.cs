@@ -1,5 +1,4 @@
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
-using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Mapster;
 
 namespace Core.Entities.Vision.ToDos.Models.DTO.ToUnloads;

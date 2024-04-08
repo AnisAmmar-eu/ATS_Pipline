@@ -1,5 +1,3 @@
-using Core.Entities.Vision.Dictionaries;
-using Core.Entities.Vision.ToDos.Models.DB;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
 

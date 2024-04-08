@@ -14,7 +14,9 @@ namespace Core.Entities.Packets.Models.DTO;
 [JsonDerivedType(typeof(DTOFurnace))]
 [JsonDerivedType(typeof(DTOMetaData))]
 [JsonDerivedType(typeof(DTOShooting))]
-public partial class DTOPacket : DTOBaseEntity, IDTO<Packet, DTOPacket>,
+public partial class DTOPacket :
+	DTOBaseEntity,
+	IDTO<Packet, DTOPacket>,
 	IExtensionBinder<DTOPacket>
 {
 	public string StationCycleRID { get; set; } = string.Empty;

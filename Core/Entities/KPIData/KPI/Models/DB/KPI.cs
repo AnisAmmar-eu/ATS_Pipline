@@ -1,10 +1,8 @@
 using Core.Entities.KPIData.KPIs.Models.DTO;
 using Core.Entities.KPIData.TenBestMatchs.Models.DB;
 using Core.Entities.StationCycles.Models.DB;
-using Core.Entities.Vision.ToDos.Models.DTO;
 using Core.Shared.Models.DB.Kernel;
 using Core.Shared.Models.DB.Kernel.Interfaces;
-using System.Security.Claims;
 
 namespace Core.Entities.KPIData.KPIs.Models.DB;
 

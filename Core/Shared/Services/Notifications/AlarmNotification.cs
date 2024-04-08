@@ -1,7 +1,6 @@
 using Core.Entities.Alarms;
 using Core.Entities.Alarms.AlarmsLog.Models.DB;
 using Core.Entities.Alarms.AlarmsLog.Services;
-using Core.Shared.Dictionaries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

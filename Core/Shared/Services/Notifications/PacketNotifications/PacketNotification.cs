@@ -3,8 +3,6 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Services;
-using Core.Shared.Configuration;
-using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.SignalR.StationCycleHub;
 using Microsoft.AspNetCore.SignalR;
