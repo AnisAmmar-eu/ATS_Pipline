@@ -228,17 +228,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
 
-				// Check if the station matches 'matchingStation', if 'picture1' and 'picture2' are not both 0,
-				// if 'picture1' is 1, 'shooting1Packet' is not null, and if 'picture2' is 1, 'shooting2Packet' is not null.
-				bool toMatch = Station.IsMatchStation(stationCycle.StationID)
-					&& !(stationCycle.Picture1Status == 0 && stationCycle.Picture2Status == 0)
-					&& !(stationCycle.Picture1Status == 1
-						&& (stationCycle.Shooting1Packet is null
-							|| stationCycle.SignStatus1 != SignMatchStatus.Ok))
-					&& !(stationCycle.Picture2Status == 1
-						&& (stationCycle.Shooting2Packet is null
-							|| stationCycle.SignStatus2 != SignMatchStatus.Ok));
-
 				if (stationCycle.CanMatch())
 				{
 					_logger.LogInformation("Creating ToMatch");

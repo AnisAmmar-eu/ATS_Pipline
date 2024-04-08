@@ -8,17 +8,31 @@ using System.IO;
 using Core.Shared.Dictionaries;
 using System.Configuration;
 using DLLVision;
+using Core.Entities.Vision.Dictionaries;
+using Core.Entities.Vision.ToDos.Services.ToSigns;
+using Core.Shared.UnitOfWork.Interfaces;
+using Core.Entities.Vision.ToDos.Services.ToMatchs;
+using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
+using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
+using Core.Entities.Packets.Models.DB.Shootings;
+using Core.Entities.StationCycles.Models.DB;
+using Microsoft.Extensions.FileSystemGlobbing;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles;
+using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
+using Mapster;
+using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
+using Core.Entities.Packets.Services;
 
 namespace Core.Shared.Services.Background.Vision;
 
 public class MatchService : BackgroundService
 {
     private readonly IServiceScopeFactory _factory;
-    private readonly ILogger<PurgeService> _logger;
+    private readonly ILogger<MatchService> _logger;
     private readonly IConfiguration _configuration;
 
     public MatchService(
-        ILogger<PurgeService> logger,
+        ILogger<MatchService> logger,
         IServiceScopeFactory factory,
         IConfiguration configuration)
     {
@@ -27,93 +41,102 @@ public class MatchService : BackgroundService
         _configuration = configuration;
     }
 
-    const string match_image_folder = "C:\\d\\ADSVision\\ToMatch";
-	const string sign_folder = "C:\\d\\ADSVision\\sign";
-
 	const int dataset = 0;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
-        string signStaticParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
-        string signDynParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
-        string matchDynParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.MatchDynParams);
-        string DLLPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+		List<InstanceMatchID> UnloadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
+			ConfigDictionary.UnloadDestinations);
+		InstanceMatchID instanceMatchID = _configuration.GetValueWithThrow<InstanceMatchID>(ConfigDictionary.InstanceMatchID);
+		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
+
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
-        using PeriodicTimer timer = new (TimeSpan.FromSeconds(signMatchTimer));
+		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
 
-        DLLVisionImport.SetDllDirectory(DLLPath);
+		IToMatchService toMatchService
+	   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
 
-        int retInit = DLLVisionImport.fcx_init();
-        int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
+		IPacketService paquetService
+	   = asyncScope.ServiceProvider.GetRequiredService<IPacketService>();
 
-        int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynParams);
+		TypeAdapterConfig<ToMatch, ToUnload>.NewConfig()
+			.Ignore(dest => dest.ID);
 
-        int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(0, matchDynParams);
-        int datasetRegister = DLLVisionImport.fcx_register_dataset(dataset, 0, 0);
-
-        Directory.CreateDirectory("temp");
-
-        while (await timer.WaitForNextTickAsync(stoppingToken)
-            && !stoppingToken.IsCancellationRequested)
+		while (await timer.WaitForNextTickAsync(stoppingToken)
+			&& !stoppingToken.IsCancellationRequested)
         {
-            try
+			await _anodeUOW.StartTransaction();
+
+			try
 			{
-				//Filling load loop of dataset 0
-				foreach (string signature_file in Directory.GetFiles(sign_folder, "*.san"))
+				DateTimeOffset oldestShooting = await paquetService.GetOldestNotSentTimestamp();
+
+				if (oldestShooting.AddDays(stationDelay) > DateTimeOffset.Now)
+					continue;
+
+				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
+					[match => match.InstanceMatchID == instanceMatchID],
+					withTracking: false);
+
+				foreach (ToMatch toMatch in toMatchs)
 				{
-					string filename = new FileInfo(signature_file).Name;
-					string anodeId = Path.GetFileNameWithoutExtension(filename);
-					int loadAnodeCode = DLLVisionImport.fcx_load_anode(0, sign_folder, anodeId);
+					_logger.LogInformation("debut de matching {0}", toMatch.CycleRID);
+
+					_anodeUOW.ToMatch.Remove(toMatch);
+					_anodeUOW.Commit();
+
+					for (int cameraID = 1; cameraID <= 2; cameraID++)
+					{
+						FileInfo image = Shooting.GetImagePathFromRoot(
+							toMatch.CycleRID,
+							toMatch.StationID,
+							_imagesPath,
+							toMatch.AnodeType,
+							cameraID,
+							_extension);
+
+						string noExtension = image.Name[..^4];
+						IntPtr retMatch = DLLVisionImport.fcx_match(
+							(long)DataSets.TodoToDataSetID(new ToDoSimple(cameraID, toMatch.AnodeType)),
+							0,
+							image.DirectoryName,
+							noExtension);
+						int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
+
+						if (matchErrorCode == 0 || matchErrorCode == -106)
+						{
+							_logger.LogInformation("{0} matché avec code d'erreur {1}", image.Name, matchErrorCode);
+							MatchableCycle cycle = await toMatchService.UpdateCycle(toMatch, retMatch, cameraID);
+
+							if (matchErrorCode == 0)
+							{
+								if (instanceMatchID != InstanceMatchID.S5_C)
+									toMatchService.UpdateAnode(cycle);
+
+								await _anodeUOW.ToUnload.Add(toMatch.Adapt<ToUnload>());
+								break; //either camera has matched successfully, not need to go further
+							}
+						}
+						else
+						{
+							_logger.LogWarning("Return code de la signature: " + retMatch + " pour anode " + image.Name);
+						}
+					}
 				}
-
-				int returnSigner = DLLVisionImport.fcx_sign(0, 0, match_image_folder, "toto", "temp");
-				IntPtr matchRet = DLLVisionImport.fcx_match(0, 0, "temp", "toto");
-				int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(matchRet);
-
-				int similarityScore = DLLVisionImport.fcx_matchRet_similarityScore(matchRet);
-				Console.WriteLine("Similarité : " + similarityScore.ToString());
-				string anodeIdFound = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(matchRet));
-				int worstScore = DLLVisionImport.fcx_matchRet_worstScore(matchRet);
-				int nbBests = DLLVisionImport.fcx_matchRet_nbBests(matchRet);
-				//int bestScore = DLLVisionImport.fcx_matchRet_bestScore(matchRet);
-				double mean = DLLVisionImport.fcx_matchRet_mean(matchRet);
-				double variance = DLLVisionImport.fcx_matchRet_variance(matchRet);
-				long elasped =  DLLVisionImport.fcx_matchRet_elapsed(matchRet);
-				int threshold = DLLVisionImport.fcx_matchRet_threshold(matchRet);
-				int cardinality = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(matchRet);
-				_logger.LogInformation("Return code de la signature: " + matchErrorCode);
-
-				Console.WriteLine("\nerrCode = "
-					+ matchErrorCode
-					+ ", query = toto, found = "
-					+ anodeIdFound
-					+ ", similarityScore = "
-					+ similarityScore
-					+ ", worstScore = "
-					+ worstScore
-					+ ", bestScore = " + //bestScore +
-					", nbBests = "
-					+ nbBests
-					+ ", mean = "
-					+ mean
-					+ ", variance = "
-					+ variance
-					+ ", elapsed = "
-					+ elasped
-					+ ", threshold = "
-					+ threshold
-					+ ", cardinality = "
-					+ cardinality
-					+ "\n");
 			}
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "Failed to execute PurgeService with exception message {message}.",
+                    "Failed to execute MatchService with exception message {message}.",
                     ex.Message);
             }
-        }
-    }
+
+			await _anodeUOW.CommitTransaction();
+		}
+	}
 }

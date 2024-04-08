@@ -46,22 +46,25 @@ public static class ConfigDictionary
 
 	#region Vision settings
 
-	public const string S3S4Delay = "VisionSettings:S3S4Delay";
-	public const string S5Delay = "VisionSettings:S5Delay";
     public const string SignStaticParams = "VisionSettings:SignStaticParams";
     public const string SignDynParams = "VisionSettings:SignDynParams";
-    public const string MatchDynParams = "VisionSettings:MatchDynParams";
     public const string DLLPath = "VisionSettings:DLLPath";
     public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
+
     public const string LoadDestinations = "VisionSettings:LoadDestinations";
     public const string CameraID = "VisionSettings:CameraID";
     public const string AnodeType = "VisionSettings:AnodeType";
 
-    #endregion
+	public const string MatchDynParams = "VisionSettings:MatchDynParams";
+	public const string UnloadDestinations = "VisionSettings:UnloadDestinations";
+	public const string InstanceMatchID = "VisionSettings:InstanceMatchID";
+	public const string StationDelay = "VisionSettings:StationDelay";
 
-    #region Vision File settings
+	#endregion
 
-    public const string FileSettingTimer = "FileSettings:FileSettingTimer";
+	#region Vision File settings
+
+	public const string FileSettingTimer = "FileSettings:FileSettingTimer";
 	public const string ArchivePath = "FileSettings:ArchivePath";
 
 	#endregion

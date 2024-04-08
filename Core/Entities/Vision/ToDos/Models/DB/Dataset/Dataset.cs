@@ -7,6 +7,5 @@ namespace Core.Entities.Vision.ToDos.Models.DB.Datasets;
 
 public partial class Dataset : ToDo, IBaseEntity<Dataset, DTODataset>
 {
-	public string SANfile { get; set; }
     public int CameraID { get; set; }
 }

@@ -1,60 +1,70 @@
-using Core.Entities.Vision.Dictionaries;
-using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
-using Core.Entities.Vision.ToDos.Services.ToLoads;
 using Core.Shared.Configuration;
-using Core.Shared.Dictionaries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices;
+using System.IO;
+using Core.Shared.Dictionaries;
+using System.Configuration;
+using DLLVision;
+using Core.Entities.Vision.Dictionaries;
+using Core.Entities.Vision.ToDos.Services.ToSigns;
+using Core.Shared.UnitOfWork.Interfaces;
+using Core.Entities.Vision.ToDos.Services.ToMatchs;
 
 namespace Core.Shared.Services.Background.Vision;
 
-public class LoadMatchService : BackgroundService
+public class LoadService : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
-	private readonly ILogger<LoadMatchService> _logger;
-	private readonly TimeSpan _period = TimeSpan.FromDays(1);
+	private readonly ILogger<MatchService> _logger;
+	private readonly IConfiguration _configuration;
 
-	public LoadMatchService(IServiceScopeFactory factory, ILogger<LoadMatchService> logger)
+	public LoadService(
+		ILogger<LoadService> logger,
+		IServiceScopeFactory factory,
+		IConfiguration configuration)
 	{
-		_factory = factory;
 		_logger = logger;
+		_factory = factory;
+		_configuration = configuration;
 	}
 
+	const int dataset = 0;
+
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-	{/*
+	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+		IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
-		TimeSpan s3S4Delay = TimeSpan.Parse(configuration.GetValueWithThrow<string>(ConfigDictionary.S3S4Delay));
-		TimeSpan s5Delay = TimeSpan.Parse(configuration.GetValueWithThrow<string>(ConfigDictionary.S5Delay));
+		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+		List<InstanceMatchID> UnloadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
+			ConfigDictionary.UnloadDestinations);
 
-		ToLoadService ToLoad
-			= asyncScope.ServiceProvider.GetRequiredService<ToLoadService>();
-		IToSignService ToMatch
-			= asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
-		using PeriodicTimer timer = new(_period);
-		do
+		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
+		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
+
+		IToMatchService toMatchService
+	   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
+
+		while (await timer.WaitForNextTickAsync(stoppingToken)
+			   && !stoppingToken.IsCancellationRequested)
 		{
+			await _anodeUOW.StartTransaction();
+
 			try
 			{
-				ToLoad?[] loadables = await ToLoad.LoadNextCycles(
-					[(DataSetID.S3S4, s3S4Delay),
-					(DataSetID.S5, s5Delay),
-				]);
-
-				await ToMatch.MatchNextCycles([
-					(DataSetID.S3S4, s3S4Delay, loadables[0]),
-					(DataSetID.S5, s5Delay, loadables[1]),
-				]);
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				_logger.LogError("Error in LoadMatchService: {error}", e);
+				_logger.LogError(
+					"Failed to execute MatchService with exception message {message}.",
+					ex.Message);
 			}
-		} while (await timer.WaitForNextTickAsync(stoppingToken)
-			&& !stoppingToken.IsCancellationRequested);
-		*/
+
+			await _anodeUOW.CommitTransaction();
+		}
 	}
 }
