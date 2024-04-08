@@ -3,25 +3,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Runtime.InteropServices;
 using Core.Shared.Dictionaries;
 using DLLVision;
 using Core.Entities.Vision.Dictionaries;
-using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
-using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.StationCycles.Models.DB;
-using Microsoft.Extensions.FileSystemGlobbing;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles;
-using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Entities.Packets.Services;
-using Core.Shared.UnitOfWork;
-using System.Text.RegularExpressions;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -32,9 +26,9 @@ public class MatchService : BackgroundService
     private readonly IConfiguration _configuration;
 
     public MatchService(
-        ILogger<MatchService> logger,
-        IServiceScopeFactory factory,
-        IConfiguration configuration)
+    	ILogger<MatchService> logger,
+    	IServiceScopeFactory factory,
+    	IConfiguration configuration)
     {
         _logger = logger;
         _factory = factory;
@@ -61,13 +55,12 @@ public class MatchService : BackgroundService
 		IToMatchService toMatchService
 	   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
 
-		TypeAdapterConfig<ToMatch, ToUnload>.NewConfig()
-			.Ignore(dest => dest.ID);
-
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
 		{
 			await _anodeUOW.StartTransaction();
+
+			//ITApiStation _anodeUOW.IOTDevice.GetAll([devices => devices.])
 
 			try
 			{
@@ -96,18 +89,17 @@ public class MatchService : BackgroundService
 							cameraID,
 							_extension);
 
-						string noExtension = image.Name[..^4];
 						IntPtr retMatch = DLLVisionImport.fcx_match(
 							(long)DataSets.TodoToDataSetID(new ToDoSimple(cameraID, toMatch.AnodeType)),
 							0,
 							image.DirectoryName,
-							noExtension);
+							Path.GetFileNameWithoutExtension(image.Name));
 						int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
 
 						if (matchErrorCode == 0 || matchErrorCode == -106)
 						{
 							_logger.LogInformation("{0} matché avec code d'erreur {1}", image.Name, matchErrorCode);
-							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID);
+							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, instanceMatchID);
 
 							if (matchErrorCode == 0)
 							{
@@ -128,8 +120,8 @@ public class MatchService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "Failed to execute MatchService with exception message {message}.",
-                    ex.Message);
+                	"Failed to execute MatchService with exception message {message}.",
+                	ex.Message);
             }
 
 			await _anodeUOW.CommitTransaction();

@@ -59,6 +59,8 @@ public static class ConfigDictionary
 	public const string UnloadDestinations = "VisionSettings:UnloadDestinations";
 	public const string InstanceMatchID = "VisionSettings:InstanceMatchID";
 	public const string StationDelay = "VisionSettings:StationDelay";
+	public const string Datasets = "VisionSettings:Datasets";
+	public const string GPUID = "VisionSettings:GPUID";
 
 	#endregion
 

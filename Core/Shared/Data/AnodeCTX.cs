@@ -10,6 +10,7 @@ using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
@@ -111,6 +112,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<OTCamera> OTCamera => Set<OTCamera>();
 	public DbSet<OTTwinCat> OTTwinCat => Set<OTTwinCat>();
 	public DbSet<ITApi> ITApi => Set<ITApi>();
+	public DbSet<ITApiStation> ITApiStations => Set<ITApiStation>();
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
 	public DbSet<Station> Station => Set<Station>();

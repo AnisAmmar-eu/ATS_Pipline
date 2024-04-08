@@ -48,8 +48,6 @@ public class LoadService : BackgroundService
 		List<InstanceMatchID> UnloadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
 			ConfigDictionary.UnloadDestinations);
 		InstanceMatchID instanceMatchID = _configuration.GetValueWithThrow<InstanceMatchID>(ConfigDictionary.InstanceMatchID);
-		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
-		int cameraID = _configuration.GetValueWithThrow<int>(ConfigDictionary.CameraID);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
@@ -65,18 +63,18 @@ public class LoadService : BackgroundService
 
 				foreach (ToLoad toLoad in toLoads)
 				{
-					string SANFile = Shooting.GetImagePathFromRoot(
+					FileInfo SANFile = Shooting.GetImagePathFromRoot(
 						toLoad.CycleRID,
 						toLoad.StationID,
 						_imagesPath,
-						anodeType,
-						cameraID,
-						_extension).FullName;
+						toLoad.AnodeType,
+						toLoad.CameraID,
+						_extension);
 
 					int loadResponse = DLLVisionImport.fcx_load_anode(
-						(long)DataSets.TodoToDataSetID(new ToDoSimple(cameraID, anodeType)),
-						SANFile,
-						toLoad.CycleRID);
+						(long)DataSets.TodoToDataSetID(new ToDoSimple(toLoad.CameraID, toLoad.AnodeType)),
+						SANFile.DirectoryName,
+						Path.GetFileNameWithoutExtension(SANFile.Name));
 
 					if (loadResponse != 0)
 					{

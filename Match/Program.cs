@@ -1,14 +1,18 @@
-using Core.Entities.Packets.Services;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Background.Vision;
+using Core.Shared.Services.SystemApp.Logs;
+using Core.Shared.UnitOfWork.Interfaces;
+using Core.Shared.UnitOfWork;
 using DLLVision;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
+using Core.Entities.User.Models.DB.Roles;
+using System.Data;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options =>
@@ -21,7 +25,12 @@ builder.Configuration.LoadBaseConfiguration();
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+	.AddEntityFrameworkStores<AnodeCTX>()
+	.AddDefaultTokenProviders();
 
+builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
+builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IToMatchService, ToMatchService>();
 
 builder.Services.AddSingleton<LoadService>();
@@ -55,10 +64,21 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 string signStaticParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
 string matchDynamicParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.MatchDynParams);
+List<string> datasets = builder.Configuration.GetSectionWithThrow<List<string>>(ConfigDictionary.Datasets);
+List<int> GPUID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDictionary.GPUID);
 
 DLLVisionImport.SetDllDirectory(DLLPath);
 int retInit = DLLVisionImport.fcx_init();
-int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
-int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(0, matchDynamicParams);
+
+for (int i = 0; i < datasets.Count; i++)
+{
+	if (datasets[i] == string.Empty)
+		continue;
+
+	int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(i, Path.Combine(datasets[i], signStaticParams));
+	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(i, Path.Combine(datasets[i], matchDynamicParams));
+	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(i, i, GPUID[i]);
+}
+
 
 host.Run();

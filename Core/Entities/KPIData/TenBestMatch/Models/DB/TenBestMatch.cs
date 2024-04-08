@@ -7,9 +7,9 @@ namespace Core.Entities.KPIData.TenBestMatchs.Models.DB;
 
 public partial class TenBestMatch : BaseEntity, IBaseEntity<TenBestMatch, DTOTenBestMatch>
 {
-    public int Rank { get; set; }
-    public string AnodeID { get; set; }
-    public int Score { get; set; }
+	public int Rank { get; set; }
+    public string AnodeID { get; set; } = string.Empty;
+	public int Score { get; set; }
 
     public int KPIID { get; set; }
 

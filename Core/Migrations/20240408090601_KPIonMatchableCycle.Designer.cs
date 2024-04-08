@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240408090601_KPIonMatchableCycle")]
+    partial class KPIonMatchableCycle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -421,11 +424,11 @@ namespace Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<long>("ComputeTime")
-                        .HasColumnType("bigint");
+                    b.Property<double>("ComputeTime")
+                        .HasColumnType("float");
 
-                    b.Property<int>("MScore")
-                        .HasColumnType("int");
+                    b.Property<double>("MScore")
+                        .HasColumnType("float");
 
                     b.Property<double>("NMAvg")
                         .HasColumnType("float");
@@ -433,11 +436,11 @@ namespace Core.Migrations
                     b.Property<double>("NMStdev")
                         .HasColumnType("float");
 
-                    b.Property<int>("NMmaxScore")
-                        .HasColumnType("int");
+                    b.Property<double>("NMmaxScore")
+                        .HasColumnType("float");
 
-                    b.Property<int>("NMminScore")
-                        .HasColumnType("int");
+                    b.Property<double>("NMminScore")
+                        .HasColumnType("float");
 
                     b.Property<int>("NbCandidats")
                         .HasColumnType("int");
@@ -827,9 +830,6 @@ namespace Core.Migrations
                     b.Property<string>("CycleRID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("InstanceMatchID")
-                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ShootingTS")
                         .HasColumnType("datetimeoffset");
@@ -1437,16 +1437,6 @@ namespace Core.Migrations
                         .HasFilter("[KPIID] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("MatchableCycle");
-                });
-
-            modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations.ITApiStation", b =>
-                {
-                    b.HasBaseType("Core.Entities.IOT.IOTDevices.Models.DB.ITApis.ITApi");
-
-                    b.Property<DateTimeOffset>("OldestTSShooting")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasDiscriminator().HasValue("ITApiStation");
                 });
 
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", b =>

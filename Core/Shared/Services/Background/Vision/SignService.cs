@@ -52,11 +52,6 @@ public class SignService : BackgroundService
 		IToSignService toSignService
 	   = asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
 
-		TypeAdapterConfig<ToSign, ToLoad>.NewConfig()
-			.Ignore(dest => dest.ID);
-		TypeAdapterConfig<ToSign, ToMatch>.NewConfig()
-			.Ignore(dest => dest.ID);
-
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
 		{
@@ -80,7 +75,7 @@ public class SignService : BackgroundService
 						toSign.CameraID,
 						_extension);
 
-					string noExtension = image.Name[..^4];
+					string noExtension = Path.GetFileNameWithoutExtension(image.Name);
 					int retSign = DLLVisionImport.fcx_sign(0, 0, image.DirectoryName, noExtension, image.DirectoryName);
 
 					if (retSign == 0)

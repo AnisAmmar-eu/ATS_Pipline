@@ -1,4 +1,5 @@
 ﻿using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Mapster;
 
 namespace Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -11,7 +12,9 @@ public interface IBaseEntity<T, TDTO>
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {
+	[AdaptIgnore]
 	public int ID { get; set; }
+
 	public DateTimeOffset TS { get; set; }
 
 	/// <summary>

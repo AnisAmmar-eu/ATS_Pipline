@@ -100,6 +100,7 @@ public class AnodeUOW : IAnodeUOW
 		ToSign = new ToSignRepository(_anodeCTX);
 		ToUnload = new ToUnloadRepository(_anodeCTX);
 		ToNotify = new ToNotifyRepository(_anodeCTX);
+		Dataset = new DatasetRepository(_anodeCTX);
 	}
 
 	public object? GetRepoByType(Type repo)
@@ -134,6 +135,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IToSignRepository) => ToSign,
 			_ when repo == typeof(IToUnloadRepository) => ToUnload,
 			_ when repo == typeof(IToNotifyRepository) => ToNotify,
+			_ when repo == typeof(IDatasetRepository) => Dataset,
 
 			_ when repo == typeof(ILogRepository) => Log,
 			_ => null,
