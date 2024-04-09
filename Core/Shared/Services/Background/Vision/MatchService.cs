@@ -18,24 +18,24 @@ namespace Core.Shared.Services.Background.Vision;
 
 public class MatchService : BackgroundService
 {
-    private readonly IServiceScopeFactory _factory;
-    private readonly ILogger<MatchService> _logger;
-    private readonly IConfiguration _configuration;
+	private readonly IServiceScopeFactory _factory;
+	private readonly ILogger<MatchService> _logger;
+	private readonly IConfiguration _configuration;
 
-    public MatchService(
-        ILogger<MatchService> logger,
-        IServiceScopeFactory factory,
-        IConfiguration configuration)
-    {
-        _logger = logger;
-        _factory = factory;
-        _configuration = configuration;
-    }
+	public MatchService(
+		ILogger<MatchService> logger,
+		IServiceScopeFactory factory,
+		IConfiguration configuration)
+	{
+		_logger = logger;
+		_factory = factory;
+		_configuration = configuration;
+	}
 
 	const int dataset = 0;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 		IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
@@ -67,7 +67,7 @@ public class MatchService : BackgroundService
 
 				foreach (ToMatch toMatch in toMatchs)
 				{
-					_logger.LogInformation("debut de matching {0}", toMatch.CycleRID);
+					_logger.LogInformation("debut de matching {cycleRID}", toMatch.CycleRID);
 
 					_anodeUOW.ToMatch.Remove(toMatch);
 					_anodeUOW.Commit();
@@ -95,7 +95,7 @@ public class MatchService : BackgroundService
 
 						if (matchErrorCode == 0 || matchErrorCode == -106)
 						{
-							_logger.LogInformation("{0} matché avec code d'erreur {1}", image.Name, matchErrorCode);
+							_logger.LogInformation("{nb} matché avec code d'erreur {error}", image.Name, matchErrorCode);
 							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, instanceMatchID);
 
 							if (matchErrorCode == 0)
@@ -114,12 +114,12 @@ public class MatchService : BackgroundService
 					}
 				}
 			}
-            catch (Exception ex)
-            {
-                _logger.LogError(
-                    "Failed to execute MatchService with exception message {message}.",
-                    ex.Message);
-            }
+			catch (Exception ex)
+			{
+				_logger.LogError(
+					"Failed to execute MatchService with exception message {message}.",
+					ex.Message);
+			}
 
 			await _anodeUOW.CommitTransaction();
 		}

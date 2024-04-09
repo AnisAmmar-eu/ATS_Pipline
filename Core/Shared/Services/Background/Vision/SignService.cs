@@ -50,7 +50,7 @@ public class SignService : BackgroundService
 		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
 
 		IToSignService toSignService
-	   = asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
+		= asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
 
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
@@ -65,7 +65,7 @@ public class SignService : BackgroundService
 
 				foreach (ToSign toSign in toSigns)
 				{
-					_logger.LogInformation("debut de signature {0}", toSign.CycleRID);
+					_logger.LogInformation("debut de signature {cycleRID}", toSign.CycleRID);
 
 					FileInfo image = Shooting.GetImagePathFromRoot(
 						toSign.CycleRID,
@@ -79,7 +79,7 @@ public class SignService : BackgroundService
 					int retSign = DLLVisionImport.fcx_sign(0, 0, image.DirectoryName, noExtension, image.DirectoryName);
 
 					if (retSign == 0)
-						_logger.LogInformation("{0} signé avec succès", image.Name);
+						_logger.LogInformation("{nb} signé avec succès", image.Name);
 					else
 						_logger.LogWarning("Return code de la signature: " + retSign + " pour anode " + image.Name);
 
