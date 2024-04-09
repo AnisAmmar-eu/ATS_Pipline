@@ -60,6 +60,29 @@ public static class ITApisDict
 	public const string VisionPath = "/apiVision/status";
 }
 
+/// <summary>
+/// Provides information about 5 Stations. The Address is given at runtime by loading the base configuration. <see cref="Configuration"/>
+/// </summary>
+public static class ITStationApisDict
+{
+	public const string StationPath = "/apiStationCycle/oldest";
+
+	public const string Station1RID = "ApiStation1";
+	public static string Station1Address = string.Empty;
+
+	public const string Station2RID = "ApiStation2";
+	public static string Station2Address = string.Empty;
+
+	public const string Station3RID = "ApiStation3";
+	public static string Station3Address = string.Empty;
+
+	public const string Station4RID = "ApiStation4";
+	public static string Station4Address = string.Empty;
+
+	public const string Station5RID = "ApiStation5";
+	public static string Station5Address = string.Empty;
+}
+
 public static class TriggerSources
 {
 	public const string Line3 = "Line3";

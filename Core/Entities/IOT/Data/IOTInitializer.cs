@@ -1,4 +1,6 @@
 using Core.Entities.IOT.Dictionaries;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
@@ -58,15 +60,24 @@ public static class IOTInitializer
 		foreach (var api in serverApis)
 			InitializeApi(anodeCTX, api.Rid, api.Address, api.Path);
 
-		anodeCTX.ServerRule.Add(new ServerRule {
-			RID = ServerRuleDict.RID,
-			Name = ServerRuleDict.RID,
-			Description = ServerRuleDict.RID,
-			Address = string.Empty,
-			ConnectionPath = string.Empty,
-			IsConnected = true,
-			Reinit = false,
-		});
+		var stationApis = new[]
+		{
+			new { Rid = ITStationApisDict.Station1RID, Address = ITStationApisDict.Station1Address, Path = ITStationApisDict
+				.StationPath, },
+			new { Rid = ITStationApisDict.Station2RID, Address = ITStationApisDict.Station2Address, Path = ITStationApisDict
+				.StationPath, },
+			new { Rid = ITStationApisDict.Station3RID, Address = ITStationApisDict.Station3Address, Path = ITStationApisDict
+				.StationPath, },
+			new { Rid = ITStationApisDict.Station4RID, Address = ITStationApisDict.Station4Address, Path = ITStationApisDict
+				.StationPath, },
+			new { Rid = ITStationApisDict.Station5RID, Address = ITStationApisDict.Station5Address, Path = ITStationApisDict
+				.StationPath, },
+		};
+
+		foreach (var api in stationApis)
+			InitializeApiStation(anodeCTX, api.Rid, api.Address, api.Path);
+
+		InitializeServerRule(anodeCTX);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
@@ -233,15 +244,51 @@ public static class IOTInitializer
 		string address,
 		string path)
 	{
-        ServerRule api = new() {
-        	RID = rid,
-        	Name = rid,
-        	Description = rid,
-        	Address = address,
-        	ConnectionPath = path,
-        	IsConnected = false,
+		ITApi api = new() {
+			RID = rid,
+			Name = rid,
+			Description = rid,
+			Address = address,
+			ConnectionPath = path,
+			IsConnected = false,
 		};
-		anodeCTX.ServerRule.Add(api);
+		anodeCTX.ITApi.Add(api);
+		anodeCTX.SaveChanges();
+	}
+
+	private static void InitializeApiStation(
+		AnodeCTX anodeCTX,
+		string rid,
+		string address,
+		string path)
+	{
+		ITApiStation api = new() {
+			RID = rid,
+			Name = rid,
+			Description = rid,
+			Address = address,
+			ConnectionPath = path,
+			IsConnected = false,
+			OldestTSShooting = DateTimeOffset.MinValue,
+			// IsOptional = true,
+		};
+		anodeCTX.ITApiStations.Add(api);
+		anodeCTX.SaveChanges();
+	}
+
+	private static void InitializeServerRule(
+		AnodeCTX anodeCTX)
+	{
+		anodeCTX.ServerRule.Add(new ServerRule {
+			RID = ServerRuleDict.RID,
+			Name = ServerRuleDict.RID,
+			Description = ServerRuleDict.RID,
+			Address = string.Empty,
+			ConnectionPath = string.Empty,
+			IsConnected = true,
+			Reinit = false,
+		});
+
 		anodeCTX.SaveChanges();
 	}
 
