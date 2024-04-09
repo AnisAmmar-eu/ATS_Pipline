@@ -41,7 +41,7 @@ public partial class ITApi
 			isConnected = false;
 		}
 
-		if (RID == ITApisDict.ServerReceiveRID)
+		if (!Station.IsServer && RID == ITApisDict.ServerReceiveRID)
 		{
 			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, logger, 1000, cancelSource.Token);
 			uint statusHandle

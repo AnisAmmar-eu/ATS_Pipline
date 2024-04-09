@@ -1,5 +1,6 @@
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
@@ -43,7 +44,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 	public async Task<IEnumerable<string>> GetAllApisRIDs()
 	{
-		return (await AnodeUOW.IOTDevice.GetAll([device => device is ServerRule], withTracking: false))
+		return (await AnodeUOW.IOTDevice.GetAll([device => device is ITApi], withTracking: false))
 			.Select(device => device.RID);
 	}
 
@@ -101,13 +102,17 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
 		disconnectedDevices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
-		bool ITApiDisconnected
-			= disconnectedDevices.Any(device => device is ServerRule itApi && itApi.RID != ITApisDict.ServerReceiveRID);
 
-		AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, _logger, 1000, CancellationToken.None);
-		uint statusHandle
-			= tcClient.CreateVariableHandle(IOTTagPath.ApiStatusWrite);
-		tcClient.WriteAny(statusHandle, !ITApiDisconnected);
+		if (!Station.IsServer)
+		{
+			bool ITApiDisconnected
+				= disconnectedDevices.Any(device => device is ITApi itApi && itApi.RID != ITApisDict.ServerReceiveRID);
+
+			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, _logger, 1000, CancellationToken.None);
+			uint statusHandle
+				= tcClient.CreateVariableHandle(IOTTagPath.ApiStatusWrite);
+			tcClient.WriteAny(statusHandle, !ITApiDisconnected);
+		}
 
 		if (updatedDevices.Length == 0)
 			return connectedDevices;

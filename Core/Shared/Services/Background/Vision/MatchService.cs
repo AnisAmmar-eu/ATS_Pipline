@@ -36,9 +36,6 @@ public class MatchService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		List<InstanceMatchID> UnloadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
@@ -47,17 +44,16 @@ public class MatchService : BackgroundService
 		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
-		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
 
-		IToMatchService toMatchService
-	   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
-
-		while (await timer.WaitForNextTickAsync(stoppingToken)
-			&& !stoppingToken.IsCancellationRequested)
+		while (!stoppingToken.IsCancellationRequested)
 		{
-			await _anodeUOW.StartTransaction();
+            await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
+            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+            IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+            IToMatchService toMatchService
+           = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
 
-			//ITApiStation _anodeUOW.IOTDevice.GetAll([devices => devices.])
+            await _anodeUOW.StartTransaction();
 
 			try
 			{

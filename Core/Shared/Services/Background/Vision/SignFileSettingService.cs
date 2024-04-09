@@ -26,24 +26,23 @@ public class SignFileSettingService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-
 		int FileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
 		string signStaticParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
 		string signDynamicParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
 		string archivePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
-		using PeriodicTimer timer = new (TimeSpan.FromSeconds(FileSettingsTimer));
 
 		/// <summary>Logic SignFileSetting</summary>
 		/// <param name="signStaticParamsFile">Path to the file with static parameters</param>
 		/// <param name="signDynamicParamsFile">Path to the file with dynamic parameters</param>
 		/// <remarks>Reads the file with static parameters and dynamic parameters</remarks>
 		/// <remarks>If exists sets them in the DLL then move them in archive</remarks>
-		while (await timer.WaitForNextTickAsync(stoppingToken)
-			&& !stoppingToken.IsCancellationRequested)
+		while (!stoppingToken.IsCancellationRequested)
 		{
-			try
-			{
+            await Task.Delay(TimeSpan.FromSeconds(FileSettingsTimer), stoppingToken);
+            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+
+            try
+            {
 				int responseStatic = 1000;
 				if (File.Exists(signStaticParamsFile)
 					&& ((responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0)

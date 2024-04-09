@@ -5,6 +5,7 @@ using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
+using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
@@ -36,6 +37,10 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 
 // To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+	.AddEntityFrameworkStores<AnodeCTX>()
+	.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<ILogService, LogService>();
 

@@ -38,9 +38,6 @@ public class UnloadService : BackgroundService
 	/// <exception cref="Exception">Failed to execute UnloadService with exception message {message}.</exception>
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		List<InstanceMatchID> unloadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
@@ -48,13 +45,15 @@ public class UnloadService : BackgroundService
 		InstanceMatchID instanceMatchID = _configuration.GetValueWithThrow<InstanceMatchID>(ConfigDictionary.InstanceMatchID);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
-		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
 
-		while (await timer.WaitForNextTickAsync(stoppingToken)
-			&& !stoppingToken.IsCancellationRequested)
+		while (!stoppingToken.IsCancellationRequested)
 		{
-			try
-			{
+            await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
+            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+            IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+
+            try
+            {
 				List<ToUnload> toUnloads = await _anodeUOW.ToUnload.GetAll(
 					[unload => unload.InstanceMatchID == instanceMatchID],
 					withTracking: false);

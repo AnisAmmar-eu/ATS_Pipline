@@ -36,9 +36,6 @@ public class SignService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		List<InstanceMatchID> LoadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
@@ -49,13 +46,13 @@ public class SignService : BackgroundService
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
 
-		IToSignService toSignService
-		= asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
-
-		while (await timer.WaitForNextTickAsync(stoppingToken)
-			&& !stoppingToken.IsCancellationRequested)
+		while (!stoppingToken.IsCancellationRequested)
 		{
-			await _anodeUOW.StartTransaction();
+            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+            IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+            IToSignService toSignService
+				= asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
+            await _anodeUOW.StartTransaction();
 
 			try
 			{

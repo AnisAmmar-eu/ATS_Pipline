@@ -27,18 +27,17 @@ public class IOTService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		int IOTMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.IOTMS);
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(IOTMS));
-		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		IIOTDeviceService iotDeviceService
-			= asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
-		IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 		// If there is no given devices RIDs to monitor, it defaults to monitoring all APIs.
-		IEnumerable<string> rids = configuration.GetSection("Devices").Get<string[]>()
-			?? await iotDeviceService.GetAllApisRIDs();
 
-		while (await timer.WaitForNextTickAsync(stoppingToken)
-			&& !stoppingToken.IsCancellationRequested)
+		while (!stoppingToken.IsCancellationRequested)
         {
+            await Task.Delay(TimeSpan.FromMilliseconds(IOTMS), stoppingToken);
+            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+            IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+            IIOTDeviceService iotDeviceService
+            = asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
+            IEnumerable<string> rids = configuration.GetSection("Devices").Get<string[]>()
+            	?? await iotDeviceService.GetAllApisRIDs();
             try
 			{
 				await iotDeviceService.CheckAllConnectionsAndApplyTags(rids);
