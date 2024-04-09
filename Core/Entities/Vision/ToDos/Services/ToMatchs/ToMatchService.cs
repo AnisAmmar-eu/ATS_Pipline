@@ -14,6 +14,10 @@ using Core.Entities.KPIData.KPIs.Models.DB;
 using DLLVision;
 using Core.Entities.KPIData.TenBestMatchs.Models.DB;
 using Core.Entities.Vision.Dictionaries;
+using Stemmer.Cvb;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
+using Core.Entities.IOT.IOTDevices.Models.DB;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -134,5 +138,14 @@ public class ToMatchService :
 		}
 
 		return kPI;
+	}
+
+	public async Task<bool> GoMatch()
+	{
+		List<IOTDevice> iotDevices = await AnodeUOW.IOTDevice
+			.GetAll([device => device is ITApiStation ||device is ServerRule]);
+		ServerRule? rule = iotDevices.Find(device => device is ServerRule) as ServerRule;
+
+		return true;
 	}
 }

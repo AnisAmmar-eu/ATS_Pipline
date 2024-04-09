@@ -23,9 +23,9 @@ public class MatchService : BackgroundService
     private readonly IConfiguration _configuration;
 
     public MatchService(
-        ILogger<MatchService> logger,
-        IServiceScopeFactory factory,
-        IConfiguration configuration)
+    	ILogger<MatchService> logger,
+    	IServiceScopeFactory factory,
+    	IConfiguration configuration)
     {
         _logger = logger;
         _factory = factory;
@@ -117,8 +117,8 @@ public class MatchService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(
-                    "Failed to execute MatchService with exception message {message}.",
-                    ex.Message);
+                	"Failed to execute MatchService with exception message {message}.",
+                	ex.Message);
             }
 
 			await _anodeUOW.CommitTransaction();
