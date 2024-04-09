@@ -13,9 +13,6 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles;
 using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
-using Core.Entities.Packets.Services;
-using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
-using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -26,9 +23,9 @@ public class MatchService : BackgroundService
     private readonly IConfiguration _configuration;
 
     public MatchService(
-    	ILogger<MatchService> logger,
-    	IServiceScopeFactory factory,
-    	IConfiguration configuration)
+        ILogger<MatchService> logger,
+        IServiceScopeFactory factory,
+        IConfiguration configuration)
     {
         _logger = logger;
         _factory = factory;
@@ -120,8 +117,8 @@ public class MatchService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(
-                	"Failed to execute MatchService with exception message {message}.",
-                	ex.Message);
+                    "Failed to execute MatchService with exception message {message}.",
+                    ex.Message);
             }
 
 			await _anodeUOW.CommitTransaction();
