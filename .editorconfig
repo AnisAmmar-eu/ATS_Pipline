@@ -9,11 +9,31 @@ indent_size = 4
 
 # Analyzers
 
+## IDE ##
+
 # IDE0005: Using directive is unnecessary
 dotnet_diagnostic.IDE0005.severity = error
 
 # IDE1006: Naming Styles Uppercase
 dotnet_diagnostic.IDE1006.severity = error
+
+## CA ##
+
+# CA2101: Specify marshaling for P/Invoke string arguments
+dotnet_diagnostic.CA2101.severity = none
+
+# CA1401: P/Invokes should not be visible
+dotnet_diagnostic.CA1401.severity = none
+
+# CA2253: Named placeholders should not be numeric values
+dotnet_diagnostic.CA2253.severity = error
+
+## SYSLIB ##
+
+# SYSLIB1054: Use LibraryImportAttribute instead of DllImportAttribute to generate p/invoke marshalling code at compile time.
+dotnet_diagnostic.SYSLIB1054.severity = none
+
+## RCS ##
 
 # Add blank line after embedded statement
 dotnet_diagnostic.rcs0001.severity = error
@@ -51,11 +71,6 @@ dotnet_diagnostic.rcs0012.severity = none
 
 # Add blank line between single-line declarations of different kind
 dotnet_diagnostic.rcs0013.severity = none
-
-# NOW OBSOLETE in 4.7.0 - Replaced by RCS0061
-# Add blank line between switch sections
-# dotnet_diagnostic.rcs0014.severity = none
-# roslynator_blank_line_between_closing_brace_and_switch_section = false
 
 # Add/remove blank line between using directives
 dotnet_diagnostic.rcs0015.severity = error
