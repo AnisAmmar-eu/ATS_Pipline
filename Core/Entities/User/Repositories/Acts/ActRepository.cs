@@ -24,7 +24,7 @@ public class ActRepository : BaseEntityRepository<AnodeCTX, Act, DTOAct>, IActRe
 
 		Expression<Func<Act, bool>>[] filters = QueryFilters(rid, entityType, parentType);
 
-		return GetBy(
+		return GetByWithThrow(
 			filters,
 			withTracking: withTracking
 		);

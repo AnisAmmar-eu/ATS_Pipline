@@ -37,7 +37,7 @@ public class ActEntityRepository : BaseEntityRepository<AnodeCTX, ActEntity, DTO
 	{
 		Expression<Func<ActEntity, bool>>[] filters = QueryFilters(act, entityID, parentID);
 
-		return GetBy(
+		return GetByWithThrow(
 			filters,
 			null,
 			withTracking,

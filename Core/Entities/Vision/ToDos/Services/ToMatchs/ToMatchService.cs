@@ -14,10 +14,13 @@ using Core.Entities.KPIData.KPIs.Models.DB;
 using DLLVision;
 using Core.Entities.KPIData.TenBestMatchs.Models.DB;
 using Core.Entities.Vision.Dictionaries;
-using Stemmer.Cvb;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.DB;
+using System.Reactive.Linq;
+using Core.Migrations;
+using Core.Shared.Dictionaries;
+using System.Data;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -94,7 +97,7 @@ public class ToMatchService :
 
 		try
 		{
-			Anode anode = await AnodeUOW.Anode.GetBy(
+			Anode anode = await AnodeUOW.Anode.GetByWithThrow(
 				[anode => anode.CycleRID == cycle.RID]
 				);
 
@@ -140,12 +143,59 @@ public class ToMatchService :
 		return kPI;
 	}
 
-	public async Task<bool> GoMatch()
+	public async Task<bool> GoMatch(List<string> origins, InstanceMatchID instance, int delay)
 	{
-		List<IOTDevice> iotDevices = await AnodeUOW.IOTDevice
-			.GetAll([device => device is ITApiStation ||device is ServerRule]);
-		ServerRule? rule = iotDevices.Find(device => device is ServerRule) as ServerRule;
+		try
+		{
+			List<IOTDevice> iotDevices = await AnodeUOW.IOTDevice
+				.GetAll([device => device is ITApiStation]);
+			ServerRule? rule = await AnodeUOW.IOTDevice.GetBy([device => device is ServerRule]) as ServerRule;
 
-		return true;
+			List<int> stationIDs = origins.ConvertAll(Station.StationNameToID);
+			DateTimeOffset? oldestToSign = (await AnodeUOW.ToSign
+				.GetBy(
+					[toSign => stationIDs.Contains(toSign.StationID)],
+					orderBy: query => query.OrderByDescending(
+						toSign => toSign.ShootingTS)))
+				?.ShootingTS
+				?? DateTimeOffset.Now;
+
+			DateTimeOffset? oldestToLoad = (await AnodeUOW.ToLoad
+				.GetBy(
+					[toLoad => toLoad.InstanceMatchID == instance],
+					orderBy: query => query.OrderByDescending(
+						toLoad => toLoad.ShootingTS)))
+				?.ShootingTS
+				?? DateTimeOffset.Now;
+
+			DateTimeOffset? oldestStation = DateTimeOffset.Now;
+			foreach (string origin in origins)
+			{
+				DateTimeOffset? newOldestStation
+					= (iotDevices.Find(device => device.RID.EndsWith(origin)) as ITApiStation)?.OldestTSShooting;
+
+				if (newOldestStation is not null && newOldestStation > oldestStation)
+					oldestStation = newOldestStation;
+			}
+
+			return rule is not null
+				&& rule!.Reinit
+				&& iotDevices.Select(device => device.IsConnected).Contains(false)
+				&& ValidDelay(oldestStation, delay)
+				&& ValidDelay(oldestToLoad, delay)
+				&& ValidDelay(oldestStation, delay);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+	}
+
+	private bool ValidDelay(DateTimeOffset? date, int delay)
+	{
+		if (date is null)
+			return false;
+
+		return ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
 	}
 }

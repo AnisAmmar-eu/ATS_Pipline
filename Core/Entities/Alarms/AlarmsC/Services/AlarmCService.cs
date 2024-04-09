@@ -18,6 +18,6 @@ public class AlarmCService : BaseEntityService<IAlarmCRepository, AlarmC, DTOAla
 	/// <param name="rid"></param>
 	public async Task<DTOAlarmC> GetByRID(string rid)
 	{
-		return (await AnodeUOW.AlarmC.GetBy([alarm => alarm.RID == rid])).ToDTO();
+		return (await AnodeUOW.AlarmC.GetByWithThrow([alarm => alarm.RID == rid])).ToDTO();
 	}
 }

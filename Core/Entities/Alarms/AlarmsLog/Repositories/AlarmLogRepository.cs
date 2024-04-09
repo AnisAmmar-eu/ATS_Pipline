@@ -26,7 +26,7 @@ public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAl
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
 		bool withTracking = true)
 	{
-		return GetBy(filters, orderBy, withTracking, nameof(AlarmLog.Alarm));
+		return GetByWithThrow(filters, orderBy, withTracking, nameof(AlarmLog.Alarm));
 	}
 
 	public Task<List<AlarmLog>> GetAllWithIncludes(

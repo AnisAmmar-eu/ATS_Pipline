@@ -8,6 +8,7 @@ namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
 public interface IToMatchService : IBaseEntityService<ToMatch, DTOToMatch>
 {
+	Task<bool> GoMatch(List<string> origins, int stationDelay);
 	void UpdateAnode(MatchableCycle cycle);
 	Task<MatchableCycle> UpdateCycle(MatchableCycle cycle, nint retMatch, int cameraID, InstanceMatchID instance);
 }

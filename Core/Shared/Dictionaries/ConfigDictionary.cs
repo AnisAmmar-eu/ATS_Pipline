@@ -61,6 +61,7 @@ public static class ConfigDictionary
 	public const string StationDelay = "VisionSettings:StationDelay";
 	public const string Datasets = "VisionSettings:Datasets";
 	public const string GPUID = "VisionSettings:GPUID";
+	public const string GoMatchStations = "VisionSettings:GoMatchStations";
 
 	#endregion
 

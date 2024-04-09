@@ -96,7 +96,7 @@ public class BenchmarkTestService :
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();
-		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetBy([b => b.RID == "RandomRID"], withTracking: false);
+		BenchmarkTest test = await AnodeUOW.BenchmarkTest.GetByWithThrow([b => b.RID == "RandomRID"], withTracking: false);
 		watch.Stop();
 		ans.Add(watch.Elapsed);
 		watch.Restart();

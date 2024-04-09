@@ -50,19 +50,31 @@ public interface IBaseEntityRepository<T, TDTO>
 	/// <param name="withTracking"></param>
 	/// <param name="includes"></param>
 	/// <returns>The entity <see cref="T" /></returns>
-	Task<T> GetBy(
+	Task<T> GetByWithThrow(
 		Expression<Func<T, bool>>[]? filters = null,
 		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 		bool withTracking = true,
 		params string[] includes
 		);
 
-	Task<T> GetByWithConcat(
+	public Task<T?> GetBy(
+		Expression<Func<T, bool>>[]? filters = null,
+		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+		bool withTracking = true,
+		params string[] includes);
+
+	Task<T> GetByWithConcatWithThrow(
 		Expression<Func<T, bool>>[]? filters = null,
 		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 		bool withTracking = true,
 		Dictionary<string, string[]>? includes = null
 		);
+
+	public Task<T?> GetByWithConcat(
+		Expression<Func<T, bool>>[]? filters = null,
+		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+		bool withTracking = true,
+		Dictionary<string, string[]>? includes = null);
 
 	/// <summary>
 	///     Get all entities from the table of <typeref name="T" /> with join to its navigation properties

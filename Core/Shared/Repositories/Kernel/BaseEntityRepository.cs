@@ -101,7 +101,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="withTracking"></param>
 	/// <param name="includes"></param>
 	/// <returns>The entity <see cref="T" /></returns>
-	public async Task<T> GetBy(
+	public async Task<T> GetByWithThrow(
 		Expression<Func<T, bool>>[]? filters = null,
 		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 		bool withTracking = true,
@@ -120,7 +120,22 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		return t;
 	}
 
-	public async Task<T> GetByWithConcat(
+	public Task<T?> GetBy(
+		Expression<Func<T, bool>>[]? filters = null,
+		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+		bool withTracking = true,
+		params string[] includes
+	)
+	{
+		return Query(
+			filters,
+			orderBy,
+			withTracking,
+			includes: new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } })
+			.FirstOrDefaultAsync();
+	}
+
+	public async Task<T> GetByWithConcatWithThrow(
 		Expression<Func<T, bool>>[]? filters = null,
 		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 		bool withTracking = true,
@@ -132,6 +147,16 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			throw new EntityNotFoundException(typeof(T).Name + " not found");
 
 		return t;
+	}
+
+	public Task<T?> GetByWithConcat(
+		Expression<Func<T, bool>>[]? filters = null,
+		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+		bool withTracking = true,
+		Dictionary<string, string[]>? includes = null
+)
+	{
+		return Query(filters, orderBy, withTracking, includes: GetMergedIncludes(includes)).FirstOrDefaultAsync();
 	}
 
 	/// <summary>
