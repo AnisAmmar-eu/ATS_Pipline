@@ -43,7 +43,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		// Here, we order by descending ID and not by TS because in a **single** station, the most recent packets always
 		// have the highest IDs. In the server, we would have to order by TS.
 		return (await AnodeUOW.Packet
-			.GetBy(
+			.GetByWithThrow(
 				[packet => packet is Shooting],
 				orderBy: query => query.OrderByDescending(packet => packet.ID)) as Shooting
 			?? throw new EntityNotFoundException())
@@ -57,7 +57,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		try
 		{
 			return (await AnodeUOW.Packet
-				.GetBy([packet => packet is Shooting && packet.Status != PacketStatus.Sent]) as Shooting)
+				.GetByWithThrow([packet => packet is Shooting && packet.Status != PacketStatus.Sent]) as Shooting)
 				?.ShootingTS
 				?? DateTimeOffset.Now;
 		}
@@ -70,7 +70,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	public async Task<FileInfo> GetThumbnailFromCycleRIDAndCamera(int shootingID, int cameraID)
 	{
 		Shooting shooting = await AnodeUOW.Packet
-			.GetBy([packet => packet.ID == shootingID]) as Shooting
+			.GetByWithThrow([packet => packet.ID == shootingID]) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
@@ -88,7 +88,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	public async Task<FileInfo> GetImageFromCycleRIDAndCamera(int shootingID, int cameraID)
 	{
 		Shooting shooting = await AnodeUOW.Packet
-			.GetBy([packet => packet.ID == shootingID]) as Shooting
+			.GetByWithThrow([packet => packet.ID == shootingID]) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
@@ -200,7 +200,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		try
 		{
 			StationCycle stationCycle
-				= await AnodeUOW.StationCycle.GetBy([cycle => cycle.RID == packet.StationCycleRID], withTracking: false);
+				= await AnodeUOW.StationCycle.GetByWithThrow([cycle => cycle.RID == packet.StationCycleRID], withTracking: false);
 
 			if (packet is Shooting shooting)
 			{
@@ -314,7 +314,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		try
 		{
 			StationCycle stationCycle
-				= await AnodeUOW.StationCycle.GetBy([cycle => cycle.RID == cycleRID], withTracking: false);
+				= await AnodeUOW.StationCycle.GetByWithThrow([cycle => cycle.RID == cycleRID], withTracking: false);
 			stationCycle.AssignPacket(alarmList);
 			AnodeUOW.StationCycle.Update(stationCycle);
 			AnodeUOW.Commit();

@@ -33,7 +33,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 	public async Task<IOTDeviceStatus> GetStatusByRID(string rid)
 	{
-		return new IOTDeviceStatus(await AnodeUOW.IOTDevice.GetBy([device => device.RID == rid], withTracking: false));
+		return new IOTDeviceStatus(await AnodeUOW.IOTDevice.GetByWithThrow([device => device.RID == rid], withTracking: false));
 	}
 
 	public async Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids)
@@ -127,7 +127,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 	public async Task<bool> ActiveReinit()
 	{
 		ServerRule ruleDevice = (ServerRule)await AnodeUOW.IOTDevice
-			.GetBy([device => device is ServerRule], withTracking: true);
+			.GetByWithThrow([device => device is ServerRule], withTracking: true);
 		ruleDevice.Reinit = true;
 		await AnodeUOW.StartTransaction();
 		AnodeUOW.IOTDevice.Update(ruleDevice);

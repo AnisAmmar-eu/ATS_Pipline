@@ -62,7 +62,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 				{
 					try
 					{
-						alarmRT.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == RIDAlarmStruct]);
+						alarmRT.Alarm = await AnodeUOW.AlarmC.GetByWithThrow([alarmC => alarmC.RID == RIDAlarmStruct]);
 						await AnodeUOW.AlarmRT.Add(alarmRT);
 						AnodeUOW.Commit();
 						alarms = alarms.Where(alarm => alarm.IRID != RIDAlarmStruct).ToList();
@@ -155,7 +155,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 			// If an alarmRT doesn't exist, this alarm just raised.
 			AlarmRT newAlarmRT = dtoAlarmRT.ToModel();
 			newAlarmRT.ID = 0;
-			newAlarmRT.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == newAlarmRT.IRID]);
+			newAlarmRT.Alarm = await AnodeUOW.AlarmC.GetByWithThrow([alarmC => alarmC.RID == newAlarmRT.IRID]);
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmRT.Add(newAlarmRT);
 			AnodeUOW.Commit();

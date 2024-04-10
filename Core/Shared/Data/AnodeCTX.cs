@@ -14,7 +14,6 @@ using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTTwinCats;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
-using Core.Entities.IOT.IOTDevices.Models.DB.Stations;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Entities.KPIData.KPIs.Models.DB;
@@ -115,7 +114,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<ITApiStation> ITApiStations => Set<ITApiStation>();
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
-	public DbSet<Station> Station => Set<Station>();
 	public DbSet<ServerRule> ServerRule => Set<ServerRule>();
 
 	#endregion
