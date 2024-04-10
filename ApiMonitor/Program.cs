@@ -89,11 +89,11 @@ builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddSingleton<IOTService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
 
-builder.Services.AddSingleton<PurgeService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
+//builder.Services.AddSingleton<PurgeService>();
+//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 
-builder.Services.AddSingleton<DiskCheckService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<DiskCheckService>());
+//builder.Services.AddSingleton<DiskCheckService>();
+//builder.Services.AddHostedService(provider => provider.GetRequiredService<DiskCheckService>());
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 

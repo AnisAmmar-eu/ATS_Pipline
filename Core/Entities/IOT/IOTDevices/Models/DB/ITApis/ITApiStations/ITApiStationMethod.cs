@@ -53,6 +53,7 @@ public partial class ITApiStation
 			{
 				logger.LogInformation("Error while trying to connect to {name}:\n{error}", RID, e);
 				isConnected = false;
+				OldestTSShooting = DateTimeOffset.MinValue;
 			}
 		}
 

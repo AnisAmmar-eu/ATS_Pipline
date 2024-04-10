@@ -31,9 +31,6 @@ public class PurgeService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-        await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-        _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-
         int purgeThresholdSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeThreshold);
 		int purgeTimerSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeTimerSec);
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
@@ -41,12 +38,13 @@ public class PurgeService : BackgroundService
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 
 		TimeSpan purgeThreshold = TimeSpan.FromSeconds(purgeThresholdSec);
-		using PeriodicTimer timer = new (TimeSpan.FromSeconds(purgeTimerSec));
 
-		while (await timer.WaitForNextTickAsync(stoppingToken)
-			&& !stoppingToken.IsCancellationRequested)
+		while (!stoppingToken.IsCancellationRequested)
 		{
-			try
+			await Task.Delay(TimeSpan.FromSeconds(purgeTimerSec), stoppingToken);
+            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+            _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+            try
 			{
 				_logger.LogInformation("PurgeService running at: {time}", DateTimeOffset.Now);
 				_logger.LogError("PurgeService threshold: {threshold}", purgeThreshold.ToString());

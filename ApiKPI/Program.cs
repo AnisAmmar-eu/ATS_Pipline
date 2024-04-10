@@ -86,18 +86,6 @@ builder.Services.AddCors(
 
 WebApplication app = builder.Build();
 
-string? dbInitialize = builder.Configuration["DbInitialize"];
-if (dbInitialize is null)
-	throw new ConfigurationErrorsException("Missing DbInitialize");
-if (bool.Parse(dbInitialize))
-{
-	using IServiceScope scope = app.Services.CreateScope();
-	IServiceProvider services = scope.ServiceProvider;
-	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
-	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-	await DBInitializer.InitializeServer(context, userManager);
-}
-
 app.UseCors("AllowOrigin");
 
 // Configure the HTTP request pipeline.
