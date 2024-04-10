@@ -85,7 +85,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 				return; // alarmLog is already inactive or cleared.
 
 			// If an alarmLog doesn't exist, this alarm just raised.
-			AlarmC alarmC = await AnodeUOW.AlarmC.GetBy([alarmLog => alarmLog.RID == alarm.RID.ToString()]);
+			AlarmC alarmC = await AnodeUOW.AlarmC.GetByWithThrow([alarmLog => alarmLog.RID == alarm.RID.ToString()]);
 			AlarmLog newAlarmLog = new(alarmC) {
 				Alarm = alarmC,
 				TS = DateTimeOffset.Now,
@@ -193,7 +193,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			// If an alarmLog doesn't exist, this alarm just raised.
 			AlarmLog newAlarmLog = dtoAlarmLog.ToModel();
 			_logger.LogInformation($"Not found alarm log with AlarmRID: {dtoAlarmLog.AlarmRID}");
-			newAlarmLog.Alarm = await AnodeUOW.AlarmC.GetBy([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
+			newAlarmLog.Alarm = await AnodeUOW.AlarmC.GetByWithThrow([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
 			newAlarmLog.ID = 0;
 			await AnodeUOW.StartTransaction();
 			await AnodeUOW.AlarmLog.Add(newAlarmLog);

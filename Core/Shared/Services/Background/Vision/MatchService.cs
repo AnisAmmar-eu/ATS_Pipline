@@ -42,6 +42,7 @@ public class MatchService : BackgroundService
 			ConfigDictionary.UnloadDestinations);
 		InstanceMatchID instanceMatchID = _configuration.GetValueWithThrow<InstanceMatchID>(ConfigDictionary.InstanceMatchID);
 		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
+		List<string> origins = _configuration.GetSectionWithThrow <List<string>>(ConfigDictionary.GoMatchStations);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 
@@ -57,6 +58,9 @@ public class MatchService : BackgroundService
 
 			try
 			{
+				if (! await toMatchService.GoMatch(origins, instanceMatchID, stationDelay))
+					continue;
+
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
 					[match => match.InstanceMatchID == instanceMatchID],
 					withTracking: false);

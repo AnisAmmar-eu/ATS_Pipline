@@ -21,7 +21,7 @@ public class IOTTagService : BaseEntityService<IIOTTagRepository, IOTTag, DTOIOT
 
 	public async Task<DTOIOTTag> UpdateTagByRID(string rid, string value)
 	{
-		IOTTag tag = await AnodeUOW.IOTTag.GetBy([tag => tag.RID == rid], withTracking: false);
+		IOTTag tag = await AnodeUOW.IOTTag.GetByWithThrow([tag => tag.RID == rid], withTracking: false);
 		if (tag.IsReadOnly)
 		{
 			throw new InvalidOperationException(

@@ -56,7 +56,7 @@ public class ToSignService :
 	{
 		try
 		{
-			Anode anode =  await AnodeUOW.Anode.GetBy(
+			Anode anode =  await AnodeUOW.Anode.GetByWithThrow(
 				[anode => anode.S1S2CycleID == cycle.ID]
 				);
         }
