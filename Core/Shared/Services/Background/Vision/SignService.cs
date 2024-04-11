@@ -95,7 +95,18 @@ public class SignService : BackgroundService
 
 					// S1 and S2 (sign stations) are the only station to add an Anode
 					if (cycle.CanMatch())
-						await _anodeUOW.ToMatch.Add(toSign.Adapt<ToMatch>());
+					{
+						List<string> _matchDestinations = _configuration.GetValueWithThrow<List<string>>(
+							ConfigDictionary.MatchDestinations);
+
+						string gateID = _matchDestinations[cycle.StationID];
+
+						foreach (string originGateID in _configuration.GetValueWithThrow<List<string>>(gateID))
+						{
+							// TODO Make Tomatch with gateID and originGateID
+							await _anodeUOW.ToMatch.Add(toSign.Adapt<ToMatch>());
+						}
+					}
 
 					if (!Station.IsMatchStation(cycle.StationID))
 						toSignService.AddAnode((S1S2Cycle)cycle);

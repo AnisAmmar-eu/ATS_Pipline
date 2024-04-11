@@ -10,6 +10,7 @@
     <ItemGroup>
         <Folder Include="Entities\BI\" />
         <Folder Include="Entities\KPIData\KPI\Data\" />
+        <Folder Include="Entities\Vision\Dictionnaries\" />
         <Folder Include="Shared\Models\DB\System\" />
         <Folder Include="Shared\Models\DTO\System\" />
         <Folder Include="Shared\Repositories\System\" />
