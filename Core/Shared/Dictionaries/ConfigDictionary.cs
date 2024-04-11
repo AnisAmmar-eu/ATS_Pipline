@@ -68,7 +68,7 @@ public static class ConfigDictionary
 	public const string GPUID = "VisionSettings:GPUID";
 	public const string GoMatchStations = "VisionSettings:GoMatchStations";
 	public const string MatchGateID = "VisionSettings:MatchGateID";
-	public const string Origin = "VisionSettings:Origin";
+	public const string CandidateGateID = "VisionSettings:CandidateGateID";
 	public const string IsChained = "VisionSettings:IsChained";
 
 	#endregion

@@ -38,11 +38,11 @@ public class MatchService : BackgroundService
 	{
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
-		List<InstanceMatchID> UnloadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
-			ConfigDictionary.UnloadDestinations);
-		InstanceMatchID instanceMatchID = _configuration.GetValueWithThrow<InstanceMatchID>(ConfigDictionary.InstanceMatchID);
+		int gateID = _configuration.GetValueWithThrow<int>(ConfigDictionary.MatchGateID);
+		int candidateGateID = _configuration.GetValueWithThrow<int>(ConfigDictionary.CandidateGateID);
+		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
-		List<string> origins = _configuration.GetSectionWithThrow <List<string>>(ConfigDictionary.GoMatchStations);
+		List<string> stationOrigins = _configuration.GetSectionWithThrow <List<string>>(ConfigDictionary.GoMatchStations);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 
@@ -58,11 +58,11 @@ public class MatchService : BackgroundService
 
 			try
 			{
-				if (! await toMatchService.GoMatch(origins, instanceMatchID, stationDelay))
+				if (! await toMatchService.GoMatch(stationOrigins, instanceMatchID, stationDelay))
 					continue;
 
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
-					[match => match.InstanceMatchID == instanceMatchID],
+					[match => match.GateID == gateID && match.CandidateGateID == candidateGateID && match.AnodeType == anodeType],
 					withTracking: false);
 
 				foreach (ToMatch toMatch in toMatchs)
@@ -87,7 +87,7 @@ public class MatchService : BackgroundService
 							_extension);
 
 						IntPtr retMatch = DLLVisionImport.fcx_match(
-							(long)DataSets.TodoToDataSetID(new ToDoSimple(cameraID, toMatch.AnodeType)),
+							cameraID,
 							0,
 							image.DirectoryName,
 							Path.GetFileNameWithoutExtension(image.Name));
@@ -124,4 +124,5 @@ public class MatchService : BackgroundService
 			await _anodeUOW.CommitTransaction();
 		}
 	}
+
 }
