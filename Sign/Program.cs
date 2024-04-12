@@ -13,26 +13,21 @@ using System.Configuration;
 using Core.Shared.Dictionaries;
 using DLLVision;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddWindowsService(options =>
-{
-	options.ServiceName = "Sign service";
-});
-
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+builder.Services.AddWindowsService(options => options.ServiceName = "Sign service");
 
 builder.Configuration.LoadBaseConfiguration();
 
-builder.Services.AddDbContext<AnodeCTX>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
+builder.Services.AddDbContext<AnodeCTX>(
+	options => options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<AnodeCTX>()
-    .AddDefaultTokenProviders();
+	.AddEntityFrameworkStores<AnodeCTX>()
+	.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IToSignService, ToSignService>();
-
 
 builder.Services.AddSingleton<SignService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<SignService>());
@@ -40,27 +35,40 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<SignSe
 builder.Services.AddSingleton<SignFileSettingService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<SignFileSettingService>());
 
-var host = builder.Build();
+IHost host = builder.Build();
 
 // Initialize
-string? dbInitialize = builder.Configuration["DbInitialize"];
-if (dbInitialize is null)
-throw new ConfigurationErrorsException("Missing DbInitialize");
-if (!Station.IsServer && bool.Parse(dbInitialize))
+string dbInitialize = builder.Configuration["DbInitialize"]
+	?? throw new ConfigurationErrorsException("Missing DbInitialize");
+
+if (bool.Parse(dbInitialize))
 {
-    using IServiceScope scope = host.Services.CreateScope();
-    IServiceProvider services = scope.ServiceProvider;
-    AnodeCTX context = services.GetRequiredService<AnodeCTX>();
-    UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+	using IServiceScope scope = host.Services.CreateScope();
+	IServiceProvider services = scope.ServiceProvider;
+	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
+	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
 
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
-string signStaticParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
-string signDynamicParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
+
+// FolderPath = FolderParams//StationName//AnodeType//CameraID
+string anodeType = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
+string stationName = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
+string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
+
+string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
 
 DLLVisionImport.SetDllDirectory(DLLPath);
 int retInit = DLLVisionImport.fcx_init();
+string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
-int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(0, signDynamicParams);
+
+foreach (int cameraID in new int[] {1, 2})
+{
+	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
+	string signDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);
+
+	int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, signDynamicParams);
+}
 
 host.Run();

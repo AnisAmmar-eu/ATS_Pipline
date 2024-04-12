@@ -13,12 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using Core.Entities.User.Models.DB.Roles;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddWindowsService(options =>
-{
-	options.ServiceName = "Match service";
-});
-
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+builder.Services.AddWindowsService(options => options.ServiceName = "Match service");
 
 builder.Configuration.LoadBaseConfiguration();
 
@@ -44,14 +40,12 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Unload
 builder.Services.AddSingleton<MatchFileSettingService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchFileSettingService>());
 
-
-
-var host = builder.Build();
+IHost host = builder.Build();
 
 // Initialize
-string? dbInitialize = builder.Configuration["DbInitialize"];
-if (dbInitialize is null)
-	throw new ConfigurationErrorsException("Missing DbInitialize");
+string? dbInitialize = builder.Configuration["DbInitialize"]
+	?? throw new ConfigurationErrorsException("Missing DbInitialize");
+
 if (!Station.IsServer && bool.Parse(dbInitialize))
 {
 	using IServiceScope scope = host.Services.CreateScope();
@@ -60,29 +54,29 @@ if (!Station.IsServer && bool.Parse(dbInitialize))
 	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
 
-string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
-string signStaticParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
-string matchDynamicParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.MatchDynParams);
-List<string> datasets = builder.Configuration.GetSectionWithThrow<List<string>>(ConfigDictionary.Datasets);
 List<int> GPUID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDictionary.GPUID);
+
+string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+
+// FolderPath = FolderParams//StationName//AnodeType//CameraID
+string anodeType = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
+string stationName = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
+string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
+
+string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
 
 DLLVisionImport.SetDllDirectory(DLLPath);
 int retInit = DLLVisionImport.fcx_init();
+string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
+int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
 
-for (int i = 0; i < datasets.Count; i++)
+foreach (int cameraID in new int[] {1, 2})
 {
-	if (datasets[i].Length == 0)
-		continue;
+	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
+	string signDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);
 
-	int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(
-		i,
-		Path.Combine(datasets[i], signStaticParams));
-
-	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(
-		i,
-		Path.Combine(datasets[i], matchDynamicParams));
-
-	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(i, i, GPUID[i]);
+	int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, signDynamicParams);
+	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, cameraID, GPUID[cameraID]);
 }
 
 host.Run();
