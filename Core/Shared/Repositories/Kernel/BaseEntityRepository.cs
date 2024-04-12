@@ -18,7 +18,9 @@ namespace Core.Shared.Repositories.Kernel;
 /// <typeparam name="T">
 ///     Type that defines a table in the database and have to implement <see cref="IBaseEntity{T}" />
 /// </typeparam>
-/// <typeparam name="TDTO"></typeparam>
+/// <typeparam name="TDTO">
+///     Type that defines a DTO of <typeref name="T" /> and have to implement <see cref="IDTO{T,TDTO}" />
+/// </typeparam>
 public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, TDTO>
 	where TContext : DbContext
 	where T : class, IBaseEntity<T, TDTO>
@@ -34,12 +36,12 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Constructor
 	/// </summary>
 	/// <param name="context"><see cref="DbContext" /> of the project</param>
-    /// <param name="baseIncludes">All includes made in the ..WithIncludes methods</param>
-    /// <param name="baseConcatIncludes">All includes made within foreign relations (eg: WorkingOrder.EquipmentI.EquipmentC)</param>
-    public BaseEntityRepository(
-    	TContext context,
-    	string[] baseIncludes,
-    	Dictionary<string, string[]> baseConcatIncludes)
+	/// <param name="baseIncludes">All includes made in the ..WithIncludes methods</param>
+	/// <param name="baseConcatIncludes">All includes made within foreign relations (eg: WorkingOrder.EquipmentI.EquipmentC)</param>
+	public BaseEntityRepository(
+		TContext context,
+		string[] baseIncludes,
+		Dictionary<string, string[]> baseConcatIncludes)
 	{
 		Context = context;
 		_baseIncludes = baseIncludes;
@@ -68,10 +70,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			includes: new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } }
 				)
 			.FirstOrDefaultAsync(x => x.ID == id);
-		if (t is null)
-			throw new EntityNotFoundException(typeof(T).Name, id);
-
-		return t;
+		return t ?? throw new EntityNotFoundException(typeof(T).Name, id);
 	}
 
 	public async Task<T> GetByIdWithConcat(
@@ -87,10 +86,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			withTracking,
 			includes: GetMergedIncludes(includes))
 			.FirstOrDefaultAsync(x => x.ID == id);
-		if (t is null)
-			throw new EntityNotFoundException(typeof(T).Name, id);
-
-		return t;
+		return t ?? throw new EntityNotFoundException(typeof(T).Name, id);
 	}
 
 	/// <summary>
@@ -114,10 +110,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			withTracking,
 			includes: new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } })
 			.FirstOrDefaultAsync();
-		if (t is null)
-			throw new EntityNotFoundException(typeof(T).Name + " not found");
-
-		return t;
+		return t ?? throw new EntityNotFoundException(typeof(T).Name + " not found");
 	}
 
 	public Task<T?> GetBy(
@@ -143,10 +136,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		)
 	{
 		T? t = await Query(filters, orderBy, withTracking, includes: GetMergedIncludes(includes)).FirstOrDefaultAsync();
-		if (t is null)
-			throw new EntityNotFoundException(typeof(T).Name + " not found");
-
-		return t;
+		return t ?? throw new EntityNotFoundException(typeof(T).Name + " not found");
 	}
 
 	public Task<T?> GetByWithConcat(
@@ -240,7 +230,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="entity"></param>
 	public async Task Add(T entity)
 	{
-		await Context.Set<T>().AddAsync(entity);
+		_ = await Context.Set<T>().AddAsync(entity);
 	}
 
 	/// <summary>
@@ -250,7 +240,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <returns>The entity <see cref="T" /> saved in the database</returns>
 	public async Task<T> AddAndReturn(T entity)
 	{
-		await Context.Set<T>().AddAsync(entity);
+		_ = await Context.Set<T>().AddAsync(entity);
 		return entity;
 	}
 
@@ -269,7 +259,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="entity">The entity <see cref="T" /> to remove</param>
 	public void Remove(T entity)
 	{
-		Context.Set<T>().Remove(entity);
+		_ = Context.Set<T>().Remove(entity);
 	}
 
 	/// <summary>
@@ -284,11 +274,8 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		if (includes.Length != 0)
 			query = query.AsNoTracking();
 
-		T? entity = await query.FirstOrDefaultAsync(x => x.ID == id);
-		if (entity is null)
-			throw new EntityNotFoundException(typeof(T).Name, id);
-
-		Context.Set<T>().Remove(entity);
+		T? entity = await query.FirstOrDefaultAsync(x => x.ID == id) ?? throw new EntityNotFoundException(typeof(T).Name, id);
+		_ = Context.Set<T>().Remove(entity);
 	}
 
 	/// <summary>
@@ -319,7 +306,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <returns>The updated entity <see cref="T" /></returns>
 	public T Update(T entity)
 	{
-		Context.Set<T>().Update(entity);
+		_ = Context.Set<T>().Update(entity);
 		return entity;
 	}
 
@@ -331,7 +318,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	public T[] UpdateArray(T[] entities)
 	{
 		foreach (T entity in entities)
-			Context.Set<T>().Update(entity);
+			_ = Context.Set<T>().Update(entity);
 
 		return entities;
 	}
@@ -426,10 +413,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		if (maxCount is not null)
 			query = query.Take(maxCount.Value);
 
-		if (orderBy is not null)
-			return orderBy(query);
-
-		return query;
+		return (orderBy is not null) ? orderBy(query) : query;
 	}
 
 	private static IQueryable<T> QueryIncludes(IQueryable<T> query, Dictionary<string, string[]> includes)
@@ -466,10 +450,9 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		mergedIncludes.Add(string.Empty, _baseIncludes);
 		foreach ((string? key, string[]? value) in includes ?? [])
 		{
-			if (mergedIncludes.TryGetValue(key, out string[]? existingValue))
-				mergedIncludes[key] = existingValue.Concat(value).ToArray();
-			else
-				mergedIncludes[key] = value;
+			mergedIncludes[key] = (mergedIncludes.TryGetValue(key, out string[]? existingValue))
+				? [.. existingValue, .. value]
+				: value;
 		}
 
 		return mergedIncludes;

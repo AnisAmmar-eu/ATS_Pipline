@@ -27,9 +27,12 @@ public class SignFileSettingService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		int FileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
-		string signStaticParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
-		string signDynamicParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignDynParams);
 		string archivePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
+		string folderParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
+		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
+		string stationName = _configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
+
+		string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
 
 		/// <summary>Logic SignFileSetting</summary>
 		/// <param name="signStaticParamsFile">Path to the file with static parameters</param>
@@ -43,6 +46,7 @@ public class SignFileSettingService : BackgroundService
 
             try
             {
+				string signStaticParamsFile = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 				int responseStatic = 1000;
 				if (File.Exists(signStaticParamsFile)
 					&& ((responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0)
@@ -52,21 +56,31 @@ public class SignFileSettingService : BackgroundService
 					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
 				}
 
-				int responseDynamic = 1000;
-				if (File.Exists(signDynamicParamsFile)
-					&& ((responseDynamic = DLLVisionImport.fcx_unregister_sign_params_dynamic(0)) == 0)
-					&& ((responseDynamic = DLLVisionImport.fcx_register_sign_params_dynamic(
-						0,
-						signDynamicParamsFile)) == 0))
+				foreach (int cameraID in new int[] {1, 2})
 				{
-					File.Delete(Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
-					File.Move(signDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
-				}
+					string signDynamicParamsFile = Path.Combine(
+						folderWithoutCam,
+						cameraID.ToString(),
+						ConfigDictionary.DynamicSignName);
 
-				if (responseStatic != 0 || responseDynamic != 0)
-				{
-					_logger.LogError("Failed to execute FileSettingService with responseStatic"
-						+ $"{responseStatic.ToString()} and responseDynamic {responseDynamic.ToString()}.");
+					int responseDynamic = 1000;
+					if (File.Exists(signDynamicParamsFile)
+						&& ((responseDynamic = DLLVisionImport.fcx_unregister_sign_params_dynamic(cameraID)) == 0)
+						&& ((responseDynamic = DLLVisionImport.fcx_register_sign_params_dynamic(
+							cameraID,
+							signDynamicParamsFile)) == 0))
+					{
+						File.Delete(Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
+						File.Move(signDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
+					}
+
+					if (responseStatic != 0 || responseDynamic != 0)
+					{
+						_logger.LogError(
+							"Failed to execute FileSettingService with responseStatic {static} and responseDynamic {dynamic}.",
+							responseStatic,
+							responseDynamic);
+					}
 				}
 			}
 			catch (Exception ex)

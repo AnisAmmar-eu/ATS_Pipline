@@ -32,6 +32,9 @@ dotnet_diagnostic.IDE0161.severity = error
 # IDE0055: Formatting rule
 dotnet_diagnostic.IDE0055.severity = none
 
+# IDE0047: Remove unnecessary parentheses
+dotnet_diagnostic.IDE0047.severity = none
+
 ## CS ##
 dotnet_diagnostic.CS4014.severity = none
 

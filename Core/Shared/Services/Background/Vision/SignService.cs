@@ -16,6 +16,7 @@ using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Services.ToLoads;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -55,6 +56,12 @@ public class SignService : BackgroundService
 
 			try
 			{
+				ServerRule rule = (ServerRule)await _anodeUOW.IOTDevice
+					.GetByWithThrow([device => device is ServerRule], withTracking: false);
+
+				if (rule.Reinit)
+					throw new("Reinit is launched");
+
 				List<ToSign> toSigns = await _anodeUOW.ToSign.GetAll(
 					[sign => sign.StationID == Station.ID && sign.AnodeType == anodeType],
 					withTracking: false);
@@ -80,7 +87,7 @@ public class SignService : BackgroundService
 						_logger.LogWarning("Return code de la signature: " + retSign + " pour anode " + image.Name);
 
 					_anodeUOW.ToSign.Remove(toSign);
-					_anodeUOW.Commit();
+					_ = _anodeUOW.Commit();
 
 					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
 
@@ -106,7 +113,7 @@ public class SignService : BackgroundService
 					if (!Station.IsMatchStation(cycle.StationID))
 						toSignService.AddAnode((S1S2Cycle)cycle);
 
-					_anodeUOW.Commit();
+					_ = _anodeUOW.Commit();
 				}
 			}
 			catch (Exception ex)

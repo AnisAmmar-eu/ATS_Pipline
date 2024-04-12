@@ -27,9 +27,12 @@ public class MatchFileSettingService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		int FileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
-		string signStaticParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.SignStaticParams);
-		string matchDynamicParamsFile = _configuration.GetValueWithThrow<string>(ConfigDictionary.MatchDynParams);
 		string archivePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
+		string folderParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
+		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
+		string stationName = _configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
+
+		string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
 
 		/// <summary>Logic SignFileSetting</summary>
 		/// <param name="matchDynamicParamsFile">Path to the file with dynamic parameters</param>
@@ -37,11 +40,13 @@ public class MatchFileSettingService : BackgroundService
 		/// <remarks>If exists sets them in the DLL then move them in archive</remarks>
 		while (!stoppingToken.IsCancellationRequested)
 		{
-            await Task.Delay(TimeSpan.FromSeconds(FileSettingsTimer), stoppingToken);
-            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			await Task.Delay(TimeSpan.FromSeconds(FileSettingsTimer), stoppingToken);
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
-            try
-            {
+			try
+			{
+				string signStaticParamsFile = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
+
 				int responseStatic = 1000;
 				if (File.Exists(signStaticParamsFile)
 					&& ((responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0)
@@ -51,18 +56,26 @@ public class MatchFileSettingService : BackgroundService
 					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
 				}
 
-				int responseDynamic = 1000;
-				if (File.Exists(matchDynamicParamsFile)
-					&& ((responseDynamic = DLLVisionImport.fcx_unregister_match_params_dynamic(0)) == 0)
-					&& ((responseDynamic = DLLVisionImport.fcx_register_match_params_dynamic(0, matchDynamicParamsFile)) == 0))
+				foreach (int cameraID in new int[] {1, 2})
 				{
-					File.Move(matchDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(matchDynamicParamsFile)));
-				}
+					string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
+					string matchDynamicParamsFile = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);
 
-				if (responseStatic != 0 || responseDynamic != 0)
-				{
-					_logger.LogError("Failed to execute FileSettingService with responseStatic"
-						+ $"{responseStatic.ToString()} and responseDynamic {responseDynamic.ToString()}.");
+					int responseDynamic = 1000;
+					if (File.Exists(matchDynamicParamsFile)
+						&& ((responseDynamic = DLLVisionImport.fcx_unregister_match_params_dynamic(cameraID)) == 0)
+						&& ((responseDynamic = DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParamsFile)) == 0))
+					{
+						File.Move(matchDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(matchDynamicParamsFile)));
+					}
+
+					if (responseStatic != 0 || responseDynamic != 0)
+					{
+						_logger.LogError(
+							"Failed to execute FileSettingService with responseStatic {static} and responseDynamic {dynamic}.",
+							responseStatic,
+							responseDynamic);
+					}
 				}
 			}
 			catch (Exception ex)

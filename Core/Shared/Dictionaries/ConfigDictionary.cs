@@ -47,12 +47,14 @@ public static class ConfigDictionary
 	#region Vision settings
 
 	//Common
-	public const string SignStaticParams = "VisionSettings:SignStaticParams";
-	public const string SignDynParams = "VisionSettings:SignDynParams";
+	public const string FolderParams = "VisionSettings:FolderParams";
+	public const string StaticSignName = "signature_static.xml";
+
 	public const string DLLPath = "VisionSettings:DLLPath";
 	public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
 
 	//sign
+	public const string DynamicSignName = "signature_dynamic.xml";
 	public const string CameraID = "VisionSettings:CameraID";
 	public const string AnodeType = "VisionSettings:AnodeType";
 
@@ -61,7 +63,7 @@ public static class ConfigDictionary
 	// OriginGateIDs are directly in configuration, no need to be loaded
 
 	//match
-	public const string Datasets = "VisionSettings:Datasets";
+	public const string DynamicMatchName = "match_dynamic.xml";
 	public const string InstanceMatchID = "VisionSettings:InstanceMatchID";
 	public const string MatchDynParams = "VisionSettings:MatchDynParams";
 	public const string StationDelay = "VisionSettings:StationDelay";

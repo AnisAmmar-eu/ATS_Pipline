@@ -56,12 +56,15 @@ public class LoadService : BackgroundService
 			{
 				List<ToLoad> toLoads = await _anodeUOW.ToLoad.GetAll(
 					[load => load.InstanceMatchID == instanceMatchID],
-					withTracking: false);
+					orderBy: query => query.OrderByDescending(
+						toLoad => toLoad.ShootingTS),
+					withTracking: false,
+					maxCount: 20);
 
 				foreach (ToLoad toLoad in toLoads)
 				{
 					LoadableCycle cycle = (LoadableCycle)await _anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
-					if (cycle.TSFirstShooting?.AddDays(stationDelay) > DateTimeOffset.Now)
+					if (cycle.TSFirstShooting?.AddDays(stationDelay) < DateTimeOffset.Now)
 						break;
 
 					FileInfo SANFile = Shooting.GetImagePathFromRoot(
