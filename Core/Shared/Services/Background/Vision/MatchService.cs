@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Core.Shared.Dictionaries;
 using DLLVision;
-using Core.Entities.Vision.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
@@ -32,41 +31,38 @@ public class MatchService : BackgroundService
 		_configuration = configuration;
 	}
 
-	const int dataset = 0;
-
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
-		int gateID = _configuration.GetValueWithThrow<int>(ConfigDictionary.MatchGateID);
-		int candidateGateID = _configuration.GetValueWithThrow<int>(ConfigDictionary.CandidateGateID);
+		int instanceMatchID = _configuration.GetValueWithThrow<int>(ConfigDictionary.InstanceMatchID);
 		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
-		List<string> stationOrigins = _configuration.GetSectionWithThrow <List<string>>(ConfigDictionary.GoMatchStations);
+		bool isChained = _configuration.GetValueWithThrow<bool>(ConfigDictionary.IsChained);
+		List<string> stationOrigins = _configuration.GetSectionWithThrow<List<string>>(ConfigDictionary.GoMatchStations);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-            await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
-            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-            IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-            IToMatchService toMatchService
-           = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
+			await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+			IToMatchService toMatchService
+		   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
 
-            await _anodeUOW.StartTransaction();
+			await _anodeUOW.StartTransaction();
 
 			try
 			{
-				if (! await toMatchService.GoMatch(stationOrigins, instanceMatchID, stationDelay))
-					continue;
-
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
-					[match => match.GateID == gateID && match.CandidateGateID == candidateGateID && match.AnodeType == anodeType],
+					[match => match.InstanceMatchID == instanceMatchID && match.AnodeType == anodeType],
 					withTracking: false);
 
 				foreach (ToMatch toMatch in toMatchs)
 				{
+					// if (!await toMatchService.GoMatch(stationOrigins, toMatch.IntanceMatchID, stationDelay))
+					// continue;
 					_logger.LogInformation("debut de matching {cycleRID}", toMatch.CycleRID);
 
 					_anodeUOW.ToMatch.Remove(toMatch);
@@ -96,11 +92,11 @@ public class MatchService : BackgroundService
 						if (matchErrorCode == 0 || matchErrorCode == -106)
 						{
 							_logger.LogInformation("{nb} matché avec code d'erreur {error}", image.Name, matchErrorCode);
-							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, instanceMatchID);
+							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, isChained);
 
 							if (matchErrorCode == 0)
 							{
-								if (instanceMatchID != InstanceMatchID.S5_C)
+								if (!isChained)
 									toMatchService.UpdateAnode(cycle);
 
 								await _anodeUOW.ToUnload.Add(toMatch.Adapt<ToUnload>());
@@ -124,5 +120,4 @@ public class MatchService : BackgroundService
 			await _anodeUOW.CommitTransaction();
 		}
 	}
-
 }

@@ -8,9 +8,7 @@ using DLLVision;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Mapster;
-using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
@@ -38,21 +36,20 @@ public class SignService : BackgroundService
 	{
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
-		List<InstanceMatchID> LoadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
+		List<string> LoadDestinations = _configuration.GetSectionWithThrow<List<string>>(
 			ConfigDictionary.LoadDestinations);
 		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 		int cameraID = _configuration.GetValueWithThrow<int>(ConfigDictionary.CameraID);
-
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
-		using PeriodicTimer timer = new(TimeSpan.FromSeconds(signMatchTimer));
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-            IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-            IToSignService toSignService
+			await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+			IToSignService toSignService
 				= asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
-            await _anodeUOW.StartTransaction();
+			await _anodeUOW.StartTransaction();
 
 			try
 			{
@@ -85,12 +82,12 @@ public class SignService : BackgroundService
 
 					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
 
-					foreach (InstanceMatchID id in LoadDestinations)
+					foreach (string family in LoadDestinations)
 					{
-						ToLoad load = toSign.Adapt<ToLoad>();
-						load.InstanceMatchID = id;
-						await _anodeUOW.ToLoad.Add(load);
-						_anodeUOW.Commit();
+						// ToLoad load = toSign.Adapt<ToLoad>();
+						// load.InstanceMatchID = id;
+						// await _anodeUOW.ToLoad.Add(load);
+						// _anodeUOW.Commit();
 					}
 
 					// S1 and S2 (sign stations) are the only station to add an Anode

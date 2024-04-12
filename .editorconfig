@@ -17,6 +17,24 @@ dotnet_diagnostic.IDE0005.severity = error
 # IDE1006: Naming Styles Uppercase
 dotnet_diagnostic.IDE1006.severity = error
 
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
+# IDE0011: Add braces
+dotnet_diagnostic.IDE0011.severity = none
+
+# IDE0160: Use block-scoped namespace
+dotnet_diagnostic.IDE0160.severity = none
+
+# IDE0161: Use file-scoped namespace
+dotnet_diagnostic.IDE0161.severity = error
+
+# IDE0055: Formatting rule
+dotnet_diagnostic.IDE0055.severity = none
+
+## CS ##
+dotnet_diagnostic.CS4014.severity = none
+
 ## CA ##
 
 # CA2101: Specify marshaling for P/Invoke string arguments
@@ -27,6 +45,9 @@ dotnet_diagnostic.CA1401.severity = none
 
 # CA2253: Named placeholders should not be numeric values
 dotnet_diagnostic.CA2253.severity = error
+
+# CA1806: Do not ignore method results
+dotnet_diagnostic.CA1806.severity = none
 
 ## SYSLIB ##
 

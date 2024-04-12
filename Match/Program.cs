@@ -23,7 +23,7 @@ builder.Services.AddWindowsService(options =>
 builder.Configuration.LoadBaseConfiguration();
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
+	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 	.AddEntityFrameworkStores<AnodeCTX>()
 	.AddDefaultTokenProviders();
@@ -71,13 +71,18 @@ int retInit = DLLVisionImport.fcx_init();
 
 for (int i = 0; i < datasets.Count; i++)
 {
-	if (datasets[i] == string.Empty)
+	if (datasets[i].Length == 0)
 		continue;
 
-	int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(i, Path.Combine(datasets[i], signStaticParams));
-	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(i, Path.Combine(datasets[i], matchDynamicParams));
+	int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(
+		i,
+		Path.Combine(datasets[i], signStaticParams));
+
+	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(
+		i,
+		Path.Combine(datasets[i], matchDynamicParams));
+
 	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(i, i, GPUID[i]);
 }
-
 
 host.Run();
