@@ -12,7 +12,6 @@ using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Entities.KPIData.KPIs.Models.DB;
 using DLLVision;
 using Core.Entities.KPIData.TenBestMatchs.Models.DB;
-using Core.Entities.Vision.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.DB;
@@ -34,16 +33,15 @@ public class ToMatchService :
 		MatchableCycle cycle,
 		IntPtr retMatch,
 		int cameraID,
-		InstanceMatchID instance)
+		bool isChained)
 	{
 		await AnodeUOW.StartTransaction();
 
 		if (DLLVisionImport.fcx_matchRet_errorCode(retMatch) == 0)
 		{
-			if (cycle.MatchingTS is null)
-				cycle.MatchingTS = DateTimeOffset.Now;
+			cycle.MatchingTS ??= DateTimeOffset.Now;
 
-			if (instance == InstanceMatchID.S5_C)
+			if (isChained)
 			{
 				if (cameraID == 1)
 					((S5Cycle)cycle).ChainMatchingCamera1 = SignMatchStatus.Ok;
@@ -62,7 +60,7 @@ public class ToMatchService :
 		}
 		else //-106
 		{
-			if (instance == InstanceMatchID.S5_C)
+			if (isChained)
 			{
 				if (cameraID == 1)
 					((S5Cycle)cycle).ChainMatchingCamera1 = SignMatchStatus.NotOk;
@@ -82,8 +80,8 @@ public class ToMatchService :
 
 		cycle.KPI = CreateKPI(retMatch);
 
-		AnodeUOW.StationCycle.Update(cycle);
-		AnodeUOW.Commit();
+		_ = AnodeUOW.StationCycle.Update(cycle);
+		_ = AnodeUOW.Commit();
 
 		await AnodeUOW.CommitTransaction();
 		return cycle;
@@ -104,7 +102,7 @@ public class ToMatchService :
 			else
 				((AnodeDX)anode).S5Cycle = cycle as S5Cycle;
 
-			AnodeUOW.Commit();
+			_ = AnodeUOW.Commit();
 		}
 		catch (EntityNotFoundException)
 		{
@@ -117,31 +115,35 @@ public class ToMatchService :
 		await AnodeUOW.CommitTransaction();
 	}
 
-	private KPI CreateKPI(IntPtr retMatch)
+	private static KPI CreateKPI(IntPtr retMatch)
 	{
-		KPI kPI = new();
-		kPI.MScore = DLLVisionImport.fcx_matchRet_similarityScore(retMatch);
-		kPI.NbCandidats = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(retMatch); //TODO change when new DLL
-		kPI.Threshold = DLLVisionImport.fcx_matchRet_threshold(retMatch);
-		kPI.NMminScore = DLLVisionImport.fcx_matchRet_worstScore(retMatch);
-		// kPI.NMmaxScore = DLLVisionImport.fcx_matchRet_bestScore(retMatch); TODO allow when DLL works
-		//kPI.NMAvg = DLLVisionImport.fcx_matchRet_mean(retMatch);
-		//kPI.NMStdev = Math.Sqrt(DLLVisionImport.fcx_matchRet_variance(retMatch));
-		kPI.ComputeTime = DLLVisionImport.fcx_matchRet_elapsed(retMatch);
+		KPI kPI = new()
+		{
+			MScore = DLLVisionImport.fcx_matchRet_similarityScore(retMatch),
+			NbCandidats = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(retMatch), //TODO change when new DLL
+			Threshold = DLLVisionImport.fcx_matchRet_threshold(retMatch),
+			NMminScore = DLLVisionImport.fcx_matchRet_worstScore(retMatch),
+			// kPI.NMmaxScore = DLLVisionImport.fcx_matchRet_bestScore(retMatch); TODO allow when DLL works
+			//kPI.NMAvg = DLLVisionImport.fcx_matchRet_mean(retMatch);
+			//kPI.NMStdev = Math.Sqrt(DLLVisionImport.fcx_matchRet_variance(retMatch));
+			ComputeTime = DLLVisionImport.fcx_matchRet_elapsed(retMatch),
+		};
 
 		for (int i = 0; i < 10; i++)
 		{
-			kPI.TenBestMatches.Add(new TenBestMatch() {
-				Rank=i,
-				//AnodeID = DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i), TODO allow when DLL works
-				//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i), TODO allow when DLL works
-				KPI = kPI, });
+			kPI.TenBestMatches.Add(new TenBestMatch()
+				{
+					Rank = i,
+					//AnodeID = DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i), TODO allow when DLL works
+					//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i), TODO allow when DLL works
+					KPI = kPI,
+				});
 		}
 
 		return kPI;
 	}
 
-	public async Task<bool> GoMatch(List<string> origins, InstanceMatchID instance, int delay)
+	public async Task<bool> GoMatch(List<string> origins, int instanceMatchID, int delay)
 	{
 		try
 		{
@@ -160,7 +162,7 @@ public class ToMatchService :
 
 			DateTimeOffset? oldestToLoad = (await AnodeUOW.ToLoad
 				.GetBy(
-					[toLoad => toLoad.InstanceMatchID == instance],
+					[toLoad => toLoad.InstanceMatchID == instanceMatchID],
 					orderBy: query => query.OrderByDescending(
 						toLoad => toLoad.ShootingTS)))
 				?.ShootingTS
@@ -198,11 +200,8 @@ public class ToMatchService :
 		}
 	}
 
-	private bool ValidDelay(DateTimeOffset? date, int delay)
+	private static bool ValidDelay(DateTimeOffset? date, int delay)
 	{
-		if (date is null)
-			return false;
-
-		return ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
+		return (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
 	}
 }

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using DLLVision;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Entities.Packets.Models.DB.Shootings;
-using Core.Entities.Vision.Dictionaries;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 
 namespace Core.Shared.Services.Background.Vision;
@@ -40,20 +39,18 @@ public class UnloadService : BackgroundService
 	{
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
-		List<InstanceMatchID> unloadDestinations = _configuration.GetSectionWithThrow<List<InstanceMatchID>>(
-			ConfigDictionary.UnloadDestinations);
-		InstanceMatchID instanceMatchID = _configuration.GetValueWithThrow<InstanceMatchID>(ConfigDictionary.InstanceMatchID);
+		int instanceMatchID = _configuration.GetValueWithThrow<int>(ConfigDictionary.InstanceMatchID);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-            await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
-            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-            IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+			await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
-            try
-            {
+			try
+			{
 				List<ToUnload> toUnloads = await _anodeUOW.ToUnload.GetAll(
 					[unload => unload.InstanceMatchID == instanceMatchID],
 					withTracking: false);
@@ -71,7 +68,7 @@ public class UnloadService : BackgroundService
 							_extension).FullName;
 
 						int dropResponse = DLLVisionImport.fcx_drop_anode(
-							(long)DataSets.TodoToDataSetID(new ToDoSimple(cameraID, toUnload.AnodeType)),
+							cameraID,
 							SANFile);
 
 						if (dropResponse != 0)
@@ -84,7 +81,7 @@ public class UnloadService : BackgroundService
 
 					await _anodeUOW.Dataset.ExecuteDeleteAsync(
 						dataset => dataset.CycleRID == toUnload.CycleRID
-							&& unloadDestinations.Contains(dataset.InstanceMatchID));
+							&& toUnload.InstanceMatchID == dataset.InstanceMatchID);
 
 					await _anodeUOW.ToUnload.ExecuteDeleteAsync(
 						unload => unload.ID == toUnload.ID);

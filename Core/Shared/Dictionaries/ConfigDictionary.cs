@@ -48,27 +48,25 @@ public static class ConfigDictionary
 
 	//Common
 	public const string SignStaticParams = "VisionSettings:SignStaticParams";
-    public const string SignDynParams = "VisionSettings:SignDynParams";
-    public const string DLLPath = "VisionSettings:DLLPath";
-    public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
+	public const string SignDynParams = "VisionSettings:SignDynParams";
+	public const string DLLPath = "VisionSettings:DLLPath";
+	public const string SignMatchTimer = "VisionSettings:SignMatchTimer";
 
 	//sign
-    public const string CameraID = "VisionSettings:CameraID";
-    public const string AnodeType = "VisionSettings:AnodeType";
+	public const string CameraID = "VisionSettings:CameraID";
+	public const string AnodeType = "VisionSettings:AnodeType";
 
 	public const string LoadDestinations = "VisionSettings:LoadDestinations";
-	public const string LoadCandidate = "VisionSettings:LoadCandidate";
-
 	public const string MatchDestinations = "VisionSettings:MatchDestinations";
 	// OriginGateIDs are directly in configuration, no need to be loaded
 
 	//match
+	public const string Datasets = "VisionSettings:Datasets";
+	public const string InstanceMatchID = "VisionSettings:InstanceMatchID";
 	public const string MatchDynParams = "VisionSettings:MatchDynParams";
 	public const string StationDelay = "VisionSettings:StationDelay";
 	public const string GPUID = "VisionSettings:GPUID";
 	public const string GoMatchStations = "VisionSettings:GoMatchStations";
-	public const string MatchGateID = "VisionSettings:MatchGateID";
-	public const string CandidateGateID = "VisionSettings:CandidateGateID";
 	public const string IsChained = "VisionSettings:IsChained";
 
 	#endregion

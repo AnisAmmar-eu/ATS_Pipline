@@ -5,7 +5,6 @@ namespace Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 
 public partial class ToLoad : ToDo, IBaseEntity<ToLoad, DTOToLoad>
 {
-	public int GateID { get; set; }
-	public int CandidateGateID { get; set; }
+	public int InstanceMatchID { get; set; }
 	public int CameraID { get; set; }
 }

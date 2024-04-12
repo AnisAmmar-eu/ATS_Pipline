@@ -5,7 +5,6 @@ namespace Core.Entities.Vision.ToDos.Models.DB.Datasets;
 
 public partial class Dataset : ToDo, IBaseEntity<Dataset, DTODataset>
 {
-	public int GateID { get; set; }
-	public int CandidateGateID { get; set; }
+	public int InstanceMatchID { get; set; }
 	public int CameraID { get; set; }
 }
