@@ -183,15 +183,13 @@ public class ToMatchService :
 
 			Console.WriteLine(
 				"{0} {1} {2} {3} {4} {5}",
-				rule is not null,
-				!rule!.Reinit,
+				!rule?.Reinit,
 				!iotDevices.Select(device => device.IsConnected).Contains(false),
 				ValidDelay(oldestStation, delay),
 				ValidDelay(oldestToLoad, delay),
 				ValidDelay(oldestStation, delay));
 
-			return rule is not null
-				&& !rule!.Reinit
+			return !rule?.Reinit
 				&& !iotDevices.Select(device => device.IsConnected).Contains(false)
 				&& ValidDelay(oldestStation, delay)
 				&& ValidDelay(oldestToLoad, delay)

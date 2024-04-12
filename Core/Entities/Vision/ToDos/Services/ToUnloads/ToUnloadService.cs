@@ -1,3 +1,4 @@
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Entities.Vision.ToDos.Models.DTO.ToUnloads;
 using Core.Entities.Vision.ToDos.Repositories.ToUnloads;
@@ -12,5 +13,21 @@ public class ToUnloadService :
 {
 	public ToUnloadService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
+	}
+
+	public static async Task<List<int>> GetInstances(int instanceMatchID, IAnodeUOW anodeUOW)
+	{
+		try
+		{
+			return (List<int>)(await anodeUOW.IOTDevice
+				.GetAll([device => device is Match], withTracking: false))
+				.Cast<Match>()
+				.Where(match => match.InstanceMatchID == instanceMatchID)
+				.Select(match => match.InstanceMatchID);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
 	}
 }
