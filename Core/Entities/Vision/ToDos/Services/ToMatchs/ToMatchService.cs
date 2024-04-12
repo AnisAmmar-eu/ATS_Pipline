@@ -134,10 +134,11 @@ public class ToMatchService :
 			kPI.TenBestMatches.Add(new TenBestMatch()
 				{
 					Rank = i,
-					//AnodeID = DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i), TODO allow when DLL works
-					//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i), TODO allow when DLL works
+						//AnodeID = DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i), TODO allow when DLL works
+						//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i), TODO allow when DLL works
 					KPI = kPI,
-				});
+				}
+		);
 		}
 
 		return kPI;
@@ -179,16 +180,14 @@ public class ToMatchService :
 			}
 
 			Console.WriteLine(
-				"{0} {1} {2} {3} {4} {5}",
-				rule is not null,
-				!rule!.Reinit,
+				"{0} {1} {2} {3} {4}",
+				rule?.Reinit == false,
 				!iotDevices.Select(device => device.IsConnected).Contains(false),
 				ValidDelay(oldestStation, delay),
 				ValidDelay(oldestToLoad, delay),
 				ValidDelay(oldestStation, delay));
 
-			return rule is not null
-				&& !rule!.Reinit
+			return rule?.Reinit == false
 				&& !iotDevices.Select(device => device.IsConnected).Contains(false)
 				&& ValidDelay(oldestStation, delay)
 				&& ValidDelay(oldestToLoad, delay)
