@@ -61,6 +61,7 @@ string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
 DLLVisionImport.SetDllDirectory(DLLPath);
 int retInit = DLLVisionImport.fcx_init();
 string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
+
 int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
 
 foreach (int cameraID in new int[] {1, 2})

@@ -10,13 +10,14 @@ public partial class ToMatch
 	{
 	}
 
-	public ToMatch(StationCycle stationCycle)
+	public ToMatch(StationCycle stationCycle, int instanceMatchID)
 	{
 		CycleRID = stationCycle.RID;
 		StationID = stationCycle.StationID;
 		AnodeType = stationCycle.AnodeType;
 		ShootingTS = stationCycle.TSFirstShooting;
 		StationCycleID = stationCycle.ID;
+		InstanceMatchID = instanceMatchID;
 	}
 
 	public override DTOToMatch ToDTO()
