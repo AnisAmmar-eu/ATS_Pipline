@@ -61,8 +61,9 @@ public class MatchService : BackgroundService
 
 				foreach (ToMatch toMatch in toMatchs)
 				{
-					// if (!await toMatchService.GoMatch(stationOrigins, toMatch.IntanceMatchID, stationDelay))
-					// continue;
+					if (!await toMatchService.GoMatch(stationOrigins, toMatch.InstanceMatchID, stationDelay))
+						continue;
+
 					_logger.LogInformation("debut de matching {cycleRID}", toMatch.CycleRID);
 
 					_anodeUOW.ToMatch.Remove(toMatch);
@@ -71,8 +72,6 @@ public class MatchService : BackgroundService
 					for (int cameraID = 1; cameraID <= 2; cameraID++)
 					{
 						MatchableCycle cycle = (MatchableCycle)await _anodeUOW.StationCycle.GetById(toMatch.StationCycleID);
-						if (cycle.TSFirstShooting?.AddDays(stationDelay) > DateTimeOffset.Now)
-							break;
 
 						FileInfo image = Shooting.GetImagePathFromRoot(
 							toMatch.CycleRID,
@@ -82,7 +81,7 @@ public class MatchService : BackgroundService
 							cameraID,
 							_extension);
 
-						IntPtr retMatch = DLLVisionImport.fcx_match(
+						nint retMatch = DLLVisionImport.fcx_match(
 							cameraID,
 							0,
 							image.DirectoryName,
@@ -105,7 +104,7 @@ public class MatchService : BackgroundService
 						}
 						else
 						{
-							_logger.LogWarning("Return code de la signature: " + retMatch + " pour anode " + image.Name);
+							_logger.LogWarning("Return code de la signature: {retMatch} pour anode {image}", retMatch, image.Name);
 						}
 					}
 				}
