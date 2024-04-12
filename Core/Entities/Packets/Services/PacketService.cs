@@ -15,6 +15,7 @@ using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.Vision.ToDos.Models.DB.ToSigns;
+using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
@@ -227,7 +228,10 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				if (stationCycle.CanMatch())
 				{
 					_logger.LogInformation("Creating ToMatch");
-					await AnodeUOW.ToMatch.Add(new(stationCycle));
+					await AnodeUOW.ToMatch.Add(
+						new(
+							stationCycle,
+							await ToMatchService.GetMatchInstance(stationCycle.AnodeType, stationCycle.StationID, AnodeUOW)));
 					AnodeUOW.Commit();
 				}
 			}

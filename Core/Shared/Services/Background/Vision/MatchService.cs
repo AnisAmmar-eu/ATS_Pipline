@@ -56,12 +56,12 @@ public class MatchService : BackgroundService
 			try
 			{
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
-					[match => match.InstanceMatchID == instanceMatchID && match.AnodeType == anodeType],
+					[match => match.InstanceMatchID == instanceMatchID],
 					withTracking: false);
 
 				foreach (ToMatch toMatch in toMatchs)
 				{
-					if (!await toMatchService.GoMatch(stationOrigins, toMatch.InstanceMatchID, stationDelay))
+					if (!await toMatchService.GoMatch(stationOrigins, instanceMatchID, stationDelay))
 						continue;
 
 					_logger.LogInformation("debut de matching {cycleRID}", toMatch.CycleRID);

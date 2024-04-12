@@ -13,6 +13,9 @@ using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
+using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
+using Core.Entities.Vision.ToDos.Services.ToLoads;
+using Core.Entities.Vision.ToDos.Services.ToMatchs;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -39,7 +42,6 @@ public class SignService : BackgroundService
 		List<string> LoadDestinations = _configuration.GetSectionWithThrow<List<string>>(
 			ConfigDictionary.LoadDestinations);
 		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
-		int cameraID = _configuration.GetValueWithThrow<int>(ConfigDictionary.CameraID);
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
 
 		while (!stoppingToken.IsCancellationRequested)
@@ -54,7 +56,7 @@ public class SignService : BackgroundService
 			try
 			{
 				List<ToSign> toSigns = await _anodeUOW.ToSign.GetAll(
-					[sign => sign.StationID == Station.ID && sign.CameraID == cameraID && sign.AnodeType == anodeType],
+					[sign => sign.StationID == Station.ID && sign.AnodeType == anodeType],
 					withTracking: false);
 
 				foreach (ToSign toSign in toSigns)
@@ -70,7 +72,7 @@ public class SignService : BackgroundService
 						_extension);
 
 					string noExtension = Path.GetFileNameWithoutExtension(image.Name);
-					int retSign = DLLVisionImport.fcx_sign(0, 0, image.DirectoryName, noExtension, image.DirectoryName);
+					int retSign = DLLVisionImport.fcx_sign(0, toSign.CameraID, image.DirectoryName, noExtension, image.DirectoryName);
 
 					if (retSign == 0)
 						_logger.LogInformation("{nb} signé avec succès", image.Name);
@@ -84,27 +86,23 @@ public class SignService : BackgroundService
 
 					foreach (string family in LoadDestinations)
 					{
-						// ToLoad load = toSign.Adapt<ToLoad>();
-						// load.InstanceMatchID = id;
-						// await _anodeUOW.ToLoad.Add(load);
-						// _anodeUOW.Commit();
-					}
-
-					// S1 and S2 (sign stations) are the only station to add an Anode
-					if (cycle.CanMatch())
-					{
-						List<string> _matchDestinations = _configuration.GetValueWithThrow<List<string>>(
-							ConfigDictionary.MatchDestinations);
-
-						string gateID = _matchDestinations[cycle.StationID];
-
-						foreach (string originGateID in _configuration.GetValueWithThrow<List<string>>(gateID))
+						foreach (int instanceMatchID in await ToLoadService.GetInstances(family, _anodeUOW))
 						{
-							// TODO Make Tomatch with gateID and originGateID
-							await _anodeUOW.ToMatch.Add(toSign.Adapt<ToMatch>());
+							ToLoad load = toSign.Adapt<ToLoad>();
+							load.InstanceMatchID = instanceMatchID;
+							await _anodeUOW.ToLoad.Add(load);
+							_anodeUOW.Commit();
 						}
 					}
 
+					if (cycle.CanMatch())
+					{
+						ToMatch toMatch = toSign.Adapt<ToMatch>();
+						toMatch.InstanceMatchID = await ToMatchService.GetMatchInstance(toSign.AnodeType, toSign.StationID, _anodeUOW);
+						await _anodeUOW.ToMatch.Add(toMatch);
+					}
+
+					// S1 and S2 (sign stations) are the only station to add an Anode
 					if (!Station.IsMatchStation(cycle.StationID))
 						toSignService.AddAnode((S1S2Cycle)cycle);
 

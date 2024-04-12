@@ -18,6 +18,9 @@ using Core.Entities.IOT.IOTDevices.Models.DB;
 using System.Reactive.Linq;
 using Core.Shared.Dictionaries;
 using System.Data;
+using Stemmer.Cvb;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
+using System.Collections.Generic;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -203,5 +206,38 @@ public class ToMatchService :
 	private static bool ValidDelay(DateTimeOffset? date, int delay)
 	{
 		return (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
+	}
+
+	public static async Task<int> GetMatchInstance(string anodeType, int stationID, IAnodeUOW anodeUOW)
+	{
+		try
+		{
+			List<int> matchInstances = (List<int>)(await anodeUOW.IOTDevice
+				.GetAll([device => device is Match], withTracking: false))
+				.Cast<Match>()
+				.Where(match => match.AnodeType == anodeType && match.StationID == stationID)
+				.Select(match => match.InstanceMatchID);
+
+			List<ToMatch> toMatches = await anodeUOW.ToMatch
+				.GetAll([toMatch => matchInstances.Contains(toMatch.InstanceMatchID)], withTracking: false);
+
+			int lightestMatchInstance = matchInstances[0];
+			int lightestMatchInstanceCount = toMatches.Count(match => match.InstanceMatchID == lightestMatchInstance);
+			foreach (int matchInstance in matchInstances)
+			{
+				int instanceCount = toMatches.Count(match => match.InstanceMatchID == matchInstance);
+				if (instanceCount < lightestMatchInstanceCount)
+				{
+					lightestMatchInstance = matchInstance;
+					lightestMatchInstanceCount = instanceCount;
+				}
+			}
+
+			return lightestMatchInstance;
+		}
+		catch (Exception)
+		{
+			throw;
+		}
 	}
 }

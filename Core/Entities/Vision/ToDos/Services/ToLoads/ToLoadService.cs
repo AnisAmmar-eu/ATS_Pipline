@@ -1,3 +1,4 @@
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DTO.ToLoads;
 using Core.Entities.Vision.ToDos.Repositories.ToLoads;
@@ -12,5 +13,21 @@ public class ToLoadService :
 {
 	public ToLoadService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
+	}
+
+	public static async Task<List<int>> GetInstances(string family, IAnodeUOW anodeUOW)
+	{
+		try
+		{
+			return (List<int>)(await anodeUOW.IOTDevice
+				.GetAll([device => device is Match], withTracking: false))
+				.Cast<Match>()
+				.Where(match => match.Family == family)
+				.Select(match => match.InstanceMatchID);
+		}
+		catch (Exception)
+		{
+			throw;
+		}
 	}
 }
