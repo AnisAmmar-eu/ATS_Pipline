@@ -69,13 +69,12 @@ public class MatchFileSettingService : BackgroundService
 						File.Move(matchDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(matchDynamicParamsFile)));
 					}
 
-					if (responseStatic != 0 || responseDynamic != 0)
-					{
-						_logger.LogError(
-							"Failed to execute FileSettingService with responseStatic {static} and responseDynamic {dynamic}.",
-							responseStatic,
-							responseDynamic);
-					}
+					_logger.LogInformation(
+						"Match FileSettingService with responseStatic {static} and responseDynamic {id} {dynamic}.",
+						responseStatic,
+						cameraID,
+						responseDynamic);
+
 				}
 			}
 			catch (Exception ex)

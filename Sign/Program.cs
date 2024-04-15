@@ -40,14 +40,16 @@ IHost host = builder.Build();
 // Initialize
 string dbInitialize = builder.Configuration["DbInitialize"]
 	?? throw new ConfigurationErrorsException("Missing DbInitialize");
+using IServiceScope scope = host.Services.CreateScope();
+IServiceProvider services = scope.ServiceProvider;
 
 if (bool.Parse(dbInitialize))
 {
-	using IServiceScope scope = host.Services.CreateScope();
-	IServiceProvider services = scope.ServiceProvider;
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
 	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
+
+ILogger logger = services.GetRequiredService<ILogger>();
 
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 
@@ -64,12 +66,19 @@ string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.Static
 
 int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
 
+logger.LogInformation("Sign SignParamStatic {static}.", signParamsStaticOutput);
+
 foreach (int cameraID in new int[] {1, 2})
 {
 	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
 	string signDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);
 
 	int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, signDynamicParams);
+
+	logger.LogInformation(
+					"Sign with SignDyn {id} {dynamic}.",
+					cameraID,
+					signParamsDynOutput);
 }
 
 host.Run();

@@ -45,14 +45,16 @@ IHost host = builder.Build();
 // Initialize
 string? dbInitialize = builder.Configuration["DbInitialize"]
 	?? throw new ConfigurationErrorsException("Missing DbInitialize");
+using IServiceScope scope = host.Services.CreateScope();
+IServiceProvider services = scope.ServiceProvider;
 
-if (!Station.IsServer && bool.Parse(dbInitialize))
+if (bool.Parse(dbInitialize))
 {
-	using IServiceScope scope = host.Services.CreateScope();
-	IServiceProvider services = scope.ServiceProvider;
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
 	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
+
+ILogger logger = services.GetRequiredService<ILogger>();
 
 List<int> GPUID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDictionary.GPUID);
 
@@ -70,13 +72,24 @@ int retInit = DLLVisionImport.fcx_init();
 string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
 
+
+logger.LogInformation("Match SignParamStatic {static}.", signParamsStaticOutput);
+
 foreach (int cameraID in new int[] {1, 2})
 {
 	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
-	string signDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);
+	string matchDynamicParams = Path.Combine(folderPath, ConfigDictionary.MatchDynParams);
 
-	int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, signDynamicParams);
+	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParams);
 	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, cameraID, GPUID[cameraID]);
+
+	logger.LogInformation(
+						"Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",
+						cameraID,
+						matchParamsDynOutput,
+						cameraID,
+						registerDatasetOutput);
+
 }
 
 host.Run();

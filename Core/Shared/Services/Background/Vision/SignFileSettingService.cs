@@ -74,13 +74,11 @@ public class SignFileSettingService : BackgroundService
 						File.Move(signDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
 					}
 
-					if (responseStatic != 0 || responseDynamic != 0)
-					{
-						_logger.LogError(
-							"Failed to execute FileSettingService with responseStatic {static} and responseDynamic {dynamic}.",
-							responseStatic,
-							responseDynamic);
-					}
+					_logger.LogInformation(
+						"Sign FileSettingService with responseStatic {static} and responseDynamic {id} {dynamic}.",
+						responseStatic,
+						cameraID,
+						responseDynamic);
 				}
 			}
 			catch (Exception ex)

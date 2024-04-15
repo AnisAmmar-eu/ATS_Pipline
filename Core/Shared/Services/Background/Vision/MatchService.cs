@@ -70,7 +70,7 @@ public class MatchService : BackgroundService
 					_anodeUOW.ToMatch.Remove(toMatch);
 					_anodeUOW.Commit();
 
-					for (int cameraID = 1; cameraID <= 2; cameraID++)
+					foreach (int cameraID in new int[] { 1, 2 })
 					{
 						MatchableCycle cycle = (MatchableCycle)await _anodeUOW.StationCycle.GetById(toMatch.StationCycleID);
 

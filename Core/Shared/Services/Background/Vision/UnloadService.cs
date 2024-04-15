@@ -57,7 +57,7 @@ public class UnloadService : BackgroundService
 
 				foreach (ToUnload toUnload in toUnloads)
 				{
-					for (int cameraID = 1; cameraID <= 2; cameraID++)
+					foreach (int cameraID in new int[] { 1, 2 })
 					{
 						string SANFile = Shooting.GetImagePathFromRoot(
 							toUnload.CycleRID,
