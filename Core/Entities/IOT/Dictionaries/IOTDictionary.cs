@@ -1,4 +1,5 @@
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
 
 namespace Core.Entities.IOT.Dictionaries;
 
@@ -94,15 +95,15 @@ public record SignServiceData(int StationID, string AnodeType);
 
 public static class SignService
 {
-	public static SignServiceData S1TypeDX = new(1, "DX");
-	public static SignServiceData S1TypeD20 = new(1, "D20");
-	public static SignServiceData S2TypeDX = new(2, "DX");
-	public static SignServiceData S2TypeD20 = new(2, "D20");
-	public static SignServiceData S3TypeDX = new(3, "DX");
-	public static SignServiceData S3TypeD20 = new(3, "D20");
-	public static SignServiceData S4TypeDX = new(4, "DX");
-	public static SignServiceData S4TypeD20 = new(4, "D20");
-	public static SignServiceData S5TypeDX = new(5, "DX");
+	public static SignServiceData S1TypeDX = new(1, AnodeTypeDict.DX);
+	public static SignServiceData S1TypeD20 = new(1, AnodeTypeDict.D20);
+	public static SignServiceData S2TypeDX = new(2, AnodeTypeDict.DX);
+	public static SignServiceData S2TypeD20 = new(2, AnodeTypeDict.D20);
+	public static SignServiceData S3TypeDX = new(3, AnodeTypeDict.DX);
+	public static SignServiceData S3TypeD20 = new(3, AnodeTypeDict.D20);
+	public static SignServiceData S4TypeDX = new(4, AnodeTypeDict.DX);
+	public static SignServiceData S4TypeD20 = new(4, AnodeTypeDict.D20);
+	public static SignServiceData S5TypeDX = new(5, AnodeTypeDict.DX);
 
 	public static List<SignServiceData> list = [
 		S1TypeDX,
