@@ -10,7 +10,7 @@ using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.Datasets;
-using Core.Entities.StationCycles.Models.DB.LoadableCycles;
+using Core.Entities.StationCycles.Models.DB;
 
 namespace Core.Shared.Services.Background.Vision;
 
@@ -63,7 +63,7 @@ public class LoadService : BackgroundService
 
 				foreach (ToLoad toLoad in toLoads)
 				{
-					LoadableCycle cycle = (LoadableCycle)await _anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
+					StationCycle cycle =await _anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
 					if (cycle.TSFirstShooting?.AddDays(stationDelay) < DateTimeOffset.Now)
 						break;
 

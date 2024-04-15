@@ -65,7 +65,6 @@ public static class ConfigDictionary
 	//match
 	public const string DynamicMatchName = "match_dynamic.xml";
 	public const string InstanceMatchID = "VisionSettings:InstanceMatchID";
-	public const string MatchDynParams = "VisionSettings:MatchDynParams";
 	public const string StationDelay = "VisionSettings:StationDelay";
 	public const string GPUID = "VisionSettings:GPUID";
 	public const string GoMatchStations = "VisionSettings:GoMatchStations";

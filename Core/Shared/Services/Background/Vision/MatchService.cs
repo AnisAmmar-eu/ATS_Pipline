@@ -84,7 +84,7 @@ public class MatchService : BackgroundService
 
 						nint retMatch = DLLVisionImport.fcx_match(
 							cameraID,
-							0,
+							1,
 							image.DirectoryName,
 							Path.GetFileNameWithoutExtension(image.Name));
 						int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
@@ -111,7 +111,7 @@ public class MatchService : BackgroundService
 						}
 						else
 						{
-							_logger.LogWarning("Return code de la signature: {retMatch} pour anode {image}", retMatch, image.Name);
+							_logger.LogWarning("Return code de la signature: {retMatch} pour anode {image}", matchErrorCode, image.Name);
 						}
 					}
 				}

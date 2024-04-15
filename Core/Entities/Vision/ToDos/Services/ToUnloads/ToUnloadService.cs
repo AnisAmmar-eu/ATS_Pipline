@@ -25,11 +25,12 @@ public class ToUnloadService :
 		   withTracking: false))
 				?.Family;
 
-			return (List<int>)(await anodeUOW.IOTDevice
+			return (await anodeUOW.IOTDevice
 				.GetAll([device => device is Match], withTracking: false))
 				.Cast<Match>()
 				.Where(match => match.Family == family)
-				.Select(match => match.InstanceMatchID);
+				.Select(match => match.InstanceMatchID)
+				.ToList();
 		}
 		catch (Exception)
 		{

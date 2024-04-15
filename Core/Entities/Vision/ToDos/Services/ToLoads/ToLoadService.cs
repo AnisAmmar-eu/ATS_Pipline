@@ -1,3 +1,4 @@
+using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DTO.ToLoads;
@@ -19,11 +20,12 @@ public class ToLoadService :
 	{
 		try
 		{
-			return (List<int>)(await anodeUOW.IOTDevice
+			return (await anodeUOW.IOTDevice
 				.GetAll([device => device is Match], withTracking: false))
 				.Cast<Match>()
 				.Where(match => match.Family == family)
-				.Select(match => match.InstanceMatchID);
+				.Select(match => match.InstanceMatchID)
+				.ToList();
 		}
 		catch (Exception)
 		{

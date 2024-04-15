@@ -211,11 +211,15 @@ public class ToMatchService :
 	{
 		try
 		{
-			List<int> matchInstances = (List<int>)(await anodeUOW.IOTDevice
+			List<int> matchInstances = (await anodeUOW.IOTDevice
 				.GetAll([device => device is Match], withTracking: false))
 				.Cast<Match>()
 				.Where(match => match.AnodeType == anodeType && match.StationID == stationID)
-				.Select(match => match.InstanceMatchID);
+				.Select(match => match.InstanceMatchID)
+				.ToList();
+
+			if (matchInstances.Count == 1)
+				return matchInstances[0];
 
 			List<ToMatch> toMatches = await anodeUOW.ToMatch
 				.GetAll([toMatch => matchInstances.Contains(toMatch.InstanceMatchID)], withTracking: false);

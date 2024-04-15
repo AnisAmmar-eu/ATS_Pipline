@@ -49,7 +49,7 @@ if (bool.Parse(dbInitialize))
 	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
 
-ILogger logger = services.GetRequiredService<ILogger>();
+ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
 
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 

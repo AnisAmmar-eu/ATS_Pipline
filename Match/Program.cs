@@ -54,7 +54,7 @@ if (bool.Parse(dbInitialize))
 	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
 
-ILogger logger = services.GetRequiredService<ILogger>();
+ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
 
 List<int> GPUID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDictionary.GPUID);
 
@@ -78,10 +78,10 @@ logger.LogInformation("Match SignParamStatic {static}.", signParamsStaticOutput)
 foreach (int cameraID in new int[] {1, 2})
 {
 	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
-	string matchDynamicParams = Path.Combine(folderPath, ConfigDictionary.MatchDynParams);
+	string matchDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicMatchName);
 
 	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParams);
-	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, cameraID, GPUID[cameraID]);
+	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, GPUID[cameraID-1]);
 
 	logger.LogInformation(
 						"Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",
