@@ -1,4 +1,3 @@
-using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DTO.ToLoads;
@@ -25,6 +24,7 @@ public class ToLoadService :
 				.Cast<Match>()
 				.Where(match => match.Family == family)
 				.Select(match => match.InstanceMatchID)
+				.Distinct()
 				.ToList();
 		}
 		catch (Exception)
