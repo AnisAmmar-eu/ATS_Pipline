@@ -83,6 +83,78 @@ public static class ITStationApisDict
 	public static string Station5Address = string.Empty;
 }
 
+	/*
+		Station (S1, S2, S3, S4, S5)
+		Sign (All) / Match (S3, S4, S5)
+		Cam1 (All), Cam2 (Except S5)
+		DX (All), D20 (Except S5)
+		Static / Dynamic (Except Match)
+	*/
+public record SignServiceData(int StationID, string AnodeType);
+
+public static class SignService
+{
+	public static SignServiceData S1TypeDX = new(1, "DX");
+	public static SignServiceData S1TypeD20 = new(1, "D20");
+	public static SignServiceData S2TypeDX = new(2, "DX");
+	public static SignServiceData S2TypeD20 = new(2, "D20");
+	public static SignServiceData S3TypeDX = new(3, "DX");
+	public static SignServiceData S3TypeD20 = new(3, "D20");
+	public static SignServiceData S4TypeDX = new(4, "DX");
+	public static SignServiceData S4TypeD20 = new(4, "D20");
+	public static SignServiceData S5TypeDX = new(5, "DX");
+
+	public static List<SignServiceData> list = [
+		S1TypeDX,
+		S1TypeD20,
+		S2TypeDX,
+		S2TypeD20,
+		S3TypeDX,
+		S3TypeD20,
+		S4TypeDX,
+		S4TypeD20,
+		S5TypeDX
+	];
+}
+
+public record MatchServiceData(
+	int StationID,
+	string AnodeType,
+	string Family,
+	int InstanceMatchID);
+public static class MatchService
+{
+	/*
+		Gate0 = S1S2
+		Gate1 = S3S4
+		Gate2 = S5
+
+		Gate1Gate0DX
+		Gate1Gate0D20
+		Gate2Gate0DX
+		Gate2Gate1DX
+	*/
+	public static MatchServiceData S3Gate1Gate0DXv1 = new(3, "DX", "Gate1Gate0DX", 0);
+	public static MatchServiceData S4Gate1Gate0DXv1 = new(4, "DX", "Gate1Gate0DX", 0);
+	public static MatchServiceData S3Gate1Gate0DXv2 = new(3, "DX", "Gate1Gate0DX", 4);
+	public static MatchServiceData S4Gate1Gate0DXv2 = new(4, "DX", "Gate1Gate0DX", 4);
+	public static MatchServiceData S3Gate1Gate0D20v1 = new(3, "D20", "Gate1Gate0D20", 1);
+	public static MatchServiceData S4Gate1Gate0D20v1 = new(4, "D20", "Gate1Gate0D20", 1);
+	public static MatchServiceData S5Gate2Gate0DXv1 = new(5, "DX", "Gate2Gate0DX", 2);
+	public static MatchServiceData S5Gate2Gate1DXv1 = new(5, "DX", "Gate2Gate1DX", 3);
+
+	public static List<MatchServiceData> list = [
+		S3Gate1Gate0DXv1,
+		S4Gate1Gate0DXv1,
+		S3Gate1Gate0DXv2,
+		S4Gate1Gate0DXv2,
+		S3Gate1Gate0D20v1,
+		S4Gate1Gate0D20v1,
+		S5Gate2Gate0DXv1,
+		S5Gate2Gate1DXv1
+	];
+}
+
 public static class TriggerSources
 {
 	public const string Line3 = "Line3";

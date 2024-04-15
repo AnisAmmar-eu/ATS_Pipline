@@ -79,7 +79,12 @@ public class SignService : BackgroundService
 						_extension);
 
 					string noExtension = Path.GetFileNameWithoutExtension(image.Name);
-					int retSign = DLLVisionImport.fcx_sign(0, toSign.CameraID, image.DirectoryName, noExtension, image.DirectoryName);
+					int retSign = DLLVisionImport.fcx_sign(
+						0,
+						toSign.CameraID,
+						image.DirectoryName,
+						noExtension,
+						image.DirectoryName);
 
 					if (retSign == 0)
 						_logger.LogInformation("{nb} signé avec succès", image.Name);
