@@ -9,6 +9,8 @@ using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Sign;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
@@ -115,6 +117,8 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<IOTTag> IOTTag => Set<IOTTag>();
 	public DbSet<OTTagTwinCat> OTTagTwinCat => Set<OTTagTwinCat>();
 	public DbSet<ServerRule> ServerRule => Set<ServerRule>();
+	public DbSet<Sign> Sign => Set<Sign>();
+	public DbSet<Match> Match => Set<Match>();
 
 	#endregion
 

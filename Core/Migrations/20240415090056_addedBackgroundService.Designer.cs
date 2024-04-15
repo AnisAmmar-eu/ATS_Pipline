@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    [Migration("20240409091106_addedIsOPtional")]
-    partial class addedIsOPtional
+    [Migration("20240415090056_addedBackgroundService")]
+    partial class addedBackgroundService
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1190,6 +1190,53 @@ namespace Core.Migrations
                     b.HasDiscriminator().HasValue("AnodeDX");
                 });
 
+            modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match.Match", b =>
+                {
+                    b.HasBaseType("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice");
+
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Family")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InstanceMatchID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StationID")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("WatchdogTime")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasDiscriminator().HasValue("Match");
+                });
+
+            modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Sign.Sign", b =>
+                {
+                    b.HasBaseType("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice");
+
+                    b.Property<string>("AnodeType")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StationID")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("WatchdogTime")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasDiscriminator().HasValue("Sign");
+                });
+
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.ITApis.ITApi", b =>
                 {
                     b.HasBaseType("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice");
@@ -1219,16 +1266,6 @@ namespace Core.Migrations
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("ServerRule");
-                });
-
-            modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.Stations.Station", b =>
-                {
-                    b.HasBaseType("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice");
-
-                    b.Property<DateTimeOffset>("oldestShooting")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasDiscriminator().HasValue("Station");
                 });
 
             modelBuilder.Entity("Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat.OTTagTwinCat", b =>

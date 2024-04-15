@@ -74,7 +74,6 @@ public class MatchFileSettingService : BackgroundService
 						responseStatic,
 						cameraID,
 						responseDynamic);
-
 				}
 			}
 			catch (Exception ex)
