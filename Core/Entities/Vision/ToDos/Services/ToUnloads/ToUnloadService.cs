@@ -19,7 +19,7 @@ public class ToUnloadService :
 	{
 		try
 		{
-			string? family = ((Match)await anodeUOW.IOTDevice
+			string? family = ((Match?)await anodeUOW.IOTDevice
 				.GetBy(
 					[device => device is Match && ((Match)device).InstanceMatchID == instanceMatchID],
 		   withTracking: false))
@@ -30,6 +30,7 @@ public class ToUnloadService :
 				.Cast<Match>()
 				.Where(match => match.Family == family)
 				.Select(match => match.InstanceMatchID)
+				.Distinct()
 				.ToList();
 		}
 		catch (Exception)

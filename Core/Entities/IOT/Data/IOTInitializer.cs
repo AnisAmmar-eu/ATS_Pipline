@@ -1,4 +1,6 @@
 using Core.Entities.IOT.Dictionaries;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Sign;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
@@ -8,6 +10,7 @@ using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
+using Mapster;
 
 namespace Core.Entities.IOT.Data;
 
@@ -17,6 +20,7 @@ public static class IOTInitializer
 	{
 		if (anodeCTX.IOTDevice.Any())
 			return;
+
 		// Cameras
 		InitializeCamera(anodeCTX, DeviceRID.Camera1, "First", 1);
 		InitializeCamera(anodeCTX, DeviceRID.Camera2, "Second", 2);
@@ -78,6 +82,8 @@ public static class IOTInitializer
 			InitializeApiStation(anodeCTX, api.Rid, api.Address, api.Path);
 
 		InitializeServerRule(anodeCTX);
+		InitializeSignServices(anodeCTX);
+		InitializeMatchServices(anodeCTX);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
@@ -292,6 +298,24 @@ public static class IOTInitializer
 		anodeCTX.SaveChanges();
 	}
 
+	private static void InitializeSignServices(AnodeCTX anodeCTX)
+	{
+		foreach(SignServiceData signService in SignService.list)
+		{
+			Sign sign = signService.Adapt<Sign>();
+			anodeCTX.Sign.Add(sign);
+		}
+	}
+
+	private static void InitializeMatchServices(AnodeCTX anodeCTX)
+	{
+		foreach(MatchServiceData matchService in MatchService.list)
+		{
+			Match match = matchService.Adapt<Match>();
+			anodeCTX.Match.Add(match);
+		}
+	}
+
 	private static void InitializeTwinCat(AnodeCTX anodeCTX, string rid, string address, string path)
 	{
 		OTTwinCat twinCat = new() {
@@ -359,7 +383,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion Camera Temperature
 
 		#region Status
 
@@ -513,7 +537,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion Status
 
 		#region TestMode
 
@@ -763,7 +787,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion TestMode
 
 		#region Shooting
 
@@ -854,7 +878,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion D20
 
 		#region DX
 
@@ -943,9 +967,9 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion DX
 
-		#endregion
+		#endregion Shooting
 
 		#region Announcement
 
@@ -999,7 +1023,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion Announcement
 
 		#region Anode
 
@@ -1090,7 +1114,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion D20
 
 		#region DX
 
@@ -1179,9 +1203,9 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion DX
 
-		#endregion
+		#endregion Anode
 
 		#region Health
 
@@ -1371,7 +1395,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion Health
 
 		#region Diagnostic
 
@@ -1582,7 +1606,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion Diagnostic
 
 		#region Lasers
 
@@ -1660,7 +1684,7 @@ public static class IOTInitializer
 			IOTDevice = twinCat,
 		});
 
-		#endregion
+		#endregion Lasers
 
 		anodeCTX.SaveChanges();
 	}
