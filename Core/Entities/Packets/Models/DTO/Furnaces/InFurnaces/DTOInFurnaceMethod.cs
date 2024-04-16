@@ -25,8 +25,5 @@ public partial class DTOInFurnace
 		PitLoadTS = inFurnace.PitLoadTS;
 	}
 
-	public override InFurnace ToModel()
-	{
-		return new(this);
-	}
+	public override InFurnace ToModel() => new(this);
 }

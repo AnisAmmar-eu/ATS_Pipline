@@ -18,7 +18,7 @@ public partial class BackgroundService
 		bool isConnected;
 		try
 		{
-			isConnected = this.WatchdogTime + Server.WatchdogDelay <= DateTimeOffset.Now;
+			isConnected = this.WatchdogTime.Add(Server.WatchdogDelay) > DateTimeOffset.Now;
 		}
 		catch (Exception e)
 		{

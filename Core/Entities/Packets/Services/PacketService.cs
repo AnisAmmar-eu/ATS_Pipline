@@ -197,6 +197,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		packet.Status = PacketStatus.Sent;
 		await AnodeUOW.StartTransaction();
         await AnodeUOW.Packet.Add(packet);
+		_logger.LogInformation("IsMetaData {metdata}", packet is MetaData);
 		AnodeUOW.Commit();
 		try
 		{
@@ -223,6 +224,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
             else if (packet is MetaData metaData)
 			{
                 _logger.LogInformation("MetaData packet received");
+                _logger.LogInformation("CAM01 Status {status}", metaData.Cam01Status);
                 stationCycle.AssignPacket(metaData);
 				if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
 					stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
@@ -271,8 +273,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
             }
             else if (packet is MetaData metaData)
 			{
-				_logger.LogInformation("MetaData packet received");
-				stationCycle.AssignPacket(metaData);
+                _logger.LogInformation("MetaData packet received");
+                _logger.LogInformation("CAM01 Status {status}", metaData.Cam01Status);
+                stationCycle.AssignPacket(metaData);
 				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
