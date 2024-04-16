@@ -41,8 +41,8 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Unload
 builder.Services.AddSingleton<MatchFileSettingService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchFileSettingService>());
 
-builder.Services.AddSingleton<WatchDogServiceSign>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<WatchDogServiceSign>());
+builder.Services.AddSingleton<WatchDogServiceMatch>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<WatchDogServiceMatch>());
 
 
 IHost host = builder.Build();
