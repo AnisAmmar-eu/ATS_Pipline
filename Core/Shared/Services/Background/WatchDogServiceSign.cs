@@ -1,4 +1,5 @@
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
+using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -50,7 +51,7 @@ public class WatchDogServiceSign : BackgroundService
 					.ToList();
 
 				if (signes.Count == 0)
-					throw new EntityNotFoundException(nameof(Sign), instanceMatchID);
+					throw new EntityNotFoundException(nameof(Sign), stationID);
 
 				foreach (Sign sign in signes)
 					sign.WatchdogTime = DateTimeOffset.Now;

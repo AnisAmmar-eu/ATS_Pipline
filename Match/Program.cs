@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using Core.Entities.User.Models.DB.Roles;
+using Core.Shared.Services.Background;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Match service");
@@ -39,6 +40,10 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Unload
 
 builder.Services.AddSingleton<MatchFileSettingService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchFileSettingService>());
+
+builder.Services.AddSingleton<WatchDogServiceSign>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<WatchDogServiceSign>());
+
 
 IHost host = builder.Build();
 

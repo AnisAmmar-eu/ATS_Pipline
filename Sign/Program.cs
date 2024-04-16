@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Core.Shared.Dictionaries;
 using DLLVision;
+using Core.Shared.Services.Background;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Sign service");
@@ -34,6 +35,9 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<SignSe
 
 builder.Services.AddSingleton<SignFileSettingService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<SignFileSettingService>());
+
+builder.Services.AddSingleton<WatchDogServiceSign>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<WatchDogServiceSign>());
 
 IHost host = builder.Build();
 
