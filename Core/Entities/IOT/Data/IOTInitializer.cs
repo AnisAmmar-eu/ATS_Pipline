@@ -1,6 +1,6 @@
 using Core.Entities.IOT.Dictionaries;
-using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
-using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Sign;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
