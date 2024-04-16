@@ -45,6 +45,9 @@ public interface IAnodeUOW : IDisposable
 	IKPIRepository KPI { get; }
 
     IIOTDeviceRepository IOTDevice { get; }
+	IMatchRepository Match { get; }
+	ISignRepository Sign { get; }
+
 	IIOTTagRepository IOTTag { get; }
 
 	IPacketRepository Packet { get; }

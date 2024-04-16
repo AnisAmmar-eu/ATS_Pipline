@@ -72,9 +72,9 @@ builder.Services.AddCors(
 
 WebApplication app = builder.Build();
 
-string? dbInitialize = builder.Configuration["DbInitialize"];
-if (dbInitialize is null)
-	throw new ConfigurationErrorsException("Missing DbInitialize");
+string? dbInitialize = builder.Configuration["DbInitialize"]
+	?? throw new ConfigurationErrorsException("Missing DbInitialize");
+
 if (bool.Parse(dbInitialize))
 {
 	using IServiceScope scope = app.Services.CreateScope();

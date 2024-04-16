@@ -76,9 +76,9 @@ foreach (int cameraID in new int[] {1, 2})
 	int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, signDynamicParams);
 
 	logger.LogInformation(
-					"Sign with SignDyn {id} {dynamic}.",
-					cameraID,
-					signParamsDynOutput);
+		"Sign with SignDyn {id} {dynamic}.",
+		cameraID,
+		signParamsDynOutput);
 }
 
 host.Run();

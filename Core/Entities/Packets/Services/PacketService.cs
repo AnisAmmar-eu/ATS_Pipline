@@ -169,6 +169,12 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 						await shooting.SendImages(imagesPath, thumbnailsPath, extension, _logger);
 					}
 
+					if (packet is MetaData meta)
+					{
+						Models.DTO.MetaDatas.DTOMetaData toto = meta.ToDTO();
+						_logger.LogInformation("MetaData packet sent");
+					}
+
 					HttpResponseMessage response = await http.PostAsJsonAsync(
 						$"{ITApisDict.ServerReceiveAddress}/apiServerReceive/{Station.Name}/packets",
 						packet.ToDTO(),

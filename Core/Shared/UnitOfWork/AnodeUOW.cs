@@ -55,7 +55,10 @@ public class AnodeUOW : IAnodeUOW
 	public IBITemperatureRepository BITemperature { get; }
 	public IKPIRepository KPI { get; }
 
-    public IIOTDeviceRepository IOTDevice { get; }
+	public IIOTDeviceRepository IOTDevice { get; }
+	public IMatchRepository Match { get; }
+	public ISignRepository Sign { get; }
+
 	public IIOTTagRepository IOTTag { get; }
 
 	public IToMatchRepository ToMatch { get; }
@@ -89,6 +92,9 @@ public class AnodeUOW : IAnodeUOW
 		KPI = new KPIRepository(_anodeCTX);
 
 		IOTDevice = new IOTDeviceRepository(_anodeCTX);
+		Match = new MatchRepository(_anodeCTX);
+		Sign = new SignRepository(_anodeCTX);
+
 		IOTTag = new IOTTagRepository(_anodeCTX);
 
 		Acts = new ActRepository(_anodeCTX);
@@ -123,6 +129,9 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IKPIRepository) => KPI,
 
             _ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
+			_ when repo == typeof(IMatchRepository) => Match,
+			_ when repo == typeof(ISignRepository) => Sign,
+
 			_ when repo == typeof(IIOTTagRepository) => IOTTag,
 
 			_ when repo == typeof(IActRepository) => Acts,
@@ -241,15 +250,9 @@ public class AnodeUOW : IAnodeUOW
 		GC.SuppressFinalize(this);
 	}
 
-	public int GetTransactionCount()
-	{
-		return _transactionCount;
-	}
+	public int GetTransactionCount() => _transactionCount;
 
-	public bool GetTransactionIsNull()
-	{
-		return _transaction is null;
-	}
+	public bool GetTransactionIsNull() => _transaction is null;
 
 	#region Users
 
