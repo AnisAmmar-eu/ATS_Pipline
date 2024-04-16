@@ -18,9 +18,7 @@ using Core.Entities.IOT.IOTDevices.Models.DB;
 using System.Reactive.Linq;
 using Core.Shared.Dictionaries;
 using System.Data;
-using Stemmer.Cvb;
-using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
-using System.Collections.Generic;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -202,10 +200,7 @@ public class ToMatchService :
 		}
 	}
 
-	private static bool ValidDelay(DateTimeOffset? date, int delay)
-	{
-		return (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
-	}
+	private static bool ValidDelay(DateTimeOffset? date, int delay) => (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
 
 	public static async Task<int> GetMatchInstance(string anodeType, int stationID, IAnodeUOW anodeUOW)
 	{

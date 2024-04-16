@@ -9,7 +9,7 @@ public static class ConfigDictionary
 
 	public const string ClientHost = "ClientHost";
 
-	#endregion
+	#endregion Program
 
 	#region Api Addresses
 
@@ -23,7 +23,7 @@ public static class ConfigDictionary
 	public const string ApiUserAddress = "ApiAddresses:ApiUser";
 	public const string ApiVisionAddress = "ApiAddresses:ApiVision";
 
-	#endregion
+	#endregion Api Addresses
 
 	#region Camera Config
 
@@ -36,13 +36,13 @@ public static class ConfigDictionary
 	public const string ImagesOutputPath = "CameraConfig:ImagesOutputPath";
 	public const string CameraExtension = "CameraConfig:Extension";
 
-	#endregion
+	#endregion Camera Config
 
 	#region Station Config
 
 	public const string StationName = "StationConfig:StationName";
 
-	#endregion
+	#endregion Station Config
 
 	#region Vision settings
 
@@ -70,34 +70,34 @@ public static class ConfigDictionary
 	public const string GoMatchStations = "VisionSettings:GoMatchStations";
 	public const string IsChained = "VisionSettings:IsChained";
 
-	#endregion
+	#endregion Vision settings
 
 	#region Vision File settings
 
 	public const string FileSettingTimer = "FileSettings:FileSettingTimer";
 	public const string ArchivePath = "FileSettings:ArchivePath";
 
-	#endregion
+	#endregion Vision File settings
 
 	#region CheckSyncTime
 
 	public const string DeltaTimeSec = "DeltaTimeSec";
 
-	#endregion
+	#endregion CheckSyncTime
 
 	#region DiskCheck
 
 	public const string DiskCheckThreshold = "DiskCheckThreshold";
 	public const string DiskCheckLabel = "DiskCheckLabel";
 
-	#endregion
+	#endregion DiskCheck
 
 	#region Purge
 
 	public const string PurgeTimerSec = "PurgeTimerSec";
 	public const string PurgeThreshold = "PurgeThreshold";
 
-	#endregion
+	#endregion Purge
 
 	#region MS settings
 
@@ -109,5 +109,5 @@ public static class ConfigDictionary
 	public const string SendPacketMS = "SendPacketMS";
 	public const string SendLogMS = "SendLogMS";
 
-	#endregion
+	#endregion MS settings
 }

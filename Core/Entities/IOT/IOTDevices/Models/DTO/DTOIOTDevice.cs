@@ -12,5 +12,5 @@ public partial class DTOIOTDevice : DTOBaseEntity, IDTO<IOTDevice, DTOIOTDevice>
 	public string Description { get; set; } = string.Empty;
 	public string Address { get; set; } = string.Empty;
 	public bool IsConnected { get; set; }
-	public List<DTOIOTTag> IOTTags { get; set; } = new();
+	public List<DTOIOTTag> IOTTags { get; set; } = [];
 }

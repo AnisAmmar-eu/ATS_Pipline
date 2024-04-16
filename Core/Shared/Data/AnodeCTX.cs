@@ -9,8 +9,8 @@ using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BI.BITemperatures.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
-using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Match;
-using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Sign;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
 using Core.Entities.IOT.IOTDevices.Models.DB.OTCameras;
@@ -68,7 +68,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<ToNotify> ToNotify => Set<ToNotify>();
 	public DbSet<Dataset> Dataset => Set<Dataset>();
 
-	#endregion
+	#endregion Vision
 
 	#region Alarms
 
@@ -77,7 +77,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<AlarmRT> AlarmRT => Set<AlarmRT>();
 	public DbSet<AlarmCycle> AlarmCycle => Set<AlarmCycle>();
 
-	#endregion
+	#endregion Alarms
 
 	#region Anodes
 
@@ -85,7 +85,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<AnodeD20> AnodeD20 => Set<AnodeD20>();
 	public DbSet<AnodeDX> AnodeDX => Set<AnodeDX>();
 
-	#endregion
+	#endregion Anodes
 
 	#region Packets
 
@@ -96,7 +96,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<MetaData> MetaData => Set<MetaData>();
 	public DbSet<Shooting> Shooting => Set<Shooting>();
 
-	#endregion
+	#endregion Packets
 
 	#region StationCycle
 
@@ -105,7 +105,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<S3S4Cycle> S3S4Cycle => Set<S3S4Cycle>();
 	public DbSet<S5Cycle> S5Cycle => Set<S5Cycle>();
 
-	#endregion
+	#endregion StationCycle
 
 	#region IOT Monitoring
 
@@ -120,7 +120,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<Sign> Sign => Set<Sign>();
 	public DbSet<Match> Match => Set<Match>();
 
-	#endregion
+	#endregion IOT Monitoring
 
 	#region KPI
 
@@ -128,7 +128,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<TenBestMatch> TenBestMatch => Set<TenBestMatch>();
 	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
 
-	#endregion
+	#endregion KPI
 
 	#region Action
 
@@ -136,7 +136,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<ActEntity> ActEntities => Set<ActEntity>();
 	public DbSet<ActEntityRole> ActEntityRoles => Set<ActEntityRole>();
 
-	#endregion
+	#endregion Action
 
 	protected override void OnModelCreating(ModelBuilder builder)
 	{

@@ -45,6 +45,9 @@ public interface IAnodeUOW : IDisposable
 	IKPIRepository KPI { get; }
 
     IIOTDeviceRepository IOTDevice { get; }
+	IMatchRepository Match { get; }
+	ISignRepository Sign { get; }
+
 	IIOTTagRepository IOTTag { get; }
 
 	IPacketRepository Packet { get; }
@@ -79,5 +82,5 @@ public interface IAnodeUOW : IDisposable
 	public IActEntityRepository ActEntities { get; }
 	public IRoleRepository Roles { get; }
 
-	#endregion
+	#endregion Users
 }
