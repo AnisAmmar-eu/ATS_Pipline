@@ -62,7 +62,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 			httpContext);
 	}
 
-	#endregion
+	#endregion Admin
 
 	#region AD
 
@@ -81,7 +81,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		return GenericEndpoint(() => Task.FromResult(userService.GetAllFromAD()), logService, httpContext);
 	}
 
-	#endregion
+	#endregion AD
 
 	#region CRUD
 
@@ -185,7 +185,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 			httpContext);
 	}
 
-	#endregion
+	#endregion CRUD
 
 	#region Password
 
@@ -269,5 +269,5 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 			httpContext);
 	}
 
-	#endregion
+	#endregion Password
 }

@@ -305,6 +305,8 @@ public static class IOTInitializer
 			Sign sign = signService.Adapt<Sign>();
 			anodeCTX.Sign.Add(sign);
 		}
+
+		anodeCTX.SaveChanges();
 	}
 
 	private static void InitializeMatchServices(AnodeCTX anodeCTX)
@@ -314,6 +316,8 @@ public static class IOTInitializer
 			Match match = matchService.Adapt<Match>();
 			anodeCTX.Match.Add(match);
 		}
+
+		anodeCTX.SaveChanges();
 	}
 
 	private static void InitializeTwinCat(AnodeCTX anodeCTX, string rid, string address, string path)

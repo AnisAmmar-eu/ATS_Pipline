@@ -270,5 +270,5 @@ public class CameraService : BackgroundService
 		//}
 	}
 
-	#endregion
+	#endregion Generics functions
 }

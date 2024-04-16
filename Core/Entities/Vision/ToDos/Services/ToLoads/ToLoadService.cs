@@ -19,6 +19,22 @@ public class ToLoadService :
 	{
 		try
 		{
+			List<int> titi = (await anodeUOW.IOTDevice
+				.GetAll([device => device is Match], withTracking: false))
+				.Cast<Match>()
+				.Where(match => match.Family == family)
+				.Select(match => match.InstanceMatchID)
+				.Distinct()
+				.ToList();
+
+			List<int> toto = (await anodeUOW.IOTDevice
+				.GetAll([device => device is Match], withTracking: false))
+				.Cast<Match>()
+				.Where(match => match.Family == family)
+				.Select(match => match.InstanceMatchID)
+				.ToList();
+			toto = toto.Distinct().ToList();
+
 			return (await anodeUOW.IOTDevice
 				.GetAll([device => device is Match], withTracking: false))
 				.Cast<Match>()

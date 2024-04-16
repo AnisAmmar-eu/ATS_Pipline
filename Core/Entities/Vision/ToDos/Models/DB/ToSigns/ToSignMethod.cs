@@ -1,4 +1,5 @@
 using Core.Entities.Packets.Models.DB.Shootings;
+using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
 using Mapster;
 
@@ -15,12 +16,12 @@ public partial class ToSign
 		return this.Adapt<DTOToSign>();
 	}
 
-	public static ToSign ShootingToSign(Shooting shooting)
+	public static ToSign ShootingToSign(Shooting shooting, StationCycle stationCycle)
 	{
 		TypeAdapterConfig<Shooting, ToSign>.NewConfig()
 			.Map(dest => dest.CycleRID, src => src.StationCycleRID)
-			.Map(dest => dest.StationCycleID, src => src.StationCycle!.ID)
-			.Map(dest => dest.StationID, src => src.StationCycle!.StationID)
+			.Map(dest => dest.StationCycleID, _ => stationCycle.ID)
+			.Map(dest => dest.StationID, _ => stationCycle.StationID)
 			.Map(dest => dest.CameraID, src => (src.Cam01Status == 1) ? 1 : (src.Cam02Status == 1) ? 2 : 0);
 
 		return shooting.Adapt<ToSign>();

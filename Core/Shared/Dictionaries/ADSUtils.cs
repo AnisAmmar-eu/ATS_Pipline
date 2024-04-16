@@ -22,14 +22,14 @@ public static class ADSUtils
 
 	public const string IsHole1 = "VA_STATION.IsHole1";
 
-	#endregion
+	#endregion Camera
 
 	#region AlarmNotification
 
 	public const string AlarmNewMsg = "VA_ALM.MsgNew"; // Notifies when there is a new message.
 	public const string AlarmToRead = "VA_ALM.Out"; // Data zone and root of the structure.
 
-	#endregion
+	#endregion AlarmNotification
 
 	#region AlarmRT
 
@@ -37,27 +37,27 @@ public static class ADSUtils
 	public const string SyncTime = "VA_IT.PLC_TT_SER";
 	public const string DiskSpace = "VA_IT.DISK_SPACE";
 
-	#endregion
+	#endregion AlarmRT
 
 	#region MetaDataNotification
 
 	public const string MetaDataNewMsg = "VA_P05.MsgNew";
 	public const string MetaDataToRead = "VA_P05.Out";
 
-	#endregion
+	#endregion MetaDataNotification
 
 	#region InFurnaceNotification
 
 	public const string InFurnaceNewMsg = "VA_P21.MsgNew";
 	public const string InFurnaceToRead = "VA_P21.Out";
 
-	#endregion
+	#endregion InFurnaceNotification
 
 	#region OutFurnaceNotification
 
 	public const string OutFurnaceNewMsg = "VA_P22.MsgNew";
 	public const string OutFurnaceToRead = "VA_P22.Out";
 
-	#endregion
+	#endregion OutFurnaceNotification
 
 }

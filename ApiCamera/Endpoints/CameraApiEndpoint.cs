@@ -43,5 +43,5 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 		return TypedResults.File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
 	}
 
-	#endregion
+	#endregion Get TestImages
 }

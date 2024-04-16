@@ -30,7 +30,7 @@ public static class IOTTagRID
 	public const string Sharpness = "Sharpness";
 	public const string AcquisitionFrameRate = "AcquisitionFrameRate";
 
-	#endregion
+	#endregion Camera
 
 	// Those are handled in the TwinCat
 
@@ -43,7 +43,7 @@ public static class IOTTagRID
 	public const string TemperatureStatusCam1 = "TemperatureStatusCam1";
 	public const string TemperatureStatusCam2 = "TemperatureStatusCam2";
 
-	#endregion
+	#endregion Camera Temperature
 
 	#region Status
 
@@ -62,7 +62,7 @@ public static class IOTTagRID
 	public const string Cam1Status = "Cam1Status";
 	public const string Cam2Status = "Cam2Status";
 
-	#endregion
+	#endregion Status
 
 	#region TestMode
 
@@ -86,7 +86,7 @@ public static class IOTTagRID
 	public const string SequenceCam2LedOn = "SequenceCam2LedOn";
 	public const string SequenceCam2LedOff = "SequenceCam2LedOff";
 
-	#endregion
+	#endregion TestMode
 
 	#region Shooting
 
@@ -106,7 +106,7 @@ public static class IOTTagRID
 	public const string HoleMaxDX = "HoleMaxDX";
 	public const string HoleMinDX = "HoleMinDX";
 
-	#endregion
+	#endregion Shooting
 
 	#region Anode
 
@@ -127,7 +127,7 @@ public static class IOTTagRID
 	public const string WidthDelayMaxDX = "WidthDelayMaxDX";
 	public const string LengthDelayMaxDX = "LengthDelayMaxDX";
 
-	#endregion
+	#endregion Anode
 
 	#region Announcement
 
@@ -137,7 +137,7 @@ public static class IOTTagRID
 
 	public const string SyncEmptyStackDelay = "SyncEmptyStackDelay";
 
-	#endregion
+	#endregion Announcement
 
 	#region Health
 
@@ -160,7 +160,7 @@ public static class IOTTagRID
 
 	public const string CamRestartDelay = "CamRestartDelay";
 
-	#endregion
+	#endregion Health
 
 	#region Diagnostic
 
@@ -184,7 +184,7 @@ public static class IOTTagRID
 	public const string DelayCheckCam2LedOff = "DelayCheckCam2LedOff";
 	public const string DurationLuxCheckCam2LedOff = "DurationLuxCheckCam2LedOff";
 
-	#endregion
+	#endregion Diagnostic
 
 	#region Lasers
 
@@ -195,7 +195,7 @@ public static class IOTTagRID
 	public const string AT01 = "AT01";
 	public const string AT02 = "AT02";
 
-	#endregion
+	#endregion Lasers
 }
 
 public static class IOTTagPath
@@ -216,7 +216,7 @@ public static class IOTTagPath
 	public const string Sharpness = "Sharpness";
 	public const string AcquisitionFrameRate = "AcquisitionFrameRate";
 
-	#endregion
+	#endregion Camera
 
 	#region Camera Temperature
 
@@ -229,7 +229,7 @@ public static class IOTTagPath
 	public const string TemperatureStatusCam1 = "VA_HMI.Cam01_Temp_Status";
 	public const string TemperatureStatusCam2 = "VA_HMI.Cam02_Temp_Status";
 
-	#endregion
+	#endregion Camera Temperature
 
 	#region Status
 
@@ -253,7 +253,7 @@ public static class IOTTagPath
 	public const string ServerStatusWrite = "VA_IT.ServerOK";
 	public const string ApiStatusWrite = "VA_IT.ApiOK";
 
-	#endregion
+	#endregion Status
 
 	#region TestMode
 
@@ -280,7 +280,7 @@ public static class IOTTagPath
 	public const string SequenceCam2LedOn = "VA_HMI.DIAG_CAM02_LED_ON";
 	public const string SequenceCam2LedOff = "VA_HMI.DIAG_CAM02_LED_OFF";
 
-	#endregion
+	#endregion TestMode
 
 	#region Shooting
 
@@ -300,7 +300,7 @@ public static class IOTTagPath
 	public const string HoleMaxDX = "VA_SETTINGS.Anode_DX.Hole_Max";
 	public const string HoleMinDX = "VA_SETTINGS.Anode_DX.Hole_Min";
 
-	#endregion
+	#endregion Shooting
 
 	#region Anode
 
@@ -322,7 +322,7 @@ public static class IOTTagPath
 	public const string WidthDelayMaxDX = "VA_SETTINGS.Anode_DX.Width_Delay_Max";
 	public const string LengthDelayMaxDX = "VA_SETTINGS.Anode_DX.Lenght_Delay_Max";
 
-	#endregion
+	#endregion Anode
 
 	#region Announcement
 
@@ -332,7 +332,7 @@ public static class IOTTagPath
 
 	public const string SyncEmptyStackDelay = "VA_SETTINGS.SyncEmptyStack_Delay";
 
-	#endregion
+	#endregion Announcement
 
 	#region Health
 
@@ -354,7 +354,7 @@ public static class IOTTagPath
 	public const string WarnCam02Temp = "VA_SETTINGS.CAM02_Temp_H";
 	public const string CamRestartDelay = "VA_SETTINGS.CAM0X_ReStartDelay";
 
-	#endregion
+	#endregion Health
 
 	#region Diagnostic
 
@@ -382,7 +382,7 @@ public static class IOTTagPath
 	public const string DelayCheckCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.Delay";
 	public const string DurationLuxCheckCam2LedOff = "VA_SETTINGS.CAM02_LED_OFF.Duration";
 
-	#endregion
+	#endregion Diagnostic
 
 	#region Lasers
 
@@ -393,5 +393,5 @@ public static class IOTTagPath
 	public const string AT01 = "VA_HMI.AT01";
 	public const string AT02 = "VA_HMI.AT02";
 
-	#endregion
+	#endregion Lasers
 }

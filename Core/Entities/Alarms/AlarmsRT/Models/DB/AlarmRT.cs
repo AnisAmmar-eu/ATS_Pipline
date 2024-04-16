@@ -24,5 +24,5 @@ public partial class AlarmRT : BaseEntity, IBaseEntity<AlarmRT, DTOAlarmRT>
 		get => _alarm ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Alarm));
 	}
 
-	#endregion
+	#endregion Nav Properties
 }

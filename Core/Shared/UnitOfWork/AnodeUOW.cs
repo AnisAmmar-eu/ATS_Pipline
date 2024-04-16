@@ -257,5 +257,5 @@ public class AnodeUOW : IAnodeUOW
 	public IActEntityRepository ActEntities { get; }
 	public IRoleRepository Roles { get; }
 
-	#endregion
+	#endregion Users
 }

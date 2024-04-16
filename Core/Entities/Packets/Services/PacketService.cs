@@ -11,6 +11,7 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
+using Core.Entities.Packets.Models.DTO.MetaDatas;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Models.DB;
@@ -192,11 +193,11 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task ReceivePacket(DTOPacket dtoPacket, string stationName)
 	{
-		Packet packet = dtoPacket.ToModel();
+        Packet packet = dtoPacket.ToModel();
 		packet.ID = 0;
 		packet.Status = PacketStatus.Sent;
 		await AnodeUOW.StartTransaction();
-		await AnodeUOW.Packet.Add(packet);
+        await AnodeUOW.Packet.Add(packet);
 		AnodeUOW.Commit();
 		try
 		{
@@ -205,7 +206,9 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 			if (packet is Shooting shooting)
 			{
-				if (stationCycle.AnodeType is "")
+                _logger.LogError("Packet shooting update");
+
+                if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
 					stationCycle.AnodeType = shooting.AnodeType;
 
 				if (shooting.Cam01Status == 1)
@@ -213,13 +216,16 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				else
 					stationCycle.Shooting2Packet = shooting;
 
-				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting));
-				AnodeUOW.Commit();
-			}
-			else if (packet is MetaData metaData)
+				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting, stationCycle));
+                _logger.LogError("Packet shooting update before commit");
+                AnodeUOW.Commit();
+                _logger.LogError("Packet shooting update after commit");
+            }
+            else if (packet is MetaData metaData)
 			{
-				stationCycle.AssignPacket(metaData);
-				if (stationCycle.AnodeType is "")
+                _logger.LogInformation("MetaData packet received");
+                stationCycle.AssignPacket(metaData);
+				if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
 					stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 
 				stationCycle.Picture1Status = metaData.Cam01Status;
@@ -237,7 +243,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			}
 			else
 			{
-				stationCycle.AssignPacket(packet);
+                _logger.LogInformation("Other packet received");
+                stationCycle.AssignPacket(packet);
 			}
 
 			AnodeUOW.StationCycle.Update(stationCycle);
@@ -250,17 +257,20 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			stationCycle.RID = packet.StationCycleRID;
 			if (packet is Shooting shooting)
 			{
-				stationCycle.AnodeType = shooting.AnodeType;
+                _logger.LogError("Packet shooting first time");
+
+                stationCycle.AnodeType = shooting.AnodeType;
 				stationCycle.TSFirstShooting = shooting.ShootingTS;
 				if (shooting.Cam01Status == 1)
 					stationCycle.Shooting1Packet = shooting;
 				else
 					stationCycle.Shooting2Packet = shooting;
 
-				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting));
-				AnodeUOW.Commit();
-			}
-			else if (packet is MetaData metaData)
+                _logger.LogError("Packet shooting update before commit");
+                AnodeUOW.Commit();
+                _logger.LogError("Packet shooting update after commit");
+            }
+            else if (packet is MetaData metaData)
 			{
 				_logger.LogInformation("MetaData packet received");
 				stationCycle.AssignPacket(metaData);
@@ -276,6 +286,12 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 			await AnodeUOW.StationCycle.Add(stationCycle);
 			AnodeUOW.Commit();
+
+			if (packet is Shooting shoot)
+			{
+				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shoot, stationCycle));
+				AnodeUOW.Commit();
+			}
 		}
 
 		await AnodeUOW.CommitTransaction();

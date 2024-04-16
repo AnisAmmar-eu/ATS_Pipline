@@ -26,5 +26,5 @@ public partial class ActEntity : BaseEntity, IBaseEntity<ActEntity, DTOActEntity
 
 	public ICollection<ActEntityRole> ActEntityRoles { get; set; } = new List<ActEntityRole>();
 
-	#endregion
+	#endregion Nav Properties
 }

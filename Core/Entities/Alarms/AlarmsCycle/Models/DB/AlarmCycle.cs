@@ -23,5 +23,5 @@ public partial class AlarmCycle : BaseEntity, IBaseEntity<AlarmCycle, DTOAlarmCy
 			?? throw new InvalidOperationException("Uninitialized property: " + nameof(AlarmList));
 	}
 
-	#endregion
+	#endregion Nav Properties
 }

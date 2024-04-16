@@ -22,5 +22,5 @@ public partial class ActEntityRole : BaseEntity
 			?? throw new InvalidOperationException("Uninitialized property: " + nameof(ActEntity));
 	}
 
-	#endregion
+	#endregion Nav Properties
 }

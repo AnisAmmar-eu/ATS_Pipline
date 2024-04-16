@@ -105,7 +105,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint(() => service.Add(dto.ToModel()), logService, httpContext, _isLogged);
 	}
 
-	#endregion
+	#endregion Create
 
 	#region Read
 
@@ -206,7 +206,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint( () => service.CountWithPagination(pagination), logService, httpContext, _isLogged);
 	}
 
-	#endregion
+	#endregion Read
 
 	#region Update
 
@@ -219,7 +219,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		return GenericEndpoint(() => service.Update(dto.ToModel()), logService, httpContext, _isLogged);
 	}
 
-	#endregion
+	#endregion Update
 
 	#region Delete
 
@@ -236,5 +236,5 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 			_isLogged);
 	}
 
-	#endregion
+	#endregion Delete
 }

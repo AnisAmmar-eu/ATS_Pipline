@@ -50,7 +50,7 @@ public static class UserInitializer
 			anodeCTX.SaveChanges();
 		}
 
-		#endregion
+		#endregion Roles
 
 		#region Users
 
@@ -89,7 +89,7 @@ public static class UserInitializer
 			}
 		}
 
-		#endregion
+		#endregion Users
 
 		#region Acts
 
@@ -99,7 +99,7 @@ public static class UserInitializer
 			anodeCTX.SaveChanges();
 		}
 
-		#endregion
+		#endregion Acts
 
 		#region ActEntities
 
@@ -113,7 +113,7 @@ public static class UserInitializer
 			anodeCTX.SaveChanges();
 		}
 
-		#endregion
+		#endregion ActEntities
 
 		#region ActEntityRoles
 
@@ -137,6 +137,6 @@ public static class UserInitializer
 			});
 		anodeCTX.SaveChanges();
 
-		#endregion
+		#endregion ActEntityRoles
 	}
 }

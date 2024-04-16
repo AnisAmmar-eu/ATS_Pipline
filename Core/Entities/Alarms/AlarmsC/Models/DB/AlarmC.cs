@@ -27,5 +27,5 @@ public partial class AlarmC : BaseEntity, IBaseEntity<AlarmC, DTOAlarmC>
 
 	public virtual ICollection<AlarmLog> AlarmLogs { get; set; } = new List<AlarmLog>();
 
-	#endregion
+	#endregion Nav Properties
 }
