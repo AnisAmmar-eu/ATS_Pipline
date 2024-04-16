@@ -11,46 +11,336 @@ indent_size = 4
 
 ## IDE ##
 
+# IDE1006: Naming rule violation
+dotnet_diagnostic.IDE1006.severity = error
+
+# IDE0001: Simplify name
+dotnet_diagnostic.IDE0001.severity = error
+
+# IDE0002: Simplify member access
+dotnet_diagnostic.IDE0002.severity = error
+
+# IDE0003: Remove this or Me qualification
+dotnet_diagnostic.IDE0003.severity = error
+
+# IDE0009: Add this or Me qualification
+dotnet_diagnostic.IDE0009.severity = none
+dotnet_style_qualification_for_field = true
+dotnet_style_qualification_for_property = true
+dotnet_style_qualification_for_method = true
+dotnet_style_qualification_for_event = true
+
+# IDE0004: Remove unnecessary cast
+dotnet_diagnostic.IDE0004.severity = error
+
 # IDE0005: Using directive is unnecessary
 dotnet_diagnostic.IDE0005.severity = error
 
-# IDE1006: Naming Styles Uppercase
-dotnet_diagnostic.IDE1006.severity = error
-
-# IDE0290: Use primary constructor
-dotnet_diagnostic.IDE0290.severity = none
+# IDE0010: Add missing cases to switch statement
+dotnet_diagnostic.IDE0010.severity = error
 
 # IDE0011: Add braces
 dotnet_diagnostic.IDE0011.severity = none
 
-# IDE0160: Use block-scoped namespace
-dotnet_diagnostic.IDE0160.severity = none
+# IDE0016: Use throw expression
+dotnet_diagnostic.IDE0016.severity = error
 
-# IDE0161: Use file-scoped namespace
-dotnet_diagnostic.IDE0161.severity = error
+# IDE0019: Use pattern matching to avoid as followed by a null check
+dotnet_diagnostic.IDE0019.severity = error
+
+# IDE0020: Use pattern matching to avoid is check followed by a cast (with variable)
+dotnet_diagnostic.IDE0020.severity = error
+# IDE0038: Use pattern matching to avoid is check followed by a cast (without variable)
+dotnet_diagnostic.IDE0038.severity = error
+
+# IDE0021: Use expression body for constructors
+dotnet_diagnostic.IDE0021.severity = error
+
+# IDE0022: Use expression body for methods
+dotnet_diagnostic.IDE0022.severity = error
+csharp_style_expression_bodied_methods = when_on_single_line
+
+# IDE0023: Use expression body for conversion operators
+dotnet_diagnostic.IDE0023.severity = error
+# IDE0024: Use expression body for operators
+dotnet_diagnostic.IDE0024.severity = error
+csharp_style_expression_bodied_operators = when_on_single_line
+
+# IDE0025: Use expression body for properties
+dotnet_diagnostic.IDE0025.severity = error
+
+# IDE0026: Use expression body for indexers
+dotnet_diagnostic.IDE0026.severity = error
+
+# IDE0027: Use expression body for accessors
+dotnet_diagnostic.IDE0027.severity = error
+
+# IDE0028: Use collection initializers
+dotnet_diagnostic.IDE0028.severity = error
+
+# IDE0029: Null check can be simplified
+dotnet_diagnostic.IDE0029.severity = none
+
+# IDE0030: Null check can be simplified
+dotnet_diagnostic.IDE0030.severity = none
+
+# IDE0031: Use null propagation
+dotnet_diagnostic.IDE0031.severity = error
+
+# IDE0032: Use auto property
+dotnet_diagnostic.IDE0032.severity = error
+
+# IDE0033: Use explicitly provided tuple name
+dotnet_diagnostic.IDE0033.severity = error
+
+# IDE0034: Simplify default expression
+dotnet_diagnostic.IDE0034.severity = error
+
+# IDE0035: Remove unreachable code
+dotnet_diagnostic.IDE0035.severity = error
+
+# IDE0037: Use inferred member name
+dotnet_diagnostic.IDE0037.severity = error
+
+# IDE0039: Use local function instead of lambda
+dotnet_diagnostic.IDE0039.severity = error
+
+# IDE0040: Add accessibility modifiers
+dotnet_diagnostic.IDE0040.severity = error
+
+# IDE0041: Use is null check
+dotnet_diagnostic.IDE0041.severity = error
+
+# IDE0042: Deconstruct variable declaration
+dotnet_diagnostic.IDE0042.severity = error
+
+# IDE0044: Add readonly modifier
+dotnet_diagnostic.IDE0044.severity = error
+
+# IDE0045: Use conditional expression for assignment
+dotnet_diagnostic.IDE0045.severity = error
+
+# IDE0046: Use conditional expression for return
+dotnet_diagnostic.IDE0046.severity = error
+
+# IDE0047: Remove unnecessary parentheses
+dotnet_diagnostic.IDE0047.severity = error
+
+# IDE0048: Add parentheses for clarity
+dotnet_diagnostic.IDE0048.severity = none
+
+# IDE0049: Use language keywords instead of framework type names for type references
+dotnet_diagnostic.IDE0049.severity = error
+
+# IDE0050: Convert anonymous type to tuple
+dotnet_diagnostic.IDE0050.severity = error
+
+# IDE0051: Remove unused private member
+dotnet_diagnostic.IDE0051.severity = error
+
+# IDE0052: Remove unread private member
+dotnet_diagnostic.IDE0052.severity = error
+
+# IDE0053: Use expression body for lambdas
+dotnet_diagnostic.IDE0053.severity = error
+
+# IDE0054: Use compound assignment
+dotnet_diagnostic.IDE0054.severity = none
 
 # IDE0055: Formatting rule
 dotnet_diagnostic.IDE0055.severity = none
 
-# IDE0047: Remove unnecessary parentheses
-dotnet_diagnostic.IDE0047.severity = none
+# IDE0056: Use index operator
+dotnet_diagnostic.IDE0056.severity = error
+
+# IDE0057: Use range operator
+dotnet_diagnostic.IDE0057.severity = error
+
+# IDE0058: Remove unnecessary expression value
+dotnet_diagnostic.IDE0058.severity = none
+
+# IDE0059: Remove unnecessary value assignment
+dotnet_diagnostic.IDE0059.severity = none
+
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = none
+
+# IDE0061: Use expression body for local functions
+dotnet_diagnostic.IDE0061.severity = error
+csharp_style_expression_bodied_local_functions = when_on_single_line
+
+# IDE0062: Make local function static
+dotnet_diagnostic.IDE0062.severity = error
+
+# IDE0063: Use simple using statement
+dotnet_diagnostic.IDE0063.severity = error
+
+# IDE0064: Make struct fields writable (not directly supported)
+dotnet_diagnostic.IDE0064.severity = error
+
+# IDE0065: using directive placement (not directly supported)
+dotnet_diagnostic.IDE0065.severity = error
+
+# IDE0066: Use switch expression (dotnet_style_prefer_switch_expression is already set)
+dotnet_diagnostic.IDE0066.severity = error
+
+# IDE0070: Use System.HashCode.Combine (not directly supported)
+dotnet_diagnostic.IDE0070.severity = error
+
+# IDE0071: Simplify interpolation
+dotnet_diagnostic.IDE0071.severity = none
+
+# IDE0072: Add missing cases to switch expression (not directly supported)
+dotnet_diagnostic.IDE0072.severity = error
+
+# IDE0073: Use file header (not directly supported)
+dotnet_diagnostic.IDE0073.severity = none
+
+# IDE0074: Use coalesce compound assignment (dotnet_style_prefer_compound_assignment is already set)
+dotnet_diagnostic.IDE0074.severity = none
+
+# IDE0075: Simplify conditional expression (dotnet_style_prefer_simplified_boolean_expressions is already set)
+dotnet_diagnostic.IDE0075.severity = none
+
+# IDE0076: Remove invalid global SuppressMessageAttribute (not directly supported)
+dotnet_diagnostic.IDE0076.severity = error
+
+# IDE0077: Avoid legacy format target in global SuppressMessageAttribute (not directly supported)
+dotnet_diagnostic.IDE0077.severity = error
+
+# IDE0078: Use pattern matching (csharp_style_prefer_pattern_matching is already set)
+dotnet_diagnostic.IDE0078.severity = none
+
+# IDE0079: Remove unnecessary suppression (not directly supported)
+dotnet_diagnostic.IDE0079.severity = error
+
+# IDE0080: Remove unnecessary suppression operator (not directly supported)
+dotnet_diagnostic.IDE0080.severity = error
+
+# IDE0081: Remove ByVal (not directly supported)
+dotnet_diagnostic.IDE0081.severity = error
+
+# IDE0082: Convert typeof to nameof (not directly supported)
+dotnet_diagnostic.IDE0082.severity = error
+
+# IDE0083: Use pattern matching (not operator) (csharp_style_prefer_pattern_matching is already set)
+dotnet_diagnostic.IDE0083.severity = none
+
+# IDE0090: Simplify new expression (csharp_style_implicit_object_creation_when_type_is_apparent is already set)
+dotnet_diagnostic.IDE0090.severity = none
+
+# IDE0100: Remove unnecessary equality operator (not directly supported)
+dotnet_diagnostic.IDE0100.severity = none
+
+# IDE0110: Remove unnecessary discard (not directly supported)
+dotnet_diagnostic.IDE0110.severity = error
+
+# IDE0120: Simplify LINQ expression (not directly supported)
+dotnet_diagnostic.IDE0120.severity = none
+
+# IDE0130: Namespace does not match folder structure (dotnet_style_namespace_match_folder is already set)
+dotnet_diagnostic.IDE0130.severity = error
+
+# IDE0150: Prefer null check over type check (csharp_style_prefer_null_check_over_type_check is already set)
+dotnet_diagnostic.IDE0150.severity = none
+
+# IDE0160: Use block-scoped namespace
+dotnet_diagnostic.IDE0160.severity = none
+# IDE0161: Use file-scoped namespace
+dotnet_diagnostic.IDE0161.severity = error
+csharp_style_namespace_declarations = file_scoped
+
+# IDE0170: Simplify property pattern (not directly supported)
+dotnet_diagnostic.IDE0170.severity = error
+
+# IDE0180: Use tuple to swap values (csharp_style_prefer_tuple_swap is already set)
+dotnet_diagnostic.IDE0180.severity = none
+
+# IDE0200: Remove unnecessary lambda expression (csharp_style_prefer_method_group_conversion is already set)
+dotnet_diagnostic.IDE0200.severity = none
+
+# IDE0210: Convert to top-level statements (csharp_style_prefer_top_level_statements is already set)
+dotnet_diagnostic.IDE0210.severity = none
+
+# IDE0211: Convert to 'Program.Main' style program (csharp_style_prefer_top_level_statements is already set)
+dotnet_diagnostic.IDE0211.severity = none
+
+# IDE0220: Add explicit cast in foreach loop (dotnet_style_prefer_foreach_explicit_cast_in_source is already set)
+dotnet_diagnostic.IDE0220.severity = error
+
+# IDE0230: Use UTF-8 string literal (csharp_style_prefer_utf8_string_literals is already set)
+dotnet_diagnostic.IDE0230.severity = error
+
+# IDE0240: Nullable directive is redundant (not directly supported)
+dotnet_diagnostic.IDE0240.severity = error
+
+# IDE0241: Nullable directive is unnecessary (not directly supported)
+dotnet_diagnostic.IDE0241.severity = error
+
+# IDE0250: Struct can be made 'readonly' (not directly supported)
+dotnet_diagnostic.IDE0250.severity = none
+
+# IDE0251: Member can be made 'readonly' (not directly supported)
+dotnet_diagnostic.IDE0251.severity = none
+
+# IDE0260: Use pattern matching (csharp_style_prefer_pattern_matching is already set)
+dotnet_diagnostic.IDE0260.severity = error
+
+# IDE0270: Null check can be simplified (dotnet_style_coalesce_expression is already set)
+dotnet_diagnostic.IDE0270.severity = error
+
+# IDE0280: Use nameof (not directly supported)
+dotnet_diagnostic.IDE0280.severity = error
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = error
+csharp_style_prefer_primary_constructors = false
+
+# IDE0300: Use collection expression for array (dotnet_style_prefer_collection_expression is already set)
+dotnet_diagnostic.IDE0300.severity = error
+
+# IDE0301: Use collection expression for empty (dotnet_style_prefer_collection_expression is already set)
+dotnet_diagnostic.IDE0301.severity = error
+
+# IDE0302: Use collection expression for stackalloc (dotnet_style_prefer_collection_expression is already set)
+dotnet_diagnostic.IDE0302.severity = error
+
+# IDE0303: Use collection expression for Create() (dotnet_style_prefer_collection_expression is already set)
+dotnet_diagnostic.IDE0303.severity = error
+
+# IDE0304: Use collection expression for builder (dotnet_style_prefer_collection_expression is already set)
+dotnet_diagnostic.IDE0304.severity = error
+
+# IDE0305: Use collection expression for fluent (dotnet_style_prefer_collection_expression is already set)
+dotnet_diagnostic.IDE0305.severity = error
 
 ## CS ##
-dotnet_diagnostic.CS4014.severity = none
+dotnet_diagnostic.CS4014.severity = error
+# CS8604: Possible null reference argument for parameter 'parameter' in 'method' (not directly supported)
+dotnet_diagnostic.CS8604.severity = none
 
 ## CA ##
+
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = none
+
+# CA2211: Non-constant fields should not be visible
+dotnet_diagnostic.CA2211.severity = none
+
+# CA1806: Do not ignore method results
+dotnet_diagnostic.CA1806.severity = none
 
 # CA2101: Specify marshaling for P/Invoke string arguments
 dotnet_diagnostic.CA2101.severity = none
 
-# CA1401: P/Invokes should not be visible
-dotnet_diagnostic.CA1401.severity = none
-
 # CA2253: Named placeholders should not be numeric values
 dotnet_diagnostic.CA2253.severity = error
 
-# CA1806: Do not ignore method results
-dotnet_diagnostic.CA1806.severity = none
+# CA2254: Template should be a static expression
+dotnet_diagnostic.CA2254.severity = warning
+
+# CA1401: P/Invokes should not be visible
+dotnet_diagnostic.CA1401.severity = none
 
 ## SYSLIB ##
 
@@ -592,7 +882,7 @@ dotnet_diagnostic.rcs1179.severity = error
 dotnet_diagnostic.rcs1180.severity = error
 
 # Convert comment to documentation comment
-dotnet_diagnostic.rcs1181.severity = silent
+dotnet_diagnostic.rcs1181.severity = none
 
 # Remove redundant base interface
 dotnet_diagnostic.rcs1182.severity = error
@@ -607,7 +897,7 @@ dotnet_diagnostic.rcs1187.severity = error
 dotnet_diagnostic.rcs1188.severity = error
 
 # Add or remove region name
-dotnet_diagnostic.rcs1189.severity = silent
+dotnet_diagnostic.rcs1189.severity = error
 
 # Join string expressions
 dotnet_diagnostic.rcs1190.severity = error
@@ -724,7 +1014,7 @@ dotnet_diagnostic.rcs1227.severity = error
 
 # Unused element in documentation comment
 # No flags empty params but another rule requests params to be present.
-dotnet_diagnostic.rcs1228.severity = silent
+dotnet_diagnostic.rcs1228.severity = none
 
 # Use async/await when necessary
 dotnet_diagnostic.rcs1229.severity = error
