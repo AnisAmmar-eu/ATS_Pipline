@@ -45,6 +45,7 @@ public static class Configuration
 	public static void LoadBaseConfiguration(this IConfiguration configuration)
 	{
 		Station.Name = configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
+		Server.WatchdogDelay = TimeSpan.FromSeconds(configuration.GetValueWithThrow<int>(ConfigDictionary.WatchdogDelay));
 
 		// TODO IF station is server then different config
 		ITApisDict.ADSAddress = configuration.GetValueWithThrow<string>(ConfigDictionary.ApiADSAddress);

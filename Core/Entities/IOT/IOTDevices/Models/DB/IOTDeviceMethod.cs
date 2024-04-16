@@ -23,24 +23,15 @@ public partial class IOTDevice
 		IOTTags = dtoIOTDevice.IOTTags.ConvertAll(tag => tag.ToModel());
 	}
 
-	public override DTOIOTDevice ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOIOTDevice ToDTO() => new(this);
 
-	public virtual Task<bool> CheckConnection(ILogger logger)
-	{
-		return Task.FromResult(true);
-	}
+	public virtual Task<bool> CheckConnection(ILogger logger) => Task.FromResult(true);
 
-    /// <summary>
-    ///     Will apply all the tags of the device which need to be updated.
-    /// </summary>
-    /// <param name="anodeUOW"></param>
-    /// <param name="logger"></param>
-    /// <returns>True if at least one tag is applied. False otherwise.</returns>
-    public virtual Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger)
-	{
-		return Task.FromResult(new List<IOTTag>());
-	}
+	/// <summary>
+	///     Will apply all the tags of the device which need to be updated.
+	/// </summary>
+	/// <param name="anodeUOW"></param>
+	/// <param name="logger"></param>
+	/// <returns>True if at least one tag is applied. False otherwise.</returns>
+	public virtual Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger) => Task.FromResult(new List<IOTTag>());
 }

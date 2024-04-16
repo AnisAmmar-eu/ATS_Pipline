@@ -108,6 +108,7 @@ public static class ConfigDictionary
 	public const string SendAlarmCycleMS = "SendAlarmCycleMS";
 	public const string SendPacketMS = "SendPacketMS";
 	public const string SendLogMS = "SendLogMS";
+	public const string WatchdogDelay = "WatchdogDelay";
 
-	#endregion MS settings
+    #endregion MS settings
 }

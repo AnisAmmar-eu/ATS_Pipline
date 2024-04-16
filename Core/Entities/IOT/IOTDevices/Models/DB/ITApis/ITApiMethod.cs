@@ -20,10 +20,7 @@ public partial class ITApi
 	{
 	}
 
-	public override DTOITApi ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOITApi ToDTO() => new(this);
 
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{

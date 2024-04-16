@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Core.Shared.Services.Background;
+namespace Core.Shared.Services.Background.Vision;
 
 /// <summary>
 /// Background service responsible for watching over the signs and updating their watchdog time.

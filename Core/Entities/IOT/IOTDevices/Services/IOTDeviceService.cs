@@ -67,7 +67,7 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		{
 			await AnodeUOW.StartTransaction();
 			foreach (List<IOTTag> updatedTagList in updatedTags)
-				AnodeUOW.IOTTag.UpdateArray(updatedTagList.ToArray());
+				AnodeUOW.IOTTag.UpdateArray([.. updatedTagList]);
 
 			AnodeUOW.Commit();
 			await AnodeUOW.CommitTransaction();

@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using Core.Entities.User.Models.DB.Roles;
-using Core.Shared.Services.Background;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Match service");
