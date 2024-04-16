@@ -5,24 +5,24 @@ namespace Core.Entities.Packets.Models.DTO.MetaDatas;
 
 public partial class DTOMetaData : DTOPacket, IDTO<MetaData, DTOMetaData>
 {
-	public int SyncIndex;
-	public float AnodeSize;
-	public int AnodeType;
-	public int SyncIndex_RW;
-	public int Double_RW;
-	public int AnodeType_RW;
-	public int Trolley;
-	public int AnodeTypeStatus;
-	public int Cam01Status;
-	public int Cam02Status;
-	public float Cam01Temp;
-	public float Cam02Temp;
-	public float TT01;
+	public int SyncIndex { get; set; }
+	public float AnodeSize { get; set; }
+	public int AnodeType { get; set; }
+	public int SyncIndex_RW { get; set; }
+	public int Double_RW { get; set; }
+	public int AnodeType_RW { get; set; }
+	public int Trolley { get; set; }
+	public int AnodeTypeStatus { get; set; }
+	public int Cam01Status { get; set; }
+	public int Cam02Status { get; set; }
+	public float Cam01Temp { get; set; }
+	public float Cam02Temp { get; set; }
+	public float TT01 { get; set; }
 
-	public int SN_StationID;
-	public int SN_Year;
-	public int SN_Month;
-	public int SN_Day;
-	public int SN_Vibro;
-	public int SN_Number;
+	public int SN_StationID { get; set; }
+	public int SN_Year { get; set; }
+	public int SN_Month { get; set; }
+	public int SN_Day { get; set; }
+	public int SN_Vibro { get; set; }
+	public int SN_Number { get; set; }
 }

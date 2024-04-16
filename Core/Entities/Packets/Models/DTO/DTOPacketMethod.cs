@@ -27,10 +27,7 @@ public partial class DTOPacket
 		HasError = packet.HasError;
 	}
 
-	public override Packet ToModel()
-	{
-		return new(this);
-	}
+	public override Packet ToModel() => new(this);
 
 	public static async ValueTask<DTOPacket?> BindAsync(HttpContext httpContext)
 	{
@@ -53,10 +50,9 @@ public partial class DTOPacket
 
 	private static Type GetDTOType(string? type)
 	{
-		if (type is null)
-			throw new EntityNotFoundException("Packet type is null");
-
-		return type switch {
+		return (type is null)
+			? throw new EntityNotFoundException("Packet type is null")
+			: type switch {
 			PacketTypes.AlarmList => typeof(DTOAlarmList),
 			PacketTypes.MetaData => typeof(DTOMetaData),
 			PacketTypes.Shooting => typeof(DTOShooting),
