@@ -11,7 +11,6 @@ using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.MetaDatas;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.Packets.Models.DTO;
-using Core.Entities.Packets.Models.DTO.MetaDatas;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Models.DB;
@@ -167,12 +166,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 						string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 						string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 						await shooting.SendImages(imagesPath, thumbnailsPath, extension, _logger);
-					}
-
-					if (packet is MetaData meta)
-					{
-						Models.DTO.MetaDatas.DTOMetaData toto = meta.ToDTO();
-						_logger.LogInformation("MetaData packet sent");
 					}
 
 					HttpResponseMessage response = await http.PostAsJsonAsync(

@@ -200,7 +200,8 @@ public class ToMatchService :
 		}
 	}
 
-	private static bool ValidDelay(DateTimeOffset? date, int delay) => (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
+	private static bool ValidDelay(DateTimeOffset? date, int delay)
+		=> (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
 
 	public static async Task<int> GetMatchInstance(string anodeType, int stationID, IAnodeUOW anodeUOW)
 	{
