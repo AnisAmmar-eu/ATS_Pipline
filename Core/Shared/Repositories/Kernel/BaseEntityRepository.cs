@@ -144,10 +144,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 		bool withTracking = true,
 		Dictionary<string, string[]>? includes = null
-)
-	{
-		return Query(filters, orderBy, withTracking, includes: GetMergedIncludes(includes)).FirstOrDefaultAsync();
-	}
+) => Query(filters, orderBy, withTracking, includes: GetMergedIncludes(includes)).FirstOrDefaultAsync();
 
 	/// <summary>
 	///     Get all entities from the table of <typeref name="T" /> with join to its navigation properties
@@ -181,10 +178,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		bool withTracking = true,
 		int? maxCount = null,
 		Dictionary<string, string[]>? includes = null
-		)
-	{
-		return Query(filters, orderBy, withTracking, maxCount, includes).ToListAsync();
-	}
+		) => Query(filters, orderBy, withTracking, maxCount, includes).ToListAsync();
 
 	public Task<List<T>> GetWithPagination(Pagination pagination, int nbItems)
 	{
@@ -219,19 +213,13 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Find entities by a predicate
 	/// </summary>
 	/// <param name="expression">Predicate</param>
-	public Task<List<T>> Find(Expression<Func<T, bool>> expression)
-	{
-		return Context.Set<T>().Where(expression).ToListAsync();
-	}
+	public Task<List<T>> Find(Expression<Func<T, bool>> expression) => Context.Set<T>().Where(expression).ToListAsync();
 
 	/// <summary>
 	///     Add an new entity in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entity"></param>
-	public async Task Add(T entity)
-	{
-		_ = await Context.Set<T>().AddAsync(entity);
-	}
+	public async Task Add(T entity) => _ = await Context.Set<T>().AddAsync(entity);
 
 	/// <summary>
 	///     Add an new entity in the table of <typeref name="T" /> and return the new entity as <see cref="IDTO" />
@@ -248,19 +236,13 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Add several entities in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entities"></param>
-	public Task AddRange(IEnumerable<T> entities)
-	{
-		return Context.Set<T>().AddRangeAsync(entities);
-	}
+	public Task AddRange(IEnumerable<T> entities) => Context.Set<T>().AddRangeAsync(entities);
 
 	/// <summary>
 	///     Remove an entity in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entity">The entity <see cref="T" /> to remove</param>
-	public void Remove(T entity)
-	{
-		_ = Context.Set<T>().Remove(entity);
-	}
+	public void Remove(T entity) => _ = Context.Set<T>().Remove(entity);
 
 	/// <summary>
 	///     Remove an entitiy in the table of <typeref name="T" /> with the given ID
@@ -294,10 +276,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Remove several entities in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entities"><see cref="IEnumerable{T}" /> of entity to remove</param>
-	public void RemoveRange(IEnumerable<T> entities)
-	{
-		Context.Set<T>().RemoveRange(entities);
-	}
+	public void RemoveRange(IEnumerable<T> entities) => Context.Set<T>().RemoveRange(entities);
 
 	/// <summary>
 	///     Update an entity in the table of <typeref name="T" /> and returns the updated entity
@@ -338,9 +317,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		Expression<Func<
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties)
-	{
-		return Context.Set<T>().Where(x => x.ID == entity.ID).ExecuteUpdateAsync(properties);
-	}
+				=> Context.Set<T>().Where(x => x.ID == entity.ID).ExecuteUpdateAsync(properties);
 
 	/// <summary>
 	///    Update an entity in the table of <typeref name="T" /> and returns the updated entity
@@ -355,9 +332,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		Expression<Func<
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties)
-	{
-		return Context.Set<T>().Where(predicate).ExecuteUpdateAsync(properties);
-	}
+				=> Context.Set<T>().Where(predicate).ExecuteUpdateAsync(properties);
 
 	/// <summary>
 	///    Delete an entity in the table of <typeref name="T" /> and returns the number entity affected
@@ -366,10 +341,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="predicate">Predicate where</param>
 	/// <returns>The deleted entity <see cref="T" /></returns>
 	public Task<int> ExecuteDeleteAsync(
-		Expression<Func<T, bool>> predicate)
-	{
-		return Context.Set<T>().Where(predicate).ExecuteDeleteAsync();
-	}
+		Expression<Func<T, bool>> predicate) => Context.Set<T>().Where(predicate).ExecuteDeleteAsync();
 
 	/// <summary>
 	///     Check if an element exist with the predication
@@ -450,7 +422,8 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		mergedIncludes.Add(string.Empty, _baseIncludes);
 		foreach ((string? key, string[]? value) in includes ?? [])
 		{
-			mergedIncludes[key] = (mergedIncludes.TryGetValue(key, out string[]? existingValue))
+			bool isExist = mergedIncludes.TryGetValue(key, out string[]? existingValue);
+			mergedIncludes[key] = isExist
 				? [.. existingValue, .. value]
 				: value;
 		}
