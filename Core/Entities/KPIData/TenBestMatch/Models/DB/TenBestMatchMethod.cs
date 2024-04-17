@@ -9,8 +9,5 @@ public partial class TenBestMatch
 	{
 	}
 
-	public override DTOTenBestMatch ToDTO()
-	{
-		return this.Adapt<DTOTenBestMatch>();
-	}
+	public override DTOTenBestMatch ToDTO() => this.Adapt<DTOTenBestMatch>();
 }

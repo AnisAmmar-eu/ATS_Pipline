@@ -17,8 +17,5 @@ public partial class DTOS5Cycle
 		MatchingCamera2 = s5Cycle.MatchingCamera2;
 	}
 
-	public override S5Cycle ToModel()
-	{
-		return new(this);
-	}
+	public override S5Cycle ToModel() => new(this);
 }

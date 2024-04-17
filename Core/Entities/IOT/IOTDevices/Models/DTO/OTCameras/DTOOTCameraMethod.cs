@@ -12,8 +12,5 @@ public partial class DTOOTCamera
 	{
 	}
 
-	public override OTCamera ToModel()
-	{
-		return new(this);
-	}
+	public override OTCamera ToModel() => new(this);
 }

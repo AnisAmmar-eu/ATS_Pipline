@@ -18,8 +18,5 @@ public partial class DTOAlarmList
 		AlarmCycles = packet.AlarmCycles.ToList().ConvertAll(alarmCycle => alarmCycle.ToDTO());
 	}
 
-	public override AlarmList ToModel()
-	{
-		return new(this);
-	}
+	public override AlarmList ToModel() => new(this);
 }

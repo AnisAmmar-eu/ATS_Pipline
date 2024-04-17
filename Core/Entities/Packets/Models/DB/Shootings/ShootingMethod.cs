@@ -23,10 +23,7 @@ public partial class Shooting
 		Cam02Status = dtoShooting.Cam02Status;
 	}
 
-	public override DTOShooting ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOShooting ToDTO() => new(this);
 
 	public static FileInfo GetImagePathFromRoot(
 		string rid,
@@ -75,7 +72,7 @@ public partial class Shooting
 		foreach (string path in (List<string>)([imagesPath, thumbnailsPath]))
 		{
 			int cameraNumber = (Cam01Status == 1) ? 1 : 2;
-			MultipartFormDataContent formData = new();
+			MultipartFormDataContent formData = [];
 			formData.Headers.ContentType!.MediaType = "multipart/form-data";
 
 			FileInfo image

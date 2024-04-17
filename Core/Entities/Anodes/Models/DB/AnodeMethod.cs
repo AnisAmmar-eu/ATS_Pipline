@@ -40,23 +40,12 @@ public abstract partial class Anode
 		};
 	}
 
-	public Anode GetValue()
-	{
-		return this;
-	}
+	public Anode GetValue() => this;
 
-	public Func<List<Anode>, string[]> GetComputedValues()
-	{
-		return anodes => [anodes.Count.ToString()];
-	}
+	public static Func<List<Anode>, string[]> GetComputedValues() => anodes => [anodes.Count.ToString()];
 
 	public static Anode Create(S1S2Cycle cycle)
-	{
-		if (cycle.AnodeType == AnodeTypeDict.D20)
-			return new AnodeD20(cycle);
-
-		return new AnodeDX(cycle);
-	}
+		=> (cycle.AnodeType == AnodeTypeDict.D20) ? new AnodeD20(cycle) : new AnodeDX(cycle);
 
 	public void AddS3S4Cycle(S3S4Cycle cycle)
 	{

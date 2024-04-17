@@ -19,8 +19,5 @@ public partial class DTOShooting
 		Cam02Status = shooting.Cam02Status;
 	}
 
-	public override Shooting ToModel()
-	{
-		return new(this);
-	}
+	public override Shooting ToModel() => new(this);
 }

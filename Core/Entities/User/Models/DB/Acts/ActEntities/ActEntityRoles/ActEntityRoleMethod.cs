@@ -30,13 +30,7 @@ public partial class ActEntityRole
 		ApplicationID = role.Id;
 	}
 
-	new public DTOActEntityRole ToDTO()
-	{
-		return new(this);
-	}
+	new public DTOActEntityRole ToDTO() => new(this);
 
-	public DTOActEntityRole ToDTO(string? applicationName)
-	{
-		return new(this, applicationName);
-	}
+	public DTOActEntityRole ToDTO(string? applicationName) => new(this, applicationName);
 }

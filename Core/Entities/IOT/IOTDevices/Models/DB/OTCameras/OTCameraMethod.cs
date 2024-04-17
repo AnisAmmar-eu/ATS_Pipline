@@ -24,10 +24,7 @@ public partial class OTCamera
 	{
 	}
 
-	public override DTOOTCamera ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOOTCamera ToDTO() => new(this);
 
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{

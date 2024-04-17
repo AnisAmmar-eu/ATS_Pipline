@@ -15,8 +15,5 @@ public partial class DTOAnodeD20
 		AnodeType = AnodeTypes.D20;
 	}
 
-	public override AnodeD20 ToModel()
-	{
-		return new(this);
-	}
+	public override AnodeD20 ToModel() => new(this);
 }

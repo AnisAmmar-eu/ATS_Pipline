@@ -23,10 +23,7 @@ public partial class AlarmList
 		});
 	}
 
-	public override DTOAlarmList ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOAlarmList ToDTO() => new(this);
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{

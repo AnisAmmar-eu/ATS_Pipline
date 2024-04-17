@@ -16,8 +16,5 @@ public partial class S5Cycle
         ChainMatchingCamera2 = dtoS5Cycle.ChainMatchingCamera2;
     }
 
-	public override DTOS5Cycle ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOS5Cycle ToDTO() => new(this);
 }

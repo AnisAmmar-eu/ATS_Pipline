@@ -24,8 +24,5 @@ public partial class DTOAlarmRT
 		Alarm = alarmRT.Alarm.ToDTO();
 	}
 
-	public override AlarmRT ToModel()
-	{
-		return new(this);
-	}
+	public override AlarmRT ToModel() => new(this);
 }

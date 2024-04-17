@@ -12,8 +12,5 @@ public partial class DTOITApiStation
 	{
 	}
 
-	public override ITApiStation ToModel()
-	{
-		return new(this);
-	}
+	public override ITApiStation ToModel() => new(this);
 }

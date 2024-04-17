@@ -12,8 +12,5 @@ public partial class DTOOTTwinCat
 	{
 	}
 
-	public override OTTwinCat ToModel()
-	{
-		return new(this);
-	}
+	public override OTTwinCat ToModel() => new(this);
 }

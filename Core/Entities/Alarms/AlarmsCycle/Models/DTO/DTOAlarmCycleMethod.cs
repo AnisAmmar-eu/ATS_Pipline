@@ -16,8 +16,5 @@ public partial class DTOAlarmCycle
 		AlarmListPacketID = alarmCycle.AlarmListPacketID;
 	}
 
-	public override AlarmCycle ToModel()
-	{
-		return new(this);
-	}
+	public override AlarmCycle ToModel() => new(this);
 }

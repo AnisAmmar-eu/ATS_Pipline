@@ -15,8 +15,5 @@ public partial class DTOS1S2Cycle
 		CycleType = CycleTypes.S1S2;
     }
 
-	public override S1S2Cycle ToModel()
-	{
-		return new(this);
-	}
+	public override S1S2Cycle ToModel() => new(this);
 }

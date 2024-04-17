@@ -21,8 +21,5 @@ public partial class DTOOutFurnace
 		BakedConvPos = outFurnace.BakedConvPos;
 	}
 
-	public override OutFurnace ToModel()
-	{
-		return new(this);
-	}
+	public override OutFurnace ToModel() => new(this);
 }

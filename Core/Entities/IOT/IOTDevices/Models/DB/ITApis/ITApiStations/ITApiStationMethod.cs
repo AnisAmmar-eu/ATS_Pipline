@@ -16,10 +16,7 @@ public partial class ITApiStation
 	{
 	}
 
-	public override DTOITApiStation ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOITApiStation ToDTO() => new(this);
 
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{
@@ -39,11 +36,9 @@ public partial class ITApiStation
 				HttpResponseMessage response = await httpClient.GetAsync(Address + ConnectionPath);
 				isConnected = response.StatusCode == HttpStatusCode.OK;
 
-				ApiResponse? apiResponse
-				= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
-				if (apiResponse is null)
-					throw new ApplicationException("Could not deserialize ApiIOT response");
-
+				ApiResponse apiResponse
+				= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync())
+					?? throw new ApplicationException("Could not deserialize ApiIOT response");
 				if (apiResponse.Result is not JsonElement jsonElement)
 					throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
 

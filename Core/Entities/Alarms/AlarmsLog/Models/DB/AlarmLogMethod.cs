@@ -32,8 +32,5 @@ public partial class AlarmLog
 		TSGet = dtoAlarmLog.TSGet;
 	}
 
-	public override DTOAlarmLog ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOAlarmLog ToDTO() => new(this);
 }

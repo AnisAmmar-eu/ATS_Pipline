@@ -17,8 +17,5 @@ public partial class DTOBITemperature
 		Temperature = biTemperature.Temperature;
 	}
 
-	public override BITemperature ToModel()
-	{
-		return new(this);
-	}
+	public override BITemperature ToModel() => new(this);
 }

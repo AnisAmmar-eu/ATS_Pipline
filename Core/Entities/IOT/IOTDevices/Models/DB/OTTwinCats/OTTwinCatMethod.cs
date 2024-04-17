@@ -20,10 +20,7 @@ public partial class OTTwinCat
 	{
 	}
 
-	public override DTOOTTwinCat ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOOTTwinCat ToDTO() => new(this);
 
 	public override async Task<bool> CheckConnection(ILogger logger)
 	{
@@ -133,10 +130,9 @@ public partial class OTTwinCat
 		(AdsClient tcClient, uint varHandle, OTTagTwinCat tag, CancellationToken cancel)
 	{
 		ResultValue<T> resultValue = await tcClient.ReadAnyAsync<T>(varHandle, cancel);
-		if (resultValue.ErrorCode != AdsErrorCode.Succeeded)
-			throw new AdsException($"Could not read {tag.RID}: {resultValue.ErrorCode.ToString()}");
-
-		return resultValue.Value;
+		return (resultValue.ErrorCode != AdsErrorCode.Succeeded)
+			? throw new AdsException($"Could not read {tag.RID}: {resultValue.ErrorCode.ToString()}")
+			: (object?)resultValue.Value;
 	}
 
 	private async Task<ResultWrite> WriteFromType(

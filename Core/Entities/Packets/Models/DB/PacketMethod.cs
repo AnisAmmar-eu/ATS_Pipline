@@ -18,10 +18,7 @@ public partial class Packet
 		HasError = dto.HasError;
 	}
 
-	public override DTOPacket ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOPacket ToDTO() => new(this);
 
 	public async Task Create(IAnodeUOW anodeUOW)
 	{
@@ -37,8 +34,5 @@ public partial class Packet
 		anodeUOW.Commit();
 	}
 
-	protected virtual Task InheritedBuild(IAnodeUOW anodeUOW)
-	{
-		return Task.CompletedTask;
-	}
+	protected virtual Task InheritedBuild(IAnodeUOW anodeUOW) => Task.CompletedTask;
 }

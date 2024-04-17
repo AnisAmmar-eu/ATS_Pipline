@@ -39,8 +39,5 @@ public partial class DTOMetaData
 		SN_Number = metaData.SN_Number;
 	}
 
-	public override MetaData ToModel()
-	{
-		return new(this);
-	}
+	public override MetaData ToModel() => new(this);
 }

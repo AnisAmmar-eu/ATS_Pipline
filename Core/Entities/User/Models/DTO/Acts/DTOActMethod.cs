@@ -18,8 +18,5 @@ public partial class DTOAct
 		TS = act.TS;
 	}
 
-	public override Act ToModel()
-	{
-		return new(this);
-	}
+	public override Act ToModel() => new(this);
 }

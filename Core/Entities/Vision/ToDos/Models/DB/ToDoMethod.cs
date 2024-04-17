@@ -10,8 +10,5 @@ public partial class ToDo
 	{
 	}
 
-	public override DTOToDo ToDTO()
-	{
-		return this.Adapt<DTOToSign>();
-	}
+	public override DTOToDo ToDTO() => this.Adapt<DTOToSign>();
 }
