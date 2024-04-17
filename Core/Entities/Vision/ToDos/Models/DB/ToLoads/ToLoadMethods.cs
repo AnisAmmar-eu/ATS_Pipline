@@ -9,8 +9,5 @@ public partial class ToLoad
 	{
 	}
 
-	public override DTOToLoad ToDTO()
-	{
-		return this.Adapt<DTOToLoad>();
-	}
+	public override DTOToLoad ToDTO() => this.Adapt<DTOToLoad>();
 }

@@ -9,8 +9,5 @@ public partial class KPI
 	{
 	}
 
-	public override DTOKPI ToDTO()
-	{
-		return this.Adapt<DTOKPI>();
-	}
+	public override DTOKPI ToDTO() => this.Adapt<DTOKPI>();
 }
