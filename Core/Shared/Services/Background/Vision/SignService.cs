@@ -120,7 +120,7 @@ public class SignService : BackgroundService
 
 					// S1 and S2 (sign stations) are the only station to add an Anode
 					if (!Station.IsMatchStation(cycle.StationID))
-						toSignService.AddAnode((S1S2Cycle)cycle);
+						await toSignService.AddAnode((S1S2Cycle)cycle);
 
 					_ = _anodeUOW.Commit();
 				}
