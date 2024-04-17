@@ -86,33 +86,37 @@ public class SignService : BackgroundService
 						noExtension,
 						image.DirectoryName);
 
+					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
+
 					if (retSign == 0)
+					{
 						_logger.LogInformation("{nb} signé avec succès", image.Name);
+
+						foreach (string family in LoadDestinations)
+						{
+							foreach (int instanceMatchID in await ToLoadService.GetInstances(family, _anodeUOW))
+							{
+								ToLoad load = toSign.Adapt<ToLoad>();
+								load.InstanceMatchID = instanceMatchID;
+								await _anodeUOW.ToLoad.Add(load);
+								_anodeUOW.Commit();
+							}
+						}
+
+						if (cycle.CanMatch())
+						{
+							ToMatch toMatch = toSign.Adapt<ToMatch>();
+							toMatch.InstanceMatchID = await ToMatchService.GetMatchInstance(toSign.AnodeType, toSign.StationID, _anodeUOW);
+							await _anodeUOW.ToMatch.Add(toMatch);
+						}
+					}
 					else
+					{
 						_logger.LogWarning("Return code de la signature: " + retSign + " pour anode " + image.Name);
+					}
 
 					_anodeUOW.ToSign.Remove(toSign);
 					_ = _anodeUOW.Commit();
-
-					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
-
-					foreach (string family in LoadDestinations)
-					{
-						foreach (int instanceMatchID in await ToLoadService.GetInstances(family, _anodeUOW))
-						{
-							ToLoad load = toSign.Adapt<ToLoad>();
-							load.InstanceMatchID = instanceMatchID;
-							await _anodeUOW.ToLoad.Add(load);
-							_anodeUOW.Commit();
-						}
-					}
-
-					if (cycle.CanMatch())
-					{
-						ToMatch toMatch = toSign.Adapt<ToMatch>();
-						toMatch.InstanceMatchID = await ToMatchService.GetMatchInstance(toSign.AnodeType, toSign.StationID, _anodeUOW);
-						await _anodeUOW.ToMatch.Add(toMatch);
-					}
 
 					// S1 and S2 (sign stations) are the only station to add an Anode
 					if (!Station.IsMatchStation(cycle.StationID))

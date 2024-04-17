@@ -52,7 +52,7 @@ public class ToSignService :
         return cycle;
 	}
 
-	public async void AddAnode(S1S2Cycle cycle)
+	public async Task AddAnode(S1S2Cycle cycle)
 	{
 		try
 		{

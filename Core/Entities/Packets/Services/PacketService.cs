@@ -197,7 +197,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		packet.Status = PacketStatus.Sent;
 		await AnodeUOW.StartTransaction();
         await AnodeUOW.Packet.Add(packet);
-		_logger.LogInformation("IsMetaData {metdata}", packet is MetaData);
 		AnodeUOW.Commit();
 		try
 		{
@@ -217,14 +216,11 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					stationCycle.Shooting2Packet = shooting;
 
 				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting, stationCycle));
-                _logger.LogError("Packet shooting update before commit");
                 AnodeUOW.Commit();
-                _logger.LogError("Packet shooting update after commit");
             }
             else if (packet is MetaData metaData)
 			{
                 _logger.LogInformation("MetaData packet received");
-                _logger.LogInformation("CAM01 Status {status}", metaData.Cam01Status);
                 stationCycle.AssignPacket(metaData);
 				if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
 					stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
@@ -267,14 +263,11 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				else
 					stationCycle.Shooting2Packet = shooting;
 
-                _logger.LogError("Packet shooting update before commit");
                 AnodeUOW.Commit();
-                _logger.LogError("Packet shooting update after commit");
             }
             else if (packet is MetaData metaData)
 			{
                 _logger.LogInformation("MetaData packet received");
-                _logger.LogInformation("CAM01 Status {status}", metaData.Cam01Status);
                 stationCycle.AssignPacket(metaData);
 				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 				stationCycle.Picture1Status = metaData.Cam01Status;
