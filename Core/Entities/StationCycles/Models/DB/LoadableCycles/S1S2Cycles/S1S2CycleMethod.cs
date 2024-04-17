@@ -12,8 +12,5 @@ public partial class S1S2Cycle
 	{
     }
 
-	public override DTOS1S2Cycle ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOS1S2Cycle ToDTO() => new(this);
 }

@@ -42,24 +42,21 @@ public partial class StationCycle
 		AlarmListPacket = dtoStationCycle.AlarmListPacket?.ToModel();
 	}
 
-	public override DTOStationCycle ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOStationCycle ToDTO() => new(this);
 
-	public StationCycle GetValue()
-	{
-		return this;
-	}
+	public StationCycle GetValue() => this;
 
+	/// <summary>
+	/// Assigns a packet to the station cycle.
+	/// </summary>
+	/// <param name="packet">The packet to assign.</param>
 	public void AssignPacket(Packet packet)
 	{
-		PropertyInfo? property = Array.Find(
-			this.GetType()
-				.GetProperties(BindingFlags.Instance | BindingFlags.Public),
-			info => info.PropertyType == packet.GetType());
-		if (property is null)
-			throw new ArgumentException($"Cycle of RID {RID} has no packet of type {packet.GetType()}");
+		PropertyInfo[] properties = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+		Type packetType = packet.GetType();
+
+		PropertyInfo property = properties.FirstOrDefault(info => info.PropertyType == packetType)
+			?? throw new ArgumentException($"Cycle of RID {RID} has no packet of type {packetType}");
 
 		property.SetValue(this, packet);
 	}
@@ -119,7 +116,7 @@ public partial class StationCycle
 					AddAtIndex(signMatchValues, cycle.StationID, nbNotSignedIndex);
 				}
 			});
-			List<string> ans = new();
+			List<string> ans = [];
 			// The int[,] is flattened into a List<string> and the match cam1 percentage is computed.
 			for (int i = 0; i < signMatchValues.GetLength(0); ++i)
 			{
@@ -136,7 +133,7 @@ public partial class StationCycle
 			ans.Add(nbDX.ToString());
 			ans.AddRange(nbAnodes.Select(x => x.ToString()));
 
-			return ans.ToArray();
+			return [.. ans];
 		};
 	}
 
@@ -147,6 +144,8 @@ public partial class StationCycle
 		{
 			StationType.S1S2 => new S1S2Cycle(),
 			StationType.S3S4 => new S3S4Cycle(),
+			StationType.S5 => new S5Cycle(),
+			StationType.Server => throw new ArgumentException("Cannot create a server cycle"),
 			_ => new S5Cycle(),
 		};
 	}

@@ -40,8 +40,5 @@ public partial class InFurnace
 		PitLoadTS = adsStruct.MD.PitLoadTS.GetTimestamp();
 	}
 
-	public override DTOInFurnace ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOInFurnace ToDTO() => new(this);
 }

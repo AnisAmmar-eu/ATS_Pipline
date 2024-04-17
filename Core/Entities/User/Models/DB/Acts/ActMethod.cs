@@ -23,8 +23,5 @@ public partial class Act
 		ParentType = dto.ParentType;
 	}
 
-	public override DTOAct ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOAct ToDTO() => new(this);
 }

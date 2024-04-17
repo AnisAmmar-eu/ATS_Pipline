@@ -17,8 +17,5 @@ public partial class AnodeD20
 	{
 	}
 
-	public override DTOAnodeD20 ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOAnodeD20 ToDTO() => new(this);
 }

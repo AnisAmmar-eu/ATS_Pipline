@@ -12,8 +12,5 @@ public partial class ServerRule
 	{
 	}
 
-	public override DTOServerRule ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOServerRule ToDTO() => new(this);
 }

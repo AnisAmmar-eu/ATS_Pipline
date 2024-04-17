@@ -28,8 +28,5 @@ public partial class BITemperature
 		Temperature = double.Parse(cameraTemperature.CurrentValue, CultureInfo.InvariantCulture);
 	}
 
-	public override DTOBITemperature ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOBITemperature ToDTO() => new(this);
 }

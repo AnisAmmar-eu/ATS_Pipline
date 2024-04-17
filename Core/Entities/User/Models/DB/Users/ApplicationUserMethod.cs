@@ -31,8 +31,5 @@ public partial class ApplicationUser
 		Source = SourceAuth.AD;
 	}
 
-	public DTOUser ToDTO()
-	{
-		return new(this);
-	}
+	public DTOUser ToDTO() => new(this);
 }

@@ -62,8 +62,5 @@ public partial class MetaData
 		SN_Number = adsStruct.SN.Number;
 	}
 
-	public override DTOMetaData ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOMetaData ToDTO() => new(this);
 }
