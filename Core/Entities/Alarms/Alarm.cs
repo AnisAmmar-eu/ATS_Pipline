@@ -40,8 +40,5 @@ public struct Alarm : IBaseADS<Alarm>
 	///     This is tricky but other notifications are supposed to be converted to something before being processed.
 	///     This one does not but we pretend that we do something.
 	/// </summary>
-	public Alarm ToModel()
-	{
-		return this;
-	}
+	public Alarm ToModel() => this;
 }

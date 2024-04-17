@@ -10,8 +10,5 @@ public partial class DTODataset : DTOToDo, IDTO<Dataset, DTODataset>
 	{
 	}
 
-	public override Dataset ToModel()
-	{
-		return this.Adapt<Dataset>();
-	}
+	public override Dataset ToModel() => this.Adapt<Dataset>();
 }

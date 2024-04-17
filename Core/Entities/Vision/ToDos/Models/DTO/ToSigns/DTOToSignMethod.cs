@@ -9,8 +9,5 @@ public partial class DTOToSign
 	{
 	}
 
-	public override ToSign ToModel()
-	{
-		return this.Adapt<ToSign>();
-	}
+	public override ToSign ToModel() => this.Adapt<ToSign>();
 }

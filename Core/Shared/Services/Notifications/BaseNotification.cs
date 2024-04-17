@@ -53,7 +53,7 @@ public class BaseNotification<T, TStruct>
 		}
 		catch (Exception e)
 		{
-			_logger.LogError($"Error while dequeuing a {typeof(T).Name}: {e}");
+			_logger.LogError("Error while dequeuing a {EntityName}: {Error}", typeof(T).Name, e);
 			tcClient.WriteAny(_newMsg, (ushort)1);
 		}
 	}
@@ -64,8 +64,5 @@ public class BaseNotification<T, TStruct>
 	/// <param name="services"></param>
 	/// <param name="entity"></param>
 	/// <returns></returns>
-	protected virtual Task AddElement(IServiceProvider services, T entity)
-	{
-		return Task.CompletedTask;
-	}
+	protected virtual Task AddElement(IServiceProvider services, T entity) => Task.CompletedTask;
 }

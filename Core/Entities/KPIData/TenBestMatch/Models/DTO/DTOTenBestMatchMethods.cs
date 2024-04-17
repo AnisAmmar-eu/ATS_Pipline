@@ -9,8 +9,5 @@ public partial class DTOTenBestMatch
 	{
 	}
 
-	public override TenBestMatch ToModel()
-	{
-		return this.Adapt<TenBestMatch>();
-	}
+	public override TenBestMatch ToModel() => this.Adapt<TenBestMatch>();
 }
