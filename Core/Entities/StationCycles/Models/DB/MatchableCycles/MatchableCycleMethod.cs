@@ -14,8 +14,5 @@ public abstract partial class MatchableCycle
 		MatchingCamera2 = dtoMatchingCycle.MatchingCamera2;
 	}
 
-	public override DTOMatchingCycle ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOMatchingCycle ToDTO() => new(this);
 }

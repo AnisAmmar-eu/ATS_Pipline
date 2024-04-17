@@ -23,8 +23,5 @@ public partial class AlarmCycle
 		AlarmListPacketID = dtoAlarmCycle.AlarmListPacketID;
 	}
 
-	public override DTOAlarmCycle ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOAlarmCycle ToDTO() => new(this);
 }

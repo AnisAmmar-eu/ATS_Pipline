@@ -47,8 +47,5 @@ public partial class Log
 		StationID = dto.StationID;
 	}
 
-	public override DTOLog ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOLog ToDTO() => new(this);
 }

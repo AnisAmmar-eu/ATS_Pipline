@@ -11,10 +11,7 @@ public partial class ToSign
 	{
 	}
 
-	public override DTOToSign ToDTO()
-	{
-		return this.Adapt<DTOToSign>();
-	}
+	public override DTOToSign ToDTO() => this.Adapt<DTOToSign>();
 
 	public static ToSign ShootingToSign(Shooting shooting, StationCycle stationCycle)
 	{

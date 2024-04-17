@@ -13,8 +13,5 @@ public partial class DTOOTTagTwinCat
 		ValueType = otTagTwinCat.ValueType;
 	}
 
-	public override OTTagTwinCat ToModel()
-	{
-		return new(this);
-	}
+	public override OTTagTwinCat ToModel() => new(this);
 }

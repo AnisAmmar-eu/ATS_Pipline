@@ -37,8 +37,5 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 	    get => CameraTestSub ?? throw new ArgumentException("rip bozo");
     }
 
-    public override DTOBenchmarkTest ToDTO()
-	{
-		return new(this);
-	}
+    public override DTOBenchmarkTest ToDTO() => new(this);
 }

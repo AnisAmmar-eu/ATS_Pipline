@@ -9,8 +9,5 @@ public partial class Dataset
 	{
 	}
 
-	public override DTODataset ToDTO()
-	{
-		return this.Adapt<DTODataset>();
-	}
+	public override DTODataset ToDTO() => this.Adapt<DTODataset>();
 }

@@ -17,8 +17,5 @@ public partial class AlarmC
 		Severity = alarmC.Severity;
 	}
 
-	public override DTOAlarmC ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOAlarmC ToDTO() => new(this);
 }

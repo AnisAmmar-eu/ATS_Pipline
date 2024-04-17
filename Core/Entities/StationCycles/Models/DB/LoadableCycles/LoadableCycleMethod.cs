@@ -12,8 +12,5 @@ public abstract partial class LoadableCycle
 	{
 	}
 
-	public override DTOLoadableCycle ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOLoadableCycle ToDTO() => new(this);
 }

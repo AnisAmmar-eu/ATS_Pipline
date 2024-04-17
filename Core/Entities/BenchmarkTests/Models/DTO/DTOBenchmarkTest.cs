@@ -25,8 +25,5 @@ public class DTOBenchmarkTest : DTOBaseEntity, IDTO<BenchmarkTest, DTOBenchmarkT
 	public int Status { get; set; }
 	public int AnodeType { get; set; }
 
-	public override BenchmarkTest ToModel()
-	{
-		return new(this);
-	}
+	public override BenchmarkTest ToModel() => new(this);
 }

@@ -15,8 +15,5 @@ public partial class ApplicationRole
 		Type = ApplicationRoleType.User;
 	}
 
-	public DTORole ToDTO()
-	{
-		return new(this);
-	}
+	public DTORole ToDTO() => new(this);
 }

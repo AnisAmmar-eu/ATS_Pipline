@@ -20,8 +20,5 @@ public partial class DTOIOTDevice
 		IOTTags = iotDevice.IOTTags.ConvertAll(tag => tag.ToDTO());
 	}
 
-	public override IOTDevice ToModel()
-	{
-		return new(this);
-	}
+	public override IOTDevice ToModel() => new(this);
 }

@@ -20,8 +20,5 @@ public partial class ToMatch
 		InstanceMatchID = instanceMatchID;
 	}
 
-	public override DTOToMatch ToDTO()
-	{
-		return this.Adapt<DTOToMatch>();
-	}
+	public override DTOToMatch ToDTO() => this.Adapt<DTOToMatch>();
 }

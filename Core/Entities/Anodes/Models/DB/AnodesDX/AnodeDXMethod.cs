@@ -20,10 +20,7 @@ public partial class AnodeDX
 	{
 	}
 
-	public override DTOAnodeDX ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOAnodeDX ToDTO() => new(this);
 
 	public void AddS5Cycle(S5Cycle cycle)
 	{

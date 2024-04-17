@@ -32,8 +32,5 @@ public partial class OutFurnace
 		BakedConvPos = adsStruct.MD.BakedConvPos;
 	}
 
-	public override DTOOutFurnace ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOOutFurnace ToDTO() => new(this);
 }

@@ -12,8 +12,5 @@ public abstract partial class Furnace
 	{
 	}
 
-	public override DTOFurnace ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOFurnace ToDTO() => new(this);
 }

@@ -18,8 +18,5 @@ public partial class IOTTag
 		IsReadOnly = dtoIOTTag.IsReadOnly;
 	}
 
-	public override DTOIOTTag ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOIOTTag ToDTO() => new(this);
 }

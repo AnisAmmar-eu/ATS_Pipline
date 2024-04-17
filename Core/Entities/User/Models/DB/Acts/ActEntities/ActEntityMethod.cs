@@ -25,8 +25,5 @@ public partial class ActEntity
 		Act = act;
 	}
 
-	public override DTOActEntity ToDTO()
-	{
-		return new(this);
-	}
+	public override DTOActEntity ToDTO() => new(this);
 }

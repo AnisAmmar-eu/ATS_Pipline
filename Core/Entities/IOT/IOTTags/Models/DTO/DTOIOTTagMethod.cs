@@ -18,8 +18,5 @@ public partial class DTOIOTTag
 		IsReadOnly = iotTag.IsReadOnly;
 	}
 
-	public override IOTTag ToModel()
-	{
-		return new(this);
-	}
+	public override IOTTag ToModel() => new(this);
 }

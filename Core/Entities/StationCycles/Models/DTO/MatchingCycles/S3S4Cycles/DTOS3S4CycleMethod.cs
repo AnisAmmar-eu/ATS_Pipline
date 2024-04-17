@@ -24,8 +24,5 @@ public partial class DTOS3S4Cycle
 		OutFurnacePacket = s3S4Cycle.OutFurnacePacket?.ToDTO();
 	}
 
-	public override S3S4Cycle ToModel()
-	{
-		return new(this);
-	}
+	public override S3S4Cycle ToModel() => new(this);
 }
