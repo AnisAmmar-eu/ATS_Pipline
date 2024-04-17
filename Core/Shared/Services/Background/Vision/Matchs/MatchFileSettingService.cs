@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using DLLVision;
 
-namespace Core.Shared.Services.Background.Vision;
+namespace Core.Shared.Services.Background.Vision.Matchs;
 
 public class MatchFileSettingService : BackgroundService
 {

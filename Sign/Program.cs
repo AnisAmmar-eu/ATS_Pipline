@@ -1,6 +1,5 @@
 using Core.Shared.Configuration;
 using Core.Shared.Data;
-using Core.Shared.Services.Background.Vision;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Core.Shared.Dictionaries;
 using DLLVision;
+using Core.Shared.Services.Background.Vision.Signs;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Sign service");

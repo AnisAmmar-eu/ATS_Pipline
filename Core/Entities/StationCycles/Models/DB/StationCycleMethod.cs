@@ -55,7 +55,7 @@ public partial class StationCycle
 		PropertyInfo[] properties = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 		Type packetType = packet.GetType();
 
-		PropertyInfo property = properties.FirstOrDefault(info => info.PropertyType == packetType)
+		PropertyInfo property = Array.Find(properties, info => info.PropertyType == packetType)
 			?? throw new ArgumentException($"Cycle of RID {RID} has no packet of type {packetType}");
 
 		property.SetValue(this, packet);

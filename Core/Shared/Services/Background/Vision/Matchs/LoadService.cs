@@ -11,8 +11,10 @@ using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.StationCycles.Models.DB;
+using System.Data;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
 
-namespace Core.Shared.Services.Background.Vision;
+namespace Core.Shared.Services.Background.Vision.Matchs;
 
 public class LoadService : BackgroundService
 {
@@ -54,6 +56,14 @@ public class LoadService : BackgroundService
 			IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 			try
 			{
+				Match match = (Match)await _anodeUOW.IOTDevice
+					.GetByWithThrow(
+						[device => device is Match && ((Match)device).InstanceMatchID == instanceMatchID],
+						withTracking: false);
+
+				if (match.Pause)
+					throw new("System on pause");
+
 				List<ToLoad> toLoads = await _anodeUOW.ToLoad.GetAll(
 					[load => load.InstanceMatchID == instanceMatchID],
 					orderBy: query => query.OrderByDescending(

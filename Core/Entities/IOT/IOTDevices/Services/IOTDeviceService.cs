@@ -1,5 +1,6 @@
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
@@ -117,6 +118,15 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 		if (updatedDevices.Length == 0)
 			return connectedDevices;
+
+		ServerRule ruleDevice = (ServerRule)await AnodeUOW.IOTDevice
+			.GetByWithThrow([device => device is ServerRule], withTracking: true);
+
+		foreach (IOTDevice device in updatedDevices)
+		{
+			if (device is BackgroundService service)
+				service.Pause = ruleDevice.Reinit;
+		}
 
 		await AnodeUOW.StartTransaction();
 		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);

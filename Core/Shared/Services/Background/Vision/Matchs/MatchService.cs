@@ -13,8 +13,9 @@ using Core.Entities.StationCycles.Models.DB.MatchableCycles;
 using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Entities.Vision.ToDos.Services.ToUnloads;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
 
-namespace Core.Shared.Services.Background.Vision;
+namespace Core.Shared.Services.Background.Vision.Matchs;
 
 public class MatchService : BackgroundService
 {
@@ -56,6 +57,14 @@ public class MatchService : BackgroundService
 
 			try
 			{
+				Match match = (Match)await _anodeUOW.IOTDevice
+					.GetByWithThrow(
+						[device => device is Match && ((Match)device).InstanceMatchID == instanceMatchID],
+						withTracking: false);
+
+				if (match.Pause)
+					throw new("System on pause");
+
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
 					[match => match.InstanceMatchID == instanceMatchID],
 					withTracking: false);

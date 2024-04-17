@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using DLLVision;
 
-namespace Core.Shared.Services.Background.Vision;
+namespace Core.Shared.Services.Background.Vision.Signs;
 
 public class SignFileSettingService : BackgroundService
 {
@@ -41,22 +41,22 @@ public class SignFileSettingService : BackgroundService
 		/// <remarks>If exists sets them in the DLL then move them in archive</remarks>
 		while (!stoppingToken.IsCancellationRequested)
 		{
-            await Task.Delay(TimeSpan.FromSeconds(FileSettingsTimer), stoppingToken);
-            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			await Task.Delay(TimeSpan.FromSeconds(FileSettingsTimer), stoppingToken);
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
-            try
-            {
+			try
+			{
 				string signStaticParamsFile = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 				int responseStatic = 1000;
 				if (File.Exists(signStaticParamsFile)
-					&& ((responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0)
-					&& ((responseStatic = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParamsFile)) == 0))
+					&& (responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0
+					&& (responseStatic = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParamsFile)) == 0)
 				{
 					File.Delete(Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
 					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
 				}
 
-				foreach (int cameraID in new int[] {1, 2})
+				foreach (int cameraID in new int[] { 1, 2 })
 				{
 					string signDynamicParamsFile = Path.Combine(
 						folderWithoutCam,
@@ -65,10 +65,10 @@ public class SignFileSettingService : BackgroundService
 
 					int responseDynamic = 1000;
 					if (File.Exists(signDynamicParamsFile)
-						&& ((responseDynamic = DLLVisionImport.fcx_unregister_sign_params_dynamic(cameraID)) == 0)
-						&& ((responseDynamic = DLLVisionImport.fcx_register_sign_params_dynamic(
+						&& (responseDynamic = DLLVisionImport.fcx_unregister_sign_params_dynamic(cameraID)) == 0
+						&& (responseDynamic = DLLVisionImport.fcx_register_sign_params_dynamic(
 							cameraID,
-							signDynamicParamsFile)) == 0))
+							signDynamicParamsFile)) == 0)
 					{
 						File.Delete(Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
 						File.Move(signDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));

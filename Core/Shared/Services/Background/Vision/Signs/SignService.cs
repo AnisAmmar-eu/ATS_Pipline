@@ -16,9 +16,9 @@ using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Services.ToLoads;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
-using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
 
-namespace Core.Shared.Services.Background.Vision;
+namespace Core.Shared.Services.Background.Vision.Signs;
 
 public class SignService : BackgroundService
 {
@@ -56,11 +56,16 @@ public class SignService : BackgroundService
 
 			try
 			{
-				ServerRule rule = (ServerRule)await _anodeUOW.IOTDevice
-					.GetByWithThrow([device => device is ServerRule], withTracking: false);
+				Sign sign = (Sign)await _anodeUOW.IOTDevice
+					.GetByWithThrow(
+						[device => device is Sign && ((Sign)device).StationID == Station.ID && ((Sign)device).AnodeType == anodeType],
+						withTracking: false);
 
-				if (rule.Reinit)
-					throw new("Reinit is launched");
+				if (sign.Pause)
+				{
+					_logger.LogWarning("System on pause");
+					continue;
+				}
 
 				List<ToSign> toSigns = await _anodeUOW.ToSign.GetAll(
 					[sign => sign.StationID == Station.ID && sign.AnodeType == anodeType],

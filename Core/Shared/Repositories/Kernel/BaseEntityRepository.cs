@@ -26,7 +26,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {
-	protected readonly ICollection<Expression<Func<T, bool>>> ImportFilters = new List<Expression<Func<T, bool>>>();
+	protected readonly ICollection<Expression<Func<T, bool>>> ImportFilters = [];
 	private readonly string[] _baseIncludes;
 	private readonly Dictionary<string, string[]> _baseConcatIncludes;
 

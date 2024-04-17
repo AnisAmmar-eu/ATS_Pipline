@@ -8,4 +8,5 @@ public partial class BackgroundService: IOTDevice, IBaseEntity<BackgroundService
 	public int StationID { get; set; }
 	public string AnodeType { get; set; }
 	public DateTimeOffset WatchdogTime { get; set; } = DateTimeOffset.MinValue;
+	public bool Pause { get; set; }
 }
