@@ -9,8 +9,5 @@ public partial class DTOToMatch
 	{
 	}
 
-	public override ToMatch ToModel()
-	{
-		return this.Adapt<ToMatch>();
-	}
+	public override ToMatch ToModel() => this.Adapt<ToMatch>();
 }

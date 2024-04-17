@@ -83,7 +83,7 @@ public partial class OTCamera
 		}
 		catch (IOException e)
 		{
-			logger.LogError($"Error while connecting to {RID} when applying tags: {e}");
+			logger.LogError("Error while connecting to {RID} when applying tags: {error}", RID, e);
 			return [];
 		}
 

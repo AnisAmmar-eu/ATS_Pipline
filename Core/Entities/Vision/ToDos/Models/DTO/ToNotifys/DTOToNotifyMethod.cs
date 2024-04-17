@@ -9,8 +9,5 @@ public partial class DTOToNotify
 	{
 	}
 
-	public override ToNotify ToModel()
-	{
-		return this.Adapt<ToNotify>();
-	}
+	public override ToNotify ToModel() => this.Adapt<ToNotify>();
 }
