@@ -9,10 +9,7 @@ public struct RIDStruct
 	public int StationID { get; set; }
 	public TimestampStruct TS { get; set; }
 
-	public string ToRID()
-	{
-		// Final RID : S_yyyyMMdd-HHmmss-fff
-		// Example : 1_20241225-155623-543 -> Station 1 2024-12-25 15:56:23:543
-		return $"{StationID:0}_{TS.GetTimestamp().ToString(AnodeFormat.RIDFormat)}";
-	}
+	// Final RID : S_yyyyMMdd-HHmmss-fff
+	// Example : 1_20241225-155623-543 -> Station 1 2024-12-25 15:56:23:543
+	public string ToRID() => $"{StationID:0}_{TS.GetTimestamp().ToString(AnodeFormat.RIDFormat)}";
 }
