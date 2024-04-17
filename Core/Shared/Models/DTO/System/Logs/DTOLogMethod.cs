@@ -26,8 +26,5 @@ public partial class DTOLog
 		StationID = log.StationID;
 	}
 
-	public override Log ToModel()
-	{
-		return new(this);
-	}
+	public override Log ToModel() => new(this);
 }

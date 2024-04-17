@@ -24,15 +24,9 @@ public partial class DTOActEntity
 			.ToList();
 	}
 
-	public override ActEntity ToModel()
-	{
-		return new(this);
-	}
+	public override ActEntity ToModel() => new(this);
 
-	public ActEntity ToModel(Act act, string signatureType)
-	{
-		return new(this, act, signatureType);
-	}
+	public ActEntity ToModel(Act act, string signatureType) => new(this, act, signatureType);
 
 	public void AssociateEntity(string entityType, int entityID, string? parentType = null, int? parentID = null)
 	{
