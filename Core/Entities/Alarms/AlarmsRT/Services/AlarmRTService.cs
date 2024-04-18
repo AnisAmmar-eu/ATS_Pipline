@@ -39,7 +39,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 			foreach (Alarm alarmStruct in alarmStructs)
 			{
 				AlarmRT alarmRT = new(alarmStruct);
-				_logger.LogInformation($"AlarmRT: {alarmRT.TSRaised.ToString()}");
+				_logger.LogInformation("AlarmRT: {Time}", alarmRT.TSRaised);
 				string RIDAlarmStruct = alarmStruct.RID.ToString();
 
 				try
@@ -69,7 +69,10 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 					}
 					catch (EntityNotFoundException)
 					{
-						_logger.LogWarning($"Alarm {RIDAlarmStruct} | {alarmStruct.RID.ToString()} is not in the alarm list.");
+						_logger.LogWarning(
+							"Alarm {RIDAlarmStruct} | {RIDAlarmStructString} is not in the alarm list.",
+							RIDAlarmStruct,
+							alarmStruct.RID.ToString());
 					}
 				}
 			}
@@ -79,7 +82,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 		}
 		catch (Exception e)
 		{
-			_logger.LogError($"Error while reading alarm list: {e}");
+			_logger.LogError("Error while reading alarm list: {e}", e);
 		}
 	}
 
@@ -105,7 +108,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 		}
 		catch (Exception e)
 		{
-			_logger.LogError($"Error while sending AlarmRT: {e}");
+			_logger.LogError("Error while sending AlarmRT: {e}", e);
 		}
 
 		await AnodeUOW.CommitTransaction();
@@ -133,7 +136,7 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 
 	public async Task ReceiveAlarmRT(DTOAlarmRT dtoAlarmRT)
 	{
-		_logger.LogInformation($"Receiving AlarmRT: {dtoAlarmRT.IRID} | {dtoAlarmRT.StationID.ToString()}");
+		_logger.LogInformation("Receiving AlarmRT: {IRID} | {StationID}", dtoAlarmRT.IRID, dtoAlarmRT.StationID);
 		List<AlarmRT> alarms = await AnodeUOW.AlarmRT.GetAll(withTracking: false);
 		try
 		{

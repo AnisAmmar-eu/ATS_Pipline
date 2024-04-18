@@ -46,10 +46,7 @@ public struct MetaDataStruct : IBaseADS<Packet>
 	public float Cam02Temp;
 	public float TT01;
 
-	public Packet ToModel()
-	{
-		return new MetaData(this);
-	}
+	public Packet ToModel() => new MetaData(this);
 }
 
 /*

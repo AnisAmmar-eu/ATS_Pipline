@@ -10,8 +10,5 @@ public partial class DTOToLoad : DTOToDo, IDTO<ToLoad, DTOToLoad>
 	{
 	}
 
-	public override ToLoad ToModel()
-	{
-		return this.Adapt<ToLoad>();
-	}
+	public override ToLoad ToModel() => this.Adapt<ToLoad>();
 }

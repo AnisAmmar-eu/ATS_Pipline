@@ -9,8 +9,5 @@ public partial class DTOToUnload
 	{
 	}
 
-	public override ToUnload ToModel()
-	{
-		return this.Adapt<ToUnload>();
-	}
+	public override ToUnload ToModel() => this.Adapt<ToUnload>();
 }

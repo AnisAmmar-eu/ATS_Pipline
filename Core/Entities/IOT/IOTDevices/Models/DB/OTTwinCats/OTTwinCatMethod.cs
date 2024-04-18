@@ -54,7 +54,7 @@ public partial class OTTwinCat
 		}
 		catch (AdsException e)
 		{
-			logger.LogError($"Error while connecting to {RID} when applying tags: {e}");
+			logger.LogError("Error while connecting to {RID} when applying tags: {e}", RID, e);
 			return []; // The TwinCat will be marked as disconnected at next monitoring.
 		}
 
@@ -94,7 +94,7 @@ public partial class OTTwinCat
 			}
 			catch (Exception e)
 			{
-				logger.LogError($"Error while applying tag {tag.RID}: {e}");
+				logger.LogError("Error while applying tag {TagRID}: {Error}", tag.RID, e);
 			}
 		}
 

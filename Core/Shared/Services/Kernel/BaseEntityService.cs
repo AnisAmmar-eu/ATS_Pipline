@@ -27,10 +27,7 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 		int id,
 		Expression<Func<T, bool>>[]? filters = null,
 		bool withTracking = true,
-		params string[] includes)
-	{
-		return (await _repository.GetById(id, filters, withTracking, includes)).ToDTO();
-	}
+		params string[] includes) => (await _repository.GetById(id, filters, withTracking, includes)).ToDTO();
 
 	public async Task<List<TDTO>> GetAll(
 		Expression<Func<T, bool>>[]? filters = null,
@@ -50,10 +47,7 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 			entity.ToDTO());
 	}
 
-	public Task<int> CountWithPagination(Pagination pagination)
-	{
-		return _repository.CountWithPagination(pagination);
-	}
+	public Task<int> CountWithPagination(Pagination pagination) => _repository.CountWithPagination(pagination);
 
 	public async Task<TDTO> Add(T entity)
 	{
@@ -67,7 +61,7 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 	public async Task<List<TDTO>> AddAll(IEnumerable<T> entities)
 	{
 		await AnodeUOW.StartTransaction();
-		List<TDTO> result = new();
+		List<TDTO> result = [];
 		foreach (T entity in entities)
 		{
 			await _repository.Add(entity);
@@ -91,7 +85,7 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 	public async Task<List<TDTO>> UpdateAll(IEnumerable<T> entities)
 	{
 		await AnodeUOW.StartTransaction();
-		List<TDTO> result = new();
+		List<TDTO> result = [];
 		foreach (T entity in entities)
 		{
 			_repository.Update(entity);
@@ -119,10 +113,7 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 		await AnodeUOW.CommitTransaction();
 	}
 
-	public async Task RemoveByLifeSpan(TimeSpan lifeSpan)
-	{
-		await _repository.RemoveByLifeSpan(lifeSpan);
-	}
+	public async Task RemoveByLifeSpan(TimeSpan lifeSpan) => await _repository.RemoveByLifeSpan(lifeSpan);
 
 	public async Task RemoveAll(IEnumerable<T> entities)
 	{

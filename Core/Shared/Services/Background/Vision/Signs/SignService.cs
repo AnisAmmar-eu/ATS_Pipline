@@ -123,7 +123,7 @@ public class SignService : BackgroundService
 					}
 					else
 					{
-						_logger.LogWarning("Return code de la signature: " + retSign + " pour anode " + image.Name);
+						_logger.LogWarning("Return code de la signature: {retSign} pour anode {imageName}", retSign, image.Name);
 					}
 
 					_anodeUOW.ToSign.Remove(toSign);

@@ -194,7 +194,8 @@ public class CameraService : BackgroundService
 			return (int)cameraNb;
 
 		uint isHole1Handle = tcClient.CreateVariableHandle(ADSUtils.IsHole1);
-		return (tcClient.ReadAny<bool>(isHole1Handle)) ? (int)CameraNb.Camera1 : (int)CameraNb.Camera2;
+		bool isHole1 = tcClient.ReadAny<bool>(isHole1Handle);
+		return isHole1 ? (int)CameraNb.Camera1 : (int)CameraNb.Camera2;
 	}
 
 	private static async Task<bool> IsTestModeOn(ILogger<CameraService> logger)
@@ -207,11 +208,9 @@ public class CameraService : BackgroundService
 			if (response.StatusCode != HttpStatusCode.OK)
 				throw new ApplicationException($"Response status code is: {response.StatusCode.ToString()}");
 
-			ApiResponse? apiResponse
-				= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
-			if (apiResponse is null)
-				throw new ApplicationException("Could not deserialize ApiIOT response");
-
+			ApiResponse apiResponse
+				= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync())
+					?? throw new ApplicationException("Could not deserialize ApiIOT response");
 			if (apiResponse.Result is not JsonElement jsonElement)
 				throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
 

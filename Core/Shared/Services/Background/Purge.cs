@@ -17,7 +17,6 @@ public class PurgeService : BackgroundService
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<PurgeService> _logger;
 	private readonly IConfiguration _configuration;
-	private IAnodeUOW _anodeUOW;
 
 	public PurgeService(
 		ILogger<PurgeService> logger,
@@ -31,7 +30,7 @@ public class PurgeService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-        int purgeThresholdSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeThreshold);
+		int purgeThresholdSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeThreshold);
 		int purgeTimerSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeTimerSec);
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
@@ -42,9 +41,9 @@ public class PurgeService : BackgroundService
 		while (!stoppingToken.IsCancellationRequested)
 		{
 			await Task.Delay(TimeSpan.FromSeconds(purgeTimerSec), stoppingToken);
-            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-            _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-            try
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+			try
 			{
 				_logger.LogInformation("PurgeService running at: {time}", DateTimeOffset.Now);
 				_logger.LogError("PurgeService threshold: {threshold}", purgeThreshold.ToString());

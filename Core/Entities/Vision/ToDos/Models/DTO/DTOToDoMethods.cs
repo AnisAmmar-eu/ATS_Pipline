@@ -1,4 +1,5 @@
 using Mapster;
+using Core.Entities.Vision.ToDos.Models.DB;
 
 namespace Core.Entities.Vision.ToDos.Models.DTO;
 
@@ -8,8 +9,5 @@ public partial class DTOToDo
 	{
 	}
 
-	public override DB.ToDo ToModel()
-	{
-		return this.Adapt<DB.ToDo>();
-	}
+	public override ToDo ToModel() => this.Adapt<ToDo>();
 }

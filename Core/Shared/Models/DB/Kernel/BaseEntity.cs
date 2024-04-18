@@ -31,9 +31,9 @@ public class BaseEntity : IBaseEntity<BaseEntity, DTOBaseEntity>
 	public virtual DTOBaseEntity ToDTO()
 	{
 		return new()
-        {
-         ID = ID,
-         TS = TS,
+		{
+			ID = ID,
+			TS = TS,
 		};
 	}
 }

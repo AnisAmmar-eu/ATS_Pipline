@@ -13,10 +13,7 @@ public struct OutFurnaceStruct : IBaseADS<Packet>
 	public TimestampStruct TS;
 	public OutFurnaceRWStruct MD;
 
-	public Packet ToModel()
-	{
-		return new OutFurnace(this);
-	}
+	public Packet ToModel() => new OutFurnace(this);
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 0, CharSet = CharSet.Ansi)]
