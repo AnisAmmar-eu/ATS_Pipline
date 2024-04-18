@@ -16,6 +16,7 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public int StationID { get; set; } = Station.ID;
 	public string AnodeType { get; set; } = string.Empty;
 	public string RID { get; set; } = string.Empty;
+	public string SerialNumber { get; set; } = "NA";
 	public PacketStatus Status { get; set; } = PacketStatus.Initialized;
 	public DateTimeOffset? TSFirstShooting { get; set; }
 	public SignMatchStatus SignStatus1 { get; set; } = SignMatchStatus.NA;

@@ -23,6 +23,7 @@ public partial class DTOStationCycle
 		StationID = stationCycle.StationID;
 		AnodeType = stationCycle.AnodeType;
 		RID = stationCycle.RID;
+		SerialNumber = stationCycle.SerialNumber;
 		Status = stationCycle.Status;
 		TSFirstShooting = stationCycle.TSFirstShooting;
 		SignStatus1 = stationCycle.SignStatus1;
