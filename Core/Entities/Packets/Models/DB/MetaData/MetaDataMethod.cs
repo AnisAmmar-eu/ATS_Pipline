@@ -100,6 +100,6 @@ public partial class MetaData
 		string _SN_Vibro = SN_Vibro.ToString();
 		string _SN_Number = SN_Number.ToString().PadLeft(4, '0');
 
-		return $"{_SN_Year}-{_SN_Month}-{_SN_Day}-{_SN_Vibro}-{_SN_Number}";
+		return $"{_SN_Year}{_SN_Month}{_SN_Day}{_SN_Vibro}{_SN_Number}";
 	}
 }
