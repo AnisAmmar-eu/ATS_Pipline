@@ -47,8 +47,8 @@ builder.Services.AddAuthentication(
 		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
-			ValidAudience = builder.Configuration["JWT:ValidAudience"],
-			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+			ValidAudience = builder.Configuration.GetValueWithThrow<string>("JWT:ValidAudience"),
+			ValidIssuer = builder.Configuration.GetValueWithThrow<string>("JWT:ValidIssuer"),
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
 		options.Events = new() {

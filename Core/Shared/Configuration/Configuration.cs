@@ -12,31 +12,13 @@ namespace Core.Shared.Configuration;
 public static class Configuration
 {
 	public static T GetValueWithThrow<T>(this IConfiguration configuration, string path)
-	{
-		T? res = configuration.GetValue<T>(path);
-		if (res is null)
-			throw new ConfigurationErrorsException($"Missing {path}");
-
-		return res;
-	}
+		=> configuration.GetValue<T>(path) ?? throw new ConfigurationErrorsException($"Missing {path}");
 
 	public static T GetSectionWithThrow<T>(this IConfiguration configuration, string path)
-	{
-		T? res = configuration.GetSection(path).Get<T>();
-		if (res is null)
-			throw new ConfigurationErrorsException($"Missing {path}");
-
-		return res;
-	}
+		=> configuration.GetSection(path).Get<T>() ?? throw new ConfigurationErrorsException($"Missing {path}");
 
 	public static string GetConnectionStringWithThrow(this IConfiguration configuration, string path)
-	{
-		string? res = configuration.GetConnectionString(path);
-		if (res is null)
-			throw new ConfigurationErrorsException($"Missing {path}");
-
-		return res;
-	}
+		=> configuration.GetConnectionString(path) ?? throw new ConfigurationErrorsException($"Missing {path}");
 
 	/// <summary>
 	/// Allows to load config common to every Api upon startup
