@@ -67,6 +67,13 @@ public partial class Shooting
 		return new($@"{root}\{path}\{filename}");
 	}
 
+	public static string GetCycleRIDFromFilename(string filename)
+	{
+		Regex regex = FilenameRegex();
+		GroupCollection groups = regex.Match(filename).Groups;
+		return $"S{groups["stationID"].Value}_{groups["TS"].Value}";
+	}
+
 	public async Task SendImages(string imagesPath, string thumbnailsPath, string extension, ILogger logger)
 	{
 		foreach (string path in (List<string>)([imagesPath, thumbnailsPath]))
