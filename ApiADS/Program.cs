@@ -44,10 +44,8 @@ builder.Services.AddAuthentication(
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
-		string? jwtSecret = builder.Configuration["JWT:Secret"];
-		if (jwtSecret is null)
-			throw new ConfigurationErrorsException("Missing JWT Secret");
-
+		string? jwtSecret = builder.Configuration["JWT:Secret"]
+			?? throw new ConfigurationErrorsException("Missing JWT Secret");
 		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
@@ -82,7 +80,7 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
 
-builder.Services.AddSingleton<IServiceProvider>(sp => sp);
+builder.Services.AddSingleton(sp => sp);
 
 builder.Services.AddSingleton<ADSService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<ADSService>());

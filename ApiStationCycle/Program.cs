@@ -43,10 +43,8 @@ builder.Services.AddAuthentication(
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
-		string? jwtSecret = builder.Configuration["JWT:Secret"];
-		if (jwtSecret is null)
-			throw new ConfigurationErrorsException("Missing JWT Secret");
-
+		string? jwtSecret = builder.Configuration["JWT:Secret"]
+			?? throw new ConfigurationErrorsException("Missing JWT Secret");
 		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
@@ -97,9 +95,9 @@ if (!Station.IsServer)
 WebApplication app = builder.Build();
 
 // Initialize
-string? dbInitialize = builder.Configuration["DbInitialize"];
-if (dbInitialize is null)
-	throw new ConfigurationErrorsException("Missing DbInitialize");
+string? dbInitialize = builder.Configuration["DbInitialize"]
+	?? throw new ConfigurationErrorsException("Missing DbInitialize");
+
 if (!Station.IsServer && bool.Parse(dbInitialize))
 {
 	using IServiceScope scope = app.Services.CreateScope();
