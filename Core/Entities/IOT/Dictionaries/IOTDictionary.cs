@@ -91,19 +91,19 @@ public static class ITStationApisDict
 		DX (All), D20 (Except S5)
 		Static / Dynamic (Except Match)
 	*/
-public record SignServiceData(int StationID, string AnodeType);
+public record SignServiceData(string RID, int StationID, string AnodeType);
 
 public static class SignService
 {
-	public static SignServiceData S1TypeDX = new(1, AnodeTypeDict.DX);
-	public static SignServiceData S1TypeD20 = new(1, AnodeTypeDict.D20);
-	public static SignServiceData S2TypeDX = new(2, AnodeTypeDict.DX);
-	public static SignServiceData S2TypeD20 = new(2, AnodeTypeDict.D20);
-	public static SignServiceData S3TypeDX = new(3, AnodeTypeDict.DX);
-	public static SignServiceData S3TypeD20 = new(3, AnodeTypeDict.D20);
-	public static SignServiceData S4TypeDX = new(4, AnodeTypeDict.DX);
-	public static SignServiceData S4TypeD20 = new(4, AnodeTypeDict.D20);
-	public static SignServiceData S5TypeDX = new(5, AnodeTypeDict.DX);
+	public static SignServiceData S1TypeDX = new("Sign1", 1, AnodeTypeDict.DX);
+	public static SignServiceData S1TypeD20 = new("Sign2", 1, AnodeTypeDict.D20);
+	public static SignServiceData S2TypeDX = new("Sign3", 2, AnodeTypeDict.DX);
+	public static SignServiceData S2TypeD20 = new("Sign4", 2, AnodeTypeDict.D20);
+	public static SignServiceData S3TypeDX = new("Sign5", 3, AnodeTypeDict.DX);
+	public static SignServiceData S3TypeD20 = new("Sign6", 3, AnodeTypeDict.D20);
+	public static SignServiceData S4TypeDX = new("Sign7", 4, AnodeTypeDict.DX);
+	public static SignServiceData S4TypeD20 = new("Sign8", 4, AnodeTypeDict.D20);
+	public static SignServiceData S5TypeDX = new("Sign9", 5, AnodeTypeDict.DX);
 
 	public static List<SignServiceData> list = [
 		S1TypeDX,
@@ -119,6 +119,7 @@ public static class SignService
 }
 
 public record MatchServiceData(
+	string RID,
 	int StationID,
 	string AnodeType,
 	string Family,
@@ -135,24 +136,20 @@ public static class MatchService
 		Gate2Gate0DX
 		Gate2Gate1DX
 	*/
-	public static MatchServiceData S3Gate1Gate0DXv1 = new(3, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
-	public static MatchServiceData S4Gate1Gate0DXv1 = new(4, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
-	public static MatchServiceData S3Gate1Gate0DXv2 = new(3, AnodeTypeDict.DX, "Gate1Gate0DX", 4);
-	public static MatchServiceData S4Gate1Gate0DXv2 = new(4, AnodeTypeDict.DX, "Gate1Gate0DX", 4);
-	public static MatchServiceData S3Gate1Gate0D20v1 = new(3, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
-	public static MatchServiceData S4Gate1Gate0D20v1 = new(4, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
-	public static MatchServiceData S5Gate2Gate0DXv1 = new(5, AnodeTypeDict.DX, "Gate2Gate0DX", 2);
-	public static MatchServiceData S5Gate2Gate1DXv1 = new(5, AnodeTypeDict.DX, "Gate2Gate1DX", 3);
+	public static MatchServiceData S3Gate1Gate0DX = new("Match1" , 3, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
+	public static MatchServiceData S4Gate1Gate0DX = new("Match2", 4, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
+	public static MatchServiceData S3Gate1Gate0D20 = new("Match3", 3, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
+	public static MatchServiceData S4Gate1Gate0D20 = new("Match4", 4, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
+	public static MatchServiceData S5Gate2Gate0DX = new("Match5", 5, AnodeTypeDict.DX, "Gate2Gate0DX", 2);
+	public static MatchServiceData S5Gate2Gate1DX = new("Match6", 5, AnodeTypeDict.DX, "Gate2Gate1DX", 3);
 
 	public static List<MatchServiceData> list = [
-		S3Gate1Gate0DXv1,
-		S4Gate1Gate0DXv1,
-		S3Gate1Gate0DXv2,
-		S4Gate1Gate0DXv2,
-		S3Gate1Gate0D20v1,
-		S4Gate1Gate0D20v1,
-		S5Gate2Gate0DXv1,
-		S5Gate2Gate1DXv1
+		S3Gate1Gate0DX,
+		S4Gate1Gate0DX,
+		S3Gate1Gate0D20,
+		S4Gate1Gate0D20,
+		S5Gate2Gate0DX,
+		S5Gate2Gate1DX
 	];
 }
 
