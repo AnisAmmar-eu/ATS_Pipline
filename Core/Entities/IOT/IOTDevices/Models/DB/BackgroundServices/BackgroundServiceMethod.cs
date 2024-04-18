@@ -13,7 +13,7 @@ public partial class BackgroundService
 
 	public override DTOBackgroundService ToDTO() => this.Adapt<DTOBackgroundService>();
 
-	public override async Task<bool> CheckConnection(ILogger logger)
+	public override Task<bool> CheckConnection(ILogger logger)
 	{
 		bool isConnected;
 		try
@@ -26,6 +26,6 @@ public partial class BackgroundService
 			isConnected = false;
 		}
 
-		return isConnected;
+		return Task.FromResult(isConnected);
 	}
 }

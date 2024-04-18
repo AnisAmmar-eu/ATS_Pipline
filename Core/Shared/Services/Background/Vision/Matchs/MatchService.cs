@@ -14,6 +14,7 @@ using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Entities.Vision.ToDos.Services.ToUnloads;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 
 namespace Core.Shared.Services.Background.Vision.Matchs;
 
@@ -62,8 +63,16 @@ public class MatchService : BackgroundService
 						[device => device is Match && ((Match)device).InstanceMatchID == instanceMatchID],
 						withTracking: false);
 
-				if (match.Pause)
-					throw new("System on pause");
+				ServerRule rule = (ServerRule)await _anodeUOW.IOTDevice
+					.GetByWithThrow(
+						[device => device is ServerRule],
+						withTracking: false);
+
+				if (match.Pause || rule.Reinit)
+				{
+					_logger.LogWarning("System on pause");
+					continue;
+				}
 
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
 					[match => match.InstanceMatchID == instanceMatchID],
@@ -106,7 +115,7 @@ public class MatchService : BackgroundService
 							if (matchErrorCode == 0)
 							{
 								if (!isChained)
-									toMatchService.UpdateAnode(cycle);
+									await toMatchService.UpdateAnode(cycle);
 
 								foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, _anodeUOW))
 								{

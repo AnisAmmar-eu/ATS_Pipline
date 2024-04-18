@@ -17,6 +17,7 @@ using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Services.ToLoads;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 
 namespace Core.Shared.Services.Background.Vision.Signs;
 
@@ -61,7 +62,12 @@ public class SignService : BackgroundService
 						[device => device is Sign && ((Sign)device).StationID == Station.ID && ((Sign)device).AnodeType == anodeType],
 						withTracking: false);
 
-				if (sign.Pause)
+				ServerRule rule = (ServerRule)await _anodeUOW.IOTDevice
+					.GetByWithThrow(
+						[device => device is ServerRule],
+						withTracking: false);
+
+				if (sign.Pause || rule.Reinit)
 				{
 					_logger.LogWarning("System on pause");
 					continue;

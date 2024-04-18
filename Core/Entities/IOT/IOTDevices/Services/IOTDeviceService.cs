@@ -122,12 +122,6 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		ServerRule ruleDevice = (ServerRule)await AnodeUOW.IOTDevice
 			.GetByWithThrow([device => device is ServerRule], withTracking: true);
 
-		foreach (IOTDevice device in updatedDevices)
-		{
-			if (device is BackgroundService service)
-				service.Pause = ruleDevice.Reinit;
-		}
-
 		await AnodeUOW.StartTransaction();
 		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);
 		AnodeUOW.Commit();

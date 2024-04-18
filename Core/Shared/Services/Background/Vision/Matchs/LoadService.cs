@@ -13,6 +13,8 @@ using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.StationCycles.Models.DB;
 using System.Data;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 
 namespace Core.Shared.Services.Background.Vision.Matchs;
 
@@ -61,8 +63,16 @@ public class LoadService : BackgroundService
 						[device => device is Match && ((Match)device).InstanceMatchID == instanceMatchID],
 						withTracking: false);
 
-				if (match.Pause)
-					throw new("System on pause");
+				ServerRule rule = (ServerRule)await _anodeUOW.IOTDevice
+					.GetByWithThrow(
+						[device => device is ServerRule],
+						withTracking: false);
+
+				if (match.Pause || rule.Reinit)
+				{
+					_logger.LogWarning("System on pause");
+					continue;
+				}
 
 				List<ToLoad> toLoads = await _anodeUOW.ToLoad.GetAll(
 					[load => load.InstanceMatchID == instanceMatchID],

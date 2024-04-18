@@ -8,6 +8,6 @@ namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 public interface IToMatchService : IBaseEntityService<ToMatch, DTOToMatch>
 {
 	Task<bool> GoMatch(List<string> origins, int instanceMatchID, int delay);
-	void UpdateAnode(MatchableCycle cycle);
+	Task UpdateAnode(MatchableCycle cycle);
 	Task<MatchableCycle> UpdateCycle(MatchableCycle cycle, nint retMatch, int cameraID, bool isChained);
 }

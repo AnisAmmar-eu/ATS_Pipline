@@ -88,7 +88,7 @@ public class ToMatchService :
 		return cycle;
 	}
 
-	public async void UpdateAnode(MatchableCycle cycle)
+	public async Task UpdateAnode(MatchableCycle cycle)
 	{
 		await AnodeUOW.StartTransaction();
 
