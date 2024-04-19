@@ -203,36 +203,41 @@ public class ToMatchService :
 	private static bool ValidDelay(DateTimeOffset? date, int delay)
 		=> (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
 
-	public static async Task<int> GetMatchInstance(string anodeType, int stationID, IAnodeUOW anodeUOW)
+	public static async Task<List<int>> GetMatchInstance(string anodeType, int stationID, IAnodeUOW anodeUOW)
 	{
 		try
 		{
-			List<int> matchInstances = (await anodeUOW.IOTDevice
+			List<Match> matches = (await anodeUOW.IOTDevice
 				.GetAll([device => device is Match], withTracking: false))
 				.Cast<Match>()
 				.Where(match => match.AnodeType == anodeType && match.StationID == stationID)
-				.Select(match => match.InstanceMatchID)
 				.ToList();
 
-			if (matchInstances.Count == 1)
-				return matchInstances[0];
-
 			List<ToMatch> toMatches = await anodeUOW.ToMatch
-				.GetAll([toMatch => matchInstances.Contains(toMatch.InstanceMatchID)], withTracking: false);
+				.GetAll(
+					[toMatch => matches.Select(match => match.InstanceMatchID).Contains(toMatch.InstanceMatchID)],
+					withTracking: false);
 
-			int lightestMatchInstance = matchInstances[0];
-			int lightestMatchInstanceCount = toMatches.Count(match => match.InstanceMatchID == lightestMatchInstance);
-			foreach (int matchInstance in matchInstances)
+			List<int> lightestMatchInstances = [];
+
+			foreach (IGrouping<string, Match> familyGroup in matches.GroupBy(match => match.Family))
 			{
-				int instanceCount = toMatches.Count(match => match.InstanceMatchID == matchInstance);
-				if (instanceCount < lightestMatchInstanceCount)
+				int lightestMatchInstance = familyGroup.First().InstanceMatchID;
+				int lightestMatchInstanceCount = toMatches.Count(match => match.InstanceMatchID == lightestMatchInstance);
+				foreach (Match match in familyGroup)
 				{
-					lightestMatchInstance = matchInstance;
-					lightestMatchInstanceCount = instanceCount;
+					int instanceCount = toMatches.Count(toMatch => toMatch.InstanceMatchID == match.InstanceMatchID);
+					if (instanceCount < lightestMatchInstanceCount)
+					{
+						lightestMatchInstance = match.InstanceMatchID;
+						lightestMatchInstanceCount = instanceCount;
+					}
 				}
+
+				lightestMatchInstances.Add(lightestMatchInstance);
 			}
 
-			return lightestMatchInstance;
+			return lightestMatchInstances;
 		}
 		catch (Exception)
 		{

@@ -303,6 +303,8 @@ public static class IOTInitializer
 		foreach(SignServiceData signService in SignService.list)
 		{
 			Sign sign = signService.Adapt<Sign>();
+			sign.Name = sign.RID;
+			sign.Description = sign.RID;
 			anodeCTX.Sign.Add(sign);
 		}
 
@@ -314,6 +316,8 @@ public static class IOTInitializer
 		foreach(MatchServiceData matchService in MatchService.list)
 		{
 			Match match = matchService.Adapt<Match>();
+			match.Name = match.RID;
+			match.Description = match.RID;
 			anodeCTX.Match.Add(match);
 		}
 
