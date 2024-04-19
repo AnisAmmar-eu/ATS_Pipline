@@ -19,6 +19,8 @@ using System.Reactive.Linq;
 using Core.Shared.Dictionaries;
 using System.Data;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -88,18 +90,21 @@ public class ToMatchService :
 		return cycle;
 	}
 
-	public async Task UpdateAnode(MatchableCycle cycle)
+	public async Task UpdateAnode(MatchableCycle cycle, string cycleRID)
 	{
+		if (cycleRID is null)
+			return;
+
 		await AnodeUOW.StartTransaction();
 
 		try
 		{
 			Anode anode = await AnodeUOW.Anode.GetByWithThrow(
-				[anode => anode.CycleRID == cycle.RID]
+				[anode => anode.CycleRID == cycleRID]
 				);
 
-			if (cycle is StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle)
-				anode.S3S4Cycle = cycle as StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle;
+			if (cycle is S3S4Cycle)
+				anode.S3S4Cycle = cycle as S3S4Cycle;
 			else
 				((AnodeDX)anode).S5Cycle = cycle as S5Cycle;
 

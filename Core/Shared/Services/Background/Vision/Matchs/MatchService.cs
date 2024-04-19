@@ -15,6 +15,7 @@ using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Entities.Vision.ToDos.Services.ToUnloads;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
+using System.Runtime.InteropServices;
 
 namespace Core.Shared.Services.Background.Vision.Matchs;
 
@@ -106,24 +107,32 @@ public class MatchService : BackgroundService
 							image.DirectoryName,
 							Path.GetFileNameWithoutExtension(image.Name));
 						int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
+						_logger.LogInformation(
+							"{nb} matché avec code d'erreur {error}",
+							DLLVisionImport.fcx_matchRet_anodeId(retMatch),
+							matchErrorCode);
 
 						if (matchErrorCode == 0 || matchErrorCode == -106)
 						{
-							_logger.LogInformation("{nb} matché avec code d'erreur {error}", image.Name, matchErrorCode);
 							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, isChained);
 
 							if (matchErrorCode == 0)
 							{
+								string? anodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(retMatch));
+								string? cycleRID = Shooting.GetCycleRIDFromFilename(anodeID);
+
 								if (!isChained)
-									await toMatchService.UpdateAnode(cycle);
+									await toMatchService.UpdateAnode(cycle, cycleRID);
 
 								foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, _anodeUOW))
 								{
 									ToUnload toUnload = toMatch.Adapt<ToUnload>();
 									toUnload.InstanceMatchID = instance;
+									toUnload.CycleRID = cycleRID;
 									await _anodeUOW.ToUnload.Add(toUnload);
 								}
 
+								_anodeUOW.Commit();
 								break; //either camera has matched successfully, not need to go further
 							}
 						}

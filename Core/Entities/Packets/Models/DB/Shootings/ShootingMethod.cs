@@ -67,11 +67,14 @@ public partial class Shooting
 		return new($@"{root}\{path}\{filename}");
 	}
 
+	[GeneratedRegex("S(?<stationID>[0-9]{2})T(?<anodeType>.{2})C(?<camera>[0-9]{2})T(?<TS>.*)")]
+	private static partial Regex ServerFilenameRegex();
+
 	public static string GetCycleRIDFromFilename(string filename)
 	{
-		Regex regex = FilenameRegex();
+		Regex regex = ServerFilenameRegex();
 		GroupCollection groups = regex.Match(filename).Groups;
-		return $"S{groups["stationID"].Value}_{groups["TS"].Value}";
+		return $"{int.Parse(groups["stationID"].Value).ToString()}_{groups["TS"].Value}";
 	}
 
 	public async Task SendImages(string imagesPath, string thumbnailsPath, string extension, ILogger logger)
