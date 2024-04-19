@@ -20,7 +20,6 @@ using Core.Shared.Dictionaries;
 using System.Data;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 

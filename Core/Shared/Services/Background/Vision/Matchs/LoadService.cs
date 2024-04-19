@@ -13,7 +13,6 @@ using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.StationCycles.Models.DB;
 using System.Data;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
-using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 
 namespace Core.Shared.Services.Background.Vision.Matchs;
