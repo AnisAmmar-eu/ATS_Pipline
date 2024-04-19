@@ -13,9 +13,7 @@ public class LogRepository : BaseEntityRepository<AnodeCTX, Log, DTOLog>, ILogRe
 	}
 
 	public Task<List<Log>> GetRange(int start, int nbItems)
-	{
-		return Context.Log.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
-	}
+		=> Context.Log.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
 
 	public async Task DeleteAll()
 	{

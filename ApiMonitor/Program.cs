@@ -47,15 +47,13 @@ builder.Services.AddAuthentication(
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
-		string? jwtSecret = builder.Configuration["JWT:Secret"];
-		if (jwtSecret is null)
-			throw new ConfigurationErrorsException("Missing JWT Secret");
-
+		string jwtSecret = builder.Configuration["JWT:Secret"]
+			?? throw new ConfigurationErrorsException("Missing JWT Secret");
 		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
-			ValidAudience = builder.Configuration["JWT:ValidAudience"],
-			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+			ValidAudience = builder.Configuration.GetValueWithThrow<string>("JWT:ValidAudience"),
+			ValidIssuer = builder.Configuration.GetValueWithThrow<string>("JWT:ValidIssuer"),
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
 		options.Events = new() {
@@ -89,9 +87,6 @@ builder.Services.AddScoped<IAlarmCService, AlarmCService>();
 builder.Services.AddSingleton<IOTService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
 
-//builder.Services.AddSingleton<PurgeService>();
-//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
-
 //builder.Services.AddSingleton<DiskCheckService>();
 //builder.Services.AddHostedService(provider => provider.GetRequiredService<DiskCheckService>());
 
@@ -103,6 +98,9 @@ if (!Station.IsServer)
 {
 	builder.Services.AddSingleton<CheckSyncTimeService>();
 	builder.Services.AddHostedService(provider => provider.GetRequiredService<CheckSyncTimeService>());
+
+	//builder.Services.AddSingleton<PurgeService>();
+	//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 }
 
 WebApplication app = builder.Build();

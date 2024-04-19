@@ -1,4 +1,3 @@
-using System.Configuration;
 using System.Text;
 using Carter;
 using Core.Entities.BI.BITemperatures.Services;
@@ -46,15 +45,12 @@ builder.Services.AddAuthentication(
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
-		string? jwtSecret = builder.Configuration["JWT:Secret"];
-		if (jwtSecret is null)
-			throw new ConfigurationErrorsException("Missing JWT Secret");
-
+		string jwtSecret = builder.Configuration.GetValueWithThrow<string>("JWT:Secret");
 		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
-			ValidAudience = builder.Configuration["JWT:ValidAudience"],
-			ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+			ValidAudience = builder.Configuration.GetValueWithThrow<string>("JWT:ValidAudience"),
+			ValidIssuer = builder.Configuration.GetValueWithThrow<string>("JWT:ValidIssuer"),
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
 		options.Events = new() {

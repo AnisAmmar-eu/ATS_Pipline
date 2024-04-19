@@ -16,7 +16,7 @@ public partial class IOTDevice : BaseEntity, IBaseEntity<IOTDevice, DTOIOTDevice
 
 	#region Nav Properties
 
-	public List<IOTTag> IOTTags { get; set; } = new();
+	public List<IOTTag> IOTTags { get; set; } = [];
 
 	#endregion Nav Properties
 }

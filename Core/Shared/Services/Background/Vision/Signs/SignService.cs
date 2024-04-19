@@ -110,15 +110,20 @@ public class SignService : BackgroundService
 								ToLoad load = toSign.Adapt<ToLoad>();
 								load.InstanceMatchID = instanceMatchID;
 								await _anodeUOW.ToLoad.Add(load);
-								_anodeUOW.Commit();
 							}
 						}
 
 						if (cycle.CanMatch())
 						{
-							ToMatch toMatch = toSign.Adapt<ToMatch>();
-							toMatch.InstanceMatchID = await ToMatchService.GetMatchInstance(toSign.AnodeType, toSign.StationID, _anodeUOW);
-							await _anodeUOW.ToMatch.Add(toMatch);
+							foreach (int instanceMatchID in await ToMatchService.GetMatchInstance(
+								toSign.AnodeType,
+								toSign.StationID,
+								_anodeUOW))
+							{
+								ToMatch toMatch = toSign.Adapt<ToMatch>();
+								toMatch.InstanceMatchID = instanceMatchID;
+								await _anodeUOW.ToMatch.Add(toMatch);
+							}
 						}
 					}
 					else
