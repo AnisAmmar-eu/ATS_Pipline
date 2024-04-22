@@ -39,7 +39,8 @@ public class ToMatchService :
 	{
 		await AnodeUOW.StartTransaction();
 
-		if (DLLVisionImport.fcx_matchRet_errorCode(retMatch) == 0)
+		int retMatchCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
+		if (retMatchCode  == 0)
 		{
 			cycle.MatchingTS ??= DateTimeOffset.Now;
 
@@ -80,7 +81,8 @@ public class ToMatchService :
 			}
 		}
 
-		cycle.KPI = CreateKPI(retMatch);
+		if (cameraID == 2 || (cameraID == 1 && retMatchCode != -106))
+			cycle.KPI = CreateKPI(retMatch);
 
 		_ = AnodeUOW.StationCycle.Update(cycle);
 		_ = AnodeUOW.Commit();
