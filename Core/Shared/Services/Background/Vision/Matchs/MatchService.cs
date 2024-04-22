@@ -40,7 +40,6 @@ public class MatchService : BackgroundService
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		int instanceMatchID = _configuration.GetValueWithThrow<int>(ConfigDictionary.InstanceMatchID);
-		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
 		bool isChained = _configuration.GetValueWithThrow<bool>(ConfigDictionary.IsChained);
 		List<string> stationOrigins = _configuration.GetSectionWithThrow<List<string>>(ConfigDictionary.GoMatchStations);
@@ -120,6 +119,8 @@ public class MatchService : BackgroundService
 							{
 								string? anodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(retMatch));
 								string? cycleRID = Shooting.GetCycleRIDFromFilename(anodeID);
+
+								DLLVisionImport.fcx_matchRet_free(retMatch);
 
 								if (!isChained)
 									await toMatchService.UpdateAnode(cycle, cycleRID);

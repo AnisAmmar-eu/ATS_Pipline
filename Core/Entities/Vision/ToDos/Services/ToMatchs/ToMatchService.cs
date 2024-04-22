@@ -161,7 +161,7 @@ public class ToMatchService :
 			DateTimeOffset? oldestToSign = (await AnodeUOW.ToSign
 				.GetBy(
 					[toSign => stationIDs.Contains(toSign.StationID)],
-					orderBy: query => query.OrderByDescending(
+					orderBy: query => query.OrderBy(
 						toSign => toSign.ShootingTS)))
 				?.ShootingTS
 				?? DateTimeOffset.Now;
@@ -169,7 +169,7 @@ public class ToMatchService :
 			DateTimeOffset? oldestToLoad = (await AnodeUOW.ToLoad
 				.GetBy(
 					[toLoad => toLoad.InstanceMatchID == instanceMatchID],
-					orderBy: query => query.OrderByDescending(
+					orderBy: query => query.OrderBy(
 						toLoad => toLoad.ShootingTS)))
 				?.ShootingTS
 				?? DateTimeOffset.Now;
@@ -190,13 +190,13 @@ public class ToMatchService :
 				!iotDevices.Select(device => device.IsConnected).Contains(false),
 				ValidDelay(oldestStation, delay),
 				ValidDelay(oldestToLoad, delay),
-				ValidDelay(oldestStation, delay));
+				ValidDelay(oldestToSign, delay));
 
 			return rule?.Reinit == false
 				&& !iotDevices.Select(device => device.IsConnected).Contains(false)
 				&& ValidDelay(oldestStation, delay)
 				&& ValidDelay(oldestToLoad, delay)
-				&& ValidDelay(oldestStation, delay);
+				&& ValidDelay(oldestToSign, delay);
 		}
 		catch (Exception)
 		{

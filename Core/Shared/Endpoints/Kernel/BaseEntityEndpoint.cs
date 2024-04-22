@@ -25,7 +25,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 	where TDTO : class, IDTO<T, TDTO>
 	where TService : IBaseEntityService<T, TDTO>
 {
-	private string[] _includes = Array.Empty<string>();
+	private string[] _includes = [];
 	private bool _isLogged;
 
 	/// <summary>
@@ -100,10 +100,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
-		TDTO dto)
-	{
-		return GenericEndpoint(() => service.Add(dto.ToModel()), logService, httpContext, _isLogged);
-	}
+		TDTO dto) => GenericEndpoint(() => service.Add(dto.ToModel()), logService, httpContext, _isLogged);
 
 	#endregion Create
 
@@ -193,18 +190,14 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		HttpContext httpContext,
 		[FromRoute] int nbItems,
 		[FromBody] Pagination pagination)
-	{
-		return GenericEndpoint( () => service.GetWithPagination(pagination, nbItems), logService, httpContext, _isLogged);
-	}
+			=> GenericEndpoint(() => service.GetWithPagination(pagination, nbItems), logService, httpContext, _isLogged);
 
 	private Task<JsonHttpResult<ApiResponse>> CountWithPagination(
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
 		[FromBody] Pagination pagination)
-	{
-		return GenericEndpoint( () => service.CountWithPagination(pagination), logService, httpContext, _isLogged);
-	}
+			=> GenericEndpoint(() => service.CountWithPagination(pagination), logService, httpContext, _isLogged);
 
 	#endregion Read
 
@@ -214,10 +207,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		TService service,
 		ILogService logService,
 		HttpContext httpContext,
-		TDTO dto)
-	{
-		return GenericEndpoint(() => service.Update(dto.ToModel()), logService, httpContext, _isLogged);
-	}
+		TDTO dto) => GenericEndpoint(() => service.Update(dto.ToModel()), logService, httpContext, _isLogged);
 
 	#endregion Update
 
