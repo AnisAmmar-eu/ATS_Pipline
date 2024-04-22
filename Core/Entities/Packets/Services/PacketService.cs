@@ -227,6 +227,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
+				stationCycle.SerialNumber = metaData.GetSerialNumber();
 
 				if (stationCycle.CanMatch())
 				{
