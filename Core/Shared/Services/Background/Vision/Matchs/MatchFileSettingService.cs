@@ -27,12 +27,12 @@ public class MatchFileSettingService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		int FileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
-		string archivePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
+		string archive = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
 		string folderParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
-		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
-		string stationName = _configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
+		string instanceMatchID = _configuration.GetValueWithThrow<string>(ConfigDictionary.InstanceMatchID);
 
-		string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
+		string folderWithoutCam = Path.Combine(folderParams, instanceMatchID);
+		string archivePath = Path.Combine(archive, instanceMatchID);
 
 		/// <summary>Logic SignFileSetting</summary>
 		/// <param name="matchDynamicParamsFile">Path to the file with dynamic parameters</param>

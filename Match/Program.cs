@@ -43,7 +43,6 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchF
 builder.Services.AddSingleton<WatchDogServiceMatch>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<WatchDogServiceMatch>());
 
-
 IHost host = builder.Build();
 
 // Initialize
@@ -65,17 +64,15 @@ List<int> GPUID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDic
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 
 // FolderPath = FolderParams//StationName//AnodeType//CameraID
-string anodeType = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
-string stationName = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
+string instanceMatchID = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.InstanceMatchID);
 string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
 
-string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
+string folderWithoutCam = Path.Combine(folderParams, instanceMatchID);
 
 DLLVisionImport.SetDllDirectory(DLLPath);
 int retInit = DLLVisionImport.fcx_init();
 string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
-
 
 logger.LogInformation("Match SignParamStatic {static}.", signParamsStaticOutput);
 
@@ -88,12 +85,11 @@ foreach (int cameraID in new int[] {1, 2})
 	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, GPUID[cameraID-1]);
 
 	logger.LogInformation(
-						"Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",
-						cameraID,
-						matchParamsDynOutput,
-						cameraID,
-						registerDatasetOutput);
-
+		"Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",
+		cameraID,
+		matchParamsDynOutput,
+		cameraID,
+		registerDatasetOutput);
 }
 
 host.Run();
