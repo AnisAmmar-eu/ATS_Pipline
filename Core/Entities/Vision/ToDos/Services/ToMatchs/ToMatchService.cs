@@ -76,7 +76,7 @@ public class ToMatchService :
 					cycle.MatchingCamera1 = SignMatchStatus.NotOk;
 
 				if (cameraID == 2)
-					cycle.MatchingCamera1 = SignMatchStatus.NotOk;
+					cycle.MatchingCamera2 = SignMatchStatus.NotOk;
 			}
 		}
 
