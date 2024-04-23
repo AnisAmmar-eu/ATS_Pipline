@@ -63,7 +63,7 @@ List<int> GPUID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDic
 
 string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 
-// FolderPath = FolderParams//StationName//AnodeType//CameraID
+// FolderPath = FolderParams//InstanceMatchID//CameraID
 string instanceMatchID = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.InstanceMatchID);
 string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
 
