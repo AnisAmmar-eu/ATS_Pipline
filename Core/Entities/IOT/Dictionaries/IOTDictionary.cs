@@ -66,7 +66,7 @@ public static class ITApisDict
 /// </summary>
 public static class ITStationApisDict
 {
-	public const string StationPath = "/apiStationCycle/oldest";
+	public const string StationPath = "/apiStationCycle/Packet/oldest";
 
 	public const string Station1RID = "ApiStation1";
 	public static string Station1Address = string.Empty;
@@ -84,13 +84,13 @@ public static class ITStationApisDict
 	public static string Station5Address = string.Empty;
 }
 
-	/*
-		Station (S1, S2, S3, S4, S5)
-		Sign (All) / Match (S3, S4, S5)
-		Cam1 (All), Cam2 (Except S5)
-		DX (All), D20 (Except S5)
-		Static / Dynamic (Except Match)
-	*/
+/*
+	Station (S1, S2, S3, S4, S5)
+	Sign (All) / Match (S3, S4, S5)
+	Cam1 (All), Cam2 (Except S5)
+	DX (All), D20 (Except S5)
+	Static / Dynamic (Except Match)
+*/
 public record SignServiceData(string RID, int StationID, string AnodeType);
 
 public static class SignService
@@ -105,7 +105,7 @@ public static class SignService
 	public static SignServiceData S4TypeD20 = new("Sign8", 4, AnodeTypeDict.D20);
 	public static SignServiceData S5TypeDX = new("Sign9", 5, AnodeTypeDict.DX);
 
-	public static List<SignServiceData> list = [
+	public static List<SignServiceData> List = [
 		S1TypeDX,
 		S1TypeD20,
 		S2TypeDX,
@@ -136,14 +136,14 @@ public static class MatchService
 		Gate2Gate0DX
 		Gate2Gate1DX
 	*/
-	public static MatchServiceData S3Gate1Gate0DX = new("Match1" , 3, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
+	public static MatchServiceData S3Gate1Gate0DX = new("Match1", 3, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
 	public static MatchServiceData S4Gate1Gate0DX = new("Match2", 4, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
 	public static MatchServiceData S3Gate1Gate0D20 = new("Match3", 3, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
 	public static MatchServiceData S4Gate1Gate0D20 = new("Match4", 4, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
 	public static MatchServiceData S5Gate2Gate0DX = new("Match5", 5, AnodeTypeDict.DX, "Gate2Gate0DX", 2);
 	public static MatchServiceData S5Gate2Gate1DX = new("Match6", 5, AnodeTypeDict.DX, "Gate2Gate1DX", 3);
 
-	public static List<MatchServiceData> list = [
+	public static List<MatchServiceData> List = [
 		S3Gate1Gate0DX,
 		S4Gate1Gate0DX,
 		S3Gate1Gate0D20,
