@@ -119,8 +119,7 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
+			async () => {
 				await roleService.Delete(rid);
 				return $"The role with RID {{{rid}}} has been successfully deleted.";
 			},

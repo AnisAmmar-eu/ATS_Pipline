@@ -5,5 +5,5 @@ namespace Core.Entities.Vision.ToDos.Models.DB.ToSigns;
 
 public partial class ToSign : ToDo, IBaseEntity<ToSign, DTOToSign>
 {
-    public int CameraID { get; set; }
+	public int CameraID { get; set; }
 }

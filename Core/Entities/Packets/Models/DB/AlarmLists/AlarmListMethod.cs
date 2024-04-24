@@ -15,8 +15,7 @@ public partial class AlarmList
 
 	public AlarmList(DTOAlarmList dto) : base(dto)
 	{
-		AlarmCycles = dto.AlarmCycles.ToList().ConvertAll(dtoAlarmCycle =>
-		{
+		AlarmCycles = dto.AlarmCycles.ToList().ConvertAll(dtoAlarmCycle => {
 			AlarmCycle alarmCycle = dtoAlarmCycle.ToModel();
 			alarmCycle.AlarmList = this;
 			return alarmCycle;

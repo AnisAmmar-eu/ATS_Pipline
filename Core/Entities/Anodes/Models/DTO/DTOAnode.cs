@@ -7,6 +7,7 @@ using Core.Entities.StationCycles.Models.DTO.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.Anodes.Models.DTO;
 
@@ -15,7 +16,7 @@ namespace Core.Entities.Anodes.Models.DTO;
 public partial class DTOAnode :
 	DTOBaseEntity,
 	IDTO<Anode, DTOAnode>,
-	IExtensionBinder<DTOAnode>
+	IBindableFromHttpContext<DTOAnode>
 {
 	public string CycleRID { get; set; } = string.Empty;
 	public string AnodeType { get; set; } = AnodeTypes.UNDEFINED;

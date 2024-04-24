@@ -12,7 +12,7 @@ public class BITemperatureService :
 	BaseEntityService<IBITemperatureRepository, BITemperature, DTOBITemperature>,
 	IBITemperatureService
 {
-	private readonly string[] _temperatureTagsRIDs = { IOTTagRID.TemperatureCam1, IOTTagRID.TemperatureCam2 };
+	private readonly string[] _temperatureTagsRIDs = [IOTTagRID.TemperatureCam1, IOTTagRID.TemperatureCam2];
 
 	public BITemperatureService(IAnodeUOW anodeUOW) : base(anodeUOW)
 	{
@@ -20,16 +20,16 @@ public class BITemperatureService :
 
 	public async Task LogNewValues()
 	{
-		List<IOTTag> temperatureTags = await AnodeUOW.IOTTag
+		List<IOTTag> temperatureTags = await _anodeUOW.IOTTag
 			.GetAll([tag => _temperatureTagsRIDs.Contains(tag.RID)], withTracking: false);
 		if (temperatureTags.Count == 0)
 			return;
 
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		foreach (IOTTag tag in temperatureTags)
-			await AnodeUOW.BITemperature.Add(new BITemperature(tag));
+			await _anodeUOW.BITemperature.Add(new BITemperature(tag));
 
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 	}
 }

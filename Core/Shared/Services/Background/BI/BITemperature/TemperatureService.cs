@@ -50,7 +50,7 @@ public class TemperatureService : BackgroundService
 					"Failed to execute PeriodicTemperatureService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-        } while (await timer.WaitForNextTickAsync(stoppingToken)
-         && !stoppingToken.IsCancellationRequested);
+		} while (await timer.WaitForNextTickAsync(stoppingToken)
+		 && !stoppingToken.IsCancellationRequested);
 	}
 }

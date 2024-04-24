@@ -15,8 +15,7 @@ public static class Station
 
 	public static string Name
 	{
-		set
-		{
+		set {
 			if (NameSub is not null)
 				throw new InvalidOperationException("Station name has already been defined.");
 
@@ -38,8 +37,7 @@ public static class Station
 
 	public static string ServerAddress
 	{
-		set
-		{
+		set {
 			if (ServerAddressSub is not null)
 				throw new InvalidOperationException("Station serverAddress has already been defined.");
 

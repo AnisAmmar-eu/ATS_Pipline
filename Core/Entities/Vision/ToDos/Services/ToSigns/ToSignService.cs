@@ -24,9 +24,9 @@ public class ToSignService :
 
 	public async Task<StationCycle> UpdateCycle(ToSign toSign, int retSign)
 	{
-        await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
-        StationCycle cycle = await AnodeUOW.StationCycle.GetById(toSign.StationCycleID);
+		StationCycle cycle = await _anodeUOW.StationCycle.GetById(toSign.StationCycleID);
 
 		if (retSign == 0)
 		{
@@ -45,36 +45,36 @@ public class ToSignService :
 				cycle.SignStatus2 = SignMatchStatus.NotOk;
 		}
 
-		AnodeUOW.StationCycle.Update(cycle);
-        AnodeUOW.Commit();
+		_anodeUOW.StationCycle.Update(cycle);
+		_anodeUOW.Commit();
 
-        await AnodeUOW.CommitTransaction();
-        return cycle;
+		await _anodeUOW.CommitTransaction();
+		return cycle;
 	}
 
 	public async Task AddAnode(S1S2Cycle cycle)
 	{
 		try
 		{
-			Anode anode =  await AnodeUOW.Anode.GetByWithThrow(
+			Anode anode = await _anodeUOW.Anode.GetByWithThrow(
 				[anode => anode.S1S2CycleID == cycle.ID]
 				);
-        }
-        catch (EntityNotFoundException)
+		}
+		catch (EntityNotFoundException)
 		{
-            await AnodeUOW.StartTransaction();
+			await _anodeUOW.StartTransaction();
 
-            if (cycle.AnodeType == AnodeTypeDict.DX)
-                await AnodeUOW.Anode.Add(new AnodeDX(cycle));
-            else if (cycle.AnodeType == AnodeTypeDict.D20)
-                await AnodeUOW.Anode.Add(new AnodeD20(cycle));
+			if (cycle.AnodeType == AnodeTypeDict.DX)
+				await _anodeUOW.Anode.Add(new AnodeDX(cycle));
+			else if (cycle.AnodeType == AnodeTypeDict.D20)
+				await _anodeUOW.Anode.Add(new AnodeD20(cycle));
 
-            AnodeUOW.Commit();
-            await AnodeUOW.CommitTransaction();
-        }
-        catch (Exception)
+			_anodeUOW.Commit();
+			await _anodeUOW.CommitTransaction();
+		}
+		catch (Exception)
 		{
 			throw;
 		}
-    }
+	}
 }

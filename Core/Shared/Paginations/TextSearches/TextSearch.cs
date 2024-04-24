@@ -8,21 +8,18 @@ namespace Core.Shared.Paginations.TextSearches;
 public static class TextSearch
 {
 	/// <summary>
-    /// Apply a text search to an <see cref="IQueryable{T}"/> source from its pagination.
-    /// It chains every <see cref="TextSearchParam"/> in pagination with OR boolean operators.
-    /// Text searches are then applied to the query.
+	/// Apply a text search to an <see cref="IQueryable{T}"/> source from its pagination.
+	/// It chains every <see cref="TextSearchParam"/> in pagination with OR boolean operators.
+	/// Text searches are then applied to the query.
 	/// </summary>
-    /// <param name="source">Query to search</param>
-    /// <param name="pagination">Pagination parameters used to search</param>
-    /// <typeparam name="T">BaseEntity from which rows will be searched upon</typeparam>
-    /// <typeparam name="TDTO"></typeparam>
-    /// <returns>A filtered query</returns>
+	/// <param name="source">Query to search</param>
+	/// <param name="pagination">Pagination parameters used to search</param>
+	/// <typeparam name="T">BaseEntity from which rows will be searched upon</typeparam>
+	/// <typeparam name="TDTO"></typeparam>
+	/// <returns>A filtered query</returns>
 	public static IQueryable<T> TextSearchFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
 		where T : class, IBaseEntity<T, TDTO>
-		where TDTO : class, IDTO<T, TDTO>
-	{
-		return source.Where(TextSearchesToWhereClause<T>(pagination.TextSearchParams));
-	}
+		where TDTO : class, IDTO<T, TDTO> => source.Where(TextSearchesToWhereClause<T>(pagination.TextSearchParams));
 
 	private static Expression<Func<T, bool>> TextSearchesToWhereClause<T>(IEnumerable<TextSearchParam>? textSearchParams)
 	{
@@ -74,9 +71,6 @@ public static class TextSearch
 			type = propertyInfo.PropertyType;
 		}
 
-		if (propertyInfo is null)
-			throw new InvalidDataException("FilterParam Column name is invalid.");
-
-		return propertyInfo;
+		return propertyInfo ?? throw new InvalidDataException("FilterParam Column name is invalid.");
 	}
 }

@@ -1,5 +1,5 @@
-using Core.Entities.Anodes.Models.DB.AnodesD20;
 using Core.Entities.Anodes.Dictionaries;
+using Core.Entities.Anodes.Models.DB.AnodesD20;
 
 namespace Core.Entities.Anodes.Models.DTO.AnodesD20;
 

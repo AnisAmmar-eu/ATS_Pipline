@@ -22,19 +22,19 @@ public static class TwinCatConnectionManager
 			uint handle = TcClient.CreateVariableHandle(ConnectionPath);
 			TcClient.ReadAny<bool>(handle);
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
-			return await Task.Run(
-				() =>
-				{
-					//using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(retryMS));
-					while (!cancel.IsCancellationRequested)
+			return await await Task.Run(
+				async () => {
+					using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(retryMS));
+					while (!cancel.IsCancellationRequested && await timer.WaitForNextTickAsync(cancel))
 					{
 						try
 						{
 							TcClient.Connect(port);
 							if (!TcClient.IsConnected)
 								throw new AdsException("Could not connect to the automaton {error}", ex);
+
 							// Tricky but if it crashes, we're not connected either.
 							uint handle = TcClient.CreateVariableHandle(ConnectionPath);
 							TcClient.ReadAny<bool>(handle);

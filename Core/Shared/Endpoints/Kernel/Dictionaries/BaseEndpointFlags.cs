@@ -1,7 +1,7 @@
 namespace Core.Shared.Endpoints.Kernel.Dictionaries;
 
 [Flags]
-public enum BaseEndpointFlags : short
+public enum BaseEndpointFlags
 {
 	None = 0,
 	Create = 1,

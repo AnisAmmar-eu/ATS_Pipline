@@ -24,20 +24,15 @@ public class IOTDeviceEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIO
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetStatusByRID(
-		[Required] [FromRoute] string rid,
+		[Required][FromRoute] string rid,
 		IIOTDeviceService iotDeviceService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(() => iotDeviceService.GetStatusByRID(rid), logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(() => iotDeviceService.GetStatusByRID(rid), logService, httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> GetDevicesByArrayRID(
-		[FromBody] [Required] IEnumerable<string> rids,
+		[FromBody][Required] IEnumerable<string> rids,
 		IIOTDeviceService iotDeviceService,
 		ILogService logService,
 		HttpContext httpContext)
-	{
-		return GenericEndpoint( () => iotDeviceService.GetStatusByArrayRID(rids), logService, httpContext);
-	}
+			=> GenericEndpoint(() => iotDeviceService.GetStatusByArrayRID(rids), logService, httpContext);
 }

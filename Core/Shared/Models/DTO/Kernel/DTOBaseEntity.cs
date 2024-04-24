@@ -28,9 +28,8 @@ public class DTOBaseEntity : IDTO<BaseEntity, DTOBaseEntity>
 	/// <returns> <see cref="T" /> of the DTO</returns>
 	public virtual BaseEntity ToModel()
 	{
-		return new()
-        {
-         ID = ID
+		return new() {
+			ID = ID
 		};
 	}
 }

@@ -1,17 +1,17 @@
-using Core.Shared.Configuration;
-using Core.Shared.Data;
-using Core.Shared.UnitOfWork.Interfaces;
-using Core.Shared.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
-using Core.Shared.Services.SystemApp.Logs;
-using Core.Entities.Vision.ToDos.Services.ToSigns;
+using System.Configuration;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
-using Microsoft.AspNetCore.Identity;
-using System.Configuration;
+using Core.Entities.Vision.ToDos.Services.ToSigns;
+using Core.Shared.Configuration;
+using Core.Shared.Data;
 using Core.Shared.Dictionaries;
-using DLLVision;
+using Core.Shared.DLLVision;
 using Core.Shared.Services.Background.Vision.Signs;
+using Core.Shared.Services.SystemApp.Logs;
+using Core.Shared.UnitOfWork;
+using Core.Shared.UnitOfWork.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Sign service");
@@ -71,7 +71,7 @@ int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, 
 
 logger.LogInformation("Sign SignParamStatic {static}.", signParamsStaticOutput);
 
-foreach (int cameraID in new int[] {1, 2})
+foreach (int cameraID in new int[] { 1, 2 })
 {
 	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
 	string signDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);

@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using Core.Entities.Anodes.Dictionaries;
 using Core.Entities.Anodes.Models.DB;
@@ -35,11 +36,11 @@ public partial class DTOAnode
 		};
 	}
 
-	public static async ValueTask<DTOAnode?> BindAsync(HttpContext httpContext)
+	public static async ValueTask<DTOAnode?> BindAsync(HttpContext context, ParameterInfo parameter)
 	{
 		try
 		{
-			Stream stream = httpContext.Request.Body;
+			Stream stream = context.Request.Body;
 
 			string json = await new StreamReader(stream).ReadToEndAsync();
 
@@ -56,10 +57,9 @@ public partial class DTOAnode
 
 	private static Type GetDTOType(string? type)
 	{
-		if (type is null)
-			throw new EntityNotFoundException("Packet type is null");
-
-		return type switch {
+		return (type is null)
+			?           throw new EntityNotFoundException("Packet type is null")
+			: type switch {
 			AnodeTypes.D20 => typeof(DTOAnodeD20),
 			AnodeTypes.DX => typeof(DTOAnodeDX),
 			AnodeTypes.UNDEFINED => typeof(DTOAnode),

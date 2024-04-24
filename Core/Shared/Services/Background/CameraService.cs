@@ -67,14 +67,14 @@ public class CameraService : BackgroundService
 		if (Station.Type != StationType.S5)
 		{
 			// Create an instance of the camera
-			Task task1 = RunAcquisition(port1, CameraNb.Camera1, timeOutCamera, packetService ,stoppingToken);
-			Task task2 = RunAcquisition(port2, CameraNb.Camera2, timeOutCamera, packetService ,stoppingToken);
+			Task task1 = RunAcquisition(port1, CameraNb.Camera1, timeOutCamera, packetService, stoppingToken);
+			Task task2 = RunAcquisition(port2, CameraNb.Camera2, timeOutCamera, packetService, stoppingToken);
 			await task1;
 			await task2;
 		}
 		else
 		{
-			await RunAcquisition(port1, CameraNb.Both, timeOutCamera, packetService ,stoppingToken);
+			await RunAcquisition(port1, CameraNb.Both, timeOutCamera, packetService, stoppingToken);
 		}
 	}
 
@@ -101,8 +101,7 @@ public class CameraService : BackgroundService
 		WaitStatus status = WaitStatus.Ok;
 
 		await Task.Run(
-			async () =>
-			{
+			async () => {
 				while (true)
 				{
 					try
@@ -121,11 +120,11 @@ public class CameraService : BackgroundService
 						if (status != WaitStatus.Ok)
 							throw new($"Exception: {status.ToString()}");
 
-						DateTimeOffset ShootingDate = DateTimeOffset.Now;
+						DateTimeOffset shootingDate = DateTimeOffset.Now;
 						if (await IsTestModeOn(_logger))
 						{
 							// testDir2 != null means that we are in a S5 Cycle.
-							string dir = (GetCameraID(cameraNb, tcClient) == 1) ? ShootingUtils.CameraTest1 : ShootingUtils .CameraTest2;
+							string dir = (GetCameraID(cameraNb, tcClient) == 1) ? ShootingUtils.CameraTest1 : ShootingUtils.CameraTest2;
 							Directory.CreateDirectory(dir);
 							FileInfo previousImage = new(dir + ShootingUtils.TestFilename);
 							if (previousImage.Exists)
@@ -161,11 +160,10 @@ public class CameraService : BackgroundService
 
 							image.Close();
 
-							Shooting shooting = new()
-							{
+							Shooting shooting = new() {
 								StationCycleRID = rid.ToRID(),
 								AnodeType = anodeType,
-								ShootingTS = ShootingDate,
+								ShootingTS = shootingDate,
 								Cam01Status = (cameraID == (int)CameraNb.Camera1) ? 1 : 0,
 								Cam02Status = (cameraID == (int)CameraNb.Camera2) ? 1 : 0,
 								HasError = false,
@@ -179,7 +177,7 @@ public class CameraService : BackgroundService
 					catch (Exception e)
 					{
 						_logger.LogError("WaitStatus: {status}", status);
-						_logger.LogError("Error while monitoring camera with port {port}: {e}",port, e);
+						_logger.LogError("Error while monitoring camera with port {port}: {e}", port, e);
 					}
 				}
 			},

@@ -1,10 +1,10 @@
 ﻿using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
+using Core.Shared.DLLVision;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using DLLVision;
 
 namespace Core.Shared.Services.Background.Vision.Matchs;
 
@@ -56,7 +56,7 @@ public class MatchFileSettingService : BackgroundService
 					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
 				}
 
-				foreach (int cameraID in new int[] {1, 2})
+				foreach (int cameraID in new int[] { 1, 2 })
 				{
 					string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
 					string matchDynamicParamsFile = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);

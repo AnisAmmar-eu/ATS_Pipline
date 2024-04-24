@@ -37,15 +37,13 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
 builder.Services.AddAuthentication(
-	options =>
-	{
+	options => {
 		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 	})
-// Adding Jwt Bearer
-	.AddJwtBearer(options =>
-	{
+	// Adding Jwt Bearer
+	.AddJwtBearer(options => {
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
 		string jwtSecret = builder.Configuration["JWT:Secret"]
@@ -58,8 +56,7 @@ builder.Services.AddAuthentication(
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
 		options.Events = new() {
-			OnMessageReceived = context =>
-			{
+			OnMessageReceived = context => {
 				if (context.Request.Query.TryGetValue("access_token", out StringValues token))
 					context.Token = token;
 

@@ -77,9 +77,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		IUserService userService,
 		ILogService logService,
 		HttpContext httpContext)
-	{
-		return GenericEndpoint(() => Task.FromResult(userService.GetAllFromAD()), logService, httpContext);
-	}
+			=> GenericEndpoint(() => Task.FromResult(userService.GetAllFromAD()), logService, httpContext);
 
 	#endregion AD
 
@@ -96,10 +94,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 	private static Task<JsonHttpResult<ApiResponse>> GetAll(
 		IUserService userService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(userService.GetAll, logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(userService.GetAll, logService, httpContext);
 
 	// GET apiUser/users/{username}
 	/// <summary>
@@ -114,10 +109,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		[Required] string username,
 		IUserService userService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(() => userService.GetByUsername(username), logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(() => userService.GetByUsername(username), logService, httpContext);
 
 	// GET apiUser/users/{id}
 	/// <summary>
@@ -132,10 +124,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		[Required] string id,
 		IUserService userService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(() => userService.GetById(id), logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(() => userService.GetById(id), logService, httpContext);
 
 	// PUT apiUser/users/{username}
 	/// <summary>
@@ -176,8 +165,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
+			async () => {
 				await userService.Delete(username);
 				return $"User {{{username}}} has been deleted.";
 			},
@@ -207,8 +195,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
+			async () => {
 				await userService.UpdatePasswordByAdmin(username, newPassword);
 				return "The password has been updated.";
 			},
@@ -234,8 +221,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
+			async () => {
 				string oldPassword = data["oldPassword"];
 				string newPassword = data["newPassword"];
 				await userService.UpdatePasswordByUser(username, oldPassword, newPassword);
@@ -260,8 +246,7 @@ public class UserEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
+			async () => {
 				await userService.ResetPassword(username);
 				return "The password has been reset.";
 			},

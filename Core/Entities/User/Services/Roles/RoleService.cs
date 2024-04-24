@@ -43,10 +43,7 @@ public class RoleService : IRoleService
 			.AsNoTracking()
 			.FirstOrDefaultAsync(r => r.Name == rid);
 
-		if (role is null)
-			throw new EntityNotFoundException("role", rid);
-
-		return role.ToDTO();
+		return (role is null) ? throw new EntityNotFoundException("role", rid) : role.ToDTO();
 	}
 
 	/// <summary>
@@ -84,11 +81,9 @@ public class RoleService : IRoleService
 	public async Task<DTORole> Update(string rid, DTORole dtoRole)
 	{
 		ApplicationRole? role = await _roleManager.Roles
-			.FirstOrDefaultAsync(r => r.Name == rid);
-
-		if (role is null)
-			throw new EntityNotFoundException("Unable to find a role with RID {" + rid + "}.");
-
+			.FirstOrDefaultAsync(r => r
+				.Name == rid)
+			?? throw new EntityNotFoundException("Unable to find a role with RID {" + rid + "}.");
 		_anodeUOW.Commit();
 
 		return role.ToDTO();
@@ -101,11 +96,8 @@ public class RoleService : IRoleService
 	/// <exception cref="EntityNotFoundException"></exception>
 	public async Task Delete(string rid)
 	{
-		ApplicationRole? role = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == rid);
-
-		if (role is null)
-			throw new EntityNotFoundException("Unable to find a role with RID {" + rid + "}.");
-
+		ApplicationRole? role = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == rid)
+			?? throw new EntityNotFoundException("Unable to find a role with RID {" + rid + "}.");
 		await _roleManager.DeleteAsync(role);
 	}
 }

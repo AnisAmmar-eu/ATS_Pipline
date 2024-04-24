@@ -105,7 +105,7 @@ public static class SignService
 	public static SignServiceData S4TypeD20 = new("Sign8", 4, AnodeTypeDict.D20);
 	public static SignServiceData S5TypeDX = new("Sign9", 5, AnodeTypeDict.DX);
 
-	public static List<SignServiceData> List = [
+	public static List<SignServiceData> list = [
 		S1TypeDX,
 		S1TypeD20,
 		S2TypeDX,
@@ -143,7 +143,7 @@ public static class MatchService
 	public static MatchServiceData S5Gate2Gate0DX = new("Match5", 5, AnodeTypeDict.DX, "Gate2Gate0DX", 2);
 	public static MatchServiceData S5Gate2Gate1DX = new("Match6", 5, AnodeTypeDict.DX, "Gate2Gate1DX", 3);
 
-	public static List<MatchServiceData> List = [
+	public static List<MatchServiceData> list = [
 		S3Gate1Gate0DX,
 		S4Gate1Gate0DX,
 		S3Gate1Gate0D20,

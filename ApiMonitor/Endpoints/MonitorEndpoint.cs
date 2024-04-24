@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiMonitor.Endpoints;
 
-public class MonitorEndpoint :  BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIOTDeviceService>, ICarterModule
+public class MonitorEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIOTDeviceService>, ICarterModule
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{

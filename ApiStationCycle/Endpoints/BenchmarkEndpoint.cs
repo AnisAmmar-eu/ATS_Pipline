@@ -31,7 +31,5 @@ public class BenchmarkEndpoint :
 		IBenchmarkTestService benchmarkTestService,
 		ILogService logService,
 		HttpContext httpContext)
-	{
-		return GenericEndpoint( () => benchmarkTestService.GenerateRows(nbItems), logService, httpContext);
-	}
+			=> GenericEndpoint(() => benchmarkTestService.GenerateRows(nbItems), logService, httpContext);
 }

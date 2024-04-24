@@ -35,10 +35,10 @@ public class CheckSyncTimeService : BackgroundService
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-		int CheckSyncTimeMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.CheckSyncTimeMS);
+		int checkSyncTimeMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.CheckSyncTimeMS);
 		int deltaTimeSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.DeltaTimeSec);
 		int retryMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.RetryMS);
-		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(CheckSyncTimeMS));
+		using PeriodicTimer timer = new(TimeSpan.FromMilliseconds(checkSyncTimeMS));
 
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
@@ -48,8 +48,7 @@ public class CheckSyncTimeService : BackgroundService
 				string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/time";
 				CancellationToken cancel = CancellationToken.None;
 				await Task.Run(
-					async () =>
-					{
+					async () => {
 						using HttpClient httpClient = new();
 						HttpResponseMessage response = await httpClient.GetAsync(api2Url, cancel);
 
@@ -61,10 +60,8 @@ public class CheckSyncTimeService : BackgroundService
 
 						// Delta Time station and server Check
 						ApiResponse? apiResponse
-						= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync());
-						if (apiResponse is null)
-							throw new ApplicationException("Could not deserialize ApiIOT response");
-
+						= JsonSerializer.Deserialize<ApiResponse>(await response.Content.ReadAsStreamAsync())
+							?? throw new ApplicationException("Could not deserialize ApiIOT response");
 						if (apiResponse.Result is not JsonElement jsonElement)
 							throw new ApplicationException("JSON Exception, ApiResponse from ApiIOT is broken");
 

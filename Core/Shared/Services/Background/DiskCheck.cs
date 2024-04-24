@@ -32,7 +32,7 @@ public class DiskCheckService : BackgroundService
 		int cycleMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.CycleMS);
 		long diskCheckThreshold = _configuration.GetValueWithThrow<long>(ConfigDictionary.DiskCheckThreshold);
 		int retryMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.RetryMS);
-		string DiskCheckLabel = _configuration.GetValueWithThrow<string>(ConfigDictionary.DiskCheckLabel);
+		string diskCheckLabel = _configuration.GetValueWithThrow<string>(ConfigDictionary.DiskCheckLabel);
 		CancellationToken cancel = CancellationToken.None;
 		_logger.LogInformation(
 			"DiskCheckService started with cycleMS {cycleMS}"
@@ -48,10 +48,10 @@ public class DiskCheckService : BackgroundService
 			{
 				foreach (DriveInfo d in DriveInfo.GetDrives())
 				{
-					if (d.Name.Equals(DiskCheckLabel + ":\\", StringComparison.Ordinal) && d.IsReady)
+					if (d.Name.Equals(diskCheckLabel + ":\\", StringComparison.Ordinal) && d.IsReady)
 					{
 						// only returns free space of current user
-						long freeSpaceMB = d.AvailableFreeSpace / (1024*1024);
+						long freeSpaceMB = d.AvailableFreeSpace / (1024 * 1024);
 						_logger.LogInformation(
 							"{freeSpace}MB free space left for Drive {driveName}",
 							freeSpaceMB,
