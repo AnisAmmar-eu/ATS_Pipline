@@ -227,14 +227,19 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
+				stationCycle.SerialNumber = metaData.GetSerialNumber();
 
 				if (stationCycle.CanMatch())
 				{
 					_logger.LogInformation("Creating ToMatch");
-					await AnodeUOW.ToMatch.Add(
-						new(
-							stationCycle,
-							await ToMatchService.GetMatchInstance(stationCycle.AnodeType, stationCycle.StationID, AnodeUOW)));
+					foreach (int instanceMatchID in await ToMatchService.GetMatchInstance(
+						stationCycle.AnodeType,
+						stationCycle.StationID,
+						AnodeUOW))
+					{
+						await AnodeUOW.ToMatch.Add(new(stationCycle, instanceMatchID));
+					}
+
 					AnodeUOW.Commit();
 				}
 			}

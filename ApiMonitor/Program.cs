@@ -6,6 +6,7 @@ using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.IOT.IOTDevices.Services;
 using Core.Entities.IOT.IOTTags.Services;
 using Core.Entities.Packets.Services;
+using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -83,6 +84,7 @@ builder.Services.AddScoped<IAlarmLogService, AlarmLogService>();
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IAlarmCService, AlarmCService>();
+builder.Services.AddScoped<IToMatchService, ToMatchService>();
 
 builder.Services.AddSingleton<IOTService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<IOTService>());
@@ -111,6 +113,9 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>(ConfigDictionary.ClientHost);
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)

@@ -23,6 +23,7 @@ public partial class DTOStationCycle :
 	public int StationID { get; set; } = Station.ID;
 	public string AnodeType { get; set; } = string.Empty;
 	public string RID { get; set; } = string.Empty;
+	public string SerialNumber { get; set; } = "NA";
 	public PacketStatus Status { get; set; } = PacketStatus.Initialized;
 	public string CycleType { get; set; } = string.Empty;
 	public DateTimeOffset? TSFirstShooting { get; set; }

@@ -14,6 +14,8 @@ using Mapster;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Entities.Vision.ToDos.Services.ToUnloads;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
+using System.Runtime.InteropServices;
 
 namespace Core.Shared.Services.Background.Vision.Matchs;
 
@@ -38,7 +40,6 @@ public class MatchService : BackgroundService
 		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		int instanceMatchID = _configuration.GetValueWithThrow<int>(ConfigDictionary.InstanceMatchID);
-		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
 		bool isChained = _configuration.GetValueWithThrow<bool>(ConfigDictionary.IsChained);
 		List<string> stationOrigins = _configuration.GetSectionWithThrow<List<string>>(ConfigDictionary.GoMatchStations);
@@ -62,8 +63,16 @@ public class MatchService : BackgroundService
 						[device => device is Match && ((Match)device).InstanceMatchID == instanceMatchID],
 						withTracking: false);
 
-				if (match.Pause)
-					throw new("System on pause");
+				ServerRule rule = (ServerRule)await _anodeUOW.IOTDevice
+					.GetByWithThrow(
+						[device => device is ServerRule],
+						withTracking: false);
+
+				if (match.Pause || rule.Reinit)
+				{
+					_logger.LogWarning("System on pause");
+					continue;
+				}
 
 				List<ToMatch> toMatchs = await _anodeUOW.ToMatch.GetAll(
 					[match => match.InstanceMatchID == instanceMatchID],
@@ -97,24 +106,34 @@ public class MatchService : BackgroundService
 							image.DirectoryName,
 							Path.GetFileNameWithoutExtension(image.Name));
 						int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
+						_logger.LogInformation(
+							"{nb} matché avec code d'erreur {error}",
+							DLLVisionImport.fcx_matchRet_anodeId(retMatch),
+							matchErrorCode);
 
 						if (matchErrorCode == 0 || matchErrorCode == -106)
 						{
-							_logger.LogInformation("{nb} matché avec code d'erreur {error}", image.Name, matchErrorCode);
 							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, isChained);
 
 							if (matchErrorCode == 0)
 							{
+								string? anodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(retMatch));
+								string? cycleRID = Shooting.GetCycleRIDFromFilename(anodeID);
+
+								DLLVisionImport.fcx_matchRet_free(retMatch);
+
 								if (!isChained)
-									toMatchService.UpdateAnode(cycle);
+									await toMatchService.UpdateAnode(cycle, cycleRID);
 
 								foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, _anodeUOW))
 								{
 									ToUnload toUnload = toMatch.Adapt<ToUnload>();
 									toUnload.InstanceMatchID = instance;
+									toUnload.CycleRID = cycleRID;
 									await _anodeUOW.ToUnload.Add(toUnload);
 								}
 
+								_anodeUOW.Commit();
 								break; //either camera has matched successfully, not need to go further
 							}
 						}

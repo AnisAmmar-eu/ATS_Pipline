@@ -19,6 +19,7 @@ using System.Reactive.Linq;
 using Core.Shared.Dictionaries;
 using System.Data;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -38,7 +39,8 @@ public class ToMatchService :
 	{
 		await AnodeUOW.StartTransaction();
 
-		if (DLLVisionImport.fcx_matchRet_errorCode(retMatch) == 0)
+		int retMatchCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
+		if (retMatchCode  == 0)
 		{
 			cycle.MatchingTS ??= DateTimeOffset.Now;
 
@@ -75,11 +77,12 @@ public class ToMatchService :
 					cycle.MatchingCamera1 = SignMatchStatus.NotOk;
 
 				if (cameraID == 2)
-					cycle.MatchingCamera1 = SignMatchStatus.NotOk;
+					cycle.MatchingCamera2 = SignMatchStatus.NotOk;
 			}
 		}
 
-		cycle.KPI = CreateKPI(retMatch);
+		if (cameraID == 2 || (cameraID == 1 && retMatchCode != -106))
+			cycle.KPI = CreateKPI(retMatch);
 
 		_ = AnodeUOW.StationCycle.Update(cycle);
 		_ = AnodeUOW.Commit();
@@ -88,18 +91,21 @@ public class ToMatchService :
 		return cycle;
 	}
 
-	public async void UpdateAnode(MatchableCycle cycle)
+	public async Task UpdateAnode(MatchableCycle cycle, string cycleRID)
 	{
+		if (cycleRID is null)
+			return;
+
 		await AnodeUOW.StartTransaction();
 
 		try
 		{
 			Anode anode = await AnodeUOW.Anode.GetByWithThrow(
-				[anode => anode.CycleRID == cycle.RID]
+				[anode => anode.CycleRID == cycleRID]
 				);
 
-			if (cycle is StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle)
-				anode.S3S4Cycle = cycle as StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle;
+			if (cycle is S3S4Cycle)
+				anode.S3S4Cycle = cycle as S3S4Cycle;
 			else
 				((AnodeDX)anode).S5Cycle = cycle as S5Cycle;
 
@@ -157,7 +163,7 @@ public class ToMatchService :
 			DateTimeOffset? oldestToSign = (await AnodeUOW.ToSign
 				.GetBy(
 					[toSign => stationIDs.Contains(toSign.StationID)],
-					orderBy: query => query.OrderByDescending(
+					orderBy: query => query.OrderBy(
 						toSign => toSign.ShootingTS)))
 				?.ShootingTS
 				?? DateTimeOffset.Now;
@@ -165,7 +171,7 @@ public class ToMatchService :
 			DateTimeOffset? oldestToLoad = (await AnodeUOW.ToLoad
 				.GetBy(
 					[toLoad => toLoad.InstanceMatchID == instanceMatchID],
-					orderBy: query => query.OrderByDescending(
+					orderBy: query => query.OrderBy(
 						toLoad => toLoad.ShootingTS)))
 				?.ShootingTS
 				?? DateTimeOffset.Now;
@@ -186,13 +192,13 @@ public class ToMatchService :
 				!iotDevices.Select(device => device.IsConnected).Contains(false),
 				ValidDelay(oldestStation, delay),
 				ValidDelay(oldestToLoad, delay),
-				ValidDelay(oldestStation, delay));
+				ValidDelay(oldestToSign, delay));
 
 			return rule?.Reinit == false
 				&& !iotDevices.Select(device => device.IsConnected).Contains(false)
 				&& ValidDelay(oldestStation, delay)
 				&& ValidDelay(oldestToLoad, delay)
-				&& ValidDelay(oldestStation, delay);
+				&& ValidDelay(oldestToSign, delay);
 		}
 		catch (Exception)
 		{
