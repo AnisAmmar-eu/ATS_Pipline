@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Carter;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
-using Core.Entities.StationCycles.Models.Structs;
 using Core.Entities.StationCycles.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
@@ -36,10 +35,7 @@ public class StationCycleEndpoint :
 	private static Task<JsonHttpResult<ApiResponse>> GetAllRIDs(
 		IStationCycleService stationCycleService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(stationCycleService.GetAllRIDs, logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(stationCycleService.GetAllRIDs, logService, httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> GetMostRecent(
 		IStationCycleService stationCycleService,
@@ -47,21 +43,17 @@ public class StationCycleEndpoint :
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
-				DTOReducedStationCycle? result = await stationCycleService.GetMostRecentWithIncludes();
-				if (result is null)
+			async () => {
+				return await stationCycleService.GetMostRecentWithIncludes() ??
 					throw new NoDataException("There is no station cycles yet.");
-
-				return result;
 			},
 			logService,
 			httpContext);
 	}
 
 	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetImageByIdAndCamera(
-		[Required] [FromRoute] int id,
-		[Required] [FromRoute] int cameraNb,
+		[Required][FromRoute] int id,
+		[Required][FromRoute] int cameraNb,
 		IStationCycleService stationCycleService,
 		ILogService logService,
 		HttpContext httpContext)

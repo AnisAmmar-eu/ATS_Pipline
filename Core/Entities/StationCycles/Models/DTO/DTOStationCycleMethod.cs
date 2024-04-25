@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB;
@@ -46,11 +47,11 @@ public partial class DTOStationCycle
 
 	public override StationCycle ToModel() => new(this);
 
-	public static async ValueTask<DTOStationCycle?> BindAsync(HttpContext httpContext)
+	public static async ValueTask<DTOStationCycle?> BindAsync(HttpContext context, ParameterInfo parameter)
 	{
 		try
 		{
-			Stream stream = httpContext.Request.Body;
+			Stream stream = context.Request.Body;
 
 			string json = await new StreamReader(stream).ReadToEndAsync();
 
@@ -70,10 +71,10 @@ public partial class DTOStationCycle
 		return (type is null)
 			? throw new EntityNotFoundException("DTOStationCycle type is null")
 			: type switch {
-			CycleTypes.S1S2 => typeof(DTOS1S2Cycle),
-			CycleTypes.S3S4 => typeof(DTOS3S4Cycle),
-			CycleTypes.S5 => typeof(DTOS5Cycle),
-			_ => typeof(DTOStationCycle),
-		};
+				CycleTypes.S1S2 => typeof(DTOS1S2Cycle),
+				CycleTypes.S3S4 => typeof(DTOS3S4Cycle),
+				CycleTypes.S5 => typeof(DTOS5Cycle),
+				_ => typeof(DTOStationCycle),
+			};
 	}
 }

@@ -7,16 +7,16 @@ namespace Core.Shared.Paginations.Sorting;
 
 public static class Sort
 {
-    /// <summary>
-    /// Sorts an <see cref="IQueryable{T}"/> source from its pagination.
-    /// The last value from the <see cref="SortParam"/> is treated in the <see cref="Filter"/> part.
-    /// The sort can either be ascending or descending.
-    /// </summary>
-    /// <param name="source">Query to sort</param>
-    /// <param name="pagination">Pagination parameters used to sort</param>
-    /// <typeparam name="T">BaseEntity from which rows will be sorted</typeparam>
-    /// <typeparam name="TDTO"></typeparam>
-    /// <returns>An <see cref="IOrderedQueryable{T}"/></returns>
+	/// <summary>
+	/// Sorts an <see cref="IQueryable{T}"/> source from its pagination.
+	/// The last value from the <see cref="SortParam"/> is treated in the <see cref="Filter"/> part.
+	/// The sort can either be ascending or descending.
+	/// </summary>
+	/// <param name="source">Query to sort</param>
+	/// <param name="pagination">Pagination parameters used to sort</param>
+	/// <typeparam name="T">BaseEntity from which rows will be sorted</typeparam>
+	/// <typeparam name="TDTO"></typeparam>
+	/// <returns>An <see cref="IOrderedQueryable{T}"/></returns>
 	public static IOrderedQueryable<T> SortFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>

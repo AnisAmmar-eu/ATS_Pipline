@@ -37,8 +37,8 @@ public class SendPacketService : BackgroundService
 
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
-        {
-            try
+		{
+			try
 			{
 				await packetService.SendCompletedPackets();
 			}
@@ -48,6 +48,6 @@ public class SendPacketService : BackgroundService
 					"Failed to execute PeriodicSendService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-        }
-    }
+		}
+	}
 }

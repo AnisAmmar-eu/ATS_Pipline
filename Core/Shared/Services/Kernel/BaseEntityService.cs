@@ -14,11 +14,11 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 	where TDTO : class, IDTO<T, TDTO>
 {
 	private readonly TRepository _repository;
-	protected readonly IAnodeUOW AnodeUOW;
+	protected readonly IAnodeUOW _anodeUOW;
 
 	protected BaseEntityService(IAnodeUOW anodeUOW)
 	{
-		AnodeUOW = anodeUOW;
+		_anodeUOW = anodeUOW;
 		_repository = (TRepository?)anodeUOW.GetRepoByType(typeof(TRepository)) ??
 			throw new InvalidOperationException("Repo is null");
 	}
@@ -51,16 +51,16 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 
 	public async Task<TDTO> Add(T entity)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		await _repository.Add(entity);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 
 	public async Task<List<TDTO>> AddAll(IEnumerable<T> entities)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		List<TDTO> result = [];
 		foreach (T entity in entities)
 		{
@@ -68,23 +68,23 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 			result.Add(entity.ToDTO());
 		}
 
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 		return result;
 	}
 
 	public async Task<TDTO> Update(T entity)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		_repository.Update(entity);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 		return entity.ToDTO();
 	}
 
 	public async Task<List<TDTO>> UpdateAll(IEnumerable<T> entities)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		List<TDTO> result = [];
 		foreach (T entity in entities)
 		{
@@ -92,36 +92,36 @@ public class BaseEntityService<TRepository, T, TDTO> : IBaseEntityService<T, TDT
 			result.Add(entity.ToDTO());
 		}
 
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 		return result;
 	}
 
 	public async Task Remove(T entity)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		_repository.Remove(entity);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 	}
 
 	public async Task Remove(int id, params string[] includes)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		await _repository.Remove(id, includes);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 	}
 
 	public async Task RemoveByLifeSpan(TimeSpan lifeSpan) => await _repository.RemoveByLifeSpan(lifeSpan);
 
 	public async Task RemoveAll(IEnumerable<T> entities)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		foreach (T entity in entities)
 			_repository.Remove(entity);
 
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 	}
 }

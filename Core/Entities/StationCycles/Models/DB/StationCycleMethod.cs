@@ -45,8 +45,6 @@ public partial class StationCycle
 
 	public override DTOStationCycle ToDTO() => new(this);
 
-	public StationCycle GetValue() => this;
-
 	/// <summary>
 	/// Assigns a packet to the station cycle.
 	/// </summary>
@@ -76,8 +74,7 @@ public partial class StationCycle
 
 	public static Func<List<StationCycle>, string[]> GetComputedValues()
 	{
-		return stationCycles =>
-		{
+		return stationCycles => {
 			const int nbSignedAndMatchedIndex = 0;
 			const int nbSignedIndex = 1;
 			const int nbNotSignedIndex = 2;
@@ -86,10 +83,9 @@ public partial class StationCycle
 			int nbD20 = 0;
 			int nbDX = 0;
 			// Because there is 6 times 5 values
-			int[,] signMatchValues = new int[6, 5];
+			int[][] signMatchValues = new int[6][];
 			int[] nbAnodes = new int[5];
-			stationCycles.ForEach(cycle =>
-			{
+			stationCycles.ForEach(cycle => {
 				nbAnodes[cycle.StationID - 1]++;
 				if (cycle.AnodeType == AnodeTypeDict.D20)
 					nbD20++;
@@ -122,10 +118,10 @@ public partial class StationCycle
 			for (int i = 0; i < signMatchValues.GetLength(0); ++i)
 			{
 				for (int j = 0; j < 3; ++j)
-					ans.Add(signMatchValues[i, j].ToString());
+					ans.Add(signMatchValues[i][j].ToString());
 
-				int nbMatchCam1 = signMatchValues[i, nbMatchCam1Index];
-				int nbTotalMatch = signMatchValues[i, nbTotalMatchIndex];
+				int nbMatchCam1 = signMatchValues[i][nbMatchCam1Index];
+				int nbTotalMatch = signMatchValues[i][nbTotalMatchIndex];
 				int percentageCam1 = (nbTotalMatch == 0) ? 0 : (int)((double)nbMatchCam1 / nbTotalMatch * 100);
 				ans.Add(percentageCam1.ToString());
 			}
@@ -141,8 +137,7 @@ public partial class StationCycle
 	public static StationCycle Create(string stationName)
 	{
 		StationType stationType = Station.StationNameToType(stationName);
-		return stationType switch
-		{
+		return stationType switch {
 			StationType.S1S2 => new S1S2Cycle(),
 			StationType.S3S4 => new S3S4Cycle(),
 			StationType.S5 => new S5Cycle(),
@@ -153,8 +148,7 @@ public partial class StationCycle
 
 	public DTOReducedStationCycle Reduce()
 	{
-		return new()
-		{
+		return new() {
 			ID = ID,
 			RID = RID,
 			AnodeSize = null,
@@ -163,10 +157,10 @@ public partial class StationCycle
 		};
 	}
 
-	private static void AddAtIndex(int[,] table, int stationID, int index)
+	private static void AddAtIndex(int[][] table, int stationID, int index)
 	{
 		// 0 is the index of the global values.
-		table[0, index]++;
-		table[stationID, index]++;
+		table[0][index]++;
+		table[stationID][index]++;
 	}
 }

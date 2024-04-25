@@ -40,8 +40,7 @@ public partial class Shooting
 			string filename
 				= $"S{stationID:00}T{anodeType}C{camera:00}T{rid[2..]}.{extension}";
 			string path
-				= $@"S{stationID:00}\T{anodeType}\Y{ridTS.Year.ToString()}\M{ridTS.Month:00}\D{
-					ridTS.Day:00}\C{camera:00}\";
+				= $@"S{stationID:00}\T{anodeType}\Y{ridTS.Year.ToString()}\M{ridTS.Month:00}\D{ridTS.Day:00}\C{camera:00}\";
 			return new($@"{root}\{path}\{filename}");
 		}
 		catch (Exception)
@@ -62,8 +61,8 @@ public partial class Shooting
 			AnodeFormat.RIDFormat,
 			CultureInfo.InvariantCulture.DateTimeFormat);
 		string path
-			= $@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year.ToString()}\M{date.Month:00}\D{
-				date.Day:00}\C{groups["camera"]}\";
+			= $@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year.ToString()}
+				\M{date.Month:00}\D{date.Day:00}\C{groups["camera"]}\";
 		return new($@"{root}\{path}\{filename}");
 	}
 

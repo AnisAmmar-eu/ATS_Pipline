@@ -27,10 +27,9 @@ public class BaseEndpoint
 			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		if (isLogged)
-			return await new ApiResponse(ans).SuccessResult(logService, httpContext);
-
-		return new ApiResponse(ans).SuccessResult();
+		return isLogged
+			? await new ApiResponse(ans).SuccessResult(logService, httpContext)
+			: new ApiResponse(ans).SuccessResult();
 	}
 
 	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpointEmptyResponse(
@@ -48,9 +47,6 @@ public class BaseEndpoint
 			return await new ApiResponse().ErrorResult(logService, httpContext, e);
 		}
 
-		if (isLogged)
-			return await new ApiResponse().SuccessResult(logService, httpContext);
-
-		return new ApiResponse().SuccessResult();
+		return isLogged ? await new ApiResponse().SuccessResult(logService, httpContext) : new ApiResponse().SuccessResult();
 	}
 }

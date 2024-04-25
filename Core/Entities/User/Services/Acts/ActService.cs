@@ -50,7 +50,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 		HttpContext httpContext,
 		List<DTOActEntityStatus> dtoActEntitiesStatus)
 	{
-		List<DTOActEntityStatus> dtoActEntities = new();
+		List<DTOActEntityStatus> dtoActEntities = [];
 
 		foreach (DTOActEntityStatus dtoActEntityStatus in dtoActEntitiesStatus)
 			dtoActEntities.Add(await GetAction(httpContext, dtoActEntityStatus));
@@ -66,7 +66,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 	/// <returns>A <see cref="DTOActEntityStatus" /></returns>
 	public async Task<DTOActEntityStatus> GetAction(HttpContext httpContext, DTOActEntityStatus dtoActEntityStatus)
 	{
-		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(
+		Act act = await _anodeUOW.Acts.GetByRIDAndTypeWithIncludes(
 			dtoActEntityStatus.Act?.RID,
 			dtoActEntityStatus.Act?.EntityType,
 			dtoActEntityStatus.Act?.ParentType);
@@ -74,7 +74,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 
 		try
 		{
-			actEntity = await AnodeUOW.ActEntities
+			actEntity = await _anodeUOW.ActEntities
 				.GetByActWithIncludes(act, dtoActEntityStatus.EntityID, dtoActEntityStatus.ParentID);
 		}
 		catch (Exception e)
@@ -95,39 +95,21 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 		string? userId = (string?)httpContext.Items["UserId"];
 		List<string>? userRolesID = (List<string>?)httpContext.Items["UserRolesId"];
 
-        if (httpContext.Items.ContainsKey("HasAdminRole") && (bool?)httpContext.Items["HasAdminRole"] == true)
-        {
-            dtoActEntityStatus.Visible = true;
-        }
-        else
-        {
-            switch (actEntity.SignatureType)
-            {
-                case SignatureTypeRID.Explicit:
-                    dtoActEntityStatus.Visible = true;
-                    break;
-                case SignatureTypeRID.Session:
-                    if (actEntity.ActEntityRoles.Count == 0)
-                    {
-                        dtoActEntityStatus.Visible = true;
-                    }
-                    else
-                    {
-                        dtoActEntityStatus.Visible = actEntity.ActEntityRoles.Any(aer =>
-                        	(aer.ApplicationType == ApplicationTypeRID.Role)
-                        	    ? userRolesID?.Contains(aer.ApplicationID) == true
-                        	    : aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId
-                                                );
-                    }
+		dtoActEntityStatus.Visible = (httpContext.Items.ContainsKey("HasAdminRole")
+			&& (bool?)httpContext.Items["HasAdminRole"] == true)
+			? true
+			: actEntity.SignatureType switch {
+				SignatureTypeRID.Explicit => true,
+				SignatureTypeRID.Session => (actEntity.ActEntityRoles.Count == 0)
+					|| actEntity.ActEntityRoles.Any(aer =>
+						(aer.ApplicationType == ApplicationTypeRID.Role)
+							? userRolesID?.Contains(aer.ApplicationID) == true
+							: aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId
+											),
+				_ => (bool?)true,
+			};
 
-                    break;
-                default:
-                    dtoActEntityStatus.Visible = true;
-                    break;
-            }
-        }
-
-        return dtoActEntityStatus;
+		return dtoActEntityStatus;
 	}
 
 	/// <summary>
@@ -137,13 +119,13 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 	/// <returns>A <see cref="DTOActEntity" /></returns>
 	public async Task<DTOActEntity> GetActionEntityRoles(DTOActEntity dtoActEntity)
 	{
-		Act act = await AnodeUOW.Acts
-			.GetByRIDAndTypeWithIncludes( dtoActEntity.Act?.RID, dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
+		Act act = await _anodeUOW.Acts
+			.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID, dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
 		ActEntity actEntity;
 
 		try
 		{
-			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes( act, dtoActEntity.EntityID, dtoActEntity.ParentID);
+			actEntity = await _anodeUOW.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID, dtoActEntity.ParentID);
 		}
 		catch (Exception e)
 		{
@@ -172,7 +154,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 
 	public async Task AssignAction(DTOActEntity dtoActEntity, bool remove = true)
 	{
-		Act act = await AnodeUOW.Acts
+		Act act = await _anodeUOW.Acts
 			.GetByRIDAndTypeWithIncludes(dtoActEntity.Act?.RID, dtoActEntity.Act?.EntityType, dtoActEntity.Act?.ParentType);
 		string? signatureType = dtoActEntity.SignatureType;
 
@@ -180,7 +162,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 
 		try
 		{
-			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID, dtoActEntity.ParentID);
+			actEntity = await _anodeUOW.ActEntities.GetByActWithIncludes(act, dtoActEntity.EntityID, dtoActEntity.ParentID);
 		}
 		catch (Exception e)
 		{
@@ -188,27 +170,27 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 				throw;
 		}
 
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
 		if (actEntity is null)
 		{
 			if (signatureType is null)
 			{
-				await AnodeUOW.CommitTransaction();
+				await _anodeUOW.CommitTransaction();
 				return;
 			}
 
 			actEntity = dtoActEntity.ToModel(act, signatureType);
 
-			await AnodeUOW.ActEntities.Add(actEntity);
+			await _anodeUOW.ActEntities.Add(actEntity);
 		}
 		else
 		{
 			if (signatureType is null)
 			{
-				AnodeUOW.ActEntities.Remove(actEntity);
-				AnodeUOW.Commit();
-				await AnodeUOW.CommitTransaction();
+				_anodeUOW.ActEntities.Remove(actEntity);
+				_anodeUOW.Commit();
+				await _anodeUOW.CommitTransaction();
 				return;
 			}
 
@@ -217,100 +199,98 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 			if (remove)
 				actEntity.ActEntityRoles.Clear();
 
-			AnodeUOW.ActEntities.Update(actEntity);
+			_anodeUOW.ActEntities.Update(actEntity);
 		}
 
-		AnodeUOW.Commit();
+		_anodeUOW.Commit();
 
 		switch (signatureType)
 		{
 			case SignatureTypeRID.Session:
 			case SignatureTypeRID.Explicit:
 				if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.Role))
-                {
-                    foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
-                    	a.Type == ApplicationTypeRID.Role))
+				{
+					foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
+						a.Type == ApplicationTypeRID.Role))
 					{
-						ApplicationRole? role = (application.Name is null) ? null : await _rolesManager.FindByNameAsync(application.Name);
-						if (role is null)
-							throw new EntityNotFoundException("role", application.Name ?? string.Empty);
-
+						ApplicationRole? role = ((application.Name is null) ? null : await _rolesManager.FindByNameAsync(
+							application.Name))
+							?? throw new EntityNotFoundException("role", application.Name ?? string.Empty);
 						actEntity.ActEntityRoles?.Add(new ActEntityRole(actEntity, role));
 					}
-                }
+				}
 
-                if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.User))
-                {
-                    foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
-                    	a.Type == ApplicationTypeRID.User))
+				if (dtoActEntity.Applications.Any(a => a.Type == ApplicationTypeRID.User))
+				{
+					foreach (DTOActEntityRole application in dtoActEntity.Applications.FindAll(a =>
+						a.Type == ApplicationTypeRID.User))
 					{
-						ApplicationUser? user = (application.Name is null)
+						ApplicationUser? user = ((application.Name is null)
 							? null
-							: await _usersManager.FindByNameAsync(application.Name ?? string.Empty);
-						if (user is null)
-							throw new EntityNotFoundException("user", application.Name ?? string.Empty);
-
+							: await _usersManager.FindByNameAsync(application
+								.Name))
+							?? throw new EntityNotFoundException("user", application.Name ?? string.Empty);
 						actEntity.ActEntityRoles?.Add(new ActEntityRole(actEntity, user));
 					}
-                }
+				}
 
-                break;
+				break;
 		}
 
-		AnodeUOW.ActEntities.Update(actEntity);
-		AnodeUOW.Commit();
+		_anodeUOW.ActEntities.Update(actEntity);
+		_anodeUOW.Commit();
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 	}
 
-    /// <summary>
-    ///     Delete an actionEntities based on an act and some ids
-    /// </summary>
-    /// <param name="actRID"></param>
-    /// <param name="entityType"></param>
-    /// <param name="entityID"></param>
-    /// <param name="parentType"></param>
-    /// <param name="parentID" />
-    /// <param name="parentID"></param>
-    public async Task DeleteActionEntity(
-    	string actRID,
-    	string? entityType = null,
-    	int? entityID = null,
-    	string? parentType = null,
-    	int? parentID = null)
-    {
-        Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(actRID, entityType, parentType);
-
-        // [T0DO] -> Confirm if the list is necessary 
-        List<ActEntity> actEntities = await AnodeUOW.ActEntities.GetAllByActWithIncludes(act, entityID, parentID);
-
-        if (actEntities.Count == 0)
-            return;
-
-        AnodeUOW.ActEntities.RemoveRange(actEntities);
-        AnodeUOW.Commit();
-    }
-
-    /// <summary>
-    ///     Duplicate actionEntities
-    /// </summary>
-    /// <param name="dtoActToDuplicate"></param>
-    /// <param name="dtoAct"></param>
-    /// <returns>True/False</returns>
-    public async Task<bool> DuplicateActionEntities(DTOActEntityToValid dtoActToDuplicate, DTOActEntityToValid dtoAct)
+	/// <summary>
+	///     Delete an actionEntities based on an act and some ids
+	/// </summary>
+	/// <param name="actRID"></param>
+	/// <param name="entityType"></param>
+	/// <param name="entityID"></param>
+	/// <param name="parentType"></param>
+	/// <param name="parentID" />
+	/// <param name="parentID"></param>
+	public async Task DeleteActionEntity(
+		string actRID,
+		string? entityType = null,
+		int? entityID = null,
+		string? parentType = null,
+		int? parentID = null)
 	{
-		Act actFromDuplicate = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(
+		Act act = await _anodeUOW.Acts.GetByRIDAndTypeWithIncludes(actRID, entityType, parentType);
+
+		// [T0DO] -> Confirm if the list is necessary 
+		List<ActEntity> actEntities = await _anodeUOW.ActEntities.GetAllByActWithIncludes(act, entityID, parentID);
+
+		if (actEntities.Count == 0)
+			return;
+
+		_anodeUOW.ActEntities.RemoveRange(actEntities);
+		_anodeUOW.Commit();
+	}
+
+	/// <summary>
+	///     Duplicate actionEntities
+	/// </summary>
+	/// <param name="dtoActToDuplicate"></param>
+	/// <param name="dtoAct"></param>
+	/// <returns>True/False</returns>
+	public async Task<bool> DuplicateActionEntities(DTOActEntityToValid dtoActToDuplicate, DTOActEntityToValid dtoAct)
+	{
+		Act actFromDuplicate = await _anodeUOW.Acts.GetByRIDAndTypeWithIncludes(
 			dtoActToDuplicate.Act?.RID,
 			dtoActToDuplicate.Act?.EntityType,
 			dtoActToDuplicate.Act?.ParentType);
-		Act act = await AnodeUOW.Acts
+		Act act = await _anodeUOW.Acts
 			.GetByRIDAndTypeWithIncludes(dtoAct.Act?.RID, dtoAct.Act?.EntityType, dtoAct.Act?.ParentType);
 
 		ActEntity? actEntityToDuplicate;
 
 		try
 		{
-			actEntityToDuplicate = await AnodeUOW.ActEntities
+			actEntityToDuplicate = await _anodeUOW.ActEntities
 				.GetByActWithIncludes(actFromDuplicate, dtoActToDuplicate.EntityID, dtoActToDuplicate.ParentID);
 		}
 		catch (Exception e)
@@ -321,45 +301,44 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 			return false;
 		}
 
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
 		ActEntity? actEntity;
 
 		try
 		{
-			actEntity = await AnodeUOW.ActEntities.GetByActWithIncludes(act, dtoAct.EntityID, dtoAct.ParentID);
+			actEntity = await _anodeUOW.ActEntities.GetByActWithIncludes(act, dtoAct.EntityID, dtoAct.ParentID);
 		}
 		catch (Exception e)
 		{
 			if (e is not EntityNotFoundException)
 				throw;
 
-			actEntity = new()
-            {
-             RID = act.RID + "." + dtoAct.EntityID,
-             Act = act,
-             EntityID = dtoAct.EntityID,
-             ParentID = dtoAct.ParentID,
-             SignatureType = actEntityToDuplicate.SignatureType,
+			actEntity = new() {
+				RID = act.RID + "." + dtoAct.EntityID,
+				Act = act,
+				EntityID = dtoAct.EntityID,
+				ParentID = dtoAct.ParentID,
+				SignatureType = actEntityToDuplicate.SignatureType,
 			};
 
-			await AnodeUOW.ActEntities.Add(actEntity);
-			AnodeUOW.Commit();
+			await _anodeUOW.ActEntities.Add(actEntity);
+			_anodeUOW.Commit();
 		}
 
 		foreach (ActEntityRole actEntityRole in actEntityToDuplicate.ActEntityRoles)
-        {
-            actEntity.ActEntityRoles.Add(new ActEntityRole {
-            	ActEntity = actEntity,
-            	ApplicationID = actEntityRole.ApplicationID,
-            	ApplicationType = actEntityRole.ApplicationType,
-            	});
-        }
+		{
+			actEntity.ActEntityRoles.Add(new ActEntityRole {
+				ActEntity = actEntity,
+				ApplicationID = actEntityRole.ApplicationID,
+				ApplicationType = actEntityRole.ApplicationType,
+			});
+		}
 
-        AnodeUOW.ActEntities.Update(actEntity);
-		AnodeUOW.Commit();
+		_anodeUOW.ActEntities.Update(actEntity);
+		_anodeUOW.Commit();
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 
 		return true;
 	}
@@ -375,7 +354,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 	{
 		await _authService.SetContextWithUser(httpContext);
 
-		Act act = await AnodeUOW.Acts.GetByRIDAndTypeWithIncludes(
+		Act act = await _anodeUOW.Acts.GetByRIDAndTypeWithIncludes(
 			dtoActEntityToValid.Act?.RID,
 			dtoActEntityToValid.Act?.EntityType,
 			dtoActEntityToValid.Act?.ParentType);
@@ -384,7 +363,7 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 
 		try
 		{
-			actEntity = await AnodeUOW.ActEntities
+			actEntity = await _anodeUOW.ActEntities
 				.GetByActWithIncludes(act, dtoActEntityToValid.EntityID, dtoActEntityToValid.ParentID);
 		}
 		catch (Exception e)
@@ -406,61 +385,49 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 		string? userId = (string?)httpContext.Items["UserId"];
 		List<string>? userRolesID = (List<string>?)httpContext.Items["UserRolesId"];
 
-        if (httpContext.Items.ContainsKey("HasAdminRole") && (bool?)httpContext.Items["HasAdminRole"] == true)
-        {
-            authorized = true;
-        }
-        else
-        {
-            switch (actEntity.SignatureType)
-            {
-                case SignatureTypeRID.Session:
-                    if (actEntity.ActEntityRoles.Count == 0)
-                    {
-                        authorized = true;
-                    }
-                    else
-                    {
-                        authorized = actEntity.ActEntityRoles.Any(aer =>
-                        	(aer.ApplicationType == ApplicationTypeRID.Role)
-                        	    ? userRolesID?.Contains(aer.ApplicationID) == true
-                        	    : aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId);
-                    }
+		if (httpContext.Items.ContainsKey("HasAdminRole") && (bool?)httpContext.Items["HasAdminRole"] == true)
+		{
+			authorized = true;
+		}
+		else
+		{
+			switch (actEntity.SignatureType)
+			{
+				case SignatureTypeRID.Session:
+					authorized = (actEntity.ActEntityRoles.Count == 0)
+						|| actEntity.ActEntityRoles.Any(aer =>
+							(aer.ApplicationType == ApplicationTypeRID.Role)
+								? userRolesID?.Contains(aer.ApplicationID) == true
+								: aer.ApplicationType == ApplicationTypeRID.User && aer.ApplicationID == userId);
 
-                    break;
-                case SignatureTypeRID.Explicit:
-                    // Check credentials inside DTOAct -> role match with action entity roles
-                    if (dtoActEntityToValid.Login is not null)
-                    {
-                        ApplicationUser otherUser = await _authService.CheckCredentials(dtoActEntityToValid.Login);
-                        List<string> rolesId = await _authService.GetRolesIdFromUser(otherUser, httpContext);
+					break;
+				case SignatureTypeRID.Explicit:
+					// Check credentials inside DTOAct -> role match with action entity roles
+					if (dtoActEntityToValid.Login is not null)
+					{
+						ApplicationUser otherUser = await _authService.CheckCredentials(dtoActEntityToValid.Login);
+						List<string> rolesId = await _authService.GetRolesIdFromUser(otherUser, httpContext);
 
-                        if (httpContext.Items.ContainsKey("HasAdminRole")
-                        	&& (bool?)httpContext.Items["HasAdminRole"] == true)
-                        {
-                            authorized = true;
-                        }
-                        else
-                        {
-                            authorized = actEntity.ActEntityRoles.Any(aer =>
-                            	(rolesId.Contains(aer.ApplicationID)
-                            		&& aer.ApplicationType == ApplicationTypeRID.Role)
-                            		|| (aer.ApplicationID == otherUser.Id
-                            			&& aer.ApplicationType == ApplicationTypeRID.User));
-                        }
-                    }
+						authorized = (httpContext.Items.ContainsKey("HasAdminRole")
+							&& (bool?)httpContext.Items["HasAdminRole"] == true)
+							|| actEntity.ActEntityRoles.Any(aer =>
+								(rolesId.Contains(aer.ApplicationID)
+									&& aer.ApplicationType == ApplicationTypeRID.Role)
+									|| (aer.ApplicationID == otherUser.Id
+										&& aer.ApplicationType == ApplicationTypeRID.User));
+					}
 
-                    break;
-            }
-        }
+					break;
+			}
+		}
 
-        if (authorized)
-        {
-            // Generate action token if the check is OK
-            return GenerateActionToken(httpContext, actEntity);
-        }
+		if (authorized)
+		{
+			// Generate action token if the check is OK
+			return GenerateActionToken(httpContext, actEntity);
+		}
 
-        throw new UnauthorizedAccessException("Unauthorized to execute this action");
+		throw new UnauthorizedAccessException("Unauthorized to execute this action");
 	}
 
 	/// <summary>
@@ -484,15 +451,15 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 			.Where(x => x.Type == "UserId")
 			.Select(c => c.Value)
 			.FirstOrDefault())
-        {
-            return false;
-        }
+		{
+			return false;
+		}
 
-        int count = 0;
+		int count = 0;
 		foreach (DTOActEntityToValid dtoActEntityToValid in dtoActEntitiesToValid)
 		{
 			if (actionTokenData.Claims.Where(x => x.Type == "ActionRID").Select(c => c.Value).FirstOrDefault()
-			    == dtoActEntityToValid.Act?.RID
+				== dtoActEntityToValid.Act?.RID
 				&& (dtoActEntityToValid.EntityID is null
 					|| actionTokenData.Claims.Where(x => x.Type == "EntityId").Select(c => c.Value).FirstOrDefault()
 					== dtoActEntityToValid.EntityID.ToString())
@@ -507,11 +474,11 @@ public class ActService : BaseEntityService<IActRepository, Act, DTOAct>, IActSe
 					== dtoActEntityToValid.Act?.ParentType)
 				&& actionTokenData.Claims.Where(x => x.Type == "Status").Select(c => c.Value).FirstOrDefault()
 					== "Complete")
-            {
-                break;
-            }
+			{
+				break;
+			}
 
-            count++;
+			count++;
 		}
 
 		return count < dtoActEntitiesToValid.Count;

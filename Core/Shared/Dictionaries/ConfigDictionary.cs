@@ -110,5 +110,5 @@ public static class ConfigDictionary
 	public const string SendLogMS = "SendLogMS";
 	public const string WatchdogDelay = "WatchdogDelay";
 
-    #endregion MS settings
+	#endregion MS settings
 }

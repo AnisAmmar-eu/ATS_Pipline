@@ -12,9 +12,9 @@ public class KPIService :
 	BaseEntityService<IKPIRepository, KPI, DTOKPI>,
 	IKPIService
 {
-    public KPIService(IAnodeUOW anodeUOW) : base(anodeUOW)
-    {
-    }
+	public KPIService(IAnodeUOW anodeUOW) : base(anodeUOW)
+	{
+	}
 
 	public async Task<List<DTOStationKPI>> CreateAllStationKPIByPeriod(
 		DateTimeOffset? start,
@@ -23,11 +23,11 @@ public class KPIService :
 		List<string> stationOrigin)
 	{
 		List<DTOStationKPI> dTOStationKPIs = [];
-		List<MatchableCycle> cycles = (await AnodeUOW.StationCycle
+		List<MatchableCycle> cycles = (await _anodeUOW.StationCycle
 			.GetAll(
 				[cycle => cycle is MatchableCycle && cycle.TS >= start && cycle.TS <= end && anodeTypes.Contains(cycle.AnodeType)]))
 			.Cast<MatchableCycle>()
-			.Where(cycle => cycle.Anode is null || stationOrigin.Contains("S"+cycle.Anode.CycleRID[0]))
+			.Where(cycle => cycle.Anode is null || stationOrigin.Contains("S" + cycle.Anode.CycleRID[0]))
 			.ToList();
 
 		foreach (int stationID in Station.Stations.ConvertAll(Station.StationNameToID))

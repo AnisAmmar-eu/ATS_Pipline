@@ -50,7 +50,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		group = group.MapGroup(tName);
 
 		if (flags.HasFlag(BaseEndpointFlags.Create))
-			group.MapPost(string.Empty, Add).WithSummary($"Add the {dtoName} in the body to the database") .WithOpenApi();
+			group.MapPost(string.Empty, Add).WithSummary($"Add the {dtoName} in the body to the database").WithOpenApi();
 
 		if (flags.HasFlag(BaseEndpointFlags.Read))
 		{
@@ -77,14 +77,14 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		}
 
 		if (flags.HasFlag(BaseEndpointFlags.Update))
-        {
-            group.MapPut("update", Update)
-            	.WithSummary($"Update the {dtoName} in the body if it already exist")
-            	.Accepts<TDTO>("application/json")
-            	.WithOpenApi();
-        }
+		{
+			group.MapPut("update", Update)
+				.WithSummary($"Update the {dtoName} in the body if it already exist")
+				.Accepts<TDTO>("application/json")
+				.WithOpenApi();
+		}
 
-        if (!flags.HasFlag(BaseEndpointFlags.Delete))
+		if (!flags.HasFlag(BaseEndpointFlags.Delete))
 			return group;
 
 		group.MapDelete("{id}", Remove)
@@ -139,15 +139,14 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		[FromRoute] string filterValue)
 	{
 		return GenericEndpoint(
-			() =>
-			{
+			() => {
 				FilterParam param = new() {
 					ColumnName = columnName,
 					FilterValue = filterValue,
 					FilterOptionName = "Equal",
 				};
 				Pagination pagination = new() {
-					Includes = _includes,
+					Includes = [.. _includes],
 					FilterParams = [param],
 				};
 				return service.GetWithPagination(pagination, 0);
@@ -166,15 +165,14 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 		[FromBody] string[] includes)
 	{
 		return GenericEndpoint(
-			() =>
-			{
+			() => {
 				FilterParam param = new() {
 					ColumnName = columnName,
 					FilterValue = filterValue,
 					FilterOptionName = "Equal",
 				};
 				Pagination pagination = new() {
-					Includes = includes,
+					Includes = [.. includes],
 					FilterParams = [param],
 				};
 				return service.GetWithPagination(pagination, 0);

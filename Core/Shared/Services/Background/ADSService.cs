@@ -102,7 +102,7 @@ public class ADSService : BackgroundService
 				}
 
 				uint handle = tcClient.CreateVariableHandle(ADSUtils.ConnectionPath);
-				while (await timer.WaitForNextTickAsync(stoppingToken)&& !stoppingToken.IsCancellationRequested)
+				while (await timer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
 				{
 					if ((await tcClient.ReadAnyAsync<bool>(handle, cancel)).ErrorCode != AdsErrorCode.NoError)
 						throw new AdsException("Error while reading variable");
@@ -119,8 +119,8 @@ public class ADSService : BackgroundService
 
 				_executionCount++;
 			}
-        }
-    }
+		}
+	}
 
 	/// <summary>
 	/// Creates msgNew and OldEntry variable handles for the notification services and returns them.
@@ -131,8 +131,8 @@ public class ADSService : BackgroundService
 	private static (uint newMsgHandle, uint oldEntryHandle) CreateVarADS(
 		AdsClient tcClient, string newMsgPath, string oldEntryPath)
 	{
-		uint newMsgHandle =  tcClient.CreateVariableHandle(newMsgPath);
-		uint oldEntryHandle =  tcClient.CreateVariableHandle(oldEntryPath);
+		uint newMsgHandle = tcClient.CreateVariableHandle(newMsgPath);
+		uint oldEntryHandle = tcClient.CreateVariableHandle(oldEntryPath);
 
 		return (newMsgHandle, oldEntryHandle);
 	}

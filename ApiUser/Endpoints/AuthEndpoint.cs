@@ -45,8 +45,7 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
+			async () => {
 				await authService.Register(dtoRegister);
 				return $"User {{{dtoRegister.Username}}} has been successfully created.";
 			},
@@ -84,10 +83,9 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 			}
 			catch (Exception e2)
 			{
-				if (e2 is UnauthorizedAccessException)
-					return await new ApiResponse(e2.Message).ErrorResult(logService, httpContext, e2);
-
-				return await new ApiResponse("An undefined error happened.").ErrorResult(logService, httpContext, e2);
+				return (e2 is UnauthorizedAccessException)
+					? await new ApiResponse(e2.Message).ErrorResult(logService, httpContext, e2)
+					: await new ApiResponse("An undefined error happened.").ErrorResult(logService, httpContext, e2);
 			}
 		}
 		catch (Exception e)

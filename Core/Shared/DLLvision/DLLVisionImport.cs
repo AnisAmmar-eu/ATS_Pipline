@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DLLVision;
+namespace Core.Shared.DLLVision;
 
 public static class DLLVisionImport
 {
@@ -19,7 +19,7 @@ public static class DLLVisionImport
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_warnings_get_message",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern IntPtr fcx_warnings_get_message(int idx);
+	public static extern nint fcx_warnings_get_message(int idx);
 
 	//Retire tout les warnings
 	[DllImport("fcx_ats_lib.dll", EntryPoint = "ats_warnings_clear", CallingConvention = CallingConvention.StdCall)]
@@ -120,7 +120,7 @@ public static class DLLVisionImport
 
 	//Matching
 	[DllImport("fcx_ats_lib.dll", EntryPoint = "ats_match", CallingConvention = CallingConvention.StdCall)]
-	public static extern IntPtr fcx_match(
+	public static extern nint fcx_match(
 		long dataset_id,
 		long matchParamsDynId,
 		string in_directory,
@@ -131,25 +131,25 @@ public static class DLLVisionImport
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_errorCode",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_errorCode(IntPtr matchRet);
+	public static extern int fcx_matchRet_errorCode(nint matchRet);
 
 	//Obtenir id de l'anode
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_anodeId",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern IntPtr fcx_matchRet_anodeId(IntPtr matchRet);
+	public static extern nint fcx_matchRet_anodeId(nint matchRet);
 
 	//Obtenir score de similarité de l'anode
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_similarityScore",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_similarityScore(IntPtr matchRet);
+	public static extern int fcx_matchRet_similarityScore(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport("fcx_ats_lib.dll", EntryPoint = "ats_matchRet_free", CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_free(IntPtr matchRet);
+	public static extern int fcx_matchRet_free(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport("fcx_ats_lib.dll", EntryPoint = "ats_set_log_type", CallingConvention = CallingConvention.StdCall)]
@@ -174,65 +174,65 @@ public static class DLLVisionImport
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_worstScore",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_worstScore(IntPtr matchRet);
+	public static extern int fcx_matchRet_worstScore(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_bestScore",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_bestScore(IntPtr matchRet);
+	public static extern int fcx_matchRet_bestScore(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_nbBests",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_nbBests(IntPtr matchRet);
+	public static extern int fcx_matchRet_nbBests(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_bestsIdx_anodeId",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern IntPtr fcx_matchRet_bestsIdx_anodeId(IntPtr matchRet, int idx);
+	public static extern nint fcx_matchRet_bestsIdx_anodeId(nint matchRet, int idx);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_bestsIdx_score",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_bestsIdx_score(IntPtr matchRet, int idx);
+	public static extern int fcx_matchRet_bestsIdx_score(nint matchRet, int idx);
 
 	//Libération de l'objet de résultat de match
 	[DllImport("fcx_ats_lib.dll", EntryPoint = "ats_matchRet_mean", CallingConvention = CallingConvention.StdCall)]
-	public static extern double fcx_matchRet_mean(IntPtr matchRet);
+	public static extern double fcx_matchRet_mean(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_variance",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern double fcx_matchRet_variance(IntPtr matchRet);
+	public static extern double fcx_matchRet_variance(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_elapsed",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern long fcx_matchRet_elapsed(IntPtr matchRet);
+	public static extern long fcx_matchRet_elapsed(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_threshold",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_threshold(IntPtr matchRet);
+	public static extern int fcx_matchRet_threshold(nint matchRet);
 
 	//Libération de l'objet de résultat de match
 	[DllImport(
 		"fcx_ats_lib.dll",
 		EntryPoint = "ats_matchRet_cardinality_after_brut_force",
 		CallingConvention = CallingConvention.StdCall)]
-	public static extern int fcx_matchRet_cardinality_after_brut_force(IntPtr matchRet);
+	public static extern int fcx_matchRet_cardinality_after_brut_force(nint matchRet);
 }

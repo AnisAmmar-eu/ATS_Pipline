@@ -8,6 +8,6 @@ namespace Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 public partial class S5Cycle : MatchableCycle, IBaseEntity<S5Cycle, DTOS5Cycle>
 {
 	new public AnodeDX? Anode { get; set; }
-    public SignMatchStatus ChainMatchingCamera1 { get; set; }
-    public SignMatchStatus ChainMatchingCamera2 { get; set; }
+	public SignMatchStatus ChainMatchingCamera1 { get; set; }
+	public SignMatchStatus ChainMatchingCamera2 { get; set; }
 }

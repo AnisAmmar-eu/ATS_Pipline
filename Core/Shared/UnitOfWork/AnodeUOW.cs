@@ -14,7 +14,6 @@ using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
-using Core.Entities.User.Repositories.Roles;
 using Core.Entities.Vision.ToDos.Repositories.Datasets;
 using Core.Entities.Vision.ToDos.Repositories.ToLoads;
 using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
@@ -99,7 +98,6 @@ public class AnodeUOW : IAnodeUOW
 
 		Acts = new ActRepository(_anodeCTX);
 		ActEntities = new ActEntityRepository(_anodeCTX);
-		Roles = new RoleRepository();
 
 		ToMatch = new ToMatchRepository(_anodeCTX);
 		ToLoad = new ToLoadRepository(_anodeCTX);
@@ -128,7 +126,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IBITemperatureRepository) => BITemperature,
 			_ when repo == typeof(IKPIRepository) => KPI,
 
-            _ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
+			_ when repo == typeof(IIOTDeviceRepository) => IOTDevice,
 			_ when repo == typeof(IMatchRepository) => Match,
 			_ when repo == typeof(ISignRepository) => Sign,
 
@@ -136,11 +134,10 @@ public class AnodeUOW : IAnodeUOW
 
 			_ when repo == typeof(IActRepository) => Acts,
 			_ when repo == typeof(IActEntityRepository) => ActEntities,
-			_ when repo == typeof(IRoleRepository) => Roles,
 
 			_ when repo == typeof(IToSignRepository) => ToSign,
 			_ when repo == typeof(IToMatchRepository) => ToMatch,
-            _ when repo == typeof(IToLoadRepository) => ToLoad,
+			_ when repo == typeof(IToLoadRepository) => ToLoad,
 			_ when repo == typeof(IToSignRepository) => ToSign,
 			_ when repo == typeof(IToUnloadRepository) => ToUnload,
 			_ when repo == typeof(IToNotifyRepository) => ToNotify,
@@ -155,8 +152,8 @@ public class AnodeUOW : IAnodeUOW
 	{
 		// There is a while true bc in case of concurrency exception, we have to retry SaveChangesAsync().
 		while (true)
-        {
-            try
+		{
+			try
 			{
 				// return _anodeCTX.SaveChangesAsync().Result;
 				return _anodeCTX.SaveChanges();
@@ -164,8 +161,8 @@ public class AnodeUOW : IAnodeUOW
 			catch (DbUpdateConcurrencyException e)
 			{
 				foreach (EntityEntry entry in e.Entries)
-                {
-                    if (entry.Entity is IOTTag)
+				{
+					if (entry.Entity is IOTTag)
 					{
 						PropertyValues proposedValues = entry.CurrentValues;
 						PropertyValues databaseValues = entry.GetDatabaseValues()!;
@@ -186,8 +183,8 @@ public class AnodeUOW : IAnodeUOW
 					{
 						throw;
 					}
-                }
-            }
+				}
+			}
 			catch (Exception e)
 			{
 				if (_transaction is not null)
@@ -198,8 +195,8 @@ public class AnodeUOW : IAnodeUOW
 
 				throw new("An error happened during SaveChanges", e);
 			}
-        }
-    }
+		}
+	}
 
 	/// <summary>
 	///     Transaction is necessary in order to do a rollback after multiple saves in case an error is encountered
@@ -227,8 +224,8 @@ public class AnodeUOW : IAnodeUOW
 	public async Task CommitTransaction()
 	{
 		if (_transaction is not null && _transactionCount == 1)
-        {
-            try
+		{
+			try
 			{
 				await _transaction.CommitAsync();
 				_transaction = null;
@@ -239,9 +236,9 @@ public class AnodeUOW : IAnodeUOW
 				_transaction = null;
 				throw new("An error happened when commiting transaction", e);
 			}
-        }
+		}
 
-        _transactionCount -= 1;
+		_transactionCount -= 1;
 	}
 
 	public void Dispose()
@@ -258,7 +255,6 @@ public class AnodeUOW : IAnodeUOW
 
 	public IActRepository Acts { get; }
 	public IActEntityRepository ActEntities { get; }
-	public IRoleRepository Roles { get; }
 
 	#endregion Users
 }

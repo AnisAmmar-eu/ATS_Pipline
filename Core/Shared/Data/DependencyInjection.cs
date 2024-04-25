@@ -31,15 +31,13 @@ public static class DependencyInjection
 		configuration.LoadBaseConfiguration();
 
 		services.AddAuthentication(
-			options =>
-			{
+			options => {
 				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 			})
-		// Adding Jwt Bearer
-			.AddJwtBearer(options =>
-			{
+			// Adding Jwt Bearer
+			.AddJwtBearer(options => {
 				options.SaveToken = true;
 				options.RequireHttpsMetadata = false;
 				string jwtSecret = configuration.GetValueWithThrow<string>("JWT:Secret");
@@ -51,8 +49,7 @@ public static class DependencyInjection
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 				};
 				options.Events = new() {
-					OnMessageReceived = context =>
-					{
+					OnMessageReceived = context => {
 						if (context.Request.Query.TryGetValue("access_token", out StringValues token))
 							context.Token = token;
 

@@ -8,39 +8,39 @@ namespace Core.Shared.Paginations.Filtering;
 
 public static class Filter
 {
-    /// <summary>
-    /// Apply filters to an <see cref="IQueryable{T}"/> source from its pagination.
-    /// The last value from the <see cref="SortParam"/> is first used to remove previously queried rows. If none is given, no rows are removed.
-    /// Then, it chains every <see cref="FilterParam"/> in pagination with AND boolean operators.
-    /// Filters are then applied to the query.
-    /// </summary>
-    /// <param name="source">Query to filter</param>
-    /// <param name="pagination">Pagination parameters used to filter</param>
-    /// <typeparam name="T">BaseEntity from which rows will be filtered</typeparam>
-    /// <typeparam name="TDTO"></typeparam>
-    /// <returns>A filtered query</returns>
-    public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
+	/// <summary>
+	/// Apply filters to an <see cref="IQueryable{T}"/> source from its pagination.
+	/// The last value from the <see cref="SortParam"/> is first used to remove previously queried rows. If none is given, no rows are removed.
+	/// Then, it chains every <see cref="FilterParam"/> in pagination with AND boolean operators.
+	/// Filters are then applied to the query.
+	/// </summary>
+	/// <param name="source">Query to filter</param>
+	/// <param name="pagination">Pagination parameters used to filter</param>
+	/// <typeparam name="T">BaseEntity from which rows will be filtered</typeparam>
+	/// <typeparam name="TDTO"></typeparam>
+	/// <returns>A filtered query</returns>
+	public static IQueryable<T> FilterFromPagination<T, TDTO>(this IQueryable<T> source, Pagination pagination)
 		where T : class, IBaseEntity<T, TDTO>
 		where TDTO : class, IDTO<T, TDTO>
 	{
 		ParameterExpression param = Expression.Parameter(typeof(T));
 		source = (pagination.SortParam.LastValue.Length == 0)
-            ? source
+			? source
 			: source.Where(GetLastValueWhereClause<T>(pagination.SortParam, param));
 
-		return source .Where(FiltersToWhereClause<T>(pagination.FilterParams, param));
+		return source.Where(FiltersToWhereClause<T>(pagination.FilterParams, param));
 	}
 
-    /// <summary>
-    /// Returns the expression filter of LastValue. The LastValue comparison is applied on the column on which the result will be sorted.
-    /// If there is no column or sort method specified, it defaults to ID Descending.
-    /// Otherwise, remove every row which are inferior (resp. superior) to it if in ascending (resp. descending) sort.
-    /// </summary>
-    /// <param name="sortParam"></param>
-    /// <param name="param"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+	/// <summary>
+	/// Returns the expression filter of LastValue. The LastValue comparison is applied on the column on which the result will be sorted.
+	/// If there is no column or sort method specified, it defaults to ID Descending.
+	/// Otherwise, remove every row which are inferior (resp. superior) to it if in ascending (resp. descending) sort.
+	/// </summary>
+	/// <param name="sortParam"></param>
+	/// <param name="param"></param>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
+	/// <exception cref="ArgumentException"></exception>
 	private static Expression<Func<T, bool>> GetLastValueWhereClause<T>(SortParam sortParam, ParameterExpression param)
 	{
 		SortOption sortOption = SortOptionMap.Get(sortParam.SortOptionName);
@@ -58,20 +58,21 @@ public static class Filter
 		return Expression.Lambda<Func<T, bool>>(comparison, param);
 	}
 
-    /// <summary>
-    /// Chains all filterParams into a single Expression.
-    /// Filters are chained with the AND boolean operator.
-    /// </summary>
-    /// <param name="filterParams"></param>
-    /// <param name="param"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+	/// <summary>
+	/// Chains all filterParams into a single Expression.
+	/// Filters are chained with the AND boolean operator.
+	/// </summary>
+	/// <param name="filterParams"></param>
+	/// <param name="param"></param>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
 	private static Expression<Func<T, bool>> FiltersToWhereClause<T>(
 		IEnumerable<FilterParam>? filterParams,
 		ParameterExpression param)
 	{
 		if (filterParams is null)
 			return _ => true;
+
 		// Maps the filterParams into a list of Expression<Func<T, bool>> with the FilterToExpression list.
 		List<Expression> filters
 			= filterParams.Select(filterParam => FilterToExpression<T>(filterParam, param)).ToList();
@@ -85,14 +86,14 @@ public static class Filter
 		return Expression.Lambda<Func<T, bool>>(expr, param);
 	}
 
-    /// <summary>
-    /// Converts a filterParam into a compilable LINQ to Entities compatible expression so it can be translated to SQL.
-    /// </summary>
-    /// <param name="filterParam"></param>
-    /// <param name="param"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+	/// <summary>
+	/// Converts a filterParam into a compilable LINQ to Entities compatible expression so it can be translated to SQL.
+	/// </summary>
+	/// <param name="filterParam"></param>
+	/// <param name="param"></param>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
+	/// <exception cref="ArgumentException"></exception>
 	private static Expression FilterToExpression<T>(FilterParam filterParam, ParameterExpression param)
 	{
 		// Gets the property of the class from its column name.
@@ -102,10 +103,7 @@ public static class Filter
 			// Gets all possible types in the Assembly (running instance) and find the one with the same name.
 			Type? type = Assembly.GetAssembly(typeof(T))?.GetTypes().ToList()
 				.Find(t => t.Name == filterParam.FilterValue);
-			if (type is null)
-				return Expression.Constant(false);
-
-			return Expression.TypeIs(param, type);
+			return (type is null) ? Expression.Constant(false) : Expression.TypeIs(param, type);
 		}
 
 		string[] names = filterParam.ColumnName.Split('.');
@@ -114,13 +112,12 @@ public static class Filter
 			return Expression.Constant(true);
 
 		IComparable? refValue = ParseAsComparable(filterColumn.PropertyType, filterParam.FilterValue);
-		if (refValue is null)
-			throw new ArgumentException("Error happened during parsing of filterValue");
-
-		return GetExpressionBody(
-			filterOption,
-			GetExpressionProperty(param, names),
-			Expression.Constant(refValue, refValue.GetType()));
+		return (refValue is null)
+			? throw new ArgumentException("Error happened during parsing of filterValue")
+			: (Expression)GetExpressionBody(
+				filterOption,
+				GetExpressionProperty(param, names),
+				Expression.Constant(refValue, refValue.GetType()));
 	}
 
 	private static BinaryExpression GetExpressionBody(FilterOption filterOption, Expression left, Expression right)
@@ -173,10 +170,7 @@ public static class Filter
 			type = propertyInfo.PropertyType;
 		}
 
-		if (propertyInfo is null)
-			throw new InvalidDataException("FilterParam Column name is invalid.");
-
-		return propertyInfo;
+		return propertyInfo ?? throw new InvalidDataException("FilterParam Column name is invalid.");
 	}
 
 	/// <summary>
@@ -222,9 +216,9 @@ public static class Filter
 			c =>
 				c.Name == "Parse"
 					&& c.GetParameters().Length == 1
-					&& c.GetParameters()[0].ParameterType == typeof(string));
-		if (parse is null)
-			throw new ArgumentException("Filter: Trying to parse a value which is not parsable.");
+					&& c.GetParameters()[0].ParameterType == typeof(string))
+			?? throw new ArgumentException(
+				"Filter: Trying to parse a value which is not parsable.");
 
 		// And it finally invokes it.
 		return parse.Invoke(null, [value]) as IComparable;

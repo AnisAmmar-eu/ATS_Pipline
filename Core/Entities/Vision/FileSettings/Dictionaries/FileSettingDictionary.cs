@@ -30,7 +30,7 @@ public static class FileSettingRID
 	public const string S2SignCam2DXDynamic = "S2SignCam2DXDynamic";
 	public const string S2SignCam2D20Dynamic = "S2SignCam2D20Dynamic";
 
-	 // Station S3 with Sign
+	// Station S3 with Sign
 	public const string S3SignCam1DXStatic = "S3SignCam1DXStatic";
 	public const string S3SignCam1D20Static = "S3SignCam1D20Static";
 	public const string S3SignCam1DXDynamic = "S3SignCam1DXDynamic";
@@ -46,7 +46,7 @@ public static class FileSettingRID
 	public const string S3MatchCam2DXDynamic = "S3MatchCam2DXDynamic";
 	public const string S3MatchCam2D20Dynamic = "S3MatchCam2D20Dynamic";
 
-	 // Station S4 with Sign
+	// Station S4 with Sign
 	public const string S4SignCam1DXStatic = "S4SignCam1DXStatic";
 	public const string S4SignCam1D20Static = "S4SignCam1D20Static";
 	public const string S4SignCam1DXDynamic = "S4SignCam1DXDynamic";
@@ -62,7 +62,7 @@ public static class FileSettingRID
 	public const string S4MatchCam2DXDynamic = "S4MatchCam2DXDynamic";
 	public const string S4MatchCam2D20Dynamic = "S4MatchCam2D20Dynamic";
 
-	 // Station S5 with Sign
+	// Station S5 with Sign
 	public const string S5SignCam1DXStatic = "S5SignCam1DXStatic";
 	public const string S5SignCam1DXDynamic = "S5SignCam1DXDynamic";
 
@@ -129,7 +129,7 @@ public static class FileSettingRID
 
 			// Station S5 with Match
 			S5MatchCam1DXDynamic,
-	];
+		];
 }
 
 public static class FileSettingPath

@@ -30,8 +30,8 @@ public class ActAuthorizeHandler : AuthorizationHandler<ActAuthorize>
 		if (!result)
 			context.Fail(new AuthorizationFailureReason(this, "Access denied"));
 		else
-            context.Succeed(requirement);
+			context.Succeed(requirement);
 
-        return Task.CompletedTask;
+		return Task.CompletedTask;
 	}
 }

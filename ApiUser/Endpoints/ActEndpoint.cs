@@ -48,8 +48,7 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
-			async () =>
-			{
+			async () => {
 				string actionToken = await actService.HasRights(httpContext, dtoActEntityToValid);
 				return new { actionToken };
 			},
@@ -115,11 +114,10 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
-			async () =>
-			{
+			async () => {
 				foreach (DTOActEntity dtoActEntity in dtoActEntities.Where(dto => dto.Act?.RID.StartsWith("MANAGE.") == true))
-                    await actService.AssignAction(dtoActEntity);
-            },
+					await actService.AssignAction(dtoActEntity);
+			},
 			logService,
 			httpContext);
 	}

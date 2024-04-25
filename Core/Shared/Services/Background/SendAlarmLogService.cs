@@ -40,8 +40,8 @@ public class SendAlarmLogService : BackgroundService
 			= asyncScope.ServiceProvider.GetRequiredService<IAlarmRTService>();
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
-        {
-            try
+		{
+			try
 			{
 				await alarmLogService.SendLogsToServer();
 				await alarmRTService.SendRTsToServer();
@@ -52,6 +52,6 @@ public class SendAlarmLogService : BackgroundService
 					"Failed to execute PeriodicSendService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-        }
-    }
+		}
+	}
 }

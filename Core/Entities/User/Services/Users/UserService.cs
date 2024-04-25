@@ -38,6 +38,10 @@ public class UserService : IUserService
 			.AsNoTracking()
 			.Select(u => u.ToDTO())
 			.ToListAsync();
+		// List<DTOUser> users = await _userManager.Users.Where(u => u.UserName != "ekium-admin" || u.UserName != "fives-admin")
+		// 	.AsNoTracking()
+		// 	.Select(u => u.ToDTO())
+		// 	.ToListAsync();
 
 		foreach (DTOUser user in users)
 			user.Roles = await GetRolesByUsername(user.Username);
@@ -56,11 +60,8 @@ public class UserService : IUserService
 		DTOUser? user = await _userManager.Users.Where(u => u.UserName == username)
 			.AsNoTracking()
 			.Select(u => u.ToDTO())
-			.FirstOrDefaultAsync();
-
-		if (user is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist.");
-
+			.FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User [" + username + "] does not exist.");
 		user.Roles = await GetRolesByUsername(user.Username);
 
 		return user;
@@ -77,11 +78,8 @@ public class UserService : IUserService
 		DTOUser? user = await _userManager.Users.Where(u => u.Id == id)
 			.AsNoTracking()
 			.Select(u => u.ToDTO())
-			.FirstOrDefaultAsync();
-
-		if (user is null)
-			throw new EntityNotFoundException("User {" + id + "} does not exist.");
-
+			.FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User {" + id + "} does not exist.");
 		user.Roles = await GetRolesByUsername(user.Username);
 
 		return user;
@@ -101,10 +99,7 @@ public class UserService : IUserService
 			.Select(u => u.Id)
 			.FirstOrDefaultAsync();
 
-		if (userId is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
-		return userId;
+		return userId ?? throw new EntityNotFoundException("User [" + username + "] does not exist");
 	}
 
 	/// <summary>
@@ -118,11 +113,8 @@ public class UserService : IUserService
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == username)
 			.AsNoTracking()
-			.FirstOrDefaultAsync();
-
-		if (user is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
+			.FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User [" + username + "] does not exist");
 		IList<string> rolesName = await _userManager.GetRolesAsync(user);
 
 		return await _roleManager.Roles
@@ -138,10 +130,7 @@ public class UserService : IUserService
 	/// <param name="roleName"></param>
 	/// <returns>An <see cref="List{ApplicationUser}" /></returns>
 	public async Task<List<ApplicationUser>> GetAllByRole(string roleName)
-	{
-		return (await _userManager.GetUsersInRoleAsync(roleName))
-			.ToList();
-	}
+		=> [.. (await _userManager.GetUsersInRoleAsync(roleName))];
 
 	/// <summary>
 	///     Update a user by its username
@@ -152,11 +141,8 @@ public class UserService : IUserService
 	/// <exception cref="Exception"></exception>
 	public async Task<DTOUser> Update(string username, DTOUser dtoUser)
 	{
-		ApplicationUser? user = await _userManager.Users.Where(u => u.UserName == username).FirstOrDefaultAsync();
-
-		if (user is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
+		ApplicationUser? user = await _userManager.Users.Where(u => u.UserName == username).FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User [" + username + "] does not exist");
 		user.UserName = dtoUser.Username;
 		user.Firstname = dtoUser.Firstname;
 		user.Lastname = dtoUser.Lastname;
@@ -167,8 +153,8 @@ public class UserService : IUserService
 		// Get all rolesName
 		IList<string> rolesName = await _userManager.GetRolesAsync(user);
 
-		// Remove admin role in rolesName
-		rolesName.Remove(RoleNames.Admin);
+		// // Remove admin role in rolesName
+		// rolesName.Remove(RoleNames.Admin);
 
 		// Remove all roles
 		await _userManager.RemoveFromRolesAsync(user, rolesName);
@@ -192,10 +178,9 @@ public class UserService : IUserService
 			.Where(u => u.UserName == username)
 			.FirstOrDefaultAsync();
 
-		if (user is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
-		return toAdmin
+		return (user is null)
+			? throw new EntityNotFoundException("User [" + username + "] does not exist")
+			: toAdmin
 			? (await _userManager.AddToRoleAsync(user, RoleNames.Admin)).Succeeded
 			: (await _userManager.RemoveFromRoleAsync(user, RoleNames.Admin)).Succeeded;
 	}
@@ -209,11 +194,8 @@ public class UserService : IUserService
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(r => r.UserName == username)
-			.FirstOrDefaultAsync();
-
-		if (user is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
+			.FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User [" + username + "] does not exist");
 		await _userManager.DeleteAsync(user);
 	}
 
@@ -227,11 +209,8 @@ public class UserService : IUserService
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == username)
-			.FirstOrDefaultAsync();
-
-		if (user is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
+			.FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User [" + username + "] does not exist");
 		string token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
 		await _userManager.ResetPasswordAsync(user, token, newPassword);
@@ -248,11 +227,8 @@ public class UserService : IUserService
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == username)
-			.FirstOrDefaultAsync();
-
-		if (user is null)
-			throw new EntityNotFoundException("User [" + username + "] does not exist");
-
+			.FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User [" + username + "] does not exist");
 		IdentityResult result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
 		if (!result.Succeeded)
@@ -268,12 +244,9 @@ public class UserService : IUserService
 	{
 		ApplicationUser? user = await _userManager.Users
 			.Where(u => u.UserName == name)
-			.FirstOrDefaultAsync();
-
-		if (user is null)
-            throw new EntityNotFoundException("User does not exist");
-
-        string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+			.FirstOrDefaultAsync()
+			?? throw new EntityNotFoundException("User does not exist");
+		string token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
 		// Generate a random new password
 		string newPassword = Guid.NewGuid().ToString()[..8];
@@ -295,8 +268,7 @@ public class UserService : IUserService
 		using PrincipalSearcher searcher = new(new UserPrincipal(adContext));
 
 		return (from UserPrincipal user in searcher.FindAll().OrderBy(x => x.SamAccountName)
-				select new DTOUser
-					{ Username = user.SamAccountName, Firstname = user.GivenName, Lastname = user.Surname })
+				select new DTOUser { Username = user.SamAccountName, Firstname = user.GivenName, Lastname = user.Surname })
 			.ToList();
 	}
 }

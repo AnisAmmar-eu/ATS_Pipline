@@ -11,5 +11,5 @@ public partial class ToDo : BaseEntity, IBaseEntity<ToDo, DTOToDo>
 	public string AnodeType { get; set; }
 	public DateTimeOffset? ShootingTS { get; set; }
 
-    public int StationCycleID { get; set; }
+	public int StationCycleID { get; set; }
 }

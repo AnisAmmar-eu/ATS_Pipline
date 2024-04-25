@@ -29,13 +29,13 @@ public class BenchmarkTest : BaseEntity, IBaseEntity<BenchmarkTest, DTOBenchmark
 	public int AnodeType { get; set; }
 
 	public DateTimeOffset TSIndex { get; set; }
-    private CameraTest? CameraTestSub { get; set; }
+	private CameraTest? CameraTestSub { get; set; }
 
-    public CameraTest CameraTest
-    {
-	    set => CameraTestSub = value;
-	    get => CameraTestSub ?? throw new ArgumentException("rip bozo");
-    }
+	public CameraTest CameraTest
+	{
+		set => CameraTestSub = value;
+		get => CameraTestSub;
+	}
 
-    public override DTOBenchmarkTest ToDTO() => new(this);
+	public override DTOBenchmarkTest ToDTO() => new(this);
 }

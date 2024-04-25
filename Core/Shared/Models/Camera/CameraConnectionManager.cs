@@ -11,33 +11,31 @@ public static class CameraConnectionManager
 	/// Could be a list but by being a dictionary, having 2 or 42 cameras does not matter as there is no need to specify
 	/// a maximum length for the list.
 	/// </summary>
-	private static Dictionary<int, Device> Devices { get; } = new();
+	private static Dictionary<int, Device> Devices { get; } = [];
 
 	public static async Task<Device> Connect(int port, CancellationToken cancel)
 	{
-		if (Devices.TryGetValue(port, out Device? existingDevice))
-			return existingDevice;
-
-		return await Task.Run(
-			() =>
-			{
-				while (!cancel.IsCancellationRequested)
-				{
-					try
+		return (Devices.TryGetValue(port, out Device? existingDevice))
+			? existingDevice
+			: await Task.Run(
+				() => {
+					while (!cancel.IsCancellationRequested)
 					{
-						string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
-						Device device = DeviceFactory.OpenPort(driverString, port);
-						Devices.Add(port, device);
-						return device;
+						try
+						{
+							string driverString = Environment.ExpandEnvironmentVariables("%CVB%") + @"Drivers\GenICam.vin";
+							Device device = DeviceFactory.OpenPort(driverString, port);
+							Devices.Add(port, device);
+							return device;
+						}
+						catch
+						{
+							// ignored
+						}
 					}
-					catch
-					{
-						// ignored
-					}
-				}
 
-				throw new IOException($"Could not connect to camera with port: {port.ToString()}");
-			},
-			cancel);
+					throw new IOException($"Could not connect to camera with port: {port.ToString()}");
+				},
+				cancel);
 	}
 }

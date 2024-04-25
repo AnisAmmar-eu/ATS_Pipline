@@ -34,18 +34,18 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 	public async Task<IOTDeviceStatus> GetStatusByRID(string rid)
 	{
 		return new IOTDeviceStatus(
-			await AnodeUOW.IOTDevice.GetByWithThrow([device => device.RID == rid], withTracking: false));
+			await _anodeUOW.IOTDevice.GetByWithThrow([device => device.RID == rid], withTracking: false));
 	}
 
 	public async Task<List<IOTDeviceStatus>> GetStatusByArrayRID(IEnumerable<string> rids)
 	{
-		return (await AnodeUOW.IOTDevice.GetAll([device => rids.Contains(device.RID)], withTracking: false))
+		return (await _anodeUOW.IOTDevice.GetAll([device => rids.Contains(device.RID)], withTracking: false))
 			.ConvertAll(device => new IOTDeviceStatus(device));
 	}
 
 	public async Task<IEnumerable<string>> GetAllApisRIDs()
 	{
-		return (await AnodeUOW.IOTDevice.GetAll([device => device is ITApi], withTracking: false))
+		return (await _anodeUOW.IOTDevice.GetAll([device => device is ITApi], withTracking: false))
 			.Select(device => device.RID);
 	}
 
@@ -56,25 +56,24 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 
 		await _hubContext.Clients.All.RefreshDevices();
 
-		IEnumerable<Task<List<IOTTag>>> tasks = devices.Select(async device =>
-		{
-			List<IOTTag> updatedTags = await device.ApplyTags(AnodeUOW, _logger);
+		IEnumerable<Task<List<IOTTag>>> tasks = devices.Select(async device => {
+			List<IOTTag> updatedTags = await device.ApplyTags(_anodeUOW, _logger);
 			hasAnyTagChanged = hasAnyTagChanged || updatedTags.Count != 0;
 			return updatedTags;
 		});
 		List<IOTTag>[] updatedTags = await Task.WhenAll(tasks);
 		if (hasAnyTagChanged)
 		{
-			await AnodeUOW.StartTransaction();
+			await _anodeUOW.StartTransaction();
 			foreach (List<IOTTag> updatedTagList in updatedTags)
-				AnodeUOW.IOTTag.UpdateArray([.. updatedTagList]);
+				_anodeUOW.IOTTag.UpdateArray([.. updatedTagList]);
 
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
+			_anodeUOW.Commit();
+			await _anodeUOW.CommitTransaction();
 			await _hubContext.Clients.All.RefreshIOTTag();
 		}
 
-		devices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
+		devices.ForEach(device => _anodeUOW.IOTDevice.StopTracking(device));
 	}
 
 	/// <summary>
@@ -86,12 +85,11 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 	/// </returns>
 	private async Task<List<IOTDevice>> CheckAllConnections(IEnumerable<string> rids)
 	{
-		List<IOTDevice> devices = await AnodeUOW.IOTDevice
+		List<IOTDevice> devices = await _anodeUOW.IOTDevice
 			.GetAll([device => rids.Contains(device.RID)], withTracking: true, includes: nameof(IOTDevice.IOTTags));
 		List<IOTDevice> connectedDevices = [];
 		List<IOTDevice> disconnectedDevices = [];
-		IEnumerable<Task<IOTDevice>> task = devices.Select(async device =>
-		{
+		IEnumerable<Task<IOTDevice>> task = devices.Select(async device => {
 			device.IsConnected = await device.CheckConnection(_logger);
 			if (device.IsConnected)
 				connectedDevices.Add(device);
@@ -102,41 +100,41 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		});
 
 		IOTDevice[] updatedDevices = await Task.WhenAll(task);
-		disconnectedDevices.ForEach(device => AnodeUOW.IOTDevice.StopTracking(device));
+		disconnectedDevices.ForEach(device => _anodeUOW.IOTDevice.StopTracking(device));
 
 		if (!Station.IsServer)
 		{
-			bool ITApiDisconnected
+			bool itApiDisconnected
 				= disconnectedDevices.Any(device => device is ITApi itApi && itApi.RID != ITApisDict.ServerReceiveRID);
 
 			AdsClient tcClient = await TwinCatConnectionManager.Connect(ADSUtils.AdsPort, _logger, 1000, CancellationToken.None);
 			uint statusHandle
 				= tcClient.CreateVariableHandle(IOTTagPath.ApiStatusWrite);
-			tcClient.WriteAny(statusHandle, !ITApiDisconnected);
+			tcClient.WriteAny(statusHandle, !itApiDisconnected);
 		}
 
 		if (updatedDevices.Length == 0)
 			return connectedDevices;
 
-		ServerRule ruleDevice = (ServerRule)await AnodeUOW.IOTDevice
+		ServerRule ruleDevice = (ServerRule)await _anodeUOW.IOTDevice
 			.GetByWithThrow([device => device is ServerRule], withTracking: true);
 
-		await AnodeUOW.StartTransaction();
-		AnodeUOW.IOTDevice.UpdateArray(updatedDevices);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.StartTransaction();
+		_anodeUOW.IOTDevice.UpdateArray(updatedDevices);
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 		return connectedDevices;
 	}
 
 	public async Task<bool> ActiveReinit()
 	{
-		ServerRule ruleDevice = (ServerRule)await AnodeUOW.IOTDevice
+		ServerRule ruleDevice = (ServerRule)await _anodeUOW.IOTDevice
 			.GetByWithThrow([device => device is ServerRule], withTracking: true);
 		ruleDevice.Reinit = true;
-		await AnodeUOW.StartTransaction();
-		AnodeUOW.IOTDevice.Update(ruleDevice);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.StartTransaction();
+		_anodeUOW.IOTDevice.Update(ruleDevice);
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 
 		await _hubContext.Clients.All.RefreshIOTTag();
 		await _hubContext.Clients.All.RefreshDevices();

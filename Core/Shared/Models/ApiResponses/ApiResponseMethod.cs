@@ -120,10 +120,7 @@ public partial class ApiResponse
 
 	private async Task CreateLog(ILogService logService, HttpContext httpContext)
 	{
-		Endpoint? endpoint = httpContext.GetEndpoint();
-		if (endpoint is null)
-			throw new ArgumentException("Logs creation, endpoint is null");
-
+		Endpoint? endpoint = httpContext.GetEndpoint() ?? throw new ArgumentException("Logs creation, endpoint is null");
 		MethodInfo methodInfo = endpoint.Metadata.GetRequiredMetadata<MethodInfo>();
 		try
 		{
@@ -154,12 +151,12 @@ public partial class ApiResponse
 	private static void AddNestedDerivedTypes(JsonTypeInfo jsonTypeInfo)
 	{
 		if (jsonTypeInfo.PolymorphismOptions is null)
-            return;
+			return;
 
-        List<Type> derivedTypes = jsonTypeInfo.PolymorphismOptions.DerivedTypes
-        	.Where(t => Attribute.IsDefined(t.DerivedType, typeof(JsonDerivedTypeAttribute)))
-        	.Select(t => t.DerivedType)
-        	.ToList();
+		List<Type> derivedTypes = jsonTypeInfo.PolymorphismOptions.DerivedTypes
+			.Where(t => Attribute.IsDefined(t.DerivedType, typeof(JsonDerivedTypeAttribute)))
+			.Select(t => t.DerivedType)
+			.ToList();
 		HashSet<Type> hashset = new(derivedTypes);
 		Queue<Type> queue = new(derivedTypes);
 		while (queue.TryDequeue(out Type? derived))
@@ -172,9 +169,9 @@ public partial class ApiResponse
 
 			foreach (JsonDerivedTypeAttribute jsonDerivedTypeAttribute in derived
 				.GetCustomAttributes<JsonDerivedTypeAttribute>())
-            {
-                queue.Enqueue(jsonDerivedTypeAttribute.DerivedType);
-            }
-        }
+			{
+				queue.Enqueue(jsonDerivedTypeAttribute.DerivedType);
+			}
+		}
 	}
 }
