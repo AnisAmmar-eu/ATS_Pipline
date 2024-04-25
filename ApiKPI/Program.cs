@@ -1,19 +1,13 @@
-using System.Configuration;
 using Carter;
 using Core.Entities.Anodes.Services;
-using Core.Entities.KPI.KPICs.Services;
-using Core.Entities.KPI.KPIEntries.Services.KPILogs;
-using Core.Entities.KPI.KPIEntries.Services.KPIRTs;
+using Core.Entities.KPIData.KPIs.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
-using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
-using Core.Shared.Services.Background.KPI.KPILogs;
-using Core.Shared.Services.Background.KPI.KPIRTs;
 using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.SignalR;
 using Core.Shared.UnitOfWork;
@@ -48,21 +42,11 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 
 builder.Services.AddScoped<ILogService, LogService>();
 
-builder.Services.AddScoped<IKPICService, KPICService>();
-builder.Services.AddScoped<IKPIRTService, KPIRTService>();
-builder.Services.AddScoped<IKPILogService, KPILogService>();
-
-builder.Services.AddScoped<IPacketService, PacketService>();
-builder.Services.AddScoped<IStationCycleService, StationCycleService>();
-builder.Services.AddSingleton<HourlyStationCycleService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyStationCycleService>());
+builder.Services.AddScoped<IKPIService, KPIService>();
 
 builder.Services.AddScoped<IAnodeService, AnodeService>();
-builder.Services.AddSingleton<HourlyAnodeService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<HourlyAnodeService>());
-
-builder.Services.AddSingleton<DailyKPILogService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<DailyKPILogService>());
+builder.Services.AddScoped<IPacketService, PacketService>();
+builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISignalRService, SignalRService>();
@@ -94,6 +78,9 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>(ConfigDictionary.ClientHost);
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder.WithOrigins(clientHost)

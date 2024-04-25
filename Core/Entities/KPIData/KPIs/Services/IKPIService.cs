@@ -6,4 +6,9 @@ namespace Core.Entities.KPIData.KPIs.Services;
 
 public interface IKPIService : IBaseEntityService<KPI, DTOKPI>
 {
+	Task<List<DTOStationKPI>> CreateAllStationKPIByPeriod(
+		DateTimeOffset? start,
+		DateTimeOffset? end,
+		List<string> anodeTypes,
+		List<string> stationOrigin);
 }
