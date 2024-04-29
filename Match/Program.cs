@@ -1,17 +1,17 @@
+using System.Configuration;
+using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
+using Core.Shared.DLLVision;
 using Core.Shared.Services.Background.Vision.Matchs;
 using Core.Shared.Services.SystemApp.Logs;
-using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.UnitOfWork;
-using DLLVision;
+using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
-using Core.Entities.User.Models.DB.Roles;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Match service");
@@ -59,9 +59,9 @@ if (bool.Parse(dbInitialize))
 
 ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
 
-List<int> GPUID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDictionary.GPUID);
+List<int> gpuID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDictionary.GPUID);
 
-string DLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+string dllPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 
 // FolderPath = FolderParams//InstanceMatchID//CameraID
 string instanceMatchID = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.InstanceMatchID);
@@ -69,20 +69,20 @@ string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDict
 
 string folderWithoutCam = Path.Combine(folderParams, instanceMatchID);
 
-DLLVisionImport.SetDllDirectory(DLLPath);
+DLLVisionImport.SetDllDirectory(dllPath);
 int retInit = DLLVisionImport.fcx_init();
 string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
 
 logger.LogInformation("Match SignParamStatic {static}.", signParamsStaticOutput);
 
-foreach (int cameraID in new int[] {1, 2})
+foreach (int cameraID in new int[] { 1, 2 })
 {
 	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
 	string matchDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicMatchName);
 
 	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParams);
-	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, GPUID[cameraID-1]);
+	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, gpuID[cameraID - 1]);
 
 	logger.LogInformation(
 		"Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",

@@ -26,7 +26,7 @@ public class StationCycleService :
 
 	public async Task<DTOReducedStationCycle?> GetMostRecentWithIncludes()
 	{
-		return (await AnodeUOW.StationCycle.GetAllWithIncludes(orderBy: query =>
+		return (await _anodeUOW.StationCycle.GetAllWithIncludes(orderBy: query =>
 			query.OrderByDescending(cycle => cycle.TS)))
 			.FirstOrDefault()
 			?.Reduce();
@@ -34,7 +34,7 @@ public class StationCycleService :
 
 	public async Task<List<DTOReducedStationCycle>> GetAllRIDs()
 	{
-		return (await AnodeUOW.StationCycle
+		return (await _anodeUOW.StationCycle
 			.GetAll(withTracking: false, includes: [nameof(StationCycle.Shooting1Packet)]))
 			.ConvertAll(cycle => cycle.Reduce());
 	}
@@ -42,12 +42,10 @@ public class StationCycleService :
 	public async Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera)
 	{
 		string includeProperty = (camera == 1) ? nameof(StationCycle.Shooting1Packet) : nameof(StationCycle.Shooting2Packet);
-		StationCycle stationCycle = await AnodeUOW.StationCycle.GetById(id, includes: includeProperty);
+		StationCycle stationCycle = await _anodeUOW.StationCycle.GetById(id, includes: includeProperty);
 
-		Shooting? shootingPacket = (camera == 1) ? stationCycle.Shooting1Packet : stationCycle.Shooting2Packet;
-		if (shootingPacket is null)
-			throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
-
+		Shooting? shootingPacket = ((camera == 1) ? stationCycle.Shooting1Packet : stationCycle.Shooting2Packet)
+			?? throw new EntityNotFoundException("Pictures have not been yet assigned for this anode.");
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 		string extenstion = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 

@@ -38,14 +38,13 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(
-		[FromBody] [Required] List<DTOAlarmLog> dtoAlarmLogs,
+		[FromBody][Required] List<DTOAlarmLog> dtoAlarmLogs,
 		IAlarmLogService alarmLogService,
 		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
-			async () =>
-			{
+			async () => {
 				foreach (DTOAlarmLog alarmLog in dtoAlarmLogs)
 					await alarmLogService.ReceiveAlarmLog(alarmLog);
 			},
@@ -54,14 +53,13 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmRT(
-		[FromBody] [Required] List<DTOAlarmRT> dtoAlarmRTs,
+		[FromBody][Required] List<DTOAlarmRT> dtoAlarmRTs,
 		IAlarmRTService alarmRTService,
 		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
-			async () =>
-			{
+			async () => {
 				foreach (DTOAlarmRT alarmRT in dtoAlarmRTs)
 					await alarmRTService.ReceiveAlarmRT(alarmRT);
 			},
@@ -69,7 +67,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 			httpContext);
 	}
 
-	private static Task<JsonHttpResult<ApiResponse>>  ReceivePacket(
+	private static Task<JsonHttpResult<ApiResponse>> ReceivePacket(
 		[Required] DTOPacket packet,
 		[FromRoute] string stationName,
 		IPacketService packetService,
@@ -89,8 +87,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
-			() =>
-			{
+			() => {
 				FormFileCollection images = [];
 				images.AddRange(
 					httpContext.Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
@@ -115,7 +112,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveLog(
-		[FromBody] [Required] List<DTOLog> logs,
+		[FromBody][Required] List<DTOLog> logs,
 		ILogService logService,
 		HttpContext httpContext)
 	{

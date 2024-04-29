@@ -10,6 +10,7 @@ using Core.Entities.StationCycles.Models.DTO.MatchingCycles;
 using Core.Shared.Dictionaries;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.StationCycles.Models.DTO;
 
@@ -18,7 +19,7 @@ namespace Core.Entities.StationCycles.Models.DTO;
 public partial class DTOStationCycle :
 	DTOBaseEntity,
 	IDTO<StationCycle, DTOStationCycle>,
-	IExtensionBinder<DTOStationCycle>
+	IBindableFromHttpContext<DTOStationCycle>
 {
 	public int StationID { get; set; } = Station.ID;
 	public string AnodeType { get; set; } = string.Empty;

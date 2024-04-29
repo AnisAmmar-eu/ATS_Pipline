@@ -1,10 +1,10 @@
 ﻿using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
+using Core.Shared.DLLVision;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using DLLVision;
 
 namespace Core.Shared.Services.Background.Vision.Signs;
 

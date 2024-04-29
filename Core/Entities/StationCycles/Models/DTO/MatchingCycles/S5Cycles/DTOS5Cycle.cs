@@ -6,6 +6,6 @@ namespace Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
 
 public partial class DTOS5Cycle : DTOMatchingCycle, IDTO<S5Cycle, DTOS5Cycle>
 {
-    public SignMatchStatus ChainMatchingCamera1 { get; set; }
-    public SignMatchStatus ChainMatchingCamera2 { get; set; }
+	public SignMatchStatus ChainMatchingCamera1 { get; set; }
+	public SignMatchStatus ChainMatchingCamera2 { get; set; }
 }

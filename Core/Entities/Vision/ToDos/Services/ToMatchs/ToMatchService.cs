@@ -1,25 +1,25 @@
-using Core.Entities.Anodes.Models.DB.AnodesDX;
+using System.Data;
+using System.Reactive.Linq;
 using Core.Entities.Anodes.Models.DB;
+using Core.Entities.Anodes.Models.DB.AnodesDX;
+using Core.Entities.IOT.IOTDevices.Models.DB;
+using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
+using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
+using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
+using Core.Entities.KPIData.KPIs.Models.DB;
+using Core.Entities.KPIData.TenBestMatchs.Models.DB;
 using Core.Entities.StationCycles.Dictionaries;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
 using Core.Entities.Vision.ToDos.Models.DTO.ToMatchs;
 using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
+using Core.Shared.Dictionaries;
+using Core.Shared.DLLVision;
 using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
-using Core.Entities.StationCycles.Models.DB.MatchableCycles;
-using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
-using Core.Entities.KPIData.KPIs.Models.DB;
-using DLLVision;
-using Core.Entities.KPIData.TenBestMatchs.Models.DB;
-using Core.Entities.IOT.IOTDevices.Models.DB.ITApiStations;
-using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
-using Core.Entities.IOT.IOTDevices.Models.DB;
-using System.Reactive.Linq;
-using Core.Shared.Dictionaries;
-using System.Data;
-using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
-using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -37,10 +37,10 @@ public class ToMatchService :
 		int cameraID,
 		bool isChained)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
 		int retMatchCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
-		if (retMatchCode  == 0)
+		if (retMatchCode == 0)
 		{
 			cycle.MatchingTS ??= DateTimeOffset.Now;
 
@@ -84,23 +84,23 @@ public class ToMatchService :
 		if (cameraID == 2 || (cameraID == 1 && retMatchCode != -106))
 			cycle.KPI = CreateKPI(retMatch);
 
-		_ = AnodeUOW.StationCycle.Update(cycle);
-		_ = AnodeUOW.Commit();
+		_anodeUOW.StationCycle.Update(cycle);
+		_anodeUOW.Commit();
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 		return cycle;
 	}
 
-	public async Task UpdateAnode(MatchableCycle cycle, string cycleRID)
+	public async Task UpdateAnode(MatchableCycle cycle, string? cycleRID)
 	{
 		if (cycleRID is null)
 			return;
 
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
 		try
 		{
-			Anode anode = await AnodeUOW.Anode.GetByWithThrow(
+			Anode anode = await _anodeUOW.Anode.GetByWithThrow(
 				[anode => anode.CycleRID == cycleRID]
 				);
 
@@ -109,7 +109,7 @@ public class ToMatchService :
 			else
 				((AnodeDX)anode).S5Cycle = cycle as S5Cycle;
 
-			_ = AnodeUOW.Commit();
+			_anodeUOW.Commit();
 		}
 		catch (EntityNotFoundException)
 		{
@@ -119,13 +119,12 @@ public class ToMatchService :
 			throw;
 		}
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 	}
 
 	private static KPI CreateKPI(IntPtr retMatch)
 	{
-		KPI kPI = new()
-		{
+		KPI kPI = new() {
 			MScore = DLLVisionImport.fcx_matchRet_similarityScore(retMatch),
 			NbCandidats = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(retMatch), //TODO change when new DLL
 			Threshold = DLLVisionImport.fcx_matchRet_threshold(retMatch),
@@ -138,13 +137,12 @@ public class ToMatchService :
 
 		for (int i = 0; i < 10; i++)
 		{
-			kPI.TenBestMatches.Add(new TenBestMatch()
-				{
-					Rank = i,
-						//AnodeID = DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i), TODO allow when DLL works
-						//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i), TODO allow when DLL works
-					KPI = kPI,
-				}
+			kPI.TenBestMatches.Add(new TenBestMatch() {
+				Rank = i,
+				//AnodeID = DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i), TODO allow when DLL works
+				//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i), TODO allow when DLL works
+				KPI = kPI,
+			}
 		);
 		}
 
@@ -155,12 +153,12 @@ public class ToMatchService :
 	{
 		try
 		{
-			List<IOTDevice> iotDevices = await AnodeUOW.IOTDevice
+			List<IOTDevice> iotDevices = await _anodeUOW.IOTDevice
 				.GetAll([device => device is ITApiStation], withTracking: false);
-			ServerRule? rule = await AnodeUOW.IOTDevice.GetBy([device => device is ServerRule]) as ServerRule;
+			ServerRule? rule = await _anodeUOW.IOTDevice.GetBy([device => device is ServerRule]) as ServerRule;
 
 			List<int> stationIDs = origins.ConvertAll(Station.StationNameToID);
-			DateTimeOffset? oldestToSign = (await AnodeUOW.ToSign
+			DateTimeOffset? oldestToSign = (await _anodeUOW.ToSign
 				.GetBy(
 					[toSign => stationIDs.Contains(toSign.StationID)],
 					orderBy: query => query.OrderBy(
@@ -168,7 +166,7 @@ public class ToMatchService :
 				?.ShootingTS
 				?? DateTimeOffset.Now;
 
-			DateTimeOffset? oldestToLoad = (await AnodeUOW.ToLoad
+			DateTimeOffset? oldestToLoad = (await _anodeUOW.ToLoad
 				.GetBy(
 					[toLoad => toLoad.InstanceMatchID == instanceMatchID],
 					orderBy: query => query.OrderBy(

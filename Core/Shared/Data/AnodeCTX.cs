@@ -163,9 +163,9 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.IsRequired();
 
 		builder.Entity<KPI>()
-			.HasMany(KPI => KPI.TenBestMatches)
-			.WithOne(TenBestMatch => TenBestMatch.KPI)
-			.HasForeignKey(TenBestMatch => TenBestMatch.KPIID)
+			.HasMany(kpi => kpi.TenBestMatches)
+			.WithOne(tenBestMatch => tenBestMatch.KPI)
+			.HasForeignKey(tenBestMatch => tenBestMatch.KPIID)
 			.IsRequired();
 
 		builder.Entity<StationCycle>()
@@ -198,7 +198,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 		builder.Entity<MatchableCycle>()
 			.HasOne(stationCycle => stationCycle.KPI)
-			.WithOne(KPI => KPI.StationCycle)
+			.WithOne(kpi => kpi.StationCycle)
 			.HasForeignKey<MatchableCycle>(stationCycle => stationCycle.KPIID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.NoAction);

@@ -74,7 +74,7 @@ public partial class OTCamera
 	public override async Task<List<IOTTag>> ApplyTags(IAnodeUOW anodeUOW, ILogger logger)
 	{
 		List<IOTTag> updatedTags = [];
-        Device device;
+		Device device;
 		CancellationTokenSource cancelSource = new();
 		cancelSource.CancelAfter(200);
 		try

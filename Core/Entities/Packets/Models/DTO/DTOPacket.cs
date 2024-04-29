@@ -7,6 +7,7 @@ using Core.Entities.Packets.Models.DTO.MetaDatas;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Shared.Models.DTO.Kernel;
 using Core.Shared.Models.DTO.Kernel.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.Packets.Models.DTO;
 
@@ -17,7 +18,7 @@ namespace Core.Entities.Packets.Models.DTO;
 public partial class DTOPacket :
 	DTOBaseEntity,
 	IDTO<Packet, DTOPacket>,
-	IExtensionBinder<DTOPacket>
+	IBindableFromHttpContext<DTOPacket>
 {
 	public string StationCycleRID { get; set; } = string.Empty;
 	public PacketStatus Status { get; set; } = PacketStatus.Initialized;

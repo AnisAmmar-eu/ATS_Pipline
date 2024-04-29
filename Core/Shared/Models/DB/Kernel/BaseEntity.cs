@@ -30,8 +30,7 @@ public class BaseEntity : IBaseEntity<BaseEntity, DTOBaseEntity>
 	/// <returns> <see cref="DTO" /> of the entity</returns>
 	public virtual DTOBaseEntity ToDTO()
 	{
-		return new()
-		{
+		return new() {
 			ID = ID,
 			TS = TS,
 		};

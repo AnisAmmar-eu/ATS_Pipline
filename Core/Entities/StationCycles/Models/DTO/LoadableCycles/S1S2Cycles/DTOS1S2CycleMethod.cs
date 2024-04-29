@@ -13,7 +13,7 @@ public partial class DTOS1S2Cycle
 	public DTOS1S2Cycle(S1S2Cycle s1S2Cycle) : base(s1S2Cycle)
 	{
 		CycleType = CycleTypes.S1S2;
-    }
+	}
 
 	public override S1S2Cycle ToModel() => new(this);
 }

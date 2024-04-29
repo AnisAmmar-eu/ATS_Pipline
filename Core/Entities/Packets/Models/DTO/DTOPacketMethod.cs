@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB;
@@ -29,11 +30,11 @@ public partial class DTOPacket
 
 	public override Packet ToModel() => new(this);
 
-	public static async ValueTask<DTOPacket?> BindAsync(HttpContext httpContext)
+	public static async ValueTask<DTOPacket?> BindAsync(HttpContext context, ParameterInfo parameter)
 	{
 		try
 		{
-			Stream stream = httpContext.Request.Body;
+			Stream stream = context.Request.Body;
 
 			string json = await new StreamReader(stream).ReadToEndAsync();
 
@@ -53,12 +54,12 @@ public partial class DTOPacket
 		return (type is null)
 			? throw new EntityNotFoundException("Packet type is null")
 			: type switch {
-			PacketTypes.AlarmList => typeof(DTOAlarmList),
-			PacketTypes.MetaData => typeof(DTOMetaData),
-			PacketTypes.Shooting => typeof(DTOShooting),
-			PacketTypes.InFurnace => typeof(DTOInFurnace),
-			PacketTypes.OutFurnace => typeof(DTOOutFurnace),
-			_ => typeof(DTOPacket),
-		};
+				PacketTypes.AlarmList => typeof(DTOAlarmList),
+				PacketTypes.MetaData => typeof(DTOMetaData),
+				PacketTypes.Shooting => typeof(DTOShooting),
+				PacketTypes.InFurnace => typeof(DTOInFurnace),
+				PacketTypes.OutFurnace => typeof(DTOOutFurnace),
+				_ => typeof(DTOPacket),
+			};
 	}
 }

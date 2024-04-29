@@ -30,7 +30,7 @@ public class AlarmLogEndpoint : BaseEntityEndpoint<AlarmLog, DTOAlarmLog, IAlarm
 	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	private static Task<JsonHttpResult<ApiResponse>> AckAlarmLogs(
-		[FromBody] [Required] int[] alarmLogIDs,
+		[FromBody][Required] int[] alarmLogIDs,
 		IAlarmLogService alarmLogService,
 		ILogService logService,
 		HttpContext httpContext)

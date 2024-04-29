@@ -1,10 +1,10 @@
-using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.Configuration;
+using Core.Shared.Dictionaries;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Core.Shared.Dictionaries;
 
 namespace Core.Shared.Services.Background;
 
@@ -34,8 +34,8 @@ public class SendLogService : BackgroundService
 
 		while (await timer.WaitForNextTickAsync(stoppingToken)
 			&& !stoppingToken.IsCancellationRequested)
-        {
-            try
+		{
+			try
 			{
 				// await logService.SendLogs(await logService.GetAllUnsent());
 			}
@@ -45,6 +45,6 @@ public class SendLogService : BackgroundService
 					"Failed to execute PeriodicSendLogService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-        }
-    }
+		}
+	}
 }

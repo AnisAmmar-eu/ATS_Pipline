@@ -12,31 +12,31 @@ namespace Core.Entities.Packets.Services;
 public interface IPacketService : IBaseEntityService<Packet, DTOPacket>
 {
 	public Task<DTOShooting> GetMostRecentShooting();
-    public Task<DateTimeOffset> GetOldestNotSentTimestamp();
+	public Task<DateTimeOffset> GetOldestNotSentTimestamp();
 
-    /// <summary>
-    /// This photo returns the FileInfo of the thumbnail gotten through the shooting packet. It works only on the station.
-    /// </summary>
-    /// <param name="shootingID"></param>
-    /// <param name="cameraID"></param>
-    /// <returns></returns>
-    public Task<FileInfo> GetThumbnailFromCycleRIDAndCamera(int shootingID, int cameraID);
+	/// <summary>
+	/// This photo returns the FileInfo of the thumbnail gotten through the shooting packet. It works only on the station.
+	/// </summary>
+	/// <param name="shootingID"></param>
+	/// <param name="cameraID"></param>
+	/// <returns></returns>
+	public Task<FileInfo> GetThumbnailFromCycleRIDAndCamera(int shootingID, int cameraID);
 
-    /// <summary>
-    /// This photo returns the FileInfo of the image gotten through the shooting packet. It works only on the station.
-    /// </summary>
-    /// <param name="shootingID"></param>
-    /// <param name="cameraID"></param>
-    /// <returns></returns>
-    public Task<FileInfo> GetImageFromCycleRIDAndCamera(int shootingID, int cameraID);
+	/// <summary>
+	/// This photo returns the FileInfo of the image gotten through the shooting packet. It works only on the station.
+	/// </summary>
+	/// <param name="shootingID"></param>
+	/// <param name="cameraID"></param>
+	/// <returns></returns>
+	public Task<FileInfo> GetImageFromCycleRIDAndCamera(int shootingID, int cameraID);
 
-    /// <summary>
-    /// Executes side effects on a packet when called. Allows a packet to update itself on other factors determined by
-    /// the implementation of a InheritedBuild function.
-    /// </summary>
-    /// <param name="packet"></param>
-    /// <returns></returns>
-    public Task<DTOPacket> BuildPacket(Packet packet);
+	/// <summary>
+	/// Executes side effects on a packet when called. Allows a packet to update itself on other factors determined by
+	/// the implementation of a InheritedBuild function.
+	/// </summary>
+	/// <param name="packet"></param>
+	/// <returns></returns>
+	public Task<DTOPacket> BuildPacket(Packet packet);
 
 	/// <summary>
 	/// Sends all packets given in argument to the given serverAddress, returns all packets which were successfully sent

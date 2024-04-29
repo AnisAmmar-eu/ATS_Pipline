@@ -43,7 +43,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	{
 		// Here, we order by descending ID and not by TS because in a **single** station, the most recent packets always
 		// have the highest IDs. In the server, we would have to order by TS.
-		return (await AnodeUOW.Packet
+		return (await _anodeUOW.Packet
 			.GetByWithThrow(
 				[packet => packet is Shooting],
 				orderBy: query => query.OrderByDescending(packet => packet.ID)) as Shooting
@@ -57,7 +57,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	{
 		try
 		{
-			return (await AnodeUOW.Packet
+			return (await _anodeUOW.Packet
 				.GetByWithThrow([packet => packet is Shooting && packet.Status != PacketStatus.Sent]) as Shooting)
 				?.ShootingTS
 				?? DateTimeOffset.Now;
@@ -70,7 +70,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task<FileInfo> GetThumbnailFromCycleRIDAndCamera(int shootingID, int cameraID)
 	{
-		Shooting shooting = await AnodeUOW.Packet
+		Shooting shooting = await _anodeUOW.Packet
 			.GetByWithThrow([packet => packet.ID == shootingID]) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
@@ -88,7 +88,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task<FileInfo> GetImageFromCycleRIDAndCamera(int shootingID, int cameraID)
 	{
-		Shooting shooting = await AnodeUOW.Packet
+		Shooting shooting = await _anodeUOW.Packet
 			.GetByWithThrow([packet => packet.ID == shootingID]) as Shooting
 			?? throw new EntityNotFoundException("Found a packet but it is not a shooting one");
 
@@ -106,13 +106,13 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task<DTOPacket> BuildPacket(Packet packet)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
-		await packet.Create(AnodeUOW);
+		await packet.Create(_anodeUOW);
 
-		await packet.Build(AnodeUOW);
+		await packet.Build(_anodeUOW);
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 		return packet.ToDTO();
 	}
 
@@ -120,7 +120,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	{
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		IEnumerable<Packet> packets
-			= await AnodeUOW.Packet.GetAll(
+			= await _anodeUOW.Packet.GetAll(
 				[packet => packet.Status == PacketStatus.Completed],
 				query => query.OrderByDescending(packet => packet.ID),
 				withTracking: false);
@@ -139,7 +139,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					List<DTOAlarmCycle> dtoAlarmCycles = [];
 					try
 					{
-						dtoAlarmCycles = (await AnodeUOW.AlarmCycle
+						dtoAlarmCycles = (await _anodeUOW.AlarmCycle
 							.GetAll([alarmCycle => alarmCycle.AlarmListPacketID == alarmLists.ID], withTracking: false))
 							.ConvertAll(alarmCycle => alarmCycle.ToDTO());
 					}
@@ -179,7 +179,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					}
 				}
 
-				await AnodeUOW.Packet.ExecuteUpdateByIdAsync(
+				await _anodeUOW.Packet.ExecuteUpdateByIdAsync(
 					packet,
 					setters => setters.SetProperty(packet => packet.Status, PacketStatus.Sent));
 			}
@@ -192,22 +192,22 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task ReceivePacket(DTOPacket dtoPacket, string stationName)
 	{
-        Packet packet = dtoPacket.ToModel();
+		Packet packet = dtoPacket.ToModel();
 		packet.ID = 0;
 		packet.Status = PacketStatus.Sent;
-		await AnodeUOW.StartTransaction();
-        await AnodeUOW.Packet.Add(packet);
-		AnodeUOW.Commit();
+		await _anodeUOW.StartTransaction();
+		await _anodeUOW.Packet.Add(packet);
+		_anodeUOW.Commit();
 		try
 		{
 			StationCycle stationCycle
-				= await AnodeUOW.StationCycle.GetByWithThrow([cycle => cycle.RID == packet.StationCycleRID], withTracking: false);
+				= await _anodeUOW.StationCycle.GetByWithThrow([cycle => cycle.RID == packet.StationCycleRID], withTracking: false);
 
 			if (packet is Shooting shooting)
 			{
-                _logger.LogError("Packet shooting update");
+				_logger.LogError("Packet shooting update");
 
-                if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
+				if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
 					stationCycle.AnodeType = shooting.AnodeType;
 
 				if (shooting.Cam01Status == 1)
@@ -215,13 +215,13 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				else
 					stationCycle.Shooting2Packet = shooting;
 
-				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting, stationCycle));
-                AnodeUOW.Commit();
-            }
-            else if (packet is MetaData metaData)
+				await _anodeUOW.ToSign.Add(ToSign.ShootingToSign(shooting, stationCycle));
+				_anodeUOW.Commit();
+			}
+			else if (packet is MetaData metaData)
 			{
-                _logger.LogInformation("MetaData packet received");
-                stationCycle.AssignPacket(metaData);
+				_logger.LogInformation("MetaData packet received");
+				stationCycle.AssignPacket(metaData);
 				if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
 					stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 
@@ -235,22 +235,22 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					foreach (int instanceMatchID in await ToMatchService.GetMatchInstance(
 						stationCycle.AnodeType,
 						stationCycle.StationID,
-						AnodeUOW))
+						_anodeUOW))
 					{
-						await AnodeUOW.ToMatch.Add(new(stationCycle, instanceMatchID));
+						await _anodeUOW.ToMatch.Add(new(stationCycle, instanceMatchID));
 					}
 
-					AnodeUOW.Commit();
+					_anodeUOW.Commit();
 				}
 			}
 			else
 			{
-                _logger.LogInformation("Other packet received");
-                stationCycle.AssignPacket(packet);
+				_logger.LogInformation("Other packet received");
+				stationCycle.AssignPacket(packet);
 			}
 
-			AnodeUOW.StationCycle.Update(stationCycle);
-			AnodeUOW.Commit();
+			_anodeUOW.StationCycle.Update(stationCycle);
+			_anodeUOW.Commit();
 		}
 		catch (EntityNotFoundException)
 		{
@@ -259,21 +259,21 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			stationCycle.RID = packet.StationCycleRID;
 			if (packet is Shooting shooting)
 			{
-                _logger.LogError("Packet shooting first time");
+				_logger.LogError("Packet shooting first time");
 
-                stationCycle.AnodeType = shooting.AnodeType;
+				stationCycle.AnodeType = shooting.AnodeType;
 				stationCycle.TSFirstShooting = shooting.ShootingTS;
 				if (shooting.Cam01Status == 1)
 					stationCycle.Shooting1Packet = shooting;
 				else
 					stationCycle.Shooting2Packet = shooting;
 
-                AnodeUOW.Commit();
-            }
-            else if (packet is MetaData metaData)
+				_anodeUOW.Commit();
+			}
+			else if (packet is MetaData metaData)
 			{
-                _logger.LogInformation("MetaData packet received");
-                stationCycle.AssignPacket(metaData);
+				_logger.LogInformation("MetaData packet received");
+				stationCycle.AssignPacket(metaData);
 				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
@@ -284,17 +284,17 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				stationCycle.AssignPacket(packet);
 			}
 
-			await AnodeUOW.StationCycle.Add(stationCycle);
-			AnodeUOW.Commit();
+			await _anodeUOW.StationCycle.Add(stationCycle);
+			_anodeUOW.Commit();
 
 			if (packet is Shooting shoot)
 			{
-				await AnodeUOW.ToSign.Add(ToSign.ShootingToSign(shoot, stationCycle));
-				AnodeUOW.Commit();
+				await _anodeUOW.ToSign.Add(ToSign.ShootingToSign(shoot, stationCycle));
+				_anodeUOW.Commit();
 			}
 		}
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 	}
 
 	public Task ReceiveStationImage(IFormFileCollection formFiles, bool isImage)
@@ -302,8 +302,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 
-		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile =>
-		{
+		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile => {
 			string path = isImage ? imagesPath : thumbnailsPath;
 			FileInfo image = Shooting.GetImagePathFromFilename(path, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);
@@ -317,27 +316,26 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 	public async Task ReceivePacketAlarm(List<DTOAlarmCycle> dtoAlarmCycles, string stationName, string cycleRID)
 	{
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 
 		// insert Alarm Packet then associate AlarmCycle to Alarm Packet
-		AlarmList alarmList = new()
-		{
+		AlarmList alarmList = new() {
 			StationCycleRID = cycleRID
 		};
 		await BuildPacket(alarmList);
 		dtoAlarmCycles.ForEach(dto => dto.AlarmListPacketID = alarmList.ID);
 		List<AlarmCycle> alarmCycles = dtoAlarmCycles.ConvertAll(dto => dto.ToModel());
 		alarmCycles.ForEach(alarmCycle => alarmCycle.AlarmList = alarmList);
-		await AnodeUOW.AlarmCycle.AddRange(alarmCycles);
-		AnodeUOW.Commit();
+		await _anodeUOW.AlarmCycle.AddRange(alarmCycles);
+		_anodeUOW.Commit();
 
 		try
 		{
 			StationCycle stationCycle
-				= await AnodeUOW.StationCycle.GetByWithThrow([cycle => cycle.RID == cycleRID], withTracking: false);
+				= await _anodeUOW.StationCycle.GetByWithThrow([cycle => cycle.RID == cycleRID], withTracking: false);
 			stationCycle.AssignPacket(alarmList);
-			AnodeUOW.StationCycle.Update(stationCycle);
-			AnodeUOW.Commit();
+			_anodeUOW.StationCycle.Update(stationCycle);
+			_anodeUOW.Commit();
 		}
 		catch (EntityNotFoundException)
 		{
@@ -345,14 +343,14 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 			stationCycle.StationID = Station.StationNameToID(stationName);
 			stationCycle.RID = cycleRID;
 			stationCycle.AssignPacket(alarmList);
-			await AnodeUOW.StationCycle.Add(stationCycle);
-			AnodeUOW.Commit();
+			await _anodeUOW.StationCycle.Add(stationCycle);
+			_anodeUOW.Commit();
 		}
 		catch (Exception)
 		{
 			throw;
 		}
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 	}
 }

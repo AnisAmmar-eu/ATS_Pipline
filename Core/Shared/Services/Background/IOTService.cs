@@ -30,15 +30,15 @@ public class IOTService : BackgroundService
 		// If there is no given devices RIDs to monitor, it defaults to monitoring all APIs.
 
 		while (!stoppingToken.IsCancellationRequested)
-        {
-            await Task.Delay(TimeSpan.FromMilliseconds(IOTMS), stoppingToken);
-            await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-            IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
-            IIOTDeviceService iotDeviceService
-            = asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
-            IEnumerable<string> rids = configuration.GetSection("Devices").Get<string[]>()
-            	?? await iotDeviceService.GetAllApisRIDs();
-            try
+		{
+			await Task.Delay(TimeSpan.FromMilliseconds(IOTMS), stoppingToken);
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
+			IIOTDeviceService iotDeviceService
+			= asyncScope.ServiceProvider.GetRequiredService<IIOTDeviceService>();
+			IEnumerable<string> rids = configuration.GetSection("Devices").Get<string[]>()
+				?? await iotDeviceService.GetAllApisRIDs();
+			try
 			{
 				await iotDeviceService.CheckAllConnectionsAndApplyTags(rids);
 			}
@@ -48,6 +48,6 @@ public class IOTService : BackgroundService
 					"Failed to execute PeriodicIOTService with exception message {message}. Good luck next round!",
 					ex.Message);
 			}
-        }
-    }
+		}
+	}
 }

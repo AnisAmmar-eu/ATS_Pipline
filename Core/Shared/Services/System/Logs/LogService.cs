@@ -18,7 +18,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 
 	public async Task<List<DTOLog>> GetAll()
 	{
-		return (await AnodeUOW.Log.GetAll(
+		return (await _anodeUOW.Log.GetAll(
 			orderBy: query => query.OrderByDescending(l => l.TS),
 			withTracking: false))
 			.ConvertAll(l => l.ToDTO());
@@ -26,12 +26,12 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 
 	public async Task<List<DTOLog>> GetRange(int start, int nbItems)
 	{
-		return (await AnodeUOW.Log.GetRange(start, nbItems)).ConvertAll(log => log.ToDTO());
+		return (await _anodeUOW.Log.GetRange(start, nbItems)).ConvertAll(log => log.ToDTO());
 	}
 
 	public Task<List<Log>> GetAllUnsent()
 	{
-		return AnodeUOW.Log.GetAll([log => !log.HasBeenSent], withTracking: false);
+		return _anodeUOW.Log.GetAll([log => !log.HasBeenSent], withTracking: false);
 	}
 
 	public async Task SendLogs(List<Log> logs)
@@ -54,35 +54,34 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		if (logs.Count == 0)
 			return;
 
-		await AnodeUOW.StartTransaction();
-		logs.ForEach(log =>
-		{
+		await _anodeUOW.StartTransaction();
+		logs.ForEach(log => {
 			log.HasBeenSent = true;
-			AnodeUOW.Log.Update(log);
+			_anodeUOW.Log.Update(log);
 		});
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 	}
 
 	public async Task ReceiveLogs(List<DTOLog> dtoLogs)
 	{
 		// DbContext operations should NOT be done concurrently. Hence why await in loop.
-		await AnodeUOW.StartTransaction();
+		await _anodeUOW.StartTransaction();
 		foreach (DTOLog dto in dtoLogs)
 		{
 			Log log = dto.ToModel();
 			log.ID = 0;
 			log.HasBeenSent = true;
-			await AnodeUOW.Log.Add(log);
+			await _anodeUOW.Log.Add(log);
 		}
 
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 	}
 
 	public Task DeleteAllLogs()
 	{
-		return AnodeUOW.Log.DeleteAll();
+		return _anodeUOW.Log.DeleteAll();
 	}
 
 	public async Task Create(
@@ -97,7 +96,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		string value
 		)
 	{
-		await AnodeUOW.Log.Add(new Log(server, username, api, controller, function, endpoint, code, value, Station.ID));
-		AnodeUOW.Commit();
+		await _anodeUOW.Log.Add(new Log(server, username, api, controller, function, endpoint, code, value, Station.ID));
+		_anodeUOW.Commit();
 	}
 }

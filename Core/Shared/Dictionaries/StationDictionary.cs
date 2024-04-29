@@ -13,10 +13,11 @@ public static class Station
 	public const string Station5 = "S5";
 	public const string Server = "Server";
 
+	public static List<string> Stations = ["S1","S2","S3", "S4", "S5"];
+
 	public static string Name
 	{
-		set
-		{
+		set {
 			if (NameSub is not null)
 				throw new InvalidOperationException("Station name has already been defined.");
 
@@ -38,8 +39,7 @@ public static class Station
 
 	public static string ServerAddress
 	{
-		set
-		{
+		set {
 			if (ServerAddressSub is not null)
 				throw new InvalidOperationException("Station serverAddress has already been defined.");
 

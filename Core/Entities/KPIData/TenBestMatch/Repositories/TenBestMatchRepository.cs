@@ -9,7 +9,7 @@ public class TenBestMatchRepository :
 	BaseEntityRepository<AnodeCTX, TenBestMatch, DTOTenBestMatch>,
 	ITenBestMatchRepository
 {
-    public TenBestMatchRepository(AnodeCTX context) : base(context, [], [])
-    {
-    }
+	public TenBestMatchRepository(AnodeCTX context) : base(context, [], [])
+	{
+	}
 }

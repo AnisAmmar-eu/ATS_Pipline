@@ -65,7 +65,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		try
 		{
 			// If an active alarmLog already exists, this alarm is active and waiting to be cleared.
-			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
+			AlarmLog alarmWithStatus = await _anodeUOW.AlarmLog.GetByWithIncludes(
 				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == alarm.RID.ToString()]);
 			if (alarm.Value)
 				return; // alarmLog is already active.
@@ -74,10 +74,10 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			alarmWithStatus.TSClear = alarm.TS.GetTimestamp();
 			alarmWithStatus.TS = DateTimeOffset.Now;
 			alarmWithStatus.HasBeenSent = false;
-			await AnodeUOW.StartTransaction();
-			AnodeUOW.AlarmLog.Update(alarmWithStatus);
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
+			await _anodeUOW.StartTransaction();
+			_anodeUOW.AlarmLog.Update(alarmWithStatus);
+			_anodeUOW.Commit();
+			await _anodeUOW.CommitTransaction();
 		}
 		catch (EntityNotFoundException)
 		{
@@ -85,7 +85,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 				return; // alarmLog is already inactive or cleared.
 
 			// If an alarmLog doesn't exist, this alarm just raised.
-			AlarmC alarmC = await AnodeUOW.AlarmC.GetByWithThrow([alarmLog => alarmLog.RID == alarm.RID.ToString()]);
+			AlarmC alarmC = await _anodeUOW.AlarmC.GetByWithThrow([alarmLog => alarmLog.RID == alarm.RID.ToString()]);
 			AlarmLog newAlarmLog = new(alarmC) {
 				Alarm = alarmC,
 				TS = DateTimeOffset.Now,
@@ -102,10 +102,10 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			}
 
 			newAlarmLog.TSRaised = alarm.TS.GetTimestamp();
-			await AnodeUOW.StartTransaction();
-			await AnodeUOW.AlarmLog.Add(newAlarmLog);
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
+			await _anodeUOW.StartTransaction();
+			await _anodeUOW.AlarmLog.Add(newAlarmLog);
+			_anodeUOW.Commit();
+			await _anodeUOW.CommitTransaction();
 		}
 		catch (Exception e)
 		{
@@ -116,10 +116,10 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 
 	public async Task<int> AckAlarmLogs(int[] idAlarmLogs)
 	{
-		await AnodeUOW.StartTransaction();
-		int res = await AnodeUOW.AlarmLog.AckAlarmLogs(idAlarmLogs);
-		AnodeUOW.Commit();
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.StartTransaction();
+		int res = await _anodeUOW.AlarmLog.AckAlarmLogs(idAlarmLogs);
+		_anodeUOW.Commit();
+		await _anodeUOW.CommitTransaction();
 		await _hubContext.Clients.All.RefreshAlarmRT();
 		await _hubContext.Clients.All.RefreshAlarmLog();
 		return res;
@@ -131,12 +131,12 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		try
 		{
 			string api2Url = $"{ITApisDict.ServerReceiveAddress}/apiServerReceive/alarmsLog";
-			AlarmLog alarmLog = await AnodeUOW.AlarmLog.GetByWithIncludes(
+			AlarmLog alarmLog = await _anodeUOW.AlarmLog.GetByWithIncludes(
 				[alarmLog => !alarmLog.HasBeenSent],
 				query => query.OrderByDescending(alarmLog => alarmLog.ID),
 				false);
 
-			List<AlarmLog> alarmLogs = [ alarmLog ];
+			List<AlarmLog> alarmLogs = [alarmLog];
 			string jsonData = JsonSerializer.Serialize(alarmLogs.ConvertAll(alarmLog => alarmLog.ToDTO()));
 			StringContent content = new(jsonData, Encoding.UTF8, "application/json");
 			using HttpClient httpClient = new();
@@ -148,7 +148,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 					+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
 			}
 
-			await AnodeUOW.AlarmLog.ExecuteUpdateByIdAsync(
+			await _anodeUOW.AlarmLog.ExecuteUpdateByIdAsync(
 				alarmLog,
 				setters => setters.SetProperty(alarmLog => alarmLog.HasBeenSent, true));
 
@@ -160,7 +160,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			_logger.LogError("Error while sending AlarmLog: {e}", e);
 		}
 
-		await AnodeUOW.CommitTransaction();
+		await _anodeUOW.CommitTransaction();
 	}
 
 	public async Task ReceiveAlarmLog(DTOAlarmLog dtoAlarmLog)
@@ -168,7 +168,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 		try
 		{
 			_logger.LogInformation("New alarm log received with AlarmRID: {AlarmRID}", dtoAlarmLog.AlarmRID);
-			AlarmLog alarmWithStatus = await AnodeUOW.AlarmLog.GetByWithIncludes(
+			AlarmLog alarmWithStatus = await _anodeUOW.AlarmLog.GetByWithIncludes(
 				[alarmLog => alarmLog.IsActive && alarmLog.Alarm.RID == dtoAlarmLog.AlarmRID],
 				query => query.OrderByDescending(alarmLog => alarmLog.ID),
 				false);
@@ -183,22 +183,22 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 
 			alarmWithStatus.IsAck = false;
 			alarmWithStatus.HasBeenSent = false;
-			await AnodeUOW.StartTransaction();
-			AnodeUOW.AlarmLog.Update(alarmWithStatus);
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
+			await _anodeUOW.StartTransaction();
+			_anodeUOW.AlarmLog.Update(alarmWithStatus);
+			_anodeUOW.Commit();
+			await _anodeUOW.CommitTransaction();
 		}
 		catch (EntityNotFoundException)
 		{
 			// If an alarmLog doesn't exist, this alarm just raised.
 			AlarmLog newAlarmLog = dtoAlarmLog.ToModel();
 			_logger.LogInformation("Not found alarm log with AlarmRID: {AlarmRID}", dtoAlarmLog.AlarmRID);
-			newAlarmLog.Alarm = await AnodeUOW.AlarmC.GetByWithThrow([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
+			newAlarmLog.Alarm = await _anodeUOW.AlarmC.GetByWithThrow([alarmC => alarmC.RID == dtoAlarmLog.AlarmRID]);
 			newAlarmLog.ID = 0;
-			await AnodeUOW.StartTransaction();
-			await AnodeUOW.AlarmLog.Add(newAlarmLog);
-			AnodeUOW.Commit();
-			await AnodeUOW.CommitTransaction();
+			await _anodeUOW.StartTransaction();
+			await _anodeUOW.AlarmLog.Add(newAlarmLog);
+			_anodeUOW.Commit();
+			await _anodeUOW.CommitTransaction();
 		}
 	}
 }

@@ -13,7 +13,6 @@ using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
-using Core.Entities.User.Repositories.Roles;
 using Core.Entities.Vision.ToDos.Repositories.Datasets;
 using Core.Entities.Vision.ToDos.Repositories.ToLoads;
 using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
@@ -44,7 +43,7 @@ public interface IAnodeUOW : IDisposable
 	IBITemperatureRepository BITemperature { get; }
 	IKPIRepository KPI { get; }
 
-    IIOTDeviceRepository IOTDevice { get; }
+	IIOTDeviceRepository IOTDevice { get; }
 	IMatchRepository Match { get; }
 	ISignRepository Sign { get; }
 
@@ -80,7 +79,6 @@ public interface IAnodeUOW : IDisposable
 
 	public IActRepository Acts { get; }
 	public IActEntityRepository ActEntities { get; }
-	public IRoleRepository Roles { get; }
 
 	#endregion Users
 }

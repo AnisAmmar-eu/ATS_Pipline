@@ -39,8 +39,7 @@ builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
-	options =>
-	{
+	options => {
 		options.Password.RequiredLength = 1;
 		options.Password.RequireLowercase = false;
 		options.Password.RequireUppercase = false;
@@ -51,15 +50,13 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
 	.AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(
-	options =>
-	{
+	options => {
 		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 	})
 	// Adding Jwt Bearer
-	.AddJwtBearer(options =>
-	{
+	.AddJwtBearer(options => {
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
 		string jwtSecret = builder.Configuration.GetValueWithThrow<string>("JWT:Secret");
@@ -71,8 +68,7 @@ builder.Services.AddAuthentication(
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
 		options.Events = new() {
-			OnMessageReceived = context =>
-			{
+			OnMessageReceived = context => {
 				if (context.Request.Query.TryGetValue("access_token", out StringValues token)
 				   )
 					context.Token = token;
@@ -111,8 +107,7 @@ builder.Services.AddScoped<IAuthorizationHandler, ActAuthorizeHandler>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
-	options =>
-	{
+	options => {
 		options.SwaggerDoc(
 			"v1",
 			new OpenApiInfo {

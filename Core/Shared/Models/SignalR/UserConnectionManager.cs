@@ -7,7 +7,7 @@
 public class UserConnectionManager<T>
 	where T : notnull
 {
-	private readonly Dictionary<T, HashSet<string>> _connections = new();
+	private readonly Dictionary<T, HashSet<string>> _connections = [];
 
 	/// <summary>
 	///     Gets the total number of connections in the collection.
@@ -22,16 +22,16 @@ public class UserConnectionManager<T>
 	/// <exception cref="ArgumentNullException">The key or connectionId parameter is null.</exception>
 	public void Add(T key, string connectionId)
 	{
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(connectionId);
+		ArgumentNullException.ThrowIfNull(key);
+		ArgumentNullException.ThrowIfNull(connectionId);
 
-        lock (_connections)
+		lock (_connections)
 		{
 			if (_connections.TryGetValue(key, out HashSet<string>? connections))
 			{
 				lock (connections)
-                    connections.Add(connectionId);
-            }
+					connections.Add(connectionId);
+			}
 			else
 			{
 				connections = [connectionId];
@@ -51,7 +51,7 @@ public class UserConnectionManager<T>
 		ArgumentNullException.ThrowIfNull(key);
 
 		return (_connections.TryGetValue(key, out HashSet<string>? connections))
-            ? connections
+			? connections
 			: Enumerable.Empty<string>();
 	}
 
@@ -59,10 +59,7 @@ public class UserConnectionManager<T>
 	///     Get the count of all connections.
 	/// </summary>
 	/// <return>A count</return>
-	public int GetConnectionsCount()
-	{
-		return _connections.Values.Sum(values => values.Count);
-	}
+	public int GetConnectionsCount() => _connections.Values.Sum(values => values.Count);
 
 	/// <summary>
 	///     Removes a connection for a given user.
@@ -78,15 +75,15 @@ public class UserConnectionManager<T>
 		lock (_connections)
 		{
 			if (_connections.TryGetValue(key, out HashSet<string>? connections))
-            {
-                lock (connections)
+			{
+				lock (connections)
 				{
 					connections.Remove(connectionId);
 
 					if (connections.Count == 0)
 						_connections.Remove(key);
 				}
-            }
-        }
+			}
+		}
 	}
 }

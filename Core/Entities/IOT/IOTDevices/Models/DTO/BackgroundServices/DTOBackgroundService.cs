@@ -6,5 +6,5 @@ namespace Core.Entities.IOT.IOTDevices.Models.DTO.BackgroundServices;
 public partial class DTOBackgroundService : DTOIOTDevice, IDTO<BackgroundService, DTOBackgroundService>
 {
 	public int StationID { get; set; }
-	public string AnodeType {  get; set; } = null!;
+	public string AnodeType { get; set; }
 }

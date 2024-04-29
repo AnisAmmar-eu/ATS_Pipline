@@ -40,8 +40,6 @@ public abstract partial class Anode
 		};
 	}
 
-	public Anode GetValue() => this;
-
 	public static Func<List<Anode>, string[]> GetComputedValues() => anodes => [anodes.Count.ToString()];
 
 	public static Anode Create(S1S2Cycle cycle)

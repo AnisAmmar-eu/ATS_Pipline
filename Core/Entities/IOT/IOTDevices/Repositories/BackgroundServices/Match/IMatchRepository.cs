@@ -1,5 +1,4 @@
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
-using Core.Entities.IOT.IOTDevices.Models.DTO;
 using Core.Entities.IOT.IOTDevices.Models.DTO.BackgroundServices.Matchs;
 using Core.Shared.Repositories.Kernel.Interfaces;
 

@@ -24,10 +24,7 @@ public class JwtService : IJwtService
 	/// <returns>The created token</returns>
 	public string GenerateToken(List<Claim> claims, int time = 120)
 	{
-		string? jwtSecret = _configuration["JWT:Secret"];
-		if (jwtSecret is null)
-			throw new ConfigurationErrorsException("Missing JWT:Secret");
-
+		string? jwtSecret = _configuration["JWT:Secret"] ?? throw new ConfigurationErrorsException("Missing JWT:Secret");
 		SymmetricSecurityKey authSigningKey = new(Encoding.UTF8.GetBytes(jwtSecret));
 
 		// Generate token with claims and secret key
@@ -47,10 +44,7 @@ public class JwtService : IJwtService
 		try
 		{
 			JwtSecurityTokenHandler tokenHandler = new();
-			string? jwtSecret = _configuration["JWT:Secret"];
-			if (jwtSecret is null)
-				throw new ConfigurationErrorsException("Missing JWT:Secret");
-
+			string? jwtSecret = _configuration["JWT:Secret"] ?? throw new ConfigurationErrorsException("Missing JWT:Secret");
 			byte[] key = Encoding.UTF8.GetBytes(jwtSecret);
 			tokenHandler.ValidateToken(
 				token,

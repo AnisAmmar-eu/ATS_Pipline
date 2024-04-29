@@ -9,7 +9,7 @@ public class KPIRepository :
 	BaseEntityRepository<AnodeCTX, KPI, DTOKPI>,
 	IKPIRepository
 {
-    public KPIRepository(AnodeCTX context) : base(context, [], [])
-    {
-    }
+	public KPIRepository(AnodeCTX context) : base(context, [], [])
+	{
+	}
 }

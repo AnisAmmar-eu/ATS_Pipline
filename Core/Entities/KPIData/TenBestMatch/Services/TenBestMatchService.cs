@@ -10,7 +10,7 @@ public class TenBestMatchService :
 	BaseEntityService<ITenBestMatchRepository, TenBestMatch, DTOTenBestMatch>,
 	ITenBestMatchService
 {
-    public TenBestMatchService(IAnodeUOW anodeUOW) : base(anodeUOW)
-    {
-    }
+	public TenBestMatchService(IAnodeUOW anodeUOW) : base(anodeUOW)
+	{
+	}
 }
