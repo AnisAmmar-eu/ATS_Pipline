@@ -1,5 +1,3 @@
-using System.Configuration;
-using System.Text;
 using Carter;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
@@ -17,10 +15,10 @@ using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -43,21 +41,23 @@ builder.Services.AddAuthentication(
 		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 	})
-// Adding Jwt Bearer
+	// Adding Jwt Bearer
 	.AddJwtBearer(options =>
 	{
 		options.SaveToken = true;
 		options.RequireHttpsMetadata = false;
 		string jwtSecret = builder.Configuration["JWT:Secret"]
 			?? throw new ConfigurationErrorsException("Missing JWT Secret");
-		options.TokenValidationParameters = new() {
+		options.TokenValidationParameters = new()
+		{
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidAudience = builder.Configuration.GetValueWithThrow<string>("JWT:ValidAudience"),
 			ValidIssuer = builder.Configuration.GetValueWithThrow<string>("JWT:ValidIssuer"),
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 		};
-		options.Events = new() {
+		options.Events = new()
+		{
 			OnMessageReceived = context =>
 			{
 				if (context.Request.Query.TryGetValue("access_token", out StringValues token))
@@ -100,7 +100,9 @@ if (!Station.IsServer)
 {
 	builder.Services.AddSingleton<CheckSyncTimeService>();
 	builder.Services.AddHostedService(provider => provider.GetRequiredService<CheckSyncTimeService>());
-
+	// Background Services
+	builder.Services.AddSingleton<NotifyService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<NotifyService>());
 	//builder.Services.AddSingleton<PurgeService>();
 	//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 }
