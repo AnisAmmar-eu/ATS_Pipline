@@ -11,7 +11,7 @@ public static class EnumerableExtension
 		double valueSum = 0;
 		double weightSum = 0;
 
-		foreach (T? record in records)
+		foreach (T? record in (List<T>)records)
 		{
 			count++;
 			double recordWeight = weight(record);
@@ -21,7 +21,7 @@ public static class EnumerableExtension
 		}
 
 		return (count == 0)
-			?           throw new ArgumentException($"{nameof(records)} is empty.")
+			? throw new ArgumentException($"{nameof(records)} is empty.")
 			: (count == 1)
 			? value(records.Single())
 			: (weightSum != 0)
@@ -34,7 +34,8 @@ public static class EnumerableExtension
 		if (values is null)
 			throw new ArgumentNullException(nameof(values), $"{nameof(values)} is null.");
 
+		values = [.. values];
 		double avg = values.Average();
-        return Math.Sqrt(values.Average(v=>Math.Pow(v-avg,2)));
-    }
+		return Math.Sqrt(values.Average(v => Math.Pow(v - avg, 2)));
+	}
 }

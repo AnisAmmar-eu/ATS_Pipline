@@ -1,126 +1,159 @@
-﻿using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices;
+﻿using System.Text;
 using Core.Entities.Vision.ToDos.Models.DB.ToNotifys;
-using Core.Entities.Vision.ToDos.Repositories.ToNotifys;
-using Core.Shared.Configuration;
-using Core.Shared.Dictionaries;
-using Core.Shared.Models.TwinCat;
 using Core.Shared.UnitOfWork.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using MQTTnet;
+using MQTTnet.Client;
 
-namespace Core.Shared.Services.Background
+namespace Core.Shared.Services.Background;
+
+public class NotifyService : BackgroundService
 {
-	public class NotifyService : BackgroundService
+	private readonly IServiceScopeFactory _factory;
+	private readonly ILogger<NotifyService> _logger;
+
+	private readonly Dictionary<int, string> _lastMsgNew = new()
 	{
-		private readonly IServiceScopeFactory _factory;
-		private readonly ILogger<NotifyService> _logger;
-		private readonly IConfiguration _configuration;
+		{ 3, string.Empty },
+		{ 4, string.Empty },
+		{ 5, string.Empty },
+	};
 
-		public NotifyService(
-			ILogger<NotifyService> logger,
-			IServiceScopeFactory factory,
-			IConfiguration configuration
-			)
-		{
-			_logger = logger;
-			_factory = factory;
-			_configuration = configuration;
-		}
+	private readonly Dictionary<int, string> _stationTopics = new()
+	{
+		{ 3, "topicS3" },
+		{ 4, "topicS4" },
+		{ 5, "topicS5" },
+	};
 
-		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	private readonly Dictionary<int, string> _msgNewTopics = new()
+	{
+		{ 3, "TopicMsgNewS3" },
+		{ 4, "TopicMsgNewS4" },
+		{ 5, "TopicMsgNewS5" },
+	};
+
+	public NotifyService(
+		ILogger<NotifyService> logger,
+		IServiceScopeFactory factory)
+	{
+		_logger = logger;
+		_factory = factory;
+	}
+
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	{
+		GetLastMessageFromMsgNewTopic(3);
+		GetLastMessageFromMsgNewTopic(4);
+		GetLastMessageFromMsgNewTopic(5);
+
+		while (!stoppingToken.IsCancellationRequested)
 		{
-			while (!stoppingToken.IsCancellationRequested)
+			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+			IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+
+			try
 			{
-				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-				IToNotifyRepository toNotifyRepository = asyncScope.ServiceProvider.GetRequiredService<IToNotifyRepository>();
-				IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-
-				try
+				foreach (KeyValuePair<int, string> entry in _lastMsgNew)
 				{
-					// Vérifier si la table ToNotify est vide ou non
-					bool hasNotifications = await anodeUOW.ToNotify.AnyAsync();
-
-					if (hasNotifications)
+					if (entry.Value != "2")
 					{
-						// Si msgNew est différent de  2
-						// récupérer une notification et envoyer les infos
-						if (msgNew != 2)
-						{
-							// Récup  notif
-							var notification = await anodeUOW.ToNotify.FirstOrDefaultAsync();
+						ToNotify? notification = await anodeUOW.ToNotify.GetBy([notify => notify.Station == entry.Key]);
+						if (notification is null)
+							continue;
 
-							SendNotificationInfo(notification);
+						string msgNewTopic = _msgNewTopics.GetValueOrDefault(notification.Station, string.Empty);
+						await SendNotificationInfo(notification);
+						await SendMessageToEGABrokerAsync("2", msgNewTopic);
 
-							msgNew = 2;
-						}
+						anodeUOW.Commit();
+						await anodeUOW.CommitTransaction();
+						await anodeUOW.ToNotify.Remove(notification.ID);
 					}
-					anodeUOW.Commit();
-					await anodeUOW.CommitTransaction();
 				}
-				catch (Exception ex)
-				{
-					_logger.LogError(
-						"Failed to execute NotifyService with exception message {message}. Good luck next round!",
-						ex.Message);
-				}
-
-				// Attente apres la prochaine itération
-				await Task.Delay(2000, stoppingToken);
-			
 			}
-		}
-
-
-		private void SendNotificationInfo(ToNotify notification)
-		{
-			// chaine d'info
-			string messageBody = $"{notification.SynchronisationKey};{notification.Timestamp};{notification.Path}";
-
-			// Choix du topic  en fct de la station
-			string topic;
-			switch (notification.Station)
+			catch (Exception ex)
 			{
-				case "3":
-					topic = "topicS3";
-					break;
-				case "4":
-					topic = "topicS4";
-					break;
-				case "5":
-					topic = "topicS5";
-					break;
+				_logger.LogError(
+					"Failed to execute NotifyService with exception message {message}",
+					ex.Message);
 			}
-			SendMessageToEGABrokerAsync(messageBody, topic).Wait(); 
+
+			await Task.Delay(2000, stoppingToken);
+		}
+	}
+
+	private async void GetLastMessageFromMsgNewTopic(int stationID)
+	{
+		MqttFactory mqttFactory = new();
+		IMqttClient client = mqttFactory.CreateMqttClient();
+
+		MqttClientOptions options = new MqttClientOptionsBuilder()
+			.WithClientId(Guid.NewGuid().ToString())
+			.WithTcpServer("localhost", 1883)
+			.WithCleanSession()
+			.Build();
+
+		try
+		{
+			await client.ConnectAsync(options);
+			string topic = _msgNewTopics.GetValueOrDefault(stationID, string.Empty);
+			client.ApplicationMessageReceivedAsync += e => {
+				if (e.ApplicationMessage.Topic == topic)
+					_lastMsgNew[stationID] = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
+
+				return Task.CompletedTask;
+			};
+
+			await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());
 
 		}
-
-		private async Task SendMessageToEGABrokerAsync(string messageBody, string topic)
+		catch (Exception ex)
 		{
-			// Configurer les options de connexion au broker MQTT
-			var mqttFactory = new MqttFactory();
-			var mqttClient = mqttFactory.CreateMqttClient();
+			_logger.LogError("Failed to wait for response from MQTT topic with exception message {message}.", ex.Message);
+		}
+	}
 
-			var options = new MqttClientOptionsBuilder()
-				.WithTcpServer("localhost", 1883) 
-				.Build();
+	private async Task SendNotificationInfo(ToNotify notification)
+	{
+		string messageBody = $"{notification.SynchronisationKey};{notification.Timestamp.ToString()};{notification.Path}";
+		string topic = _stationTopics.GetValueOrDefault(notification.Station, string.Empty);
+		await SendMessageToEGABrokerAsync(messageBody, topic);
+	}
 
-			// Connecter le client MQTT au broker
-			await mqttClient.ConnectAsync(options);
+	private async Task SendMessageToEGABrokerAsync(string messageBody, string topic)
+	{
+		MqttFactory mqttFactory = new();
+		IMqttClient client = mqttFactory.CreateMqttClient();
 
-			// Publier le message sur le topic spécifique
-			var message = new MqttApplicationMessageBuilder()
-				.WithTopic(topic) // Utilisation du topic spécifié
+		MqttClientOptions options = new MqttClientOptionsBuilder()
+			.WithClientId(Guid.NewGuid().ToString())
+			.WithTcpServer("localhost", 1883)
+			.WithCleanSession()
+			.Build();
+
+		try
+		{
+			await client.ConnectAsync(options);
+
+			Console.WriteLine("Connected to the broker");
+
+			MqttApplicationMessage message = new MqttApplicationMessageBuilder()
+				.WithTopic(topic)
 				.WithPayload(messageBody)
-				.WithExactlyOnceQoS()
 				.Build();
 
-			await mqttClient.PublishAsync(message);
-
-			// Déconnecter le client MQTT du broker
-			await mqttClient.DisconnectAsync();
+			await client.PublishAsync(message);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError("Failed to send MQTT message with exception message {message}.", ex.Message);
+		}
+		finally
+		{
+			await client.DisconnectAsync();
 		}
 	}
 }

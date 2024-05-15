@@ -6,4 +6,6 @@ namespace Core.Entities.Vision.ToDos.Repositories.ToNotifys;
 
 public interface IToNotifyRepository : IBaseEntityRepository<ToNotify, DTOToNotify>
 {
+	Task<bool> AnyAsync();
+	Task<ToNotify> FirstOrDefaultAsync();
 }

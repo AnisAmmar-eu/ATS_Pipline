@@ -15,9 +15,11 @@ using Core.Shared.SignalR.IOTHub;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
 using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -46,8 +48,7 @@ builder.Services.AddAuthentication(
 		options.RequireHttpsMetadata = false;
 		string jwtSecret = builder.Configuration["JWT:Secret"]
 			?? throw new ConfigurationErrorsException("Missing JWT Secret");
-		options.TokenValidationParameters = new()
-		{
+		options.TokenValidationParameters = new() {
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidAudience = builder.Configuration.GetValueWithThrow<string>("JWT:ValidAudience"),
@@ -97,10 +98,13 @@ if (!Station.IsServer)
 	builder.Services.AddSingleton<CheckSyncTimeService>();
 	builder.Services.AddHostedService(provider => provider.GetRequiredService<CheckSyncTimeService>());
 	// Background Services
-	builder.Services.AddSingleton<NotifyService>();
-	builder.Services.AddHostedService(provider => provider.GetRequiredService<NotifyService>());
 	//builder.Services.AddSingleton<PurgeService>();
 	//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
+}
+else
+{
+	builder.Services.AddSingleton<NotifyService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<NotifyService>());
 }
 
 WebApplication app = builder.Build();

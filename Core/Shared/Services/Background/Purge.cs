@@ -42,7 +42,7 @@ public class PurgeService : BackgroundService
 		{
 			await Task.Delay(TimeSpan.FromSeconds(purgeTimerSec), stoppingToken);
 			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-			IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+			IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 			try
 			{
 				_logger.LogInformation("PurgeService running at: {time}", DateTimeOffset.Now);
@@ -52,13 +52,13 @@ public class PurgeService : BackgroundService
 				_logger.LogError("PurgeService threshold date: {threshold}", threshold.ToString());
 
 				// Delete AlarmLog
-				await _anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
+				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
 
 				// Delete Log
-				await _anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
+				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
 
 				// Delete Packet
-				List<Packet> packets = await _anodeUOW.Packet.GetAll(
+				List<Packet> packets = await anodeUOW.Packet.GetAll(
 					[paquet => paquet.TS < threshold && paquet.Status == PacketStatus.Sent],
 					withTracking: false);
 
@@ -85,13 +85,13 @@ public class PurgeService : BackgroundService
 
 					// Delete AlarmCycle
 					if (packet is AlarmList alarmList)
-						await _anodeUOW.AlarmCycle.ExecuteDeleteAsync(alarm => alarm.AlarmListPacketID == alarmList.ID);
+						await anodeUOW.AlarmCycle.ExecuteDeleteAsync(alarm => alarm.AlarmListPacketID == alarmList.ID);
 				}
 
-				await _anodeUOW.StartTransaction();
-				_anodeUOW.Packet.RemoveRange(packets);
-				_anodeUOW.Commit();
-				await _anodeUOW.CommitTransaction();
+				await anodeUOW.StartTransaction();
+				anodeUOW.Packet.RemoveRange(packets);
+				anodeUOW.Commit();
+				await anodeUOW.CommitTransaction();
 			}
 			catch (Exception ex)
 			{

@@ -12,4 +12,7 @@ public class ToNotifyRepository :
 	public ToNotifyRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
+
+	public Task<bool> AnyAsync() => throw new NotImplementedException();
+	public Task<ToNotify> FirstOrDefaultAsync() => throw new NotImplementedException();
 }

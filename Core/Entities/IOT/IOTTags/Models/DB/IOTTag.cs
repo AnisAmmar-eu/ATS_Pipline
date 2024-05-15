@@ -21,7 +21,8 @@ public partial class IOTTag : BaseEntity, IBaseEntity<IOTTag, DTOIOTTag>
 	public IOTDevice? IOTDevice { get; set; }
 
 	[Timestamp]
-	public ICollection<byte> Version { get; set; } = [];
+#pragma warning disable CA1819
+	public byte[] Version { get; set; } = [];
 
 	/*
 	#region Nav Properties
