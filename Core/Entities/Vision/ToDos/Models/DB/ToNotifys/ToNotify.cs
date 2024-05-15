@@ -13,4 +13,6 @@ public partial class ToNotify : BaseEntity, IBaseEntity<ToNotify, DTOToNotify>
 	public string? Path { get; set; }
 
 	public int Station { get; set; }
+
+	public string SerialNumber { get; set; }
 }

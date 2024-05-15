@@ -68,9 +68,9 @@ public class NotifyService : BackgroundService
 						await SendNotificationInfo(notification);
 						await SendMessageToEGABrokerAsync("2", msgNewTopic);
 
+						await anodeUOW.ToNotify.Remove(notification.ID);
 						anodeUOW.Commit();
 						await anodeUOW.CommitTransaction();
-						await anodeUOW.ToNotify.Remove(notification.ID);
 					}
 				}
 			}
@@ -118,7 +118,10 @@ public class NotifyService : BackgroundService
 
 	private async Task SendNotificationInfo(ToNotify notification)
 	{
-		string messageBody = $"{notification.SynchronisationKey};{notification.Timestamp.ToString()};{notification.Path}";
+		string messageBody = $"{notification.SynchronisationKey};" +
+						  $"{notification.SerialNumber};" +
+						  $"{notification.Timestamp.ToString()};" +
+						  $"{notification.Path}";
 		string topic = _stationTopics.GetValueOrDefault(notification.Station, string.Empty);
 		await SendMessageToEGABrokerAsync(messageBody, topic);
 	}

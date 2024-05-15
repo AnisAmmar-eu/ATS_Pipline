@@ -13,6 +13,5 @@ public class ToNotifyRepository :
 	{
 	}
 
-	public Task<bool> AnyAsync() => throw new NotImplementedException();
-	public Task<ToNotify> FirstOrDefaultAsync() => throw new NotImplementedException();
+
 }
