@@ -12,6 +12,4 @@ public class ToNotifyRepository :
 	public ToNotifyRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
-
-
 }

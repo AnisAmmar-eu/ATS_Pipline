@@ -108,7 +108,6 @@ public class NotifyService : BackgroundService
 			};
 
 			await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());
-
 		}
 		catch (Exception ex)
 		{
@@ -118,10 +117,10 @@ public class NotifyService : BackgroundService
 
 	private async Task SendNotificationInfo(ToNotify notification)
 	{
-		string messageBody = $"{notification.SynchronisationKey};" +
-						  $"{notification.SerialNumber};" +
-						  $"{notification.Timestamp.ToString()};" +
-						  $"{notification.Path}";
+		string messageBody = $"{notification.SynchronisationKey};"
+			+ $"{notification.SerialNumber};"
+			+ $"{notification.Timestamp.ToString()};"
+			+ $"{notification.Path}";
 		string topic = _stationTopics.GetValueOrDefault(notification.Station, string.Empty);
 		await SendMessageToEGABrokerAsync(messageBody, topic);
 	}
