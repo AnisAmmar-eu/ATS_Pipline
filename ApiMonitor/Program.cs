@@ -93,18 +93,21 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
 
-if (!Station.IsServer)
+if (Station.IsServer)
 {
-	builder.Services.AddSingleton<CheckSyncTimeService>();
-	builder.Services.AddHostedService(provider => provider.GetRequiredService<CheckSyncTimeService>());
-	// Background Services
-	//builder.Services.AddSingleton<PurgeService>();
-	//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
+	builder.Services.AddSingleton<PurgeServer>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeServer>());
+
+	builder.Services.AddSingleton<NotifyService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<NotifyService>());
 }
 else
 {
-	builder.Services.AddSingleton<NotifyService>();
-	builder.Services.AddHostedService(provider => provider.GetRequiredService<NotifyService>());
+	builder.Services.AddSingleton<CheckSyncTimeService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<CheckSyncTimeService>());
+
+	//builder.Services.AddSingleton<PurgeService>();
+	//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 }
 
 WebApplication app = builder.Build();

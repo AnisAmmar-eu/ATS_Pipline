@@ -96,6 +96,10 @@ public static class ConfigDictionary
 
 	public const string PurgeTimerSec = "PurgeTimerSec";
 	public const string PurgeThreshold = "PurgeThreshold";
+	public const string PurgeRawPictures = "PurgeRawPictures";
+	public const string PurgeMetadata = "PurgeMetadata";
+	public const string PurgeAnodeEntry = "PurgeAnodeEntry";
+	public const string PurgeCycle = "PurgeCycle";
 
 	#endregion Purge
 
