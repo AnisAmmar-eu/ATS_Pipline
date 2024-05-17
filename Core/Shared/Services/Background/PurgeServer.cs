@@ -1,4 +1,5 @@
-﻿using Core.Entities.Packets.Models.DB.Shootings;
+﻿using Core.Entities.Packets.Models.DB;
+using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
@@ -54,27 +55,9 @@ public class PurgeServer : BackgroundService
 				DateTimeOffset threshold = DateTimeOffset.Now.Subtract(purgeThreshold);
 				_logger.LogError("PurgeService threshold date: {threshold}", threshold.ToString());
 
-				// Delete AlarmLog
-				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
-
-				// Delete Log
-				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
-
-				// Delete  Metadata ( 12 months )
-				DateTimeOffset metadataThreshold = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeMetadata));
-				await anodeUOW.Packet.RemoveByLifeSpan(metadataThreshold.TimeOfDay);
-
-				//Delete  Entry (5 years)
-				DateTimeOffset anodeThreshold = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeAnodeEntry));
-				await anodeUOW.Anode.RemoveByLifeSpan(anodeThreshold.TimeOfDay);
-
-				//Incomplete cycle ( 6 month )
-				DateTimeOffset incompleteAnodeThreshold = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeCycle));
-				await anodeUOW.Anode.ExecuteDeleteAsync(anode => anode.TS < incompleteAnodeThreshold && !anode.IsComplete);
-
-				DateTimeOffset currentDate = DateTimeOffset.Now;
+				DateTimeOffset purgeRaw = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeRawPictures));
 				List<StationCycle> cycles = await anodeUOW.StationCycle
-					.GetAll([cycle => currentDate - cycle.TS >= TimeSpan.FromDays(purgeRawPictures)]);
+					.GetAll([t => t.TS < purgeRaw]);
 
 				foreach (StationCycle cycle in cycles)
 				{
@@ -90,8 +73,27 @@ public class PurgeServer : BackgroundService
 					DeleteFileIfExists(image2);
 				}
 
-				await anodeUOW.StartTransaction();
-				anodeUOW.StationCycle.RemoveRange(cycles);
+				// Delete AlarmLog
+				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
+
+				// Delete Log
+				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
+
+				// Delete Metadata (12 mois)
+				TimeSpan span = TimeSpan.FromDays(purgeMetadata);
+				await anodeUOW.StationCycle.RemoveByLifeSpan(span);
+				await anodeUOW.Packet.RemoveByLifeSpan(span);
+
+				//List<Packet> packets = await anodeUOW.Packet.GetAll([t => t.TS < metadataThreshold]);
+				//anodeUOW.Packet.RemoveRange(packets);
+
+				//Delete  Entry (5 years)
+				await anodeUOW.Anode.RemoveByLifeSpan(TimeSpan.FromDays(purgeAnodeEntry));
+
+				//Incomplete cycle ( 6 month )
+				DateTimeOffset incompleteAnodeThreshold = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeCycle));
+				await anodeUOW.Anode.ExecuteDeleteAsync(anode => anode.TS < incompleteAnodeThreshold && !anode.IsComplete);
+
 				anodeUOW.Commit();
 				await anodeUOW.CommitTransaction();
 			}
