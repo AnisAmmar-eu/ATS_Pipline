@@ -36,6 +36,8 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="MQTTnet" Version="4.3.3.952" />
+        <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.3.952" />
         <PackageReference Include="Roslynator.Analyzers" Version="4.7.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -90,6 +92,5 @@
     </ItemGroup>
     <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
         <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
-        <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory=".." />
     </Target>
 </Project>

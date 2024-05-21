@@ -7,17 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Core\Core.csproj"/>
+        <ProjectReference Include="..\Core\Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Beckhoff.TwinCAT.Ads" Version="6.1.86"/>
+        <PackageReference Include="Beckhoff.TwinCAT.Ads" Version="6.1.86" />
         <PackageReference Include="Carter" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="MQTTnet" Version="4.3.3.952" />
+        <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.3.952" />
         <PackageReference Include="Roslynator.Analyzers" Version="4.7.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,7 +32,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
 
