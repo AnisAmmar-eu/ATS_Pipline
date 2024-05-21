@@ -1,5 +1,3 @@
-using System.Configuration;
-using System.Text;
 using Carter;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
@@ -21,6 +19,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
+using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -93,7 +93,15 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
 
-if (!Station.IsServer)
+if (Station.IsServer)
+{
+	builder.Services.AddSingleton<PurgeServer>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeServer>());
+
+	builder.Services.AddSingleton<NotifyService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<NotifyService>());
+}
+else
 {
 	builder.Services.AddSingleton<CheckSyncTimeService>();
 	builder.Services.AddHostedService(provider => provider.GetRequiredService<CheckSyncTimeService>());

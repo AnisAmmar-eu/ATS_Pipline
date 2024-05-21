@@ -11,13 +11,5 @@ public abstract partial class MatchableCycle : StationCycle, IBaseEntity<Matchab
 	public SignMatchStatus MatchingCamera2 { get; set; }
 	public DateTimeOffset? MatchingTS { get; set; }
 	public int? KPIID { get; set; }
-
-	private KPI? _kpi;
-
-	public KPI KPI
-	{
-		set => _kpi = value;
-		get => _kpi
-			?? throw new InvalidOperationException("Uninitialized property: " + nameof(KPI));
-	}
+	public KPI? KPI { get; set; }
 }

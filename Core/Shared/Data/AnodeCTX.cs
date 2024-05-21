@@ -173,49 +173,49 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.MetaDataID)
 			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+			.OnDelete(DeleteBehavior.ClientSetNull);
 
 		builder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.Shooting1Packet)
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.Shooting1ID)
 			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+			.OnDelete(DeleteBehavior.ClientSetNull);
 
 		builder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.Shooting2Packet)
 			.WithOne(packet => packet.StationCycleShooting2)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.Shooting2ID)
 			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+			.OnDelete(DeleteBehavior.ClientSetNull);
 
 		builder.Entity<StationCycle>()
 			.HasOne(stationCycle => stationCycle.AlarmListPacket)
 			.WithOne(packet => packet.StationCycle)
 			.HasForeignKey<StationCycle>(stationCycle => stationCycle.AlarmListID)
 			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+			.OnDelete(DeleteBehavior.ClientSetNull);
 
 		builder.Entity<MatchableCycle>()
 			.HasOne(stationCycle => stationCycle.KPI)
 			.WithOne(kpi => kpi.StationCycle)
 			.HasForeignKey<MatchableCycle>(stationCycle => stationCycle.KPIID)
 			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+			.OnDelete(DeleteBehavior.ClientSetNull);
 
 		builder.Entity<S3S4Cycle>()
 			.HasOne(s3S4Cycle => s3S4Cycle.InFurnacePacket)
 			.WithOne(packet => packet.StationCycle as S3S4Cycle)
 			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.InFurnaceID)
 			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+			.OnDelete(DeleteBehavior.ClientSetNull);
 
 		builder.Entity<S3S4Cycle>()
 			.HasOne(s3S4Cycle => s3S4Cycle.OutFurnacePacket)
 			.WithOne(packet => packet.StationCycle as S3S4Cycle)
 			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.OutFurnaceID)
 			.IsRequired(false)
-			.OnDelete(DeleteBehavior.NoAction);
+			.OnDelete(DeleteBehavior.ClientSetNull);
 
 		builder.Entity<IOTDevice>()
 			.HasMany(iotDevice => iotDevice.IOTTags)

@@ -26,12 +26,12 @@ public class IOTService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		int IOTMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.IOTMS);
+		int iOTMS = _configuration.GetValueWithThrow<int>(ConfigDictionary.IOTMS);
 		// If there is no given devices RIDs to monitor, it defaults to monitoring all APIs.
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			await Task.Delay(TimeSpan.FromMilliseconds(IOTMS), stoppingToken);
+			await Task.Delay(TimeSpan.FromMilliseconds(iOTMS), stoppingToken);
 			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 			IConfiguration configuration = asyncScope.ServiceProvider.GetRequiredService<IConfiguration>();
 			IIOTDeviceService iotDeviceService

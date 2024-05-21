@@ -15,4 +15,6 @@ public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>
 
 	public int? S3S4CycleID { get; set; }
 	public S3S4Cycle? S3S4Cycle { get; set; }
+
+	public bool IsComplete { get; set; }
 }
