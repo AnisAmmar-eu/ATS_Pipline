@@ -20,7 +20,5 @@ public class LogEndpoint : BaseEntityEndpoint<Log, DTOLog, ILogService>, ICarter
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> DeleteAll(ILogService logService, HttpContext httpContext)
-	{
-		return GenericEndpointEmptyResponse(logService.DeleteAllLogs, logService, httpContext);
-	}
+		=> GenericEndpointEmptyResponse(logService.DeleteAllLogs, logService, httpContext);
 }

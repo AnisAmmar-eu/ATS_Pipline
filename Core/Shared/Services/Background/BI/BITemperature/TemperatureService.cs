@@ -14,7 +14,6 @@ public class TemperatureService : BackgroundService
 	private readonly ILogger<TemperatureService> _logger;
 	private const int Delay = 5;
 	private readonly TimeSpan _period = TimeSpan.FromSeconds(Delay);
-	private int _executionCount;
 
 	public TemperatureService(ILogger<TemperatureService> logger, IServiceScopeFactory factory)
 	{
@@ -41,8 +40,6 @@ public class TemperatureService : BackgroundService
 			{
 				await biTemperatureService.LogNewValues();
 				await biTemperatureService.RemoveByLifeSpan(TimeSpan.FromHours(2));
-
-				_executionCount++;
 			}
 			catch (Exception ex)
 			{

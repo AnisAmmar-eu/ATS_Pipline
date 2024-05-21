@@ -34,8 +34,5 @@ public class AlarmRTEndpoint : BaseEntityEndpoint<AlarmRT, DTOAlarmRT, IAlarmRTS
 	private static Task<JsonHttpResult<ApiResponse>> GetAlarmRTStats(
 		IAlarmRTService alarmRTService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(alarmRTService.GetAlarmRTStats, logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(alarmRTService.GetAlarmRTStats, logService, httpContext);
 }
