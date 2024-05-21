@@ -54,7 +54,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("AlarmC");
+                    b.ToTable("AlarmC", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsCycle.Models.DB.AlarmCycle", b =>
@@ -82,7 +82,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmListPacketID");
 
-                    b.ToTable("AlarmCycle");
+                    b.ToTable("AlarmCycle", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsLog.Models.DB.AlarmLog", b =>
@@ -130,7 +130,7 @@ namespace Core.Migrations
 
                     b.HasIndex("AlarmID");
 
-                    b.ToTable("AlarmLog", t =>
+                    b.ToTable("AlarmLog", null, t =>
                         {
                             t.HasTrigger("trigger");
                         });
@@ -170,7 +170,7 @@ namespace Core.Migrations
                     b.HasIndex("AlarmID")
                         .IsUnique();
 
-                    b.ToTable("AlarmRT");
+                    b.ToTable("AlarmRT", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Anodes.Models.DB.Anode", b =>
@@ -209,7 +209,7 @@ namespace Core.Migrations
                         .IsUnique()
                         .HasFilter("[S3S4CycleID] IS NOT NULL");
 
-                    b.ToTable("Anode");
+                    b.ToTable("Anode", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Anode");
 
@@ -239,7 +239,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("BITemperature");
+                    b.ToTable("BITemperature", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.BenchmarkTest", b =>
@@ -280,7 +280,7 @@ namespace Core.Migrations
 
                     b.HasIndex("TSIndex");
 
-                    b.ToTable("BenchmarkTest");
+                    b.ToTable("BenchmarkTest", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.BenchmarkTests.Models.DB.CameraTests.CameraTest", b =>
@@ -296,7 +296,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("CameraTest");
+                    b.ToTable("CameraTest", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>
@@ -340,7 +340,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("IOTDevice");
+                    b.ToTable("IOTDevice", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("IOTDevice");
 
@@ -406,7 +406,7 @@ namespace Core.Migrations
 
                     b.HasIndex("IOTDeviceID");
 
-                    b.ToTable("IOTTag");
+                    b.ToTable("IOTTag", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("IOTTag");
 
@@ -450,7 +450,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("KPI");
+                    b.ToTable("KPI", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.KPIData.TenBestMatchs.Models.DB.TenBestMatch", b =>
@@ -481,7 +481,7 @@ namespace Core.Migrations
 
                     b.HasIndex("KPIID");
 
-                    b.ToTable("TenBestMatch");
+                    b.ToTable("TenBestMatch", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Packet", b =>
@@ -515,7 +515,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Packet");
+                    b.ToTable("Packet", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Packet");
 
@@ -601,7 +601,7 @@ namespace Core.Migrations
                         .IsUnique()
                         .HasFilter("[Shooting2ID] IS NOT NULL");
 
-                    b.ToTable("StationCycle");
+                    b.ToTable("StationCycle", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("StationCycle");
 
@@ -631,7 +631,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Acts");
+                    b.ToTable("Acts", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>
@@ -665,7 +665,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActID");
 
-                    b.ToTable("ActEntities");
+                    b.ToTable("ActEntities", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles.ActEntityRole", b =>
@@ -701,7 +701,7 @@ namespace Core.Migrations
 
                     b.HasIndex("ActEntityID");
 
-                    b.ToTable("ActEntityRoles");
+                    b.ToTable("ActEntityRoles", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Roles.ApplicationRole", b =>
@@ -849,7 +849,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Dataset");
+                    b.ToTable("Dataset", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToLoads.ToLoad", b =>
@@ -888,7 +888,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ToLoad");
+                    b.ToTable("ToLoad", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToMatchs.ToMatch", b =>
@@ -924,7 +924,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ToMatch");
+                    b.ToTable("ToMatch", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToNotifys.ToNotify", b =>
@@ -943,7 +943,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ToNotify");
+                    b.ToTable("ToNotify", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToSigns.ToSign", b =>
@@ -979,7 +979,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ToSign");
+                    b.ToTable("ToSign", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Vision.ToDos.Models.DB.ToUnloads.ToUnload", b =>
@@ -1015,7 +1015,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ToUnload");
+                    b.ToTable("ToUnload", (string)null);
                 });
 
             modelBuilder.Entity("Core.Shared.Models.DB.System.Logs.Log", b =>
@@ -1061,7 +1061,7 @@ namespace Core.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Log");
+                    b.ToTable("Log", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1446,7 +1446,7 @@ namespace Core.Migrations
                     b.Property<DateTimeOffset>("ShootingTS")
                         .HasColumnType("datetimeoffset");
 
-                    b.ToTable("Packet", t =>
+                    b.ToTable("Packet", null, t =>
                         {
                             t.Property("Cam01Status")
                                 .HasColumnName("Shooting_Cam01Status");

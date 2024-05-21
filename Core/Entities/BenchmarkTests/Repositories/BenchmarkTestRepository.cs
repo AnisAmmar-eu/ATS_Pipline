@@ -16,17 +16,17 @@ public class BenchmarkTestRepository :
 
 	public Task<List<BenchmarkTest>> OldGetRange(int start, int nbItems)
 	{
-		return Context.BenchmarkTest.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
+		return _context.BenchmarkTest.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
 	}
 
 	public async Task RemoveAll()
 	{
-		Context.BenchmarkTest.RemoveRange(Context.BenchmarkTest);
-		await Context.SaveChangesAsync();
+		_context.BenchmarkTest.RemoveRange(_context.BenchmarkTest);
+		await _context.SaveChangesAsync();
 	}
 
 	public int GetCount()
 	{
-		return Context.BenchmarkTest.Count();
+		return _context.BenchmarkTest.Count();
 	}
 }

@@ -37,4 +37,7 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 	public AlarmList? AlarmListPacket { get; set; }
 
 	public Anode? Anode { get; set; }
+
+	public int NbActiveAlarms { get; set; }
+	public bool HasPlug { get; set; }
 }

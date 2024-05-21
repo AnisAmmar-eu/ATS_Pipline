@@ -25,4 +25,5 @@ public partial class MetaData : Packet, IBaseEntity<MetaData, DTOMetaData>
 	public int SN_Day { get; set; }
 	public int SN_Vibro { get; set; }
 	public int SN_Number { get; set; }
+	public int NbActiveAlarms { get; set; }
 }

@@ -40,7 +40,7 @@ public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAl
 	public Task<int> AckAlarmLogs(int[] idAlarmLogs)
 	{
 		DateTimeOffset now = DateTimeOffset.Now;
-		return Context
+		return _context
 			.AlarmLog
 			.Where(alarmLog => idAlarmLogs.Contains(alarmLog.ID))
 			.Where(alarmLog => !alarmLog.IsAck)

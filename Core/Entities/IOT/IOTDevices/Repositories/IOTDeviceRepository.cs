@@ -12,5 +12,5 @@ public class IOTDeviceRepository : BaseEntityRepository<AnodeCTX, IOTDevice, DTO
 	{
 	}
 
-	public void StopTracking(IOTDevice device) => Context.Entry(device).State = EntityState.Detached;
+	public void StopTracking(IOTDevice device) => _context.Entry(device).State = EntityState.Detached;
 }

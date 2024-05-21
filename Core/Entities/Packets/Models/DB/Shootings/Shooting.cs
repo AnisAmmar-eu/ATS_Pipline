@@ -15,6 +15,7 @@ public partial class Shooting : Packet, IBaseEntity<Shooting, DTOShooting>
 	public bool HasSecondShoot { get; set; }
 
 	public StationCycle? StationCycleShooting2 { get; set; }
+	public bool HasPlug { get; set; }
 
 	// These 2 variables are only used when a shooting packet is retrieved from ADS to verify if there is an image.
 	// because the context does not allow to use configuration.

@@ -1,6 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
-exit 0
 
 ## husky task runner examples -------------------
 ## Note : for local installation use 'dotnet' prefix. e.g. 'dotnet husky'
@@ -13,7 +12,7 @@ exit 0
 
 ## run task with name: 'task-name'
 #husky run --name task-name
-
+exit 0
 ## pass hook arguments to task
 #husky run --args "$1" "$2"
 
@@ -31,7 +30,8 @@ PROJECTS=($(find * -name *.csproj))
 
 echo "roslynator on solution"
 
-roslynator fix ATS.sln --include "${STAGED_FILES[@]}" --exclude Core/Migrations/*
+echo "${STAGED_FILES[@]}"
+roslynator fix --exclude Core/Migrations/* --include "${STAGED_FILES[@]}" 
 
 ROSLYNATOR_EXIT="$?"
 
