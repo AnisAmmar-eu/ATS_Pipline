@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240514084031_ArrayByteVersion")]
+    partial class ArrayByteVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,42 +193,11 @@ namespace Core.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("S1S2CycleID")
                         .HasColumnType("int");
 
-                    b.Property<int>("S1S2SignStatus1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("S1S2SignStatus2")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("S1S2TSFirstShooting")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<int?>("S3S4CycleID")
                         .HasColumnType("int");
-
-                    b.Property<int>("S3S4MatchingCamera2")
-                        .HasColumnType("int");
-
-                    b.Property<int>("S3S4SignStatus1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("S3S4SignStatus2")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("S3S4TSFirstShooting")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("SS3S4MatchingCamera1")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
@@ -573,13 +545,7 @@ namespace Core.Migrations
                         .HasMaxLength(21)
                         .HasColumnType("nvarchar(21)");
 
-                    b.Property<bool>("HasPlug")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("MetaDataID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NbActiveAlarms")
                         .HasColumnType("int");
 
                     b.Property<int>("Picture1Status")
@@ -944,13 +910,7 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("HasPlug")
-                        .HasColumnType("bit");
-
                     b.Property<int>("InstanceMatchID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NbActiveAlarms")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ShootingTS")
@@ -979,10 +939,6 @@ namespace Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Station")
@@ -1020,12 +976,6 @@ namespace Core.Migrations
                     b.Property<string>("CycleRID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("HasPlug")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NbActiveAlarms")
-                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ShootingTS")
                         .HasColumnType("datetimeoffset");
@@ -1246,21 +1196,6 @@ namespace Core.Migrations
                     b.Property<int?>("S5CycleID")
                         .HasColumnType("int");
 
-                    b.Property<int>("S5MatchingCamera1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("S5MatchingCamera2")
-                        .HasColumnType("int");
-
-                    b.Property<int>("S5SignStatus2")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("S5TSFirstShooting")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("SSignStatus1")
-                        .HasColumnType("int");
-
                     b.HasIndex("S5CycleID")
                         .IsUnique()
                         .HasFilter("[S5CycleID] IS NOT NULL");
@@ -1467,9 +1402,6 @@ namespace Core.Migrations
                     b.Property<int>("Double_RW")
                         .HasColumnType("int");
 
-                    b.Property<int>("NbActiveAlarms")
-                        .HasColumnType("int");
-
                     b.Property<int>("SN_Day")
                         .HasColumnType("int");
 
@@ -1518,9 +1450,6 @@ namespace Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("HasFirstShoot")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HasPlug")
                         .HasColumnType("bit");
 
                     b.Property<bool>("HasSecondShoot")
@@ -1611,9 +1540,6 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", b =>
                 {
                     b.HasBaseType("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle");
-
-                    b.Property<int?>("ChainCycleID")
-                        .HasColumnType("int");
 
                     b.Property<int>("ChainMatchingCamera1")
                         .HasColumnType("int");
@@ -1710,19 +1636,23 @@ namespace Core.Migrations
                 {
                     b.HasOne("Core.Entities.Packets.Models.DB.AlarmLists.AlarmList", "AlarmListPacket")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "AlarmListID");
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "AlarmListID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.MetaDatas.MetaData", "MetaDataPacket")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "MetaDataID");
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "MetaDataID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.Shootings.Shooting", "Shooting1Packet")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "Shooting1ID");
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "Shooting1ID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.Shootings.Shooting", "Shooting2Packet")
                         .WithOne("StationCycleShooting2")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "Shooting2ID");
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.StationCycle", "Shooting2ID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("AlarmListPacket");
 
@@ -1820,26 +1750,23 @@ namespace Core.Migrations
                 {
                     b.HasOne("Core.Entities.KPIData.KPIs.Models.DB.KPI", "KPI")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle", "KPIID");
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle", "KPIID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("KPI");
                 });
 
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", b =>
                 {
-                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", "ChainCycle")
-                        .WithOne("ChainCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "ID");
-
                     b.HasOne("Core.Entities.Packets.Models.DB.Furnaces.InFurnaces.InFurnace", "InFurnacePacket")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "InFurnaceID");
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "InFurnaceID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces.OutFurnace", "OutFurnacePacket")
                         .WithOne("StationCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "OutFurnaceID");
-
-                    b.Navigation("ChainCycle");
+                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "OutFurnaceID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("InFurnacePacket");
 
@@ -1919,8 +1846,6 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", b =>
                 {
                     b.Navigation("Anode");
-
-                    b.Navigation("ChainCycle");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,5 @@
-﻿using Core.Entities.Packets.Dictionaries;
-using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.AlarmLists;
-using Core.Entities.Packets.Models.DB.Shootings;
+﻿using Core.Entities.Packets.Models.DB.Shootings;
+using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
@@ -12,13 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Shared.Services.Background;
 
-public class PurgeService : BackgroundService
+public class PurgeServer : BackgroundService
 {
 	private readonly IServiceScopeFactory _factory;
 	private readonly ILogger<PurgeService> _logger;
 	private readonly IConfiguration _configuration;
 
-	public PurgeService(
+	public PurgeServer(
 		ILogger<PurgeService> logger,
 		IServiceScopeFactory factory,
 		IConfiguration configuration)
@@ -32,6 +30,11 @@ public class PurgeService : BackgroundService
 	{
 		int purgeThresholdSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeThreshold);
 		int purgeTimerSec = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeTimerSec);
+		int purgeRawPictures = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeRawPictures);
+		int purgeMetadata = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeMetadata);
+		int purgeAnodeEntry = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeAnodeEntry);
+		int purgeCycle = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeCycle);
+
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
@@ -51,45 +54,45 @@ public class PurgeService : BackgroundService
 				DateTimeOffset threshold = DateTimeOffset.Now.Subtract(purgeThreshold);
 				_logger.LogError("PurgeService threshold date: {threshold}", threshold.ToString());
 
+				DateTimeOffset purgeRaw = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeRawPictures));
+				List<StationCycle> cycles = await anodeUOW.StationCycle
+					.GetAll([t => t.TS < purgeRaw]);
+
+				foreach (StationCycle cycle in cycles)
+				{
+					// Delete image
+					string cycleRID = cycle.RID;
+					string anodeType = cycle.AnodeType;
+					int stationID = cycle.StationID;
+
+					FileInfo image1 = Shooting.GetImagePathFromRoot(cycleRID, stationID, imagesPath, anodeType, 1, extension);
+					FileInfo image2 = Shooting.GetImagePathFromRoot(cycleRID, stationID, imagesPath, anodeType, 2, extension);
+
+					DeleteFileIfExists(image1);
+					DeleteFileIfExists(image2);
+				}
+
 				// Delete AlarmLog
 				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
 
 				// Delete Log
 				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
 
-				// Delete Packet
-				List<Packet> packets = await anodeUOW.Packet.GetAll(
-					[paquet => paquet.TS < threshold && paquet.Status == PacketStatus.Sent],
-					withTracking: false);
+				// Delete Metadata (12 mois)
+				TimeSpan span = TimeSpan.FromDays(purgeMetadata);
+				await anodeUOW.StationCycle.RemoveByLifeSpan(span);
+				await anodeUOW.Packet.RemoveByLifeSpan(span);
 
-				foreach (Packet packet in packets)
-				{
-					_logger.LogError("PurgeService packet: {packet}", packet.ID);
-					// Delete images
-					if (packet is Shooting shooting)
-					{
-						string cycleRID = shooting.StationCycleRID;
-						string anodeType = shooting.AnodeType;
-						int stationID = Station.ID;
+				//List<Packet> packets = await anodeUOW.Packet.GetAll([t => t.TS < metadataThreshold]);
+				//anodeUOW.Packet.RemoveRange(packets);
 
-						FileInfo thumbnail1 = Shooting.GetImagePathFromRoot(cycleRID, stationID, thumbnailsPath, anodeType, 1, extension);
-						FileInfo thumbnail2 = Shooting.GetImagePathFromRoot(cycleRID, stationID, thumbnailsPath, anodeType, 2, extension);
-						FileInfo image1 = Shooting.GetImagePathFromRoot(cycleRID, stationID, imagesPath, anodeType, 1, extension);
-						FileInfo image2 = Shooting.GetImagePathFromRoot(cycleRID, stationID, imagesPath, anodeType, 2, extension);
+				//Delete  Entry (5 years)
+				await anodeUOW.Anode.RemoveByLifeSpan(TimeSpan.FromDays(purgeAnodeEntry));
 
-						DeleteFileIfExists(thumbnail1);
-						DeleteFileIfExists(thumbnail2);
-						DeleteFileIfExists(image1);
-						DeleteFileIfExists(image2);
-					}
+				//Incomplete cycle ( 6 month )
+				DateTimeOffset incompleteAnodeThreshold = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeCycle));
+				await anodeUOW.Anode.ExecuteDeleteAsync(anode => anode.TS < incompleteAnodeThreshold && !anode.IsComplete);
 
-					// Delete AlarmCycle
-					if (packet is AlarmList alarmList)
-						await anodeUOW.AlarmCycle.ExecuteDeleteAsync(alarm => alarm.AlarmListPacketID == alarmList.ID);
-				}
-
-				await anodeUOW.StartTransaction();
-				anodeUOW.Packet.RemoveRange(packets);
 				anodeUOW.Commit();
 				await anodeUOW.CommitTransaction();
 			}
