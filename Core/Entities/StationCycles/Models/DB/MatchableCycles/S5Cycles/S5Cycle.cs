@@ -1,5 +1,6 @@
 using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.StationCycles.Dictionaries;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
 using Core.Shared.Models.DB.Kernel.Interfaces;
 
@@ -10,4 +11,6 @@ public partial class S5Cycle : MatchableCycle, IBaseEntity<S5Cycle, DTOS5Cycle>
 	new public AnodeDX? Anode { get; set; }
 	public SignMatchStatus ChainMatchingCamera1 { get; set; }
 	public SignMatchStatus ChainMatchingCamera2 { get; set; }
+	public int? ChainCycleID { get; set; }
+	public S3S4Cycle? ChainCycle { get; set; }
 }

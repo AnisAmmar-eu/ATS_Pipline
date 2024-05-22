@@ -16,26 +16,17 @@ public class AlarmLogRepository : BaseEntityRepository<AnodeCTX, AlarmLog, DTOAl
 	public Task<AlarmLog> GetByIdWithIncludes(
 		int id,
 		Expression<Func<AlarmLog, bool>>[]? filters = null,
-		bool withTracking = true)
-	{
-		return GetById(id, filters, withTracking, nameof(AlarmLog.Alarm));
-	}
+		bool withTracking = true) => GetById(id, filters, withTracking, nameof(AlarmLog.Alarm));
 
 	public Task<AlarmLog> GetByWithIncludes(
 		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
-		bool withTracking = true)
-	{
-		return GetByWithThrow(filters, orderBy, withTracking, nameof(AlarmLog.Alarm));
-	}
+		bool withTracking = true) => GetByWithThrow(filters, orderBy, withTracking, nameof(AlarmLog.Alarm));
 
 	public Task<List<AlarmLog>> GetAllWithIncludes(
 		Expression<Func<AlarmLog, bool>>[]? filters = null,
 		Func<IQueryable<AlarmLog>, IOrderedQueryable<AlarmLog>>? orderBy = null,
-		bool withTracking = true)
-	{
-		return GetAll(filters, orderBy, withTracking, includes: nameof(AlarmLog.Alarm));
-	}
+		bool withTracking = true) => GetAll(filters, orderBy, withTracking, includes: nameof(AlarmLog.Alarm));
 
 	public Task<int> AckAlarmLogs(int[] idAlarmLogs)
 	{

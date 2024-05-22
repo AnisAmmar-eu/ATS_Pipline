@@ -91,7 +91,7 @@ public class ToMatchService :
 		return cycle;
 	}
 
-	public async Task UpdateAnode(MatchableCycle cycle, string? cycleRID)
+	public async Task UpdateAnode(MatchableCycle cycle, string? cycleRID, bool isChained)
 	{
 		if (cycleRID is null)
 			return;
@@ -105,9 +105,31 @@ public class ToMatchService :
 				);
 
 			if (cycle is S3S4Cycle)
+			{
 				anode.S3S4Cycle = cycle as S3S4Cycle;
+				anode.S3S4SignStatus1 = cycle.SignStatus1;
+				anode.S3S4SignStatus2 = cycle.SignStatus2;
+				anode.SS3S4MatchingCamera1 = cycle.MatchingCamera1;
+				anode.S3S4MatchingCamera2 = cycle.MatchingCamera2;
+				anode.S3S4TSFirstShooting = cycle.TSFirstShooting;
+				anode.IsComplete = cycle.AnodeType == AnodeTypeDict.D20;
+			}
 			else
+			{
 				((AnodeDX)anode).S5Cycle = cycle as S5Cycle;
+				((AnodeDX)anode).SSignStatus1 = cycle.SignStatus1;
+				((AnodeDX)anode).S5SignStatus2 = cycle.SignStatus2;
+				((AnodeDX)anode).S5MatchingCamera1 = cycle.MatchingCamera1;
+				((AnodeDX)anode).S5MatchingCamera2 = cycle.MatchingCamera2;
+				((AnodeDX)anode).S5TSFirstShooting = cycle.TSFirstShooting;
+				anode.IsComplete = cycle.AnodeType == AnodeTypeDict.DX;
+
+				if (isChained)
+				{
+					((S5Cycle)cycle).ChainCycle = await _anodeUOW.StationCycle.GetByWithThrow(
+						[cycle => cycle.RID == cycleRID]) as S3S4Cycle;
+				}
+			}
 
 			_anodeUOW.Commit();
 		}

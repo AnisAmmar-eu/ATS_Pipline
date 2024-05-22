@@ -29,6 +29,7 @@ public abstract partial class Anode
 		S1S2Cycle = cycle;
 		S1S2CycleID = cycle.ID;
 		CycleRID = cycle.RID;
+		SerialNumber = cycle.SerialNumber;
 	}
 
 	public override DTOAnode ToDTO()

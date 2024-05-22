@@ -25,4 +25,6 @@ public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>
 	public SignMatchStatus S3S4SignStatus2 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus SS3S4MatchingCamera1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus S3S4MatchingCamera2 { get; set; } = SignMatchStatus.NA;
+
+	public bool IsComplete { get; set; }
 }
