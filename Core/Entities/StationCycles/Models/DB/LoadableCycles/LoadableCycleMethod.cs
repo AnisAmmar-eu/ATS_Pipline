@@ -1,4 +1,5 @@
 using Core.Entities.StationCycles.Models.DTO.LoadableCycles;
+using Mapster;
 
 namespace Core.Entities.StationCycles.Models.DB.LoadableCycles;
 
@@ -8,9 +9,5 @@ public abstract partial class LoadableCycle
 	{
 	}
 
-	protected LoadableCycle(DTOLoadableCycle dtoLoadableCycle) : base(dtoLoadableCycle)
-	{
-	}
-
-	public override DTOLoadableCycle ToDTO() => new(this);
+	public override DTOLoadableCycle ToDTO() => this.Adapt<DTOLoadableCycle>();
 }

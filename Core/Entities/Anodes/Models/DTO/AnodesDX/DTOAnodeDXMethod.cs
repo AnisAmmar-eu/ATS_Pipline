@@ -1,5 +1,6 @@
 using Core.Entities.Anodes.Dictionaries;
 using Core.Entities.Anodes.Models.DB.AnodesDX;
+using Mapster;
 
 namespace Core.Entities.Anodes.Models.DTO.AnodesDX;
 
@@ -10,12 +11,11 @@ public partial class DTOAnodeDX
 		AnodeType = AnodeTypes.DX;
 	}
 
-	public DTOAnodeDX(AnodeDX anodeDX) : base(anodeDX)
+	public override AnodeDX ToModel()
 	{
+		AnodeDX anodeDX = this.Adapt<AnodeDX>();
 		AnodeType = AnodeTypes.DX;
-		S5CycleID = anodeDX.S5CycleID;
-		S5Cycle = anodeDX.S5Cycle?.ToDTO();
+		anodeDX.S5Cycle = S5Cycle?.ToModel();
+		return anodeDX;
 	}
-
-	public override AnodeDX ToModel() => new(this);
 }

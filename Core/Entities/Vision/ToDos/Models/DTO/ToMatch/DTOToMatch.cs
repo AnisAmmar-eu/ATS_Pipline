@@ -5,6 +5,7 @@ namespace Core.Entities.Vision.ToDos.Models.DTO.ToMatchs;
 
 public partial class DTOToMatch : DTOToDo, IDTO<ToMatch, DTOToMatch>
 {
-	public int GateID { get; set; }
-	public int CandidateGateID { get; set; }
+	public int InstanceMatchID { get; set; }
+	public int NbActiveAlarms { get; set; }
+	public bool HasPlug { get; set; }
 }

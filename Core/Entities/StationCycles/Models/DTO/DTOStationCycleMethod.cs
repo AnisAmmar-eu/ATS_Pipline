@@ -6,6 +6,7 @@ using Core.Entities.StationCycles.Models.DTO.LoadableCycles.S1S2Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S5Cycles;
 using Core.Shared.Exceptions;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 
 namespace Core.Entities.StationCycles.Models.DTO;
@@ -45,7 +46,15 @@ public partial class DTOStationCycle
 		AlarmListPacket = stationCycle.AlarmListPacket?.ToDTO();
 	}
 
-	public override StationCycle ToModel() => new(this);
+	public override StationCycle ToModel()
+	{
+		StationCycle stationCycle = this.Adapt<StationCycle>();
+		stationCycle.MetaDataPacket = MetaDataPacket?.ToModel();
+		stationCycle.Shooting1Packet = Shooting1Packet?.ToModel();
+		stationCycle.Shooting2Packet = Shooting2Packet?.ToModel();
+		stationCycle.AlarmListPacket = AlarmListPacket?.ToModel();
+		return stationCycle;
+	}
 
 	public static async ValueTask<DTOStationCycle?> BindAsync(HttpContext context, ParameterInfo parameter)
 	{

@@ -8,6 +8,7 @@ using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Models.Structs;
 using Core.Shared.Dictionaries;
+using Mapster;
 
 namespace Core.Entities.StationCycles.Models.DB;
 
@@ -17,33 +18,15 @@ public partial class StationCycle
 	{
 	}
 
-	public StationCycle(DTOStationCycle dtoStationCycle)
+	public override DTOStationCycle ToDTO()
 	{
-		AnodeType = dtoStationCycle.AnodeType;
-		StationID = dtoStationCycle.StationID;
-		RID = dtoStationCycle.RID;
-		SerialNumber = dtoStationCycle.SerialNumber;
-		Status = dtoStationCycle.Status;
-		TSFirstShooting = dtoStationCycle.TSFirstShooting;
-		SignStatus1 = dtoStationCycle.SignStatus1;
-		SignStatus2 = dtoStationCycle.SignStatus2;
-
-		MetaDataID = dtoStationCycle.MetaDataID;
-		MetaDataPacket = dtoStationCycle.MetaDataPacket?.ToModel();
-
-		Picture1Status = dtoStationCycle.Picture1Status;
-		Shooting1ID = dtoStationCycle.Shooting1ID;
-		Shooting1Packet = dtoStationCycle.Shooting1Packet?.ToModel();
-
-		Picture2Status = dtoStationCycle.Picture2Status;
-		Shooting2ID = dtoStationCycle.Shooting2ID;
-		Shooting2Packet = dtoStationCycle.Shooting2Packet?.ToModel();
-
-		AlarmListID = dtoStationCycle.AlarmListID;
-		AlarmListPacket = dtoStationCycle.AlarmListPacket?.ToModel();
+		DTOStationCycle dtoStationCycle = this.Adapt<DTOStationCycle>();
+		dtoStationCycle.MetaDataPacket = MetaDataPacket?.ToDTO();
+		dtoStationCycle.Shooting1Packet = Shooting1Packet?.ToDTO();
+		dtoStationCycle.Shooting2Packet = Shooting2Packet?.ToDTO();
+		dtoStationCycle.AlarmListPacket = AlarmListPacket?.ToDTO();
+		return dtoStationCycle;
 	}
-
-	public override DTOStationCycle ToDTO() => new(this);
 
 	/// <summary>
 	/// Assigns a packet to the station cycle.

@@ -1,5 +1,6 @@
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.Shootings;
+using Mapster;
 
 namespace Core.Entities.Packets.Models.DTO.Shootings;
 
@@ -10,14 +11,10 @@ public partial class DTOShooting
 		Type = PacketTypes.Shooting;
 	}
 
-	public DTOShooting(Shooting shooting) : base(shooting)
+	public override Shooting ToModel()
 	{
+		Shooting shooting = this.Adapt<Shooting>();
 		Type = PacketTypes.Shooting;
-		ShootingTS = shooting.ShootingTS;
-		AnodeType = shooting.AnodeType;
-		Cam01Status = shooting.Cam01Status;
-		Cam02Status = shooting.Cam02Status;
+		return shooting;
 	}
-
-	public override Shooting ToModel() => new(this);
 }

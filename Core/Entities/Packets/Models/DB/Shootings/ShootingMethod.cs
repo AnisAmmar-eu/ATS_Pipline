@@ -5,6 +5,7 @@ using Core.Entities.IOT.Dictionaries;
 using Core.Entities.Packets.Models.DTO.Shootings;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
+using Mapster;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Entities.Packets.Models.DB.Shootings;
@@ -15,15 +16,7 @@ public partial class Shooting
 	{
 	}
 
-	public Shooting(DTOShooting dtoShooting) : base(dtoShooting)
-	{
-		ShootingTS = dtoShooting.ShootingTS;
-		AnodeType = dtoShooting.AnodeType;
-		Cam01Status = dtoShooting.Cam01Status;
-		Cam02Status = dtoShooting.Cam02Status;
-	}
-
-	public override DTOShooting ToDTO() => new(this);
+	public override DTOShooting ToDTO() => this.Adapt<DTOShooting>();
 
 	public static FileInfo GetImagePathFromRoot(
 		string rid,

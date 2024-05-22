@@ -1,5 +1,6 @@
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.LoadableCycles.S1S2Cycles;
+using Mapster;
 
 namespace Core.Entities.StationCycles.Models.DTO.LoadableCycles.S1S2Cycles;
 
@@ -10,10 +11,5 @@ public partial class DTOS1S2Cycle
 		CycleType = CycleTypes.S1S2;
 	}
 
-	public DTOS1S2Cycle(S1S2Cycle s1S2Cycle) : base(s1S2Cycle)
-	{
-		CycleType = CycleTypes.S1S2;
-	}
-
-	public override S1S2Cycle ToModel() => new(this);
+	public override S1S2Cycle ToModel() => this.Adapt<S1S2Cycle>();
 }

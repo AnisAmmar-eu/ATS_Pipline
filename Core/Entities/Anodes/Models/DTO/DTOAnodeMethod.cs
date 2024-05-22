@@ -58,12 +58,12 @@ public partial class DTOAnode
 	private static Type GetDTOType(string? type)
 	{
 		return (type is null)
-			?           throw new EntityNotFoundException("Packet type is null")
+			? throw new EntityNotFoundException("Packet type is null")
 			: type switch {
-			AnodeTypes.D20 => typeof(DTOAnodeD20),
-			AnodeTypes.DX => typeof(DTOAnodeDX),
-			AnodeTypes.UNDEFINED => typeof(DTOAnode),
-			_ => typeof(DTOAnode),
-		};
+				AnodeTypes.D20 => typeof(DTOAnodeD20),
+				AnodeTypes.DX => typeof(DTOAnodeDX),
+				AnodeTypes.UNDEFINED => typeof(DTOAnode),
+				_ => typeof(DTOAnode),
+			};
 	}
 }
