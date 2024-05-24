@@ -8,15 +8,14 @@ namespace Core.Entities.KPIData.KPIs.Models.DB;
 
 public partial class KPI : BaseEntity, IBaseEntity<KPI, DTOKPI>
 {
-    public int NbCandidats { get; set; }
-    public int Threshold { get; set; }
-    public int MScore { get; set; }
-    public int NMminScore { get; set; }
-    public int NMmaxScore { get; set; }
-    public double NMAvg { get; set; }
-    public double NMStdev {  get; set; }
-    public long ComputeTime {  get; set; }
-
-    public MatchableCycle StationCycle { get; set; }
-    public List<TenBestMatch> TenBestMatches { get; set; } = [];
+	public int NbCandidats { get; set; }
+	public int Threshold { get; set; }
+	public int MScore { get; set; }
+	public int NMminScore { get; set; }
+	public int NMmaxScore { get; set; }
+	public double NMAvg { get; set; }
+	public double NMStdev { get; set; }
+	public long ComputeTime { get; set; }
+	public MatchableCycle StationCycle { get; set; }
+	public List<TenBestMatch> TenBestMatches { get; set; } = [];
 }

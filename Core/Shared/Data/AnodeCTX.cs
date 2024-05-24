@@ -203,6 +203,27 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.ClientSetNull);
 
+		/*builder.Entity<S1S2Cycle>()
+			.HasOne(stationCycle => stationCycle.Anode)
+			.WithOne(anode => anode.S1S2Cycle)
+			.HasForeignKey<S1S2Cycle>(stationCycle => stationCycle.AnodeID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.ClientSetNull);
+
+		builder.Entity<S3S4Cycle>()
+			.HasOne(stationCycle => stationCycle.Anode)
+			.WithOne(anode => anode.S3S4Cycle)
+			.HasForeignKey<S3S4Cycle>(stationCycle => stationCycle.AnodeID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.ClientSetNull);
+
+		builder.Entity<S5Cycle>()
+			.HasOne(stationCycle => stationCycle.Anode)
+			.WithOne(anode => anode.S5Cycle)
+			.HasForeignKey<S5Cycle>(stationCycle => stationCycle.AnodeID)
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.ClientSetNull);*/
+
 		builder.Entity<S3S4Cycle>()
 			.HasOne(s3S4Cycle => s3S4Cycle.InFurnacePacket)
 			.WithOne(packet => packet.StationCycle as S3S4Cycle)
