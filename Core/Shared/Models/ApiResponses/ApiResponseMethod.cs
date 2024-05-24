@@ -65,10 +65,7 @@ public partial class ApiResponse
 		Status = new() { Code = code, Message = message };
 	}
 
-	public JsonHttpResult<ApiResponse> SuccessResult()
-	{
-		return TypedResults.Json(this, JsonOptions);
-	}
+	public JsonHttpResult<ApiResponse> SuccessResult() => TypedResults.Json(this, JsonOptions);
 
 	public async Task<JsonHttpResult<ApiResponse>> SuccessResult(ILogService logService, HttpContext httpContext)
 	{

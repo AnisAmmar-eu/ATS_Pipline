@@ -14,12 +14,14 @@ public abstract partial class Anode : BaseEntity, IBaseEntity<Anode, DTOAnode>
 
 	public int? S1S2CycleID { get; set; }
 	public S1S2Cycle? S1S2Cycle { get; set; }
+	public string? S1S2StationID { get; set; }
 	public DateTimeOffset? S1S2TSFirstShooting { get; set; }
 	public SignMatchStatus S1S2SignStatus1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus S1S2SignStatus2 { get; set; } = SignMatchStatus.NA;
 
 	public int? S3S4CycleID { get; set; }
 	public S3S4Cycle? S3S4Cycle { get; set; }
+	public string? S3S4StationID { get; set; }
 	public DateTimeOffset? S3S4TSFirstShooting { get; set; }
 	public SignMatchStatus S3S4SignStatus1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus S3S4SignStatus2 { get; set; } = SignMatchStatus.NA;

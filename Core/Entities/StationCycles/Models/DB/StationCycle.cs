@@ -38,7 +38,6 @@ public partial class StationCycle : BaseEntity, IBaseEntity<StationCycle, DTOSta
 
 	public Anode? Anode { get; set; }
 
-	public int InstanceMatchID { get; set; }
 	public int NbActiveAlarms { get; set; }
 	public bool HasPlug { get; set; }
 }

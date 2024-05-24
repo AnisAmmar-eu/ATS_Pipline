@@ -37,7 +37,7 @@ public class SendLogService : BackgroundService
 		{
 			try
 			{
-				// await logService.SendLogs(await logService.GetAllUnsent());
+				await logService.SendLogs(await logService.GetAllUnsent());
 			}
 			catch (Exception ex)
 			{

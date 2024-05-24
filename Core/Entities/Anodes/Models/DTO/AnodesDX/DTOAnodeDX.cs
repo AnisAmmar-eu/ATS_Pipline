@@ -12,6 +12,7 @@ public partial class DTOAnodeDX : DTOAnode, IDTO<AnodeDX, DTOAnodeDX>
 
 	public int? S5CycleID { get; set; }
 	public DTOS5Cycle? S5Cycle { get; set; }
+	public string? S5StationID { get; set; }
 	public DateTimeOffset? S5TSFirstShooting { get; set; }
 	public SignMatchStatus SSignStatus1 { get; set; } = SignMatchStatus.NA;
 	public SignMatchStatus S5SignStatus2 { get; set; } = SignMatchStatus.NA;
