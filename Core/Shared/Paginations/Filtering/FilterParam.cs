@@ -15,7 +15,7 @@ public class FilterParam
 	/// The value to which the entity value will be compared to.
 	/// In case of the "IsType" operation, the type is compared to the entity itself and not one of its properties.
 	/// </summary>
-	public string FilterValue { get; set; } = string.Empty;
+	public List<string> FilterValue { get; set; } = [];
 
 	/// <summary>
 	/// The "name" of which filter to use to make it "user-friendly". It is then converted to an enum for internal
