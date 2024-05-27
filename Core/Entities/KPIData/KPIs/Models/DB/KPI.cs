@@ -16,6 +16,7 @@ public partial class KPI : BaseEntity, IBaseEntity<KPI, DTOKPI>
 	public double NMAvg { get; set; }
 	public double NMStdev { get; set; }
 	public long ComputeTime { get; set; }
+
 	public MatchableCycle StationCycle { get; set; }
 	public List<TenBestMatch> TenBestMatches { get; set; } = [];
 }

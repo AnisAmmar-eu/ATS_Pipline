@@ -29,18 +29,12 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
 	private static Task<JsonHttpResult<ApiResponse>> GetMostRecent(
 		IPacketService packetService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(packetService.GetMostRecentShooting, logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(packetService.GetMostRecentShooting, logService, httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> GetOldest(
 		IPacketService packetService,
 		ILogService logService,
-		HttpContext httpContext)
-	{
-		return GenericEndpoint(packetService.GetOldestNotSentTimestamp, logService, httpContext);
-	}
+		HttpContext httpContext) => GenericEndpoint(packetService.GetOldestNotSentTimestamp, logService, httpContext);
 
 	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetImageFromIDAndCamera(
 		int shootingID,

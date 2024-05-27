@@ -20,6 +20,8 @@ public partial class DTOStationKPI
 
 		this.NMScoreAvg = CalculateNMScoreAvg(kpis);
 		this.MScoreAvg = CalculateMScoreAvg(kpis);
+		//manque appel
+		this.MScoreStdev = CalculateMScoreStdev(kpis);
 		this.NMScoreStdev = CalculateNMScoreStdev(kpis);
 
 		this.IDRate = (AnodeRecognized == 0) ? 0 : AnodeCount / AnodeRecognized;

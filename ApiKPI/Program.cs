@@ -56,12 +56,10 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 builder.Services.AddCarter();
 
 builder.Services.AddCors(
-	options =>
-	{
+	options => {
 		options.AddPolicy(
 			"AllowOrigin",
-			policyBuilder =>
-			{
+			policyBuilder => {
 				policyBuilder.AllowAnyOrigin()
 					.AllowAnyMethod()
 					.AllowAnyHeader();

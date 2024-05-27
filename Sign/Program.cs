@@ -54,7 +54,7 @@ if (bool.Parse(dbInitialize))
 
 ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
 
-string dLLPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
+string dllPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 
 // FolderPath = FolderParams//StationName//AnodeType//CameraID
 string anodeType = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
@@ -63,7 +63,7 @@ string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDict
 
 string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
 
-DLLVisionImport.SetDllDirectory(dLLPath);
+DLLVisionImport.SetDllDirectory(dllPath);
 int retInit = DLLVisionImport.fcx_init();
 string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 
