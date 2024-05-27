@@ -13,21 +13,11 @@ public abstract partial class Anode
 	{
 	}
 
-	protected Anode(DTOAnode dtoAnode)
-	{
-		CycleRID = dtoAnode.CycleRID;
-
-		S1S2CycleID = dtoAnode.S1S2CycleID;
-		S1S2Cycle = dtoAnode.S1S2Cycle?.ToModel();
-
-		S3S4CycleID = dtoAnode.S3S4CycleID;
-		S3S4Cycle = dtoAnode.S3S4Cycle?.ToModel();
-	}
-
 	protected Anode(S1S2Cycle cycle)
 	{
 		S1S2Cycle = cycle;
 		S1S2CycleID = cycle.ID;
+		S1S2StationID = cycle.StationID;
 		CycleRID = cycle.RID;
 		SerialNumber = cycle.SerialNumber;
 	}
