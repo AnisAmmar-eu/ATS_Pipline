@@ -23,18 +23,12 @@ public class KPIService :
 		List<string> stationOrigin)
 	{
 		List<DTOStationKPI> dTOStationKPIs = [];
-		/*List<MatchableCycle> cycles = (await _anodeUOW.StationCycle
+		List<MatchableCycle> cycles = (await _anodeUOW.StationCycle
 			.GetAll(
 				[cycle => cycle is MatchableCycle && cycle.TS >= start && cycle.TS <= end && anodeTypes.Contains(cycle.AnodeType)],
 				includes: [nameof(MatchableCycle.KPI), nameof(MatchableCycle.Anode)]))
 			.Cast<MatchableCycle>()
 			.Where(cycle => cycle.Anode is not null && stationOrigin.Contains($"S{cycle.Anode.CycleRID[0].ToString()}"))
-			.ToList();*/
-		List<MatchableCycle> cycles = (await _anodeUOW.StationCycle
-			.GetAll(
-				[cycle => cycle is MatchableCycle],
-				includes: [nameof(MatchableCycle.KPI), nameof(MatchableCycle.Anode)]))
-			.Cast<MatchableCycle>()
 			.ToList();
 
 		Console.WriteLine($"Cycles récupérés : {cycles.Count.ToString()}");
@@ -44,7 +38,7 @@ public class KPIService :
 		foreach (int stationID in stationIDs)
 		{
 			List<MatchableCycle> cyclesToKPI = cycles.Where(cycle => cycle.StationID == stationID).ToList();
-			Console.WriteLine($"StationID : {stationID}, Nombre de cycles pour KPI : {cyclesToKPI.Count}");
+			Console.WriteLine($"StationID : {stationID.ToString()}, Nombre de cycles pour KPI : {cyclesToKPI.Count.ToString()}");
 
 			if (!Station.IsMatchStation(stationID) || cyclesToKPI.Count == 0)
 				continue;
@@ -52,7 +46,7 @@ public class KPIService :
 			dTOStationKPIs.Add(new DTOStationKPI(cyclesToKPI));
 		}
 
-		Console.WriteLine($"Nombre total de DTOStationKPIs  : {dTOStationKPIs.Count}");
+		Console.WriteLine($"Nombre total de DTOStationKPIs  : {dTOStationKPIs.Count.ToString()}");
 		return dTOStationKPIs;
 	}
 }

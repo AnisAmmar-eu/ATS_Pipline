@@ -15,6 +15,8 @@ public class StationCycleRepository :
 	{
 	}
 
+	public Task GetAll(Func<object, bool> value, object includes) => throw new NotImplementedException();
+
 	public Task<List<StationCycle>> GetAllWithIncludes(
 		Expression<Func<StationCycle, bool>>[]? filters = null,
 		Func<IQueryable<StationCycle>, IOrderedQueryable<StationCycle>>? orderBy = null,
