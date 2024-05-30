@@ -79,6 +79,8 @@ builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
 
+builder.Services.AddOutputCache();
+
 if (!Station.IsServer)
 {
 	builder.Services.AddSingleton<SendPacketService>();
@@ -124,5 +126,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapCarter();
+
+app.UseOutputCache();
 
 app.Run();

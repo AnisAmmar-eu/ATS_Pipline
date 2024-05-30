@@ -10,7 +10,6 @@ using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.SystemApp.Logs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +23,13 @@ public class StationCycleEndpoint :
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
-		group.MapGet("status", () => new ApiResponse().SuccessResult());
-		group.MapGet("signMatchResults", GetSignMatchResults);
+		group.MapGet(
+			"status",
+			() => {
+				return new ApiResponse().SuccessResult();
+			})
+			.CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("signMatchResults", GetSignMatchResults).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
 		group.MapGet("mainSecondHole", GetMainSecondHole);
 		group.MapGet("anodeCounterByAnodeType", GetAnodeCounterByAnodeType);
 		group.MapGet("anodeCounterByStation", GetAnodeCounterByStation);
@@ -94,6 +98,7 @@ public class StationCycleEndpoint :
 			logService,
 			httpContext);
 	}
+
 	private static Task<JsonHttpResult<ApiResponse>> GetMainSecondHole(
 		int? stationId,
 		IStationCycleService stationCycleService,
