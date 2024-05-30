@@ -12,7 +12,7 @@ public partial class DTOStationKPI
 		this.AnodeCount = cycles.Count;
 		this.AnodeRecognized = GetMatchedStationCycles(cycles).Count;
 
-		List<KPI> kpis = cycles.ConvertAll(cycle => cycle.KPI);
+		List<KPI> kpis = cycles.ConvertAll(cycle => cycle.KPI!);
 
 		this.RSizeAvg = AverageRSize(kpis);
 		this.RSizePeak = PeakRSize(kpis);
@@ -20,7 +20,6 @@ public partial class DTOStationKPI
 
 		this.NMScoreAvg = CalculateNMScoreAvg(kpis);
 		this.MScoreAvg = CalculateMScoreAvg(kpis);
-		//manque appel
 		this.MScoreStdev = CalculateMScoreStdev(kpis);
 		this.NMScoreStdev = CalculateNMScoreStdev(kpis);
 
