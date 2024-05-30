@@ -10,4 +10,8 @@ public interface IStationCycleService : IBaseEntityService<StationCycle, DTOStat
 	public Task<DTOReducedStationCycle?> GetMostRecentWithIncludes();
 	public Task<List<DTOReducedStationCycle>> GetAllRIDs();
 	public Task<FileInfo> GetImagesFromIDAndCamera(int id, int camera);
+	public Task<int[]> GetSignMatchResults(int? stationId);
+	public Task<int[]> GetMainAndSecondHoleStatus(int? stationId);
+	public Task<int[]> GetAnodeCounterByAnodeType();
+	public Task<int[]> GetAnodeCounterByStation();
 }
