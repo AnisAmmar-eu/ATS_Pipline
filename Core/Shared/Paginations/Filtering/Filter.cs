@@ -107,7 +107,20 @@ public static class Filter
 		}
 
 		string[] names = filterParam.ColumnName.Split('.');
-		PropertyInfo filterColumn = GetColumnProperty<T>(names);
+
+		// Apply cast type if specified
+		Expression propertyAccess;
+		if (!string.IsNullOrEmpty(filterParam.CastToType))
+		{
+			Type castType = GetTypeByName(filterParam.CastToType);
+			propertyAccess = GetExpressionProperty(Expression.Convert(param, castType), names);
+		}
+		else
+		{
+			propertyAccess = GetExpressionProperty(param, names);
+		}
+
+		PropertyInfo filterColumn = GetColumnProperty<T>(names, filterParam.CastToType);
 		if (filterOption == FilterOption.Nothing)
 			return Expression.Constant(true);
 
@@ -156,13 +169,15 @@ public static class Filter
 	/// Value column is accessed with [ "Value" ] from T = Foo.
 	/// </summary>
 	/// <param name="names">An array of strings for nested parameters</param>
+	/// <param name="castToType">Type to cast to</param>
 	/// <typeparam name="T">Type from which column is queried</typeparam>
 	/// <returns>The property info of the (possibly nested) queried column</returns>
 	/// <exception cref="InvalidDataException">Thrown if no PropertyInfo is found due to invalid name</exception>
-	private static PropertyInfo GetColumnProperty<T>(string[] names)
+	private static PropertyInfo GetColumnProperty<T>(string[] names, string? castToType = null)
 	{
 		PropertyInfo? propertyInfo = null;
-		Type type = typeof(T);
+		Type type = (castToType is null) ? typeof(T) : GetTypeByName(castToType);
+
 		foreach (string name in names)
 		{
 			propertyInfo = type.GetProperty(
@@ -177,6 +192,14 @@ public static class Filter
 		return propertyInfo ?? throw new InvalidDataException("FilterParam Column name is invalid.");
 	}
 
+	private static Type GetTypeByName(string typeName)
+	{
+		return AppDomain.CurrentDomain.GetAssemblies()
+			.SelectMany(c => c.GetTypes())
+			.FirstOrDefault(c => c.Name == typeName && !c.AssemblyQualifiedName!.Contains("Migration"))
+			?? throw new ArgumentException("Filter: Trying to cast to a type which does not exist.");
+	}
+
 	/// <summary>
 	/// Similar to <see cref="GetColumnProperty{T}"/>,
 	/// except it returns an Expression accessing this (potentially nested) property instead of its PropertyInfo
@@ -184,7 +207,7 @@ public static class Filter
 	/// <param name="param">Parameter expression on which to access property</param>
 	/// <param name="names">An array of strings for nested parameters</param>
 	/// <returns>An expression accessing this property from param</returns>
-	private static Expression GetExpressionProperty(ParameterExpression param, string[] names)
+	private static Expression GetExpressionProperty(Expression param, string[] names)
 	{
 		Expression property = Expression.Property(param, names[0]);
 		for (int i = 1; i < names.Length; ++i)

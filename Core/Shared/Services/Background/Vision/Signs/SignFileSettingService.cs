@@ -26,7 +26,7 @@ public class SignFileSettingService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		int FileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
+		int fileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
 		string archivePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
 		string folderParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
 		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
@@ -42,7 +42,7 @@ public class SignFileSettingService : BackgroundService
 		/// <remarks>If exists sets them in the DLL then move them in archive</remarks>
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			await Task.Delay(TimeSpan.FromSeconds(FileSettingsTimer), stoppingToken);
+			await Task.Delay(TimeSpan.FromSeconds(fileSettingsTimer), stoppingToken);
 			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
 			try
