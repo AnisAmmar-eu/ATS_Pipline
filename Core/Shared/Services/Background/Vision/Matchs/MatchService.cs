@@ -123,7 +123,7 @@ public class MatchService : BackgroundService
 								int retFree = DLLVisionImport.fcx_matchRet_free(retMatch);
 
 								if (!isChained)
-									await toMatchService.UpdateAnode(cycle, cycleRID);
+									await toMatchService.UpdateAnode(cycle, cycleRID, isChained);
 
 								foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, anodeUOW))
 								{

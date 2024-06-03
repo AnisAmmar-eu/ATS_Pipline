@@ -3,6 +3,7 @@ using Core.Entities.Alarms.AlarmsRT.Models.DB;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Shared.UnitOfWork.Interfaces;
+using Mapster;
 
 namespace Core.Entities.Packets.Models.DB.AlarmLists;
 
@@ -10,19 +11,10 @@ public partial class AlarmList
 {
 	public AlarmList()
 	{
-		AlarmCycles = new List<AlarmCycle>();
+		AlarmCycles = [];
 	}
 
-	public AlarmList(DTOAlarmList dto) : base(dto)
-	{
-		AlarmCycles = dto.AlarmCycles.ToList().ConvertAll(dtoAlarmCycle => {
-			AlarmCycle alarmCycle = dtoAlarmCycle.ToModel();
-			alarmCycle.AlarmList = this;
-			return alarmCycle;
-		});
-	}
-
-	public override DTOAlarmList ToDTO() => new(this);
+	public override DTOAlarmList ToDTO() => this.Adapt<DTOAlarmList>();
 
 	protected override async Task InheritedBuild(IAnodeUOW anodeUOW)
 	{

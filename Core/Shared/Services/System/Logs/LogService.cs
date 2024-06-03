@@ -25,14 +25,9 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 	}
 
 	public async Task<List<DTOLog>> GetRange(int start, int nbItems)
-	{
-		return (await _anodeUOW.Log.GetRange(start, nbItems)).ConvertAll(log => log.ToDTO());
-	}
+		=> (await _anodeUOW.Log.GetRange(start, nbItems)).ConvertAll(log => log.ToDTO());
 
-	public Task<List<Log>> GetAllUnsent()
-	{
-		return _anodeUOW.Log.GetAll([log => !log.HasBeenSent], withTracking: false);
-	}
+	public Task<List<Log>> GetAllUnsent() => _anodeUOW.Log.GetAll([log => !log.HasBeenSent], withTracking: false);
 
 	public async Task SendLogs(List<Log> logs)
 	{
@@ -79,10 +74,7 @@ public class LogService : BaseEntityService<ILogRepository, Log, DTOLog>, ILogSe
 		await _anodeUOW.CommitTransaction();
 	}
 
-	public Task DeleteAllLogs()
-	{
-		return _anodeUOW.Log.DeleteAll();
-	}
+	public Task DeleteAllLogs() => _anodeUOW.Log.DeleteAll();
 
 	public async Task Create(
 		DateTimeOffset date,

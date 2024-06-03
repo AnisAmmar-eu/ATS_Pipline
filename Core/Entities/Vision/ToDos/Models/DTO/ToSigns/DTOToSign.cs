@@ -6,4 +6,6 @@ namespace Core.Entities.Vision.ToDos.Models.DTO.ToSigns;
 public partial class DTOToSign : DTOToDo, IDTO<ToSign, DTOToSign>
 {
 	public int CameraID { get; set; }
+	public int NbActiveAlarms { get; set; }
+	public bool HasPlug { get; set; }
 }

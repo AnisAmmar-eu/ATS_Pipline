@@ -37,10 +37,7 @@ public static class FilterOptionMap
 		{ "IsType", FilterOption.IsType },
 	};
 
-	public static FilterOption Get(string key)
-	{
-		return Map[key];
-	}
+	public static FilterOption Get(string key) => Map[key];
 }
 
 public enum FilterOption

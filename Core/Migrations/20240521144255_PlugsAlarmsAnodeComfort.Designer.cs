@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240521144255_PlugsAlarmsAnodeComfort")]
+    partial class PlugsAlarmsAnodeComfort
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,9 +205,6 @@ namespace Core.Migrations
                     b.Property<int>("S1S2SignStatus2")
                         .HasColumnType("int");
 
-                    b.Property<int?>("S1S2StationID")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset?>("S1S2TSFirstShooting")
                         .HasColumnType("datetimeoffset");
 
@@ -218,9 +218,6 @@ namespace Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("S3S4SignStatus2")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("S3S4StationID")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("S3S4TSFirstShooting")
@@ -1261,9 +1258,6 @@ namespace Core.Migrations
                     b.Property<int>("S5SignStatus2")
                         .HasColumnType("int");
 
-                    b.Property<int?>("S5StationID")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset?>("S5TSFirstShooting")
                         .HasColumnType("datetimeoffset");
 
@@ -1621,9 +1615,6 @@ namespace Core.Migrations
                 {
                     b.HasBaseType("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle");
 
-                    b.Property<int?>("ChainCycleID")
-                        .HasColumnType("int");
-
                     b.Property<int>("ChainMatchingCamera1")
                         .HasColumnType("int");
 
@@ -1836,10 +1827,6 @@ namespace Core.Migrations
 
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", b =>
                 {
-                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", "ChainCycle")
-                        .WithOne("ChainCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "ID");
-
                     b.HasOne("Core.Entities.Packets.Models.DB.Furnaces.InFurnaces.InFurnace", "InFurnacePacket")
                         .WithOne("StationCycle")
                         .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "InFurnaceID");
@@ -1847,8 +1834,6 @@ namespace Core.Migrations
                     b.HasOne("Core.Entities.Packets.Models.DB.Furnaces.OutFurnaces.OutFurnace", "OutFurnacePacket")
                         .WithOne("StationCycle")
                         .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "OutFurnaceID");
-
-                    b.Navigation("ChainCycle");
 
                     b.Navigation("InFurnacePacket");
 
@@ -1928,8 +1913,6 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", b =>
                 {
                     b.Navigation("Anode");
-
-                    b.Navigation("ChainCycle");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,6 @@
-using Core.Entities.Alarms.AlarmsCycle.Models.DTO;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DB.AlarmLists;
+using Mapster;
 
 namespace Core.Entities.Packets.Models.DTO.AlarmLists;
 
@@ -9,14 +9,8 @@ public partial class DTOAlarmList
 	public DTOAlarmList()
 	{
 		Type = PacketTypes.AlarmList;
-		AlarmCycles = new List<DTOAlarmCycle>();
+		AlarmCycles = [];
 	}
 
-	public DTOAlarmList(AlarmList packet) : base(packet)
-	{
-		Type = PacketTypes.AlarmList;
-		AlarmCycles = packet.AlarmCycles.ToList().ConvertAll(alarmCycle => alarmCycle.ToDTO());
-	}
-
-	public override AlarmList ToModel() => new(this);
+	public override AlarmList ToModel() => this.Adapt<AlarmList>();
 }

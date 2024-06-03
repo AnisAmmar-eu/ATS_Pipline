@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Core.Entities.Anodes.Models.DB;
+using Core.Entities.Anodes.Models.DTO;
 using Core.Entities.Packets.Dictionaries;
 using Core.Entities.Packets.Models.DTO.AlarmLists;
 using Core.Entities.Packets.Models.DTO.MetaDatas;
@@ -45,6 +45,9 @@ public partial class DTOStationCycle :
 
 	public int? AlarmListID { get; set; }
 	public DTOAlarmList? AlarmListPacket { get; set; }
-	public int? AnodeID { get; set; }
-	public Anode? Anode { get; set; }
+	public DTOAnode? Anode { get; set; }
+
+	public int InstanceMatchID { get; set; }
+	public int NbActiveAlarms { get; set; }
+	public bool HasPlug { get; set; }
 }

@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240524132154_addStationInAnode")]
+    partial class addStationInAnode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,8 +205,8 @@ namespace Core.Migrations
                     b.Property<int>("S1S2SignStatus2")
                         .HasColumnType("int");
 
-                    b.Property<int?>("S1S2StationID")
-                        .HasColumnType("int");
+                    b.Property<string>("S1S2StationID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("S1S2TSFirstShooting")
                         .HasColumnType("datetimeoffset");
@@ -220,8 +223,8 @@ namespace Core.Migrations
                     b.Property<int>("S3S4SignStatus2")
                         .HasColumnType("int");
 
-                    b.Property<int?>("S3S4StationID")
-                        .HasColumnType("int");
+                    b.Property<string>("S3S4StationID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("S3S4TSFirstShooting")
                         .HasColumnType("datetimeoffset");
@@ -1261,8 +1264,8 @@ namespace Core.Migrations
                     b.Property<int>("S5SignStatus2")
                         .HasColumnType("int");
 
-                    b.Property<int?>("S5StationID")
-                        .HasColumnType("int");
+                    b.Property<string>("S5StationID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("S5TSFirstShooting")
                         .HasColumnType("datetimeoffset");

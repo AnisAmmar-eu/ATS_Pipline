@@ -1,6 +1,7 @@
 using System.Configuration;
 using System.Text;
 using Carter;
+using Core.Entities.Anodes.Services;
 using Core.Entities.BenchmarkTests.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
@@ -74,6 +75,7 @@ builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IBenchmarkTestService, BenchmarkTestService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();
+builder.Services.AddScoped<IAnodeService, AnodeService>();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 

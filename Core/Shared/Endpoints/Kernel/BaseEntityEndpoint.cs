@@ -142,7 +142,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 			() => {
 				FilterParam param = new() {
 					ColumnName = columnName,
-					FilterValue = filterValue,
+					FilterValue = [filterValue],
 					FilterOptionName = "Equal",
 				};
 				Pagination pagination = new() {
@@ -168,7 +168,7 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 			() => {
 				FilterParam param = new() {
 					ColumnName = columnName,
-					FilterValue = filterValue,
+					FilterValue = [filterValue],
 					FilterOptionName = "Equal",
 				};
 				Pagination pagination = new() {

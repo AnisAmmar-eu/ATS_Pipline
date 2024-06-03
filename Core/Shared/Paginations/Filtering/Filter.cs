@@ -102,7 +102,7 @@ public static class Filter
 		{
 			// Gets all possible types in the Assembly (running instance) and find the one with the same name.
 			Type? type = Assembly.GetAssembly(typeof(T))?.GetTypes().ToList()
-				.Find(t => t.Name == filterParam.FilterValue);
+				.Find(t => t.Name == filterParam.FilterValue[0]);
 			return (type is null) ? Expression.Constant(false) : Expression.TypeIs(param, type);
 		}
 
@@ -111,13 +111,17 @@ public static class Filter
 		if (filterOption == FilterOption.Nothing)
 			return Expression.Constant(true);
 
-		IComparable? refValue = ParseAsComparable(filterColumn.PropertyType, filterParam.FilterValue);
-		return (refValue is null)
-			? throw new ArgumentException("Error happened during parsing of filterValue")
-			: (Expression)GetExpressionBody(
-				filterOption,
-				GetExpressionProperty(param, names),
-				Expression.Constant(refValue, refValue.GetType()));
+		List<Expression> expressions = filterParam.FilterValue
+			.ConvertAll(value => {
+				IComparable refValue = ParseAsComparable(filterColumn.PropertyType, value)
+					?? throw new ArgumentException("Error happened during parsing of filterValue");
+				return (Expression)GetExpressionBody(
+					filterOption,
+					GetExpressionProperty(param, names),
+					Expression.Constant(refValue, refValue.GetType()));
+			});
+
+		return (expressions.Count == 0) ? Expression.Constant(true) : expressions.Aggregate(Expression.OrElse);
 	}
 
 	private static BinaryExpression GetExpressionBody(FilterOption filterOption, Expression left, Expression right)

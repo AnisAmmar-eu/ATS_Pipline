@@ -9,10 +9,6 @@ public partial class DTOLoadableCycle
 	{
 	}
 
-	public DTOLoadableCycle(LoadableCycle cycle) : base(cycle)
-	{
-	}
-
 	public override LoadableCycle ToModel()
 	{
 		return (this is DTOS1S2Cycle dtoS1S2Cycle)

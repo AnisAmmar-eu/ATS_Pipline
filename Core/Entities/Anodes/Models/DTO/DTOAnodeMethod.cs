@@ -15,18 +15,6 @@ public partial class DTOAnode
 	{
 	}
 
-	public DTOAnode(Anode anode)
-	{
-		AnodeType = AnodeTypes.UNDEFINED;
-		CycleRID = anode.CycleRID;
-
-		S1S2CycleID = anode.S1S2CycleID;
-		S1S2Cycle = anode.S1S2Cycle?.ToDTO();
-
-		S3S4CycleID = anode.S3S4CycleID;
-		S3S4Cycle = anode.S3S4Cycle?.ToDTO();
-	}
-
 	public override Anode ToModel()
 	{
 		return this switch {
@@ -58,12 +46,12 @@ public partial class DTOAnode
 	private static Type GetDTOType(string? type)
 	{
 		return (type is null)
-			?           throw new EntityNotFoundException("Packet type is null")
+			? throw new EntityNotFoundException("Packet type is null")
 			: type switch {
-			AnodeTypes.D20 => typeof(DTOAnodeD20),
-			AnodeTypes.DX => typeof(DTOAnodeDX),
-			AnodeTypes.UNDEFINED => typeof(DTOAnode),
-			_ => typeof(DTOAnode),
-		};
+				AnodeTypes.D20 => typeof(DTOAnodeD20),
+				AnodeTypes.DX => typeof(DTOAnodeDX),
+				AnodeTypes.UNDEFINED => typeof(DTOAnode),
+				_ => typeof(DTOAnode),
+			};
 	}
 }

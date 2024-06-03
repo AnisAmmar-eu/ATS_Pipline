@@ -18,6 +18,8 @@ public partial class ToMatch
 		ShootingTS = stationCycle.TSFirstShooting;
 		StationCycleID = stationCycle.ID;
 		InstanceMatchID = instanceMatchID;
+		HasPlug = stationCycle.HasPlug;
+		NbActiveAlarms = stationCycle.NbActiveAlarms;
 	}
 
 	public override DTOToMatch ToDTO() => this.Adapt<DTOToMatch>();

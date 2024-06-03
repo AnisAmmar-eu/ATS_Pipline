@@ -1,5 +1,4 @@
-﻿using Core.Entities.Packets.Models.DB;
-using Core.Entities.Packets.Models.DB.Shootings;
+﻿using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;

@@ -26,11 +26,11 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	where T : class, IBaseEntity<T, TDTO>
 	where TDTO : class, IDTO<T, TDTO>
 {
-	protected readonly ICollection<Expression<Func<T, bool>>> ImportFilters = [];
+	protected readonly ICollection<Expression<Func<T, bool>>> _importFilters = [];
 	private readonly string[] _baseIncludes;
 	private readonly Dictionary<string, string[]> _baseConcatIncludes;
 
-	protected readonly TContext Context;
+	protected readonly TContext _context;
 
 	/// <summary>
 	///     Constructor
@@ -43,7 +43,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		string[] baseIncludes,
 		Dictionary<string, string[]> baseConcatIncludes)
 	{
-		Context = context;
+		_context = context;
 		_baseIncludes = baseIncludes;
 		_baseConcatIncludes = baseConcatIncludes;
 	}
@@ -186,7 +186,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		// No tracking as this is used for back to front purposes and thus useless.
 		// First line is aggregating every include
 		IOrderedQueryable<T> query = QueryIncludes(
-			Context.Set<T>().AsQueryable(),
+			_context.Set<T>().AsQueryable(),
 			GetMergedIncludes(new() { { string.Empty, _baseIncludes.Concat(pagination.Includes).ToArray() } }))
 			.AsNoTracking()
 			.FilterFromPagination<T, TDTO>(pagination)
@@ -200,7 +200,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	{
 		return pagination.Includes
 			.Aggregate(
-				Context.Set<T>()
+				_context.Set<T>()
 					.AsQueryable(),
 				(current, value) => current.Include(value))
 			.AsNoTracking()
@@ -213,13 +213,13 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Find entities by a predicate
 	/// </summary>
 	/// <param name="expression">Predicate</param>
-	public Task<List<T>> Find(Expression<Func<T, bool>> expression) => Context.Set<T>().Where(expression).ToListAsync();
+	public Task<List<T>> Find(Expression<Func<T, bool>> expression) => _context.Set<T>().Where(expression).ToListAsync();
 
 	/// <summary>
 	///     Add an new entity in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entity"></param>
-	public async Task Add(T entity) => _ = await Context.Set<T>().AddAsync(entity);
+	public async Task Add(T entity) => _ = await _context.Set<T>().AddAsync(entity);
 
 	/// <summary>
 	///     Add an new entity in the table of <typeref name="T" /> and return the new entity as <see cref="IDTO" />
@@ -228,7 +228,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <returns>The entity <see cref="T" /> saved in the database</returns>
 	public async Task<T> AddAndReturn(T entity)
 	{
-		_ = await Context.Set<T>().AddAsync(entity);
+		_ = await _context.Set<T>().AddAsync(entity);
 		return entity;
 	}
 
@@ -236,13 +236,13 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	///     Add several entities in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entities"></param>
-	public Task AddRange(IEnumerable<T> entities) => Context.Set<T>().AddRangeAsync(entities);
+	public Task AddRange(IEnumerable<T> entities) => _context.Set<T>().AddRangeAsync(entities);
 
 	/// <summary>
 	///     Remove an entity in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entity">The entity <see cref="T" /> to remove</param>
-	public void Remove(T entity) => _ = Context.Set<T>().Remove(entity);
+	public void Remove(T entity) => _ = _context.Set<T>().Remove(entity);
 
 	/// <summary>
 	///     Remove an entitiy in the table of <typeref name="T" /> with the given ID
@@ -251,13 +251,13 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="includes"></param>
 	public async Task Remove(int id, params string[] includes)
 	{
-		IQueryable<T> query = Context.Set<T>().AsQueryable();
+		IQueryable<T> query = _context.Set<T>().AsQueryable();
 		query = _baseIncludes.Concat(includes).Aggregate(query, (current, include) => current.Include(include));
 		if (includes.Length != 0)
 			query = query.AsNoTracking();
 
 		T? entity = await query.FirstOrDefaultAsync(x => x.ID == id) ?? throw new EntityNotFoundException(typeof(T).Name, id);
-		_ = Context.Set<T>().Remove(entity);
+		_ = _context.Set<T>().Remove(entity);
 	}
 
 	/// <summary>
@@ -269,14 +269,14 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	public Task RemoveByLifeSpan(TimeSpan lifeSpan)
 	{
 		DateTimeOffset threshold = DateTimeOffset.Now.Subtract(lifeSpan);
-		return Context.Set<T>().AsQueryable().Where(t => t.TS < threshold).ExecuteDeleteAsync();
+		return _context.Set<T>().AsQueryable().Where(t => t.TS < threshold).ExecuteDeleteAsync();
 	}
 
 	/// <summary>
 	///     Remove several entities in the table of <typeref name="T" />
 	/// </summary>
 	/// <param name="entities"><see cref="IEnumerable{T}" /> of entity to remove</param>
-	public void RemoveRange(IEnumerable<T> entities) => Context.Set<T>().RemoveRange(entities);
+	public void RemoveRange(IEnumerable<T> entities) => _context.Set<T>().RemoveRange(entities);
 
 	/// <summary>
 	///     Update an entity in the table of <typeref name="T" /> and returns the updated entity
@@ -285,7 +285,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <returns>The updated entity <see cref="T" /></returns>
 	public T Update(T entity)
 	{
-		_ = Context.Set<T>().Update(entity);
+		_ = _context.Set<T>().Update(entity);
 		return entity;
 	}
 
@@ -297,7 +297,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	public T[] UpdateArray(T[] entities)
 	{
 		foreach (T entity in entities)
-			_ = Context.Set<T>().Update(entity);
+			_ = _context.Set<T>().Update(entity);
 
 		return entities;
 	}
@@ -317,7 +317,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		Expression<Func<
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties)
-				=> Context.Set<T>().Where(x => x.ID == entity.ID).ExecuteUpdateAsync(properties);
+				=> _context.Set<T>().Where(x => x.ID == entity.ID).ExecuteUpdateAsync(properties);
 
 	/// <summary>
 	///    Update an entity in the table of <typeref name="T" /> and returns the updated entity
@@ -332,7 +332,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		Expression<Func<
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>,
 			Microsoft.EntityFrameworkCore.Query.SetPropertyCalls<T>>> properties)
-				=> Context.Set<T>().Where(predicate).ExecuteUpdateAsync(properties);
+				=> _context.Set<T>().Where(predicate).ExecuteUpdateAsync(properties);
 
 	/// <summary>
 	///    Delete an entity in the table of <typeref name="T" /> and returns the number entity affected
@@ -341,7 +341,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="predicate">Predicate where</param>
 	/// <returns>The deleted entity <see cref="T" /></returns>
 	public Task<int> ExecuteDeleteAsync(
-		Expression<Func<T, bool>> predicate) => Context.Set<T>().Where(predicate).ExecuteDeleteAsync();
+		Expression<Func<T, bool>> predicate) => _context.Set<T>().Where(predicate).ExecuteDeleteAsync();
 
 	/// <summary>
 	///     Check if an element exist with the predication
@@ -369,15 +369,15 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 		Dictionary<string, string[]>? includes = null
 		)
 	{
-		IQueryable<T> query = Context.Set<T>().AsQueryable();
+		IQueryable<T> query = _context.Set<T>().AsQueryable();
 		if (includes is not null)
 			query = QueryIncludes(query, includes);
 
 		if (!withTracking)
 			query = query.AsNoTracking();
 
-		if (ImportFilters.Count > 0)
-			query = ImportFilters.Aggregate(query, (current, filter) => current.Where(filter));
+		if (_importFilters.Count > 0)
+			query = _importFilters.Aggregate(query, (current, filter) => current.Where(filter));
 
 		if (filters is not null)
 			query = filters.Aggregate(query, (current, filter) => current.Where(filter));
