@@ -60,28 +60,49 @@ string dllPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionar
 string anodeType = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 string stationName = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
 string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
+string archivePath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
 
 string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
+string folderArchive = Path.Combine(archivePath, stationName, anodeType);
 
 DLLVisionImport.SetDllDirectory(dllPath);
 int retInit = DLLVisionImport.fcx_init();
 string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
 
-int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
+bool isNotArchiveStatic = File.Exists(signStaticParams);
+int signParamsStaticOutput = isNotArchiveStatic ?
+	DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams) :
+	DLLVisionImport.fcx_register_sign_params_static(0, Path.Combine(folderArchive, ConfigDictionary.StaticSignName));
 
-logger.LogInformation("Sign SignParamStatic {static}.", signParamsStaticOutput);
+if (isNotArchiveStatic)
+	logger.LogWarning("Sign SignParamStatic {static}.", signParamsStaticOutput);
+else
+	logger.LogWarning("Archive: Sign SignParamStatic {static}.", signParamsStaticOutput);
 
 foreach (int cameraID in new int[] { 1, 2 })
 {
-	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
-	string signDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);
+	string signDynamicPathRelative = Path.Combine(cameraID.ToString(), ConfigDictionary.DynamicSignName);
+	string signDynamicParams = Path.Combine(folderWithoutCam, signDynamicPathRelative);
 
-	int signParamsDynOutput = DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, signDynamicParams);
+	bool isNotArchiveDynamic = File.Exists(signDynamicParams);
+	int signParamsDynOutput = isNotArchiveDynamic ?
+		DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, signDynamicParams) :
+		DLLVisionImport.fcx_register_sign_params_dynamic(cameraID, Path.Combine(folderArchive, signDynamicPathRelative));
 
-	logger.LogInformation(
-		"Sign with SignDyn {id} {dynamic}.",
-		cameraID,
-		signParamsDynOutput);
+	if (isNotArchiveDynamic)
+	{
+		logger.LogWarning(
+			"Sign with SignDyn {id} {dynamic}.",
+			cameraID,
+			signParamsDynOutput);
+	}
+	else
+	{
+		logger.LogWarning(
+			"Archive: Sign with SignDyn {id} {dynamic}.",
+			cameraID,
+			signParamsDynOutput);
+	}
 }
 
 host.Run();

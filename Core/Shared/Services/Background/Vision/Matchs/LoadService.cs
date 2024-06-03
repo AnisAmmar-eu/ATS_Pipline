@@ -82,8 +82,8 @@ public class LoadService : BackgroundService
 
 				foreach (ToLoad toLoad in toLoads)
 				{
-					StationCycle cycle = await anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
-					if (cycle.TSFirstShooting?.AddDays(stationDelay) < DateTimeOffset.Now)
+					StationCycle cycle =await _anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
+					if (cycle.TSFirstShooting?.AddDays(stationDelay) > DateTimeOffset.Now)
 						break;
 
 					FileInfo sanFile = Shooting.GetImagePathFromRoot(

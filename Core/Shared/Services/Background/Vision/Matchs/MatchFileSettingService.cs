@@ -53,20 +53,23 @@ public class MatchFileSettingService : BackgroundService
 					&& ((responseStatic = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParamsFile)) == 0))
 				{
 					File.Delete(Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
-					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
+					File.Move(signStaticParamsFile, Path.Combine(archivePath, ConfigDictionary.StaticSignName));
 				}
 
 				foreach (int cameraID in new int[] { 1, 2 })
 				{
 					string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
-					string matchDynamicParamsFile = Path.Combine(folderPath, ConfigDictionary.DynamicSignName);
+					string matchDynamicParamsFile = Path.Combine(folderPath, ConfigDictionary.DynamicMatchName);
 
 					int responseDynamic = 1000;
 					if (File.Exists(matchDynamicParamsFile)
 						&& ((responseDynamic = DLLVisionImport.fcx_unregister_match_params_dynamic(cameraID)) == 0)
 						&& ((responseDynamic = DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParamsFile)) == 0))
 					{
-						File.Move(matchDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(matchDynamicParamsFile)));
+						File.Delete(Path.Combine(archivePath, cameraID.ToString(), ConfigDictionary.DynamicMatchName));
+						File.Move(
+							matchDynamicParamsFile,
+							Path.Combine(archivePath, cameraID.ToString(), ConfigDictionary.DynamicMatchName));
 					}
 
 					_logger.LogInformation(

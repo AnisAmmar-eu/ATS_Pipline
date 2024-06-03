@@ -188,7 +188,7 @@ public class ToMatchService :
 					orderBy: query => query.OrderBy(
 						toSign => toSign.ShootingTS)))
 				?.ShootingTS
-				?? DateTimeOffset.Now;
+				?? DateTimeOffset.MinValue;
 
 			DateTimeOffset? oldestToLoad = (await _anodeUOW.ToLoad
 				.GetBy(
@@ -196,7 +196,7 @@ public class ToMatchService :
 					orderBy: query => query.OrderBy(
 						toLoad => toLoad.ShootingTS)))
 				?.ShootingTS
-				?? DateTimeOffset.Now;
+				?? DateTimeOffset.MinValue;
 
 			DateTimeOffset? oldestStation = DateTimeOffset.Now;
 			foreach (int stationID in stationIDs)
@@ -229,7 +229,7 @@ public class ToMatchService :
 	}
 
 	private static bool ValidDelay(DateTimeOffset? date, int delay)
-		=> (date is not null) && ((DateTimeOffset)date).AddDays(delay) > DateTimeOffset.Now;
+		=> (date is not null) && ((DateTimeOffset)date).AddDays(delay) < DateTimeOffset.Now;
 
 	public static async Task<List<int>> GetMatchInstance(string anodeType, int stationID, IAnodeUOW anodeUOW)
 	{

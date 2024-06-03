@@ -66,30 +66,55 @@ string dllPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionar
 // FolderPath = FolderParams//InstanceMatchID//CameraID
 string instanceMatchID = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.InstanceMatchID);
 string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
+string archivePath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
 
 string folderWithoutCam = Path.Combine(folderParams, instanceMatchID);
+string folderArchive = Path.Combine(archivePath, instanceMatchID);
 
 DLLVisionImport.SetDllDirectory(dllPath);
 int retInit = DLLVisionImport.fcx_init();
 string signStaticParams = Path.Combine(folderWithoutCam, ConfigDictionary.StaticSignName);
-int signParamsStaticOutput = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams);
 
-logger.LogInformation("Match SignParamStatic {static}.", signParamsStaticOutput);
+bool isNotArchiveStatic = File.Exists(signStaticParams);
+int signParamsStaticOutput = isNotArchiveStatic ?
+	DLLVisionImport.fcx_register_sign_params_static(0, signStaticParams) :
+	DLLVisionImport.fcx_register_sign_params_static(0, Path.Combine(folderArchive, Path.GetFileName(signStaticParams)));
+
+if (isNotArchiveStatic)
+	logger.LogWarning("Match SignParamStatic {static}.", signParamsStaticOutput);
+else
+	logger.LogWarning("Archive: Match SignParamStatic {static}.", signParamsStaticOutput);
 
 foreach (int cameraID in new int[] { 1, 2 })
 {
-	string folderPath = Path.Combine(folderWithoutCam, cameraID.ToString());
-	string matchDynamicParams = Path.Combine(folderPath, ConfigDictionary.DynamicMatchName);
+	string matchDynamicPathRelative = Path.Combine(cameraID.ToString(), ConfigDictionary.DynamicMatchName);
+	string matchDynamicParams = Path.Combine(folderWithoutCam, matchDynamicPathRelative);
 
-	int matchParamsDynOutput = DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParams);
-	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, gpuID[cameraID - 1]);
+	bool isNotArchive = File.Exists(matchDynamicParams);
+	int matchParamsDynOutput = isNotArchive ?
+		DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParams) :
+		DLLVisionImport.fcx_register_match_params_dynamic(cameraID, Path.Combine(folderArchive, Path.Combine(folderArchive, matchDynamicPathRelative)));
+	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, GPUID[cameraID-1]);
 
-	logger.LogInformation(
-		"Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",
-		cameraID,
-		matchParamsDynOutput,
-		cameraID,
-		registerDatasetOutput);
+	if (isNotArchive)
+	{
+		logger.LogWarning(
+			"Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",
+			cameraID,
+			matchParamsDynOutput,
+			cameraID,
+			registerDatasetOutput);
+	}
+	else
+	{
+		logger.LogWarning(
+			"Archive: Match with matchDyn {id} {matchDyn} and Dataset {id} {dataset}.",
+			cameraID,
+			matchParamsDynOutput,
+			cameraID,
+			registerDatasetOutput);
+	}
+
 }
 
 host.Run();
