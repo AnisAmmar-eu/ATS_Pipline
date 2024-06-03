@@ -114,7 +114,7 @@ public class SignService : BackgroundService
 						}
 
 						// only one match has to be added
-						if (cycle.CanMatch() && toSign.CameraID == 1)
+						if (cycle.CanMatch())
 						{
 							foreach (int instanceMatchID in await ToMatchService.GetMatchInstance(
 								toSign.AnodeType,

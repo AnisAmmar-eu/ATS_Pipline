@@ -276,7 +276,7 @@ public static class IOTInitializer
 			ConnectionPath = path,
 			IsConnected = false,
 			OldestTSShooting = DateTimeOffset.MinValue,
-			// IsOptional = true,
+			IsOptional = true,
 		};
 		anodeCTX.ITApiStations.Add(api);
 		anodeCTX.SaveChanges();
