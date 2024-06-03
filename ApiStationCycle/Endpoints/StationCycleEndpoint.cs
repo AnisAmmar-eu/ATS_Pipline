@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
 using Carter;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
@@ -18,10 +19,21 @@ public class StationCycleEndpoint :
 	BaseEntityEndpoint<StationCycle, DTOStationCycle, IStationCycleService>,
 	ICarterModule
 {
+
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
-		group.MapGet("status", () => new ApiResponse().SuccessResult());
+		group.MapGet(
+			"status",
+			() => {
+				return new ApiResponse().SuccessResult();
+			})
+			.CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("signMatchResults", GetSignMatchResults).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("mainSecondHole", GetMainSecondHole);
+		group.MapGet("anodeCounterByAnodeType", GetAnodeCounterByAnodeType);
+		group.MapGet("anodeCounterByStation", GetAnodeCounterByStation);
+
 		if (!Station.IsServer)
 			return;
 
@@ -73,5 +85,51 @@ public class StationCycleEndpoint :
 
 		httpContext.Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
 		return TypedResults.File(image, "image/jpeg", ts.ToUnixTimeMilliseconds().ToString());
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> GetSignMatchResults(
+		int? stationId,
+		IStationCycleService stationCycleService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => stationCycleService.GetSignMatchResults(stationId),
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> GetMainSecondHole(
+		int? stationId,
+		IStationCycleService stationCycleService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => stationCycleService.GetMainAndSecondHoleStatus(stationId),
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> GetAnodeCounterByAnodeType(
+		IStationCycleService stationCycleService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => stationCycleService.GetAnodeCounterByAnodeType(),
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> GetAnodeCounterByStation(
+		IStationCycleService stationCycleService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => stationCycleService.GetAnodeCounterByStation(),
+			logService,
+			httpContext);
 	}
 }

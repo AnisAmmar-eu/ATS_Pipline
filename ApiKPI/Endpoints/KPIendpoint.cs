@@ -21,7 +21,7 @@ public class KPIEndpoint : BaseEntityEndpoint<KPI, DTOKPI, IKPIService>, ICarter
 			return;
 
 		RouteGroupBuilder group = app.MapGroup("apiKPI").WithTags(nameof(KPIEndpoint));
-		group = MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(KPI));
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
 
 		group.MapPut("GetAllStationKPI", GetAllStationKPIs)
 			.WithSummary("Get all KPI by period, station and origin")
