@@ -12,7 +12,7 @@
 
 ## run task with name: 'task-name'
 #husky run --name task-name
-exit 0
+
 ## pass hook arguments to task
 #husky run --args "$1" "$2"
 
