@@ -5,11 +5,11 @@ using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
-using Core.Shared.DLLVision;
 using Core.Shared.Services.Background.Vision.Matchs;
 using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
+using Core.Shared.DLLVision;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -94,7 +94,7 @@ foreach (int cameraID in new int[] { 1, 2 })
 	int matchParamsDynOutput = isNotArchive ?
 		DLLVisionImport.fcx_register_match_params_dynamic(cameraID, matchDynamicParams) :
 		DLLVisionImport.fcx_register_match_params_dynamic(cameraID, Path.Combine(folderArchive, Path.Combine(folderArchive, matchDynamicPathRelative)));
-	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, GPUID[cameraID-1]);
+	int registerDatasetOutput = DLLVisionImport.fcx_register_dataset(cameraID, 0, gpuID[cameraID - 1]);
 
 	if (isNotArchive)
 	{
