@@ -19,20 +19,14 @@ public class StationCycleEndpoint :
 	BaseEntityEndpoint<StationCycle, DTOStationCycle, IStationCycleService>,
 	ICarterModule
 {
-
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
-		group.MapGet(
-			"status",
-			() => {
-				return new ApiResponse().SuccessResult();
-			})
-			.CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("status", () => new ApiResponse().SuccessResult());
 		group.MapGet("signMatchResults", GetSignMatchResults).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
-		group.MapGet("mainSecondHole", GetMainSecondHole);
-		group.MapGet("anodeCounterByAnodeType", GetAnodeCounterByAnodeType);
-		group.MapGet("anodeCounterByStation", GetAnodeCounterByStation);
+		group.MapGet("mainSecondHole", GetMainSecondHole).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("anodeCounterByAnodeType", GetAnodeCounterByAnodeType).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("anodeCounterByStation", GetAnodeCounterByStation).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
 
 		if (!Station.IsServer)
 			return;
