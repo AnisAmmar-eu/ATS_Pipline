@@ -60,11 +60,11 @@ public class NotifyService : BackgroundService
 				{
 					if (entry.Value != "2")
 					{
-						ToNotify? notification = await anodeUOW.ToNotify.GetBy([notify => notify.Station == entry.Key]);
+						ToNotify? notification = await anodeUOW.ToNotify.GetBy([notify => notify.StationID == entry.Key]);
 						if (notification is null)
 							continue;
 
-						string msgNewTopic = _msgNewTopics.GetValueOrDefault(notification.Station, string.Empty);
+						string msgNewTopic = _msgNewTopics.GetValueOrDefault(notification.StationID, string.Empty);
 						await SendNotificationInfo(notification);
 						await SendMessageToEGABrokerAsync("2", msgNewTopic);
 
@@ -119,9 +119,9 @@ public class NotifyService : BackgroundService
 	{
 		string messageBody = $"{notification.SynchronisationKey};"
 			+ $"{notification.SerialNumber};"
-			+ $"{notification.Timestamp.ToString()};"
+			+ $"{notification.ShootingTS.ToString()};"
 			+ $"{notification.Path}";
-		string topic = _stationTopics.GetValueOrDefault(notification.Station, string.Empty);
+		string topic = _stationTopics.GetValueOrDefault(notification.StationID, string.Empty);
 		await SendMessageToEGABrokerAsync(messageBody, topic);
 	}
 

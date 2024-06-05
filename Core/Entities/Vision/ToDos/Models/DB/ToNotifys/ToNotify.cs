@@ -8,11 +8,11 @@ public partial class ToNotify : BaseEntity, IBaseEntity<ToNotify, DTOToNotify>
 {
 	public string? SynchronisationKey { get; set; }
 
-	public DateTimeOffset Timestamp { get; set; }
+	public DateTimeOffset ShootingTS { get; set; }
 
 	public string? Path { get; set; }
 
-	public int Station { get; set; }
+	public int StationID { get; set; }
 
 	public string SerialNumber { get; set; }
 }

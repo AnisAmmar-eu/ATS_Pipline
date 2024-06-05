@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
 using Carter;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
@@ -19,15 +18,12 @@ public class StationCycleEndpoint :
 	BaseEntityEndpoint<StationCycle, DTOStationCycle, IStationCycleService>,
 	ICarterModule
 {
-
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
 		group.MapGet(
 			"status",
-			() => {
-				return new ApiResponse().SuccessResult();
-			})
+			() => new ApiResponse().SuccessResult())
 			.CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
 		group.MapGet("signMatchResults", GetSignMatchResults).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
 		group.MapGet("mainSecondHole", GetMainSecondHole);
