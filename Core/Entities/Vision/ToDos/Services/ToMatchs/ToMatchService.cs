@@ -51,6 +51,8 @@ public class ToMatchService :
 
 				if (cameraID == 2)
 					((S5Cycle)cycle).ChainMatchingCamera2 = SignMatchStatus.Ok;
+
+				((S5Cycle)cycle).ChainMatchingResult = true;
 			}
 			else
 			{
@@ -59,6 +61,8 @@ public class ToMatchService :
 
 				if (cameraID == 2)
 					cycle.MatchingCamera2 = SignMatchStatus.Ok;
+
+				cycle.MatchingResult = true;
 			}
 		}
 		else //-106

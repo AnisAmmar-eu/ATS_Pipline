@@ -11,6 +11,7 @@ public partial class S5Cycle : MatchableCycle, IBaseEntity<S5Cycle, DTOS5Cycle>
 	new public AnodeDX? Anode { get; set; }
 	public SignMatchStatus ChainMatchingCamera1 { get; set; }
 	public SignMatchStatus ChainMatchingCamera2 { get; set; }
+	public bool ChainMatchingResult { get; set; }
 	public int? ChainCycleID { get; set; }
 	public S3S4Cycle? ChainCycle { get; set; }
 }
