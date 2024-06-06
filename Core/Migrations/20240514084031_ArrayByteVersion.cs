@@ -16,7 +16,7 @@ namespace Core.Migrations
                 type: "rowversion",
                 rowVersion: true,
                 nullable: false,
-                defaultValue: new byte[0]);
+                defaultValue: Array.Empty<byte>());
         }
 
         /// <inheritdoc />

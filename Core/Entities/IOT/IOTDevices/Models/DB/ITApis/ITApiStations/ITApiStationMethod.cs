@@ -27,7 +27,7 @@ public partial class ITApiStation
 		if (IsOptional)
 		{
 			isConnected = true;
-			OldestTSShooting = DateTimeOffset.Now;
+			OldestTSShooting = DateTimeOffset.MinValue;
 		}
 		else
 		{

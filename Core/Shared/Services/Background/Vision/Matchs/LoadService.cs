@@ -7,8 +7,8 @@ using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
-using Core.Shared.DLLVision;
 using Core.Shared.UnitOfWork.Interfaces;
+using Core.Shared.DLLVision;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -83,7 +83,7 @@ public class LoadService : BackgroundService
 				foreach (ToLoad toLoad in toLoads)
 				{
 					StationCycle cycle = await anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
-					if (cycle.TSFirstShooting?.AddDays(stationDelay) < DateTimeOffset.Now)
+					if (cycle.TSFirstShooting?.AddDays(stationDelay) > DateTimeOffset.Now)
 						break;
 
 					FileInfo sanFile = Shooting.GetImagePathFromRoot(

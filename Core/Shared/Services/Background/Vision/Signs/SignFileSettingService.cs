@@ -33,6 +33,7 @@ public class SignFileSettingService : BackgroundService
 		string stationName = _configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
 
 		string folderWithoutCam = Path.Combine(folderParams, stationName, anodeType);
+		string folderArchive = Path.Combine(archivePath, stationName, anodeType);
 
 		/// <summary>Logic SignFileSetting</summary>
 		/// <param name="signStaticParamsFile">Path to the file with static parameters</param>
@@ -52,8 +53,8 @@ public class SignFileSettingService : BackgroundService
 					&& (responseStatic = DLLVisionImport.fcx_unregister_sign_params_static(0)) == 0
 					&& (responseStatic = DLLVisionImport.fcx_register_sign_params_static(0, signStaticParamsFile)) == 0)
 				{
-					File.Delete(Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
-					File.Move(signStaticParamsFile, Path.Combine(archivePath, Path.GetFileName(signStaticParamsFile)));
+					File.Delete(Path.Combine(folderArchive, Path.GetFileName(signStaticParamsFile)));
+					File.Move(signStaticParamsFile, Path.Combine(folderArchive, Path.GetFileName(signStaticParamsFile)));
 				}
 
 				foreach (int cameraID in new int[] { 1, 2 })
@@ -70,8 +71,13 @@ public class SignFileSettingService : BackgroundService
 							cameraID,
 							signDynamicParamsFile)) == 0)
 					{
-						File.Delete(Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
-						File.Move(signDynamicParamsFile, Path.Combine(archivePath, Path.GetFileName(signDynamicParamsFile)));
+						File.Delete(Path.Combine(folderArchive, cameraID.ToString(), Path.GetFileName(signDynamicParamsFile)));
+						File.Move(
+							signDynamicParamsFile,
+							Path.Combine(
+								folderArchive,
+								cameraID.ToString(),
+								Path.GetFileName(signDynamicParamsFile)));
 					}
 
 					_logger.LogInformation(

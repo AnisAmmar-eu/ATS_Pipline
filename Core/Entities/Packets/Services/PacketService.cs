@@ -254,8 +254,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		}
 		catch (EntityNotFoundException)
 		{
-			StationCycle stationCycle = StationCycle.Create(stationName);
-			stationCycle.StationID = Station.StationNameToID(stationName);
+			StationCycle stationCycle = StationCycle.Create(packet.StationCycleRID[0].ToString());
+			stationCycle.StationID = Station.StationNameToID(packet.StationCycleRID[0].ToString());
 			stationCycle.RID = packet.StationCycleRID;
 			if (packet is Shooting shooting)
 			{
@@ -277,6 +277,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				stationCycle.AnodeType = AnodeTypeDict.AnodeTypeIntToString(metaData.AnodeType_MD);
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
+				stationCycle.SerialNumber = metaData.GetSerialNumber();
 			}
 			else
 			{
@@ -339,8 +340,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		}
 		catch (EntityNotFoundException)
 		{
-			StationCycle stationCycle = StationCycle.Create(stationName);
-			stationCycle.StationID = Station.StationNameToID(stationName);
+			StationCycle stationCycle = StationCycle.Create(cycleRID[0].ToString());
+			stationCycle.StationID = Station.StationNameToID(cycleRID[0].ToString());
 			stationCycle.RID = cycleRID;
 			stationCycle.AssignPacket(alarmList);
 			await _anodeUOW.StationCycle.Add(stationCycle);

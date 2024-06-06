@@ -73,13 +73,13 @@ public class StationCycleService :
 		int notSignedCount = stationCycles.Count(
 			sc => sc.SignStatus1 != SignMatchStatus.Ok && sc.SignStatus2 != SignMatchStatus.Ok);
 
-		int signNotMatchedCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle) &&
-			(matchableCycle.MatchingCamera1 != SignMatchStatus.Ok
-				|| matchableCycle.MatchingCamera2 != SignMatchStatus.Ok) &&
-			(sc.SignStatus1 != SignMatchStatus.Ok && sc.SignStatus2 != SignMatchStatus.Ok));
+		int signNotMatchedCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle)
+			&& (matchableCycle.MatchingCamera1 != SignMatchStatus.Ok
+				|| matchableCycle.MatchingCamera2 != SignMatchStatus.Ok)
+			&& (sc.SignStatus1 != SignMatchStatus.Ok && sc.SignStatus2 != SignMatchStatus.Ok));
 
-		int matchedCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle) &&
-			(matchableCycle.MatchingCamera1 == SignMatchStatus.Ok
+		int matchedCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle)
+			&& (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok
 				|| matchableCycle.MatchingCamera2 == SignMatchStatus.Ok));
 
 		return [notSignedCount, signNotMatchedCount, matchedCount];
@@ -91,11 +91,11 @@ public class StationCycleService :
 		if (stationId is not null)
 			stationCycles = stationCycles.Where(sc => sc.StationID == stationId).ToList();
 
-		int mainHoleCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle) &&
-			(matchableCycle.MatchingCamera1 == SignMatchStatus.Ok));
+		int mainHoleCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle)
+			&& (matchableCycle.MatchingCamera1 == SignMatchStatus.Ok));
 
-		int secondHoleCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle) &&
-			(matchableCycle.MatchingCamera2 == SignMatchStatus.Ok));
+		int secondHoleCount = stationCycles.Count(sc => (sc is MatchableCycle matchableCycle)
+			&& (matchableCycle.MatchingCamera2 == SignMatchStatus.Ok));
 
 		return [mainHoleCount, secondHoleCount];
 	}
