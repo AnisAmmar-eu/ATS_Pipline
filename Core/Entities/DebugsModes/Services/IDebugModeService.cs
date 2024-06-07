@@ -7,6 +7,7 @@ namespace Core.Entities.DebugsModes.Services;
 public interface IDebugModeService : IBaseEntityService<DebugMode, DTODebugMode>
 {
 	Task<bool> ApplyDebugMode(bool enabled);
-	Task<bool> ApplyLog(bool enabled, string severity);
+	Task<bool> ApplyLog(bool enabled);
+	Task<bool> SetSeverity(string severity);
 	Task<bool> ApplyCsvExport(bool enabled);
 }

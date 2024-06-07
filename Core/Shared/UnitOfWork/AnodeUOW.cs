@@ -6,6 +6,7 @@ using Core.Entities.Anodes.Repositories;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Entities.BenchmarkTests.Repositories.CameraTests;
 using Core.Entities.BI.BITemperatures.Repositories;
+using Core.Entities.DebugsModes.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Repositories;
@@ -66,6 +67,7 @@ public class AnodeUOW : IAnodeUOW
 	public IToUnloadRepository ToUnload { get; }
 	public IToNotifyRepository ToNotify { get; }
 	public IDatasetRepository Dataset { get; }
+	public IDebugModeRepository DebugMode { get; }
 
 	public AnodeUOW(AnodeCTX anodeCTX)
 	{
@@ -105,6 +107,7 @@ public class AnodeUOW : IAnodeUOW
 		ToUnload = new ToUnloadRepository(_anodeCTX);
 		ToNotify = new ToNotifyRepository(_anodeCTX);
 		Dataset = new DatasetRepository(_anodeCTX);
+		DebugMode = new DebugModeRepository(_anodeCTX);
 	}
 
 	public object? GetRepoByType(Type repo)
@@ -142,6 +145,7 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IToUnloadRepository) => ToUnload,
 			_ when repo == typeof(IToNotifyRepository) => ToNotify,
 			_ when repo == typeof(IDatasetRepository) => Dataset,
+			_ when repo == typeof(IDebugModeRepository) => DebugMode,
 
 			_ when repo == typeof(ILogRepository) => Log,
 			_ => null,
