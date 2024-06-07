@@ -1,6 +1,4 @@
 using System.Configuration;
-using Core.Entities.User.Models.DB.Roles;
-using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
@@ -10,20 +8,13 @@ using Core.Shared.Services.SystemApp.Logs;
 using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.DLLVision;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Sign service");
 
-builder.Configuration.LoadBaseConfiguration();
-
 builder.Services.AddDbContext<AnodeCTX>(
 	options => options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
-
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-	.AddEntityFrameworkStores<AnodeCTX>()
-	.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 builder.Services.AddScoped<ILogService, LogService>();
@@ -49,14 +40,12 @@ IServiceProvider services = scope.ServiceProvider;
 if (bool.Parse(dbInitialize))
 {
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
-	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
 
 ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
 
 string dllPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 
-// FolderPath = FolderParams//StationName//AnodeType//CameraID
 string anodeType = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 string stationName = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
 string folderParams = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);

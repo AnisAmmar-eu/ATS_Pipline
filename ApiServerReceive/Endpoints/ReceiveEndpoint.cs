@@ -34,7 +34,7 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		group.MapPost("images/{isImage}", ReceiveImage);
 		group.MapPost("{stationName}/alarmPacket/{cycleRID}", ReceiveAlarmPacket);
 		group.MapPost("logs", ReceiveLog);
-		group.MapGet("time", () => new ApiResponse(DateTimeOffset.Now).SuccessResult());
+		group.MapGet("time", () => new ApiResponse(DateTimeOffset.Now).SuccessResult()).CacheOutput();
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(
