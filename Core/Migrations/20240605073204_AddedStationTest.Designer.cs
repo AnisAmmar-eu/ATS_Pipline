@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240605073204_AddedStationTest")]
+    partial class AddedStationTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1612,9 +1615,6 @@ namespace Core.Migrations
                     b.Property<int>("MatchingCamera2")
                         .HasColumnType("int");
 
-                    b.Property<bool>("MatchingResult")
-                        .HasColumnType("bit");
-
                     b.Property<DateTimeOffset?>("MatchingTS")
                         .HasColumnType("datetimeoffset");
 
@@ -1674,9 +1674,6 @@ namespace Core.Migrations
 
                     b.Property<int>("ChainMatchingCamera2")
                         .HasColumnType("int");
-
-                    b.Property<bool>("ChainMatchingResult")
-                        .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("S5Cycle");
                 });

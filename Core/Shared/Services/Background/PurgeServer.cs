@@ -1,8 +1,10 @@
 ﻿using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 using Core.Shared.UnitOfWork.Interfaces;
+using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -71,6 +73,14 @@ public class PurgeServer : BackgroundService
 					DeleteFileIfExists(image1);
 					DeleteFileIfExists(image2);
 				}
+
+				List<ToUnload> toUnload = (List<ToUnload>)(await anodeUOW.Dataset.GetAll(
+					[data => cycles.ConvertAll(x => x.RID).Contains(data.CycleRID)]
+					))
+					.DistinctBy(x => x.CycleRID)
+					.Select(x => x.Adapt<ToUnload>());
+
+				anodeUOW.ToUnload.AddRange(toUnload);
 
 				// Delete AlarmLog
 				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
