@@ -3,10 +3,13 @@ using System.Text;
 using Carter;
 using Core.Entities.Anodes.Services;
 using Core.Entities.BenchmarkTests.Services;
+using Core.Entities.DebugsModes.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
+using Core.Entities.Vision.ToDos.Services.ToMatchs;
+using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
@@ -76,7 +79,9 @@ builder.Services.AddScoped<IBenchmarkTestService, BenchmarkTestService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 builder.Services.AddScoped<IAnodeService, AnodeService>();
-
+builder.Services.AddScoped<IDebugModeService, DebugModeService>();
+builder.Services.AddScoped<IToMatchService, ToMatchService>();
+builder.Services.AddScoped<IToSignService, ToSignService>();
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
