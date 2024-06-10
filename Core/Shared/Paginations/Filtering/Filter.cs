@@ -44,7 +44,7 @@ public static class Filter
 	private static Expression<Func<T, bool>> GetLastValueWhereClause<T>(SortParam sortParam, ParameterExpression param)
 	{
 		SortOption sortOption = SortOptionMap.Get(sortParam.SortOptionName);
-		string[] names = sortParam.ColumnName.Split('.');
+		string[] names = ["ID"];
 		PropertyInfo filterColumn = GetColumnProperty<T>(names);
 		IComparable? lastValue = ParseAsComparable(filterColumn.PropertyType, sortParam.LastValue);
 		if (lastValue is null)
