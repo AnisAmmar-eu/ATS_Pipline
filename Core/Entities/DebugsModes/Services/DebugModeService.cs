@@ -36,6 +36,7 @@ public class DebugModeService : BaseEntityService<IDebugModeRepository, DebugMod
 			_anodeUOW.Commit();
 		}
 
+		_logger.LogInformation("Debug mode set to: {Enabled}", enabled);
 		return true;
 	}
 
@@ -52,6 +53,7 @@ public class DebugModeService : BaseEntityService<IDebugModeRepository, DebugMod
 			_anodeUOW.Commit();
 		}
 
+		_logger.LogInformation("Log set to: {Enabled}", enabled);
 		return true;
 	}
 
@@ -68,6 +70,7 @@ public class DebugModeService : BaseEntityService<IDebugModeRepository, DebugMod
 			_anodeUOW.Commit();
 		}
 
+		_logger.LogInformation("Log severity set to: {Severity}", severity);
 		return true;
 	}
 
@@ -84,6 +87,7 @@ public class DebugModeService : BaseEntityService<IDebugModeRepository, DebugMod
 			_anodeUOW.Commit();
 		}
 
+		_logger.LogInformation("CSV export enabled set to: {Enabled}", enabled);
 		return true;
 	}
 }
