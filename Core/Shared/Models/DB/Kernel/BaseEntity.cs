@@ -1,6 +1,5 @@
 ﻿using Core.Shared.Models.DB.Kernel.Interfaces;
 using Core.Shared.Models.DTO.Kernel;
-using Mapster;
 
 namespace Core.Shared.Models.DB.Kernel;
 
@@ -19,7 +18,6 @@ public class BaseEntity : IBaseEntity<BaseEntity, DTOBaseEntity>
 		TS = (DateTimeOffset)dto.TS!;
 	}
 
-	[AdaptIgnore]
 	public int ID { get; set; }
 
 	public DateTimeOffset TS { get; set; } = DateTimeOffset.Now;

@@ -9,6 +9,7 @@ public abstract partial class MatchableCycle : StationCycle, IBaseEntity<Matchab
 {
 	public SignMatchStatus MatchingCamera1 { get; set; }
 	public SignMatchStatus MatchingCamera2 { get; set; }
+	public bool MatchingResult { get; set; }
 	public DateTimeOffset? MatchingTS { get; set; }
 	public int? KPIID { get; set; }
 	public KPI? KPI { get; set; }
