@@ -16,6 +16,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using System.Runtime.InteropServices;
+using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.Vision.ToDos.Models.DB.ToNotifys;
 
 namespace Core.Shared.Services.Background.Vision.Matchs;
 
@@ -123,7 +125,26 @@ public class MatchService : BackgroundService
 								int retFree = DLLVisionImport.fcx_matchRet_free(retMatch);
 
 								if (!isChained)
+								{
 									await toMatchService.UpdateAnode(cycle, cycleRID, isChained);
+									// Get S1S2Cycle and Add ToNotify row
+									string imagePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+									FileInfo file = Shooting.GetImagePathFromFilename(imagePath, anodeID!);
+									StationCycle? cycleMatched = await anodeUOW.StationCycle.GetBy([cycle => cycle.RID == cycleRID]);
+
+									if (cycleMatched is not null)
+									{
+										ToNotify toNotify = new() {
+											StationID = cycleMatched.StationID,
+											SynchronisationKey = cycleMatched.RID,
+											ShootingTS = cycleMatched.TSFirstShooting ?? DateTimeOffset.Now,
+											SerialNumber = cycleMatched.SerialNumber,
+											Path = file.FullName,
+										};
+
+										anodeUOW.ToNotify.Add(toNotify);
+									}
+								}
 
 								foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, anodeUOW))
 								{

@@ -67,7 +67,7 @@ public class ModeDebugService : BackgroundService
 				return;
 			}
 
-			_logger.LogInformation("Debug mode activé avec le chemin : {Path}", debugPath);
+			_logger.LogInformation("Debug mode activé");
 		}
 		else
 		{
@@ -105,9 +105,8 @@ public class ModeDebugService : BackgroundService
 			}
 
 			_logger.LogInformation(
-				"Journalisation activée avec la gravité : {Severity} et le chemin : {Path}",
-				debugMode.LogSeverity,
-				logPath);
+				"Journalisation activée avec la gravité : {Severity}",
+				debugMode.LogSeverity);
 		}
 		else
 		{
@@ -135,7 +134,7 @@ public class ModeDebugService : BackgroundService
 				return;
 			}
 
-			_logger.LogInformation("Export CSV activé avec le chemin : {Path}", csvPath);
+			_logger.LogInformation("Export CSV activé");
 		}
 		else
 		{
