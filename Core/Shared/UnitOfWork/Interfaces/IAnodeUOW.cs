@@ -6,6 +6,7 @@ using Core.Entities.Anodes.Repositories;
 using Core.Entities.BenchmarkTests.Repositories;
 using Core.Entities.BenchmarkTests.Repositories.CameraTests;
 using Core.Entities.BI.BITemperatures.Repositories;
+using Core.Entities.DebugsModes.Repositories;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Repositories;
 using Core.Entities.KPIData.KPIs.Repositories;
@@ -59,6 +60,7 @@ public interface IAnodeUOW : IDisposable
 	IToSignRepository ToSign { get; }
 	IToUnloadRepository ToUnload { get; }
 	IDatasetRepository Dataset { get; }
+	IDebugModeRepository DebugMode { get; }
 
 	IStationTestRepository StationTest { get; }
 

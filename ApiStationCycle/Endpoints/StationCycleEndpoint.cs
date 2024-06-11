@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Carter;
+using Core.Entities.DebugsModes.Services;
 using Core.Entities.StationCycles.Models.DB;
 using Core.Entities.StationCycles.Models.DTO;
 using Core.Entities.StationCycles.Services;
@@ -21,14 +22,17 @@ public class StationCycleEndpoint :
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(StationCycleEndpoint));
-		group.MapGet(
-			"status",
-			() => new ApiResponse().SuccessResult())
-			.CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("status", () => new ApiResponse().SuccessResult());
 		group.MapGet("signMatchResults", GetSignMatchResults).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
-		group.MapGet("mainSecondHole", GetMainSecondHole);
-		group.MapGet("anodeCounterByAnodeType", GetAnodeCounterByAnodeType);
-		group.MapGet("anodeCounterByStation", GetAnodeCounterByStation);
+		group.MapGet("mainSecondHole", GetMainSecondHole).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("anodeCounterByAnodeType", GetAnodeCounterByAnodeType).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+		group.MapGet("anodeCounterByStation", GetAnodeCounterByStation).CacheOutput(x => x.Expire(TimeSpan.FromHours(1)));
+
+		// Debug Mode , Logs , Csv 
+		group.MapPut("debugMode/{enabled}", ToggleDebugMode);
+		group.MapPut("logs/{enabled}", ToggleLogs);
+		group.MapPut("setSeverity/{severity}", SetLogSeverity);
+		group.MapPut("csvExport/{enabled}", ToggleCsvExport);
 
 		if (!Station.IsServer)
 			return;
@@ -125,6 +129,55 @@ public class StationCycleEndpoint :
 	{
 		return GenericEndpoint(
 			() => stationCycleService.GetAnodeCounterByStation(),
+			logService,
+			httpContext);
+	}
+
+	// Debug Mode , Logs , CSV 
+	private static Task<JsonHttpResult<ApiResponse>> ToggleDebugMode(
+		bool enabled,
+		IDebugModeService debugModeService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => debugModeService.ApplyDebugMode(enabled),
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> ToggleLogs(
+		bool enabled,
+		IDebugModeService debugModeService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => debugModeService.ApplyLog(enabled),
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> SetLogSeverity(
+		string severity,
+		IDebugModeService debugModeService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => debugModeService.SetSeverity(severity),
+			logService,
+			httpContext);
+	}
+
+	private static Task<JsonHttpResult<ApiResponse>> ToggleCsvExport(
+		bool enabled,
+		IDebugModeService debugModeService,
+		ILogService logService,
+		HttpContext httpContext)
+	{
+		return GenericEndpoint(
+			() => debugModeService.ApplyCsvExport(enabled),
 			logService,
 			httpContext);
 	}

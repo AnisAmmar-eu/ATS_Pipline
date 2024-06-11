@@ -92,6 +92,14 @@ public static class ConfigDictionary
 
 	#endregion DiskCheck
 
+	#region DebugMode 
+
+	public const string DebugModePath = "DebugConfig:DebugModePath";
+	public const string LogPath = "DebugConfig:LogPath";
+	public const string CsvExportPath = "DebugConfig:CsvExportPath";
+
+	#endregion DebugMode
+
 	#region Purge
 
 	public const string PurgeTimerSec = "PurgeTimerSec";

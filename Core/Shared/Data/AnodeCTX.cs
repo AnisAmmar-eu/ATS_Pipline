@@ -8,6 +8,7 @@ using Core.Entities.Anodes.Models.DB.AnodesDX;
 using Core.Entities.BenchmarkTests.Models.DB;
 using Core.Entities.BenchmarkTests.Models.DB.CameraTests;
 using Core.Entities.BI.BITemperatures.Models.DB;
+using Core.Entities.DebugsModes.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
@@ -144,6 +145,12 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<StationTest> StationTests => Set<StationTest>();
 
 	#endregion Testing
+
+	#region DebugMode
+
+	public DbSet<DebugMode> DebugModes => Set<DebugMode>();
+
+	#endregion DebugMode
 
 	protected override void OnModelCreating(ModelBuilder builder)
 	{

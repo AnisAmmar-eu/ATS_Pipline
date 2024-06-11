@@ -235,4 +235,46 @@ public static class DLLVisionImport
 		EntryPoint = "ats_matchRet_cardinality_after_brut_force",
 		CallingConvention = CallingConvention.StdCall)]
 	public static extern int fcx_matchRet_cardinality_after_brut_force(nint matchRet);
+
+	//Activer Debug Mode 
+	[DllImport(
+		"fcx_ats_lib.dll",
+		EntryPoint = "ats_activate_pipeline_debug ",
+		CallingConvention = CallingConvention.StdCall)]
+	public static extern int fcx_ats_activate_pipeline_debug(bool enable);
+
+	//Désactiver Debug Mode 
+	[DllImport(
+		"fcx_ats_lib.dll",
+		EntryPoint = "ats_deactivate_pipeline_debug ",
+		CallingConvention = CallingConvention.StdCall)]
+	public static extern int fcx_ats_deactivate_pipeline_debug();
+
+	//Activer log 
+	[DllImport(
+		"fcx_ats_lib.dll",
+		EntryPoint = "ats_activate_score_buffering",
+		CallingConvention = CallingConvention.StdCall)]
+	public static extern int fcx_ats_activate_score_buffering(string path);
+
+	//Desactiver log 
+	[DllImport(
+		"fcx_ats_lib.dll",
+		EntryPoint = "ats_deactivate_score_bufferingg",
+		CallingConvention = CallingConvention.StdCall)]
+	public static extern int fcx_ats_deactivate_score_buffering();
+
+	//
+	[DllImport(
+		"fcx_ats_lib.dll",
+		EntryPoint = "ats_set_log_level",
+		CallingConvention = CallingConvention.StdCall)]
+	public static extern int fcx_ats_set_log_level(string severity);
+
+	//
+	[DllImport(
+		"fcx_ats_lib.dll",
+		EntryPoint = "ats_set_log_type",
+		CallingConvention = CallingConvention.StdCall)]
+	public static extern int fcx_ats_set_log_type(string path);
 }

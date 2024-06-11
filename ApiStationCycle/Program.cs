@@ -3,6 +3,7 @@ using System.Text;
 using Carter;
 using Core.Entities.Anodes.Services;
 using Core.Entities.BenchmarkTests.Services;
+using Core.Entities.DebugsModes.Services;
 using Core.Entities.Packets.Services;
 using Core.Entities.StationCycles.Services;
 using Core.Entities.User.Models.DB.Roles;
@@ -78,9 +79,9 @@ builder.Services.AddScoped<IBenchmarkTestService, BenchmarkTestService>();
 builder.Services.AddScoped<IPacketService, PacketService>();
 builder.Services.AddScoped<IStationCycleService, StationCycleService>();
 builder.Services.AddScoped<IAnodeService, AnodeService>();
+builder.Services.AddScoped<IDebugModeService, DebugModeService>();
 builder.Services.AddScoped<IToMatchService, ToMatchService>();
 builder.Services.AddScoped<IToSignService, ToSignService>();
-
 builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
 
 builder.Services.AddCarter();
@@ -94,6 +95,11 @@ if (!Station.IsServer)
 
 	builder.Services.AddSingleton<SendLogService>();
 	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendLogService>());
+}
+else
+{
+	builder.Services.AddSingleton<ModeDebugService>();
+	builder.Services.AddHostedService(provider => provider.GetRequiredService<ModeDebugService>());
 }
 
 WebApplication app = builder.Build();
