@@ -159,10 +159,9 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 			AlarmRT newAlarmRT = dtoAlarmRT.ToModel();
 			newAlarmRT.ID = 0;
 			newAlarmRT.Alarm = await _anodeUOW.AlarmC.GetByWithThrow([alarmC => alarmC.RID == newAlarmRT.IRID]);
-			await _anodeUOW.StartTransaction();
+
 			await _anodeUOW.AlarmRT.Add(newAlarmRT);
 			_anodeUOW.Commit();
-			await _anodeUOW.CommitTransaction();
 		}
 	}
 }

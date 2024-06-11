@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Core.Entities.KPIData.KPIs.Models.DTO;
 using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles;
 using Core.Entities.StationCycles.Models.DTO.MatchingCycles.S3S4Cycles;
@@ -13,5 +14,8 @@ public partial class DTOMatchingCycle : DTOStationCycle, IDTO<MatchableCycle, DT
 {
 	public SignMatchStatus MatchingCamera1 { get; set; }
 	public SignMatchStatus MatchingCamera2 { get; set; }
+	public bool MatchingResult { get; set; }
 	public DateTimeOffset? MatchingTS { get; set; }
+	public int? KPIID { get; set; }
+	public DTOKPI? KPI { get; set; }
 }

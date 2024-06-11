@@ -14,6 +14,7 @@ using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
+using Core.Entities.Vision.Testing.Repositories;
 using Core.Entities.Vision.ToDos.Repositories.Datasets;
 using Core.Entities.Vision.ToDos.Repositories.ToLoads;
 using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
@@ -60,6 +61,8 @@ public interface IAnodeUOW : IDisposable
 	IToUnloadRepository ToUnload { get; }
 	IDatasetRepository Dataset { get; }
 	IDebugModeRepository DebugMode { get; }
+
+	IStationTestRepository StationTest { get; }
 
 	public object? GetRepoByType(Type repo);
 

@@ -22,4 +22,9 @@ public class FilterParam
 	/// processing. All possible filters are in <see cref="FilterOptionMap"/>.
 	/// </summary>
 	public string FilterOptionName { get; set; } = string.Empty;
+
+	/// <summary>
+	/// Gets or sets the type to which the value should be casted.
+	/// </summary>
+	public string? CastToType { get; set; }
 }

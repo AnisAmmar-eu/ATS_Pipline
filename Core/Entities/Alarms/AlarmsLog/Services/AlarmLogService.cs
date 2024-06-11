@@ -145,7 +145,7 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			if (!response.IsSuccessStatusCode)
 			{
 				throw new("Send alarmLog to server failed with status code:"
-					+ $" {response.StatusCode.ToString()}\nReason: {response.ReasonPhrase}");
+					+ $" {response.StatusCode.ToString()}\nReason: {response.Content}");
 			}
 
 			await _anodeUOW.AlarmLog.ExecuteUpdateByIdAsync(
@@ -187,6 +187,8 @@ public class AlarmLogService : BaseEntityService<IAlarmLogRepository, AlarmLog, 
 			_anodeUOW.AlarmLog.Update(alarmWithStatus);
 			_anodeUOW.Commit();
 			await _anodeUOW.CommitTransaction();
+			await _hubContext.Clients.All.RefreshAlarmRT();
+			await _hubContext.Clients.All.RefreshAlarmLog();
 		}
 		catch (EntityNotFoundException)
 		{

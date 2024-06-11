@@ -26,7 +26,7 @@ public class MatchFileSettingService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		int FileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
+		int fileSettingsTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.FileSettingTimer);
 		string archive = _configuration.GetValueWithThrow<string>(ConfigDictionary.ArchivePath);
 		string folderParams = _configuration.GetValueWithThrow<string>(ConfigDictionary.FolderParams);
 		string instanceMatchID = _configuration.GetValueWithThrow<string>(ConfigDictionary.InstanceMatchID);
@@ -40,7 +40,7 @@ public class MatchFileSettingService : BackgroundService
 		/// <remarks>If exists sets them in the DLL then move them in archive</remarks>
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			await Task.Delay(TimeSpan.FromSeconds(FileSettingsTimer), stoppingToken);
+			await Task.Delay(TimeSpan.FromSeconds(fileSettingsTimer), stoppingToken);
 			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 
 			try

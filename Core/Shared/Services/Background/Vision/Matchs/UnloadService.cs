@@ -37,8 +37,8 @@ public class UnloadService : BackgroundService
 	/// <exception cref="Exception">Failed to execute UnloadService with exception message {message}.</exception>
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		string _imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-		string _extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		int instanceMatchID = _configuration.GetValueWithThrow<int>(ConfigDictionary.InstanceMatchID);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
@@ -47,11 +47,11 @@ public class UnloadService : BackgroundService
 		{
 			await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
 			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-			IAnodeUOW _anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+			IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
 			try
 			{
-				List<ToUnload> toUnloads = await _anodeUOW.ToUnload.GetAll(
+				List<ToUnload> toUnloads = await anodeUOW.ToUnload.GetAll(
 					[unload => unload.InstanceMatchID == instanceMatchID],
 					withTracking: false);
 
@@ -59,17 +59,17 @@ public class UnloadService : BackgroundService
 				{
 					foreach (int cameraID in new int[] { 1, 2 })
 					{
-						string SANFile = Shooting.GetImagePathFromRoot(
+						string sANFile = Shooting.GetImagePathFromRoot(
 							toUnload.CycleRID,
 							toUnload.StationID,
-							_imagesPath,
+							imagesPath,
 							toUnload.AnodeType,
 							cameraID,
-							_extension).FullName;
+							extension).FullName;
 
 						int dropResponse = DLLVisionImport.fcx_drop_anode(
 							cameraID,
-							SANFile);
+							sANFile);
 
 						if (dropResponse != 0)
 						{
@@ -79,11 +79,11 @@ public class UnloadService : BackgroundService
 						}
 					}
 
-					await _anodeUOW.Dataset.ExecuteDeleteAsync(
+					await anodeUOW.Dataset.ExecuteDeleteAsync(
 						dataset => dataset.CycleRID == toUnload.CycleRID
 							&& toUnload.InstanceMatchID == dataset.InstanceMatchID);
 
-					await _anodeUOW.ToUnload.ExecuteDeleteAsync(
+					await anodeUOW.ToUnload.ExecuteDeleteAsync(
 						unload => unload.ID == toUnload.ID);
 				}
 			}

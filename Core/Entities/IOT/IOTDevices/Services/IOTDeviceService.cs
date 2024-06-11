@@ -116,9 +116,6 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		if (updatedDevices.Length == 0)
 			return connectedDevices;
 
-		ServerRule ruleDevice = (ServerRule)await _anodeUOW.IOTDevice
-			.GetByWithThrow([device => device is ServerRule], withTracking: true);
-
 		await _anodeUOW.StartTransaction();
 		_anodeUOW.IOTDevice.UpdateArray(updatedDevices);
 		_anodeUOW.Commit();

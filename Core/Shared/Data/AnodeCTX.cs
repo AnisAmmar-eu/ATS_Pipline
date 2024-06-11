@@ -37,6 +37,7 @@ using Core.Entities.User.Models.DB.Acts.ActEntities;
 using Core.Entities.User.Models.DB.Acts.ActEntities.ActEntityRoles;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
+using Core.Entities.Vision.Testing.Models.DB;
 using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.Vision.ToDos.Models.DB.ToLoads;
 using Core.Entities.Vision.ToDos.Models.DB.ToMatchs;
@@ -138,6 +139,12 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	public DbSet<ActEntityRole> ActEntityRoles => Set<ActEntityRole>();
 
 	#endregion Action
+
+	#region Testing
+
+	public DbSet<StationTest> StationTests => Set<StationTest>();
+
+	#endregion Testing
 
 	#region DebugMode
 

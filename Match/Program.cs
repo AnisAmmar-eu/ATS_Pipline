@@ -12,11 +12,11 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.DLLVision;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Core.Entities.Vision.ToDos.Models.DB.Datasets;
+using Core.Entities.Packets.Models.DB.Shootings;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Match service");
-
-builder.Configuration.LoadBaseConfiguration();
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
@@ -115,6 +115,37 @@ foreach (int cameraID in new int[] { 1, 2 })
 			registerDatasetOutput);
 	}
 
+}
+
+await using AsyncServiceScope asyncScope = scope.ServiceProvider.CreateAsyncScope();
+IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+string imagesPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+string extension = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
+List<Dataset> dataset = await anodeUOW.Dataset.GetAll(
+	[dataset => dataset.InstanceMatchID == int.Parse(instanceMatchID)]
+	, withTracking: false);
+
+foreach (var data in dataset)
+{
+	FileInfo sanFile = Shooting.GetImagePathFromRoot(
+	data.CycleRID,
+	data.StationID,
+	imagesPath,
+	data.AnodeType,
+	data.CameraID,
+	extension);
+
+	int loadResponse = DLLVisionImport.fcx_load_anode(
+		data.CameraID,
+		sanFile.DirectoryName ?? string.Empty,
+		Path.GetFileNameWithoutExtension(sanFile.Name));
+
+	if (loadResponse != 0)
+	{
+		logger.LogError(
+			"Failed to unload anode with response code {responseCode}.",
+			loadResponse);
+	}
 }
 
 host.Run();

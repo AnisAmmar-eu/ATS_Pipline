@@ -15,6 +15,7 @@ using Core.Entities.Packets.Repositories;
 using Core.Entities.StationCycles.Repositories;
 using Core.Entities.User.Repositories.Acts;
 using Core.Entities.User.Repositories.Acts.ActEntities;
+using Core.Entities.Vision.Testing.Repositories;
 using Core.Entities.Vision.ToDos.Repositories.Datasets;
 using Core.Entities.Vision.ToDos.Repositories.ToLoads;
 using Core.Entities.Vision.ToDos.Repositories.ToMatchs;
@@ -69,6 +70,8 @@ public class AnodeUOW : IAnodeUOW
 	public IDatasetRepository Dataset { get; }
 	public IDebugModeRepository DebugMode { get; }
 
+	public IStationTestRepository StationTest { get; }
+
 	public AnodeUOW(AnodeCTX anodeCTX)
 	{
 		_anodeCTX = anodeCTX;
@@ -107,6 +110,8 @@ public class AnodeUOW : IAnodeUOW
 		ToUnload = new ToUnloadRepository(_anodeCTX);
 		ToNotify = new ToNotifyRepository(_anodeCTX);
 		Dataset = new DatasetRepository(_anodeCTX);
+
+		StationTest = new StationTestRepository(_anodeCTX);
 		DebugMode = new DebugModeRepository(_anodeCTX);
 	}
 
@@ -146,6 +151,8 @@ public class AnodeUOW : IAnodeUOW
 			_ when repo == typeof(IToNotifyRepository) => ToNotify,
 			_ when repo == typeof(IDatasetRepository) => Dataset,
 			_ when repo == typeof(IDebugModeRepository) => DebugMode,
+
+			_ when repo == typeof(IStationTestRepository) => StationTest,
 
 			_ when repo == typeof(ILogRepository) => Log,
 			_ => null,
