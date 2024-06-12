@@ -12,6 +12,8 @@ public partial class AnodeD20
 
 	public AnodeD20(S1S2Cycle cycle) : base(cycle)
 	{
+		this.S1S2SignStatus1 = cycle.SignStatus1;
+		this.S1S2SignStatus2 = cycle.SignStatus2;
 	}
 
 	public override DTOAnodeD20 ToDTO() => this.Adapt<DTOAnodeD20>();

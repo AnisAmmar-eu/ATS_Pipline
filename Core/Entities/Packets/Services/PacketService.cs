@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Core.Entities.Alarms.AlarmsCycle.Models.DB;
@@ -254,9 +255,10 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 		}
 		catch (EntityNotFoundException)
 		{
-			StationCycle stationCycle = StationCycle.Create(packet.StationCycleRID[0].ToString());
-			stationCycle.StationID = Station.StationNameToID(packet.StationCycleRID[0].ToString());
+			StationCycle stationCycle = StationCycle.Create($"S{packet.StationCycleRID[0].ToString()}");
+			stationCycle.StationID = int.Parse(packet.StationCycleRID[0].ToString());
 			stationCycle.RID = packet.StationCycleRID;
+
 			if (packet is Shooting shooting)
 			{
 				_logger.LogError("Packet shooting first time");
@@ -267,8 +269,6 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 					stationCycle.Shooting1Packet = shooting;
 				else
 					stationCycle.Shooting2Packet = shooting;
-
-				_anodeUOW.Commit();
 			}
 			else if (packet is MetaData metaData)
 			{
@@ -302,15 +302,12 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 	{
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
-
 		IEnumerable<Task> tasks = formFiles.ToList().Select(async formFile => {
 			string path = isImage ? imagesPath : thumbnailsPath;
 			FileInfo image = Shooting.GetImagePathFromFilename(path, formFile.Name);
 			Directory.CreateDirectory(image.DirectoryName!);
-
 			await using FileStream imageStream = new(image.FullName, FileMode.Create);
 			await formFile.CopyToAsync(imageStream);
-			_logger.LogInformation("Saving image 1 imageName: {name}", image.FullName);
 		});
 		return Task.WhenAll(tasks);
 	}

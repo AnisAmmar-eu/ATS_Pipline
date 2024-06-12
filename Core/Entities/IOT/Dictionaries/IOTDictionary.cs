@@ -136,12 +136,12 @@ public static class MatchService
 		Gate2Gate0DX
 		Gate2Gate1DX
 	*/
-	public static MatchServiceData S3Gate1Gate0DX = new("Match1", 3, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
-	public static MatchServiceData S4Gate1Gate0DX = new("Match2", 4, AnodeTypeDict.DX, "Gate1Gate0DX", 0);
-	public static MatchServiceData S3Gate1Gate0D20 = new("Match3", 3, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
-	public static MatchServiceData S4Gate1Gate0D20 = new("Match4", 4, AnodeTypeDict.D20, "Gate1Gate0D20", 1);
-	public static MatchServiceData S5Gate2Gate0DX = new("Match5", 5, AnodeTypeDict.DX, "Gate2Gate0DX", 2);
-	public static MatchServiceData S5Gate2Gate1DX = new("Match6", 5, AnodeTypeDict.DX, "Gate2Gate1DX", 3);
+	public static MatchServiceData S3Gate1Gate0DX = new("Match1", 3, AnodeTypeDict.DX, "Gate1Gate0DX", 1);
+	public static MatchServiceData S4Gate1Gate0DX = new("Match2", 4, AnodeTypeDict.DX, "Gate1Gate0DX", 1);
+	public static MatchServiceData S3Gate1Gate0D20 = new("Match3", 3, AnodeTypeDict.D20, "Gate1Gate0D20", 2);
+	public static MatchServiceData S4Gate1Gate0D20 = new("Match4", 4, AnodeTypeDict.D20, "Gate1Gate0D20", 2);
+	public static MatchServiceData S5Gate2Gate0DX = new("Match5", 5, AnodeTypeDict.DX, "Gate2Gate0DX", 3);
+	public static MatchServiceData S5Gate2Gate1DX = new("Match6", 5, AnodeTypeDict.DX, "Gate2Gate1DX", 4);
 
 	public static List<MatchServiceData> list = [
 		S3Gate1Gate0DX,

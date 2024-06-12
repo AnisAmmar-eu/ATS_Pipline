@@ -45,7 +45,7 @@ public class LoadService : BackgroundService
 	{
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
-		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
+		double stationDelay = _configuration.GetValueWithThrow<double>(ConfigDictionary.StationDelay);
 		int instanceMatchID = _configuration.GetValueWithThrow<int>(ConfigDictionary.InstanceMatchID);
 
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);

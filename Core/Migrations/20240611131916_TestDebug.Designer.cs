@@ -4,6 +4,7 @@ using Core.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(AnodeCTX))]
-    partial class AlarmesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611131916_TestDebug")]
+    partial class TestDebug
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1666,9 +1669,6 @@ namespace Core.Migrations
                 {
                     b.HasBaseType("Core.Entities.StationCycles.Models.DB.MatchableCycles.MatchableCycle");
 
-                    b.Property<int?>("ChainCycleID")
-                        .HasColumnType("int");
-
                     b.Property<int>("ChainMatchingCamera1")
                         .HasColumnType("int");
 
@@ -1677,10 +1677,6 @@ namespace Core.Migrations
 
                     b.Property<bool>("ChainMatchingResult")
                         .HasColumnType("bit");
-
-                    b.HasIndex("ChainCycleID")
-                        .IsUnique()
-                        .HasFilter("[ChainCycleID] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("S5Cycle");
                 });
@@ -1901,15 +1897,6 @@ namespace Core.Migrations
                     b.Navigation("OutFurnacePacket");
                 });
 
-            modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", b =>
-                {
-                    b.HasOne("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", "ChainCycle")
-                        .WithOne("ChainCycle")
-                        .HasForeignKey("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", "ChainCycleID");
-
-                    b.Navigation("ChainCycle");
-                });
-
             modelBuilder.Entity("Core.Entities.Alarms.AlarmsC.Models.DB.AlarmC", b =>
                 {
                     b.Navigation("AlarmLogs");
@@ -1978,8 +1965,6 @@ namespace Core.Migrations
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S3S4Cycles.S3S4Cycle", b =>
                 {
                     b.Navigation("Anode");
-
-                    b.Navigation("ChainCycle");
                 });
 
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles.S5Cycle", b =>
