@@ -136,7 +136,6 @@ public class AlarmRTService : BaseEntityService<IAlarmRTRepository, AlarmRT, DTO
 
 	public async Task ReceiveAlarmRT(DTOAlarmRT dtoAlarmRT)
 	{
-		_logger.LogInformation("Receiving AlarmRT: {IRID} | {StationID}", dtoAlarmRT.IRID, dtoAlarmRT.StationID);
 		List<AlarmRT> alarms = await _anodeUOW.AlarmRT.GetAll(withTracking: false);
 		try
 		{

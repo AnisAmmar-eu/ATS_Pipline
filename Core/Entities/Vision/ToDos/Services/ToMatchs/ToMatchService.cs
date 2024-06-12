@@ -95,7 +95,7 @@ public class ToMatchService :
 		return cycle;
 	}
 
-	public async Task UpdateAnode(MatchableCycle cycle, string? cycleRID, bool isChained)
+	public async Task UpdateAnode(MatchableCycle cycle, string? cycleRID)
 	{
 		if (cycleRID is null)
 			return;
@@ -129,12 +129,6 @@ public class ToMatchService :
 				((AnodeDX)anode).S5MatchingCamera2 = cycle.MatchingCamera2;
 				((AnodeDX)anode).S5TSFirstShooting = cycle.TSFirstShooting;
 				anode.IsComplete = cycle.AnodeType == AnodeTypeDict.DX;
-
-				if (isChained)
-				{
-					((S5Cycle)cycle).ChainCycle = await _anodeUOW.StationCycle.GetByWithThrow(
-						[cycle => cycle.RID == cycleRID]) as S3S4Cycle;
-				}
 			}
 
 			_anodeUOW.Commit();
@@ -147,6 +141,20 @@ public class ToMatchService :
 			throw;
 		}
 
+		await _anodeUOW.CommitTransaction();
+	}
+
+	public async Task UpdateChainedCycle(MatchableCycle cycle, string? cycleRID)
+	{
+		if (cycleRID is null)
+			return;
+
+		await _anodeUOW.StartTransaction();
+		((S5Cycle)cycle).ChainCycle = (S3S4Cycle?)await _anodeUOW.StationCycle.GetByWithThrow(
+			[cycle => cycle.RID == cycleRID]);
+		_anodeUOW.StationCycle.Update(cycle);
+
+		_anodeUOW.Commit();
 		await _anodeUOW.CommitTransaction();
 	}
 
@@ -177,7 +185,7 @@ public class ToMatchService :
 		return kPI;
 	}
 
-	public async Task<bool> GoMatch(List<string> origins, int instanceMatchID, int delay)
+	public async Task<bool> GoMatch(List<string> origins, int instanceMatchID, double delay)
 	{
 		try
 		{
@@ -232,7 +240,7 @@ public class ToMatchService :
 		}
 	}
 
-	private static bool ValidDelay(DateTimeOffset? date, int delay)
+	private static bool ValidDelay(DateTimeOffset? date, double delay)
 		=> (date is not null) && ((DateTimeOffset)date).AddDays(delay) < DateTimeOffset.Now;
 
 	public static async Task<List<int>> GetMatchInstance(string anodeType, int stationID, IAnodeUOW anodeUOW)

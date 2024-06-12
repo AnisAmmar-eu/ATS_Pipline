@@ -71,7 +71,7 @@ public partial class MetaData
 
 		string sN_Year = (SN_Year % 10).ToString();
 		string[] months = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M"];
-		string sN_Month = months[SN_Month - 1];
+		string sN_Month = (SN_Month == 0) ? "A" : months[SN_Month - 1];
 		string sN_Day = SN_Day.ToString().PadLeft(2, '0');
 		string sN_Vibro = SN_Vibro.ToString();
 		string sN_Number = SN_Number.ToString().PadLeft(4, '0');

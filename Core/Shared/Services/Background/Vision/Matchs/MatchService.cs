@@ -42,7 +42,7 @@ public class MatchService : BackgroundService
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string extension = _configuration.GetValueWithThrow<string>(ConfigDictionary.CameraExtension);
 		int instanceMatchID = _configuration.GetValueWithThrow<int>(ConfigDictionary.InstanceMatchID);
-		int stationDelay = _configuration.GetValueWithThrow<int>(ConfigDictionary.StationDelay);
+		double stationDelay = _configuration.GetValueWithThrow<double>(ConfigDictionary.StationDelay);
 		bool isChained = _configuration.GetValueWithThrow<bool>(ConfigDictionary.IsChained);
 		List<string> stationOrigins = _configuration.GetSectionWithThrow<List<string>>(ConfigDictionary.GoMatchStations);
 
@@ -126,7 +126,7 @@ public class MatchService : BackgroundService
 
 								if (!isChained)
 								{
-									await toMatchService.UpdateAnode(cycle, cycleRID, isChained);
+									await toMatchService.UpdateAnode(cycle, cycleRID);
 									// Get S1S2Cycle and Add ToNotify row
 									string imagePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 									FileInfo file = Shooting.GetImagePathFromFilename(imagePath, anodeID!);
@@ -144,6 +144,10 @@ public class MatchService : BackgroundService
 
 										anodeUOW.ToNotify.Add(toNotify);
 									}
+								}
+								else
+								{
+									await toMatchService.UpdateChainedCycle(cycle, cycleRID);
 								}
 
 								foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, anodeUOW))

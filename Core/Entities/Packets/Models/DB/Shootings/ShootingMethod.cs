@@ -54,8 +54,9 @@ public partial class Shooting
 			AnodeFormat.RIDFormat,
 			CultureInfo.InvariantCulture.DateTimeFormat);
 		string path
-			= $@"S{groups["stationID"].Value}\T{groups["anodeType"]}\Y{date.Year.ToString()}
-				\M{date.Month:00}\D{date.Day:00}\C{groups["camera"]}\";
+			= $"S{groups["stationID"].Value}\\T{groups["anodeType"]}\\Y{date.Year.ToString()}"
+				+ $"\\M{date.Month:00}\\D{date.Day:00}\\C{groups["camera"]}\\";
+
 		return new($@"{root}\{path}\{filename}");
 	}
 
@@ -77,8 +78,9 @@ public partial class Shooting
 			MultipartFormDataContent formData = [];
 			formData.Headers.ContentType!.MediaType = "multipart/form-data";
 
+			int stationID = int.Parse(StationCycleRID[0].ToString());
 			FileInfo image
-				= GetImagePathFromRoot(StationCycleRID, Station.ID, path, AnodeType, cameraNumber, extension);
+				= GetImagePathFromRoot(StationCycleRID, stationID, path, AnodeType, cameraNumber, extension);
 
 			logger.LogInformation("Sending images to the server ? {image.Exists} {name}", image.Exists, image.FullName);
 			if (!image.Exists)

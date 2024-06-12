@@ -59,6 +59,9 @@ public class ToSignService :
 			Anode anode = await _anodeUOW.Anode.GetByWithThrow(
 				[anode => anode.S1S2CycleID == cycle.ID]
 				);
+
+			anode.S1S2SignStatus1 = cycle.SignStatus1;
+			anode.S1S2SignStatus2 = cycle.SignStatus2;
 		}
 		catch (EntityNotFoundException)
 		{

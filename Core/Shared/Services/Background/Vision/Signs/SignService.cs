@@ -45,6 +45,7 @@ public class SignService : BackgroundService
 			ConfigDictionary.LoadDestinations);
 		string anodeType = _configuration.GetValueWithThrow<string>(ConfigDictionary.AnodeType);
 		int signMatchTimer = _configuration.GetValueWithThrow<int>(ConfigDictionary.SignMatchTimer);
+		Station.Name = _configuration.GetValueWithThrow<string>(ConfigDictionary.StationName);
 
 		while (!stoppingToken.IsCancellationRequested)
 		{

@@ -98,7 +98,7 @@ public static class ConfigDictionary
 	public const string LogPath = "DebugConfig:LogPath";
 	public const string CsvExportPath = "DebugConfig:CsvExportPath";
 
-	#endregion DebugMode
+	#endregion DebugMode 
 
 	#region Purge
 

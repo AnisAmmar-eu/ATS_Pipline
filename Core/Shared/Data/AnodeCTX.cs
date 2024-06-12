@@ -233,8 +233,8 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 		builder.Entity<S5Cycle>()
 			.HasOne(s5cycle => s5cycle.ChainCycle)
-			.WithOne(packet => packet.ChainCycle)
-			.HasForeignKey<S3S4Cycle>(s3S4Cycle => s3S4Cycle.ID)
+			.WithOne(s3s4 => s3s4.ChainCycle)
+			.HasForeignKey<S5Cycle>(cycle => cycle.ChainCycleID)
 			.IsRequired(false)
 			.OnDelete(DeleteBehavior.ClientSetNull);
 
