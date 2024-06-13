@@ -10,9 +10,6 @@
     <ItemGroup>
         <Folder Include="Entities\BI\" />
         <Folder Include="Entities\Vision\Dictionnaries\" />
-        <Folder Include="Shared\Models\DB\System\" />
-        <Folder Include="Shared\Models\DTO\System\" />
-        <Folder Include="Shared\Repositories\System\" />
         <Folder Include="Shared\Services\Background\BI\" />
         <Folder Include="Shared\Services\Background\KPI\" />
         <Folder Include="Shared\Services\System\" />
@@ -50,6 +47,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Serilog" Version="4.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="System.ComponentModel" Version="4.3.0" />
         <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
