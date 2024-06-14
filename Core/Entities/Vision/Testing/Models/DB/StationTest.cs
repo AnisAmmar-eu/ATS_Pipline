@@ -14,4 +14,6 @@ public partial class StationTest : BaseEntity, IBaseEntity<StationTest, DTOStati
 	public DateTimeOffset ShootingTS { get; set; }
 	public int Cam1Status { get; set; }
 	public int Cam2Status { get; set; }
+	public int NbActiveAlarms { get; set; }
+	public bool HasPlug { get; set; }
 }

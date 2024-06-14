@@ -19,10 +19,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Context;
 using System.Configuration;
 using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, _, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container.
 
@@ -111,6 +115,10 @@ else
 }
 
 WebApplication app = builder.Build();
+
+LogContext.PushProperty("Source", app.Configuration.GetValueWithThrow<string>("StationConfig:StationName"));
+LogContext.PushProperty("Type", "Message");
+LogContext.PushProperty("HasBeenSent", Station.IsServer);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

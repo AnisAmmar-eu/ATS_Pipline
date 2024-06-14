@@ -34,6 +34,8 @@ public interface IAnodeUOW : IDisposable
 	ICameraTestRepository CameraTest { get; }
 
 	ILogRepository Log { get; }
+	ILogEntryRepository Logs { get; }
+
 	IAlarmCRepository AlarmC { get; }
 	IAlarmLogRepository AlarmLog { get; }
 	IAlarmRTRepository AlarmRT { get; }

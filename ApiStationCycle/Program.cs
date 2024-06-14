@@ -96,11 +96,6 @@ if (!Station.IsServer)
 	builder.Services.AddSingleton<SendLogService>();
 	builder.Services.AddHostedService(provider => provider.GetRequiredService<SendLogService>());
 }
-else
-{
-	builder.Services.AddSingleton<ModeDebugService>();
-	builder.Services.AddHostedService(provider => provider.GetRequiredService<ModeDebugService>());
-}
 
 WebApplication app = builder.Build();
 

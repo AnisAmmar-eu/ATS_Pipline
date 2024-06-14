@@ -336,6 +336,35 @@ namespace Core.Migrations
                     b.ToTable("CameraTest");
                 });
 
+            modelBuilder.Entity("Core.Entities.DebugsModes.Models.DB.DebugMode", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("CsvExportEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DebugModeEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LogEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LogSeverity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DebugModes");
+                });
+
             modelBuilder.Entity("Core.Entities.IOT.IOTDevices.Models.DB.IOTDevice", b =>
                 {
                     b.Property<int>("ID")
@@ -519,6 +548,34 @@ namespace Core.Migrations
                     b.HasIndex("KPIID");
 
                     b.ToTable("TenBestMatch");
+                });
+
+            modelBuilder.Entity("Core.Entities.KPIData.WarningMsgs.Models.DB.WarningMsg", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<int>("KPIID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("KPIID");
+
+                    b.ToTable("WarningMsg");
                 });
 
             modelBuilder.Entity("Core.Entities.Packets.Models.DB.Packet", b =>
@@ -873,6 +930,12 @@ namespace Core.Migrations
                     b.Property<int>("Cam2Status")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasPlug")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("NbActiveAlarms")
+                        .HasColumnType("int");
+
                     b.Property<string>("Photo1")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1172,6 +1235,51 @@ namespace Core.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Log");
+                });
+
+            modelBuilder.Entity("Core.Shared.Models.DB.System.Logs.LogEntry", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("HasBeenSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MessageTemplate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TS")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1767,6 +1875,17 @@ namespace Core.Migrations
                     b.Navigation("KPI");
                 });
 
+            modelBuilder.Entity("Core.Entities.KPIData.WarningMsgs.Models.DB.WarningMsg", b =>
+                {
+                    b.HasOne("Core.Entities.KPIData.KPIs.Models.DB.KPI", "KPI")
+                        .WithMany("WarningMsgs")
+                        .HasForeignKey("KPIID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KPI");
+                });
+
             modelBuilder.Entity("Core.Entities.StationCycles.Models.DB.StationCycle", b =>
                 {
                     b.HasOne("Core.Entities.Packets.Models.DB.AlarmLists.AlarmList", "AlarmListPacket")
@@ -1934,6 +2053,8 @@ namespace Core.Migrations
                         .IsRequired();
 
                     b.Navigation("TenBestMatches");
+
+                    b.Navigation("WarningMsgs");
                 });
 
             modelBuilder.Entity("Core.Entities.User.Models.DB.Acts.ActEntities.ActEntity", b =>

@@ -74,19 +74,23 @@ public class PurgeServer : BackgroundService
 					DeleteFileIfExists(image2);
 				}
 
-				List<ToUnload> toUnload = (List<ToUnload>)(await anodeUOW.Dataset.GetAll(
-					[data => cycles.ConvertAll(x => x.RID).Contains(data.CycleRID)]
-					))
-					.DistinctBy(x => x.CycleRID)
-					.Select(x => x.Adapt<ToUnload>());
+				if (cycles.Count > 0)
+				{
+					List<ToUnload> toUnload = (List<ToUnload>)(await anodeUOW.Dataset.GetAll(
+						[data => cycles.ConvertAll(x => x.RID).Contains(data.CycleRID)]
+						))
+						.DistinctBy(x => x.CycleRID)
+						.Select(x => x.Adapt<ToUnload>());
 
-				anodeUOW.ToUnload.AddRange(toUnload);
+					anodeUOW.ToUnload.AddRange(toUnload);
+				}
 
 				// Delete AlarmLog
 				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
 
 				// Delete Log
 				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
+				await anodeUOW.Logs.RemoveByLifeSpan(purgeThreshold);
 
 				// Delete Metadata (12 mois)
 				TimeSpan span = TimeSpan.FromDays(purgeMetadata);

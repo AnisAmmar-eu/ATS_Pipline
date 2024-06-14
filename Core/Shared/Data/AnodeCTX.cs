@@ -21,6 +21,7 @@ using Core.Entities.IOT.IOTTags.Models.DB;
 using Core.Entities.IOT.IOTTags.Models.DB.OTTagsTwinCat;
 using Core.Entities.KPIData.KPIs.Models.DB;
 using Core.Entities.KPIData.TenBestMatchs.Models.DB;
+using Core.Entities.KPIData.WarningMsgs.Models.DB;
 using Core.Entities.Packets.Models.DB;
 using Core.Entities.Packets.Models.DB.AlarmLists;
 using Core.Entities.Packets.Models.DB.Furnaces.InFurnaces;
@@ -57,6 +58,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	}
 
 	public DbSet<Log> Log => Set<Log>();
+	public DbSet<LogEntry> Logs => Set<LogEntry>();
 
 	public DbSet<BenchmarkTest> BenchmarkTest => Set<BenchmarkTest>();
 	public DbSet<CameraTest> CameraTest => Set<CameraTest>();
@@ -128,6 +130,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 	public DbSet<KPI> KPI => Set<KPI>();
 	public DbSet<TenBestMatch> TenBestMatch => Set<TenBestMatch>();
+	public DbSet<WarningMsg> WarningMsg => Set<WarningMsg>();
 	public DbSet<BITemperature> BITemperature => Set<BITemperature>();
 
 	#endregion KPI
@@ -180,6 +183,12 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 			.HasMany(kpi => kpi.TenBestMatches)
 			.WithOne(tenBestMatch => tenBestMatch.KPI)
 			.HasForeignKey(tenBestMatch => tenBestMatch.KPIID)
+			.IsRequired();
+
+		builder.Entity<KPI>()
+			.HasMany(kpi => kpi.WarningMsgs)
+			.WithOne(warningMsg => warningMsg.KPI)
+			.HasForeignKey(warningMsg => warningMsg.KPIID)
 			.IsRequired();
 
 		builder.Entity<StationCycle>()

@@ -15,4 +15,6 @@ public partial class DTOStationTest : DTOBaseEntity, IDTO<StationTest, DTOStatio
 	public DateTimeOffset? ShootingTS { get; set; }
 	public SignMatchStatus Cam1 { get; set; }
 	public SignMatchStatus Cam2 { get; set; }
+	public int NbActiveAlarms { get; set; }
+	public bool HasPlug { get; set; }
 }

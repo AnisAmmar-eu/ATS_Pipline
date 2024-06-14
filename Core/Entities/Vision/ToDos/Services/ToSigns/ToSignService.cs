@@ -62,6 +62,7 @@ public class ToSignService :
 
 			anode.S1S2SignStatus1 = cycle.SignStatus1;
 			anode.S1S2SignStatus2 = cycle.SignStatus2;
+			anode.S1S2TSFirstShooting = cycle.TSFirstShooting;
 		}
 		catch (EntityNotFoundException)
 		{

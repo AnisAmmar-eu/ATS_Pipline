@@ -6,10 +6,9 @@ namespace Core.Entities.KPIData.TenBestMatchs.Models.DTO;
 
 public partial class DTOTenBestMatch : DTOBaseEntity, IDTO<TenBestMatch, DTOTenBestMatch>
 {
-	public int CycleID { get; set; }
-	public string CycleRID { get; set; }
-	public int CameraID { get; set; }
-	public int StationID { get; set; }
-	public string AnodeType { get; set; }
-	public DateTimeOffset? ShootingTS { get; set; }
+	public int Rank { get; set; }
+	public string AnodeID { get; set; } = string.Empty;
+	public int Score { get; set; }
+
+	public int KPIID { get; set; }
 }
