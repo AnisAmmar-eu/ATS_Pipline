@@ -7,8 +7,9 @@ using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Models.ApiResponses;
 using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
 
-namespace ApiDebugMode.Endpoints;
+namespace ApiStationCycle.Endpoints;
 
 public class DebugModeEndpoint :
 	BaseEntityEndpoint<DebugMode, DTODebugMode, IDebugModeService>,
@@ -19,7 +20,7 @@ public class DebugModeEndpoint :
 		if (!Station.IsServer)
 			return;
 
-		RouteGroupBuilder group = app.MapGroup("apiDebugMode").WithTags(nameof(DebugModeEndpoint));
+		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(DebugModeEndpoint));
 		group.MapGet("status", () => new ApiResponse().SuccessResult());
 
 		// Debug Mode , Logs , Csv 
@@ -27,6 +28,8 @@ public class DebugModeEndpoint :
 		group.MapPut("logs/{enabled}", ToggleLogs);
 		group.MapPut("setSeverity/{severity}", SetLogSeverity);
 		group.MapPut("csvExport/{enabled}", ToggleCsvExport);
+
+		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
 	}
 
 	// Debug Mode , Logs , CSV 
