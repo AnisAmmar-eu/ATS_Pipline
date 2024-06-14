@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.Packets.Models.DB.Shootings;
+using Core.Shared.Services.Background;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Match service");
@@ -42,6 +43,9 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<MatchF
 
 builder.Services.AddSingleton<WatchDogServiceMatch>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<WatchDogServiceMatch>());
+
+builder.Services.AddSingleton<ModeDebugService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<ModeDebugService>());
 
 IHost host = builder.Build();
 

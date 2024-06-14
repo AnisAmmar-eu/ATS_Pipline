@@ -23,6 +23,7 @@ public partial class StationTest
 		metadata.Cam02Status = this.Cam2Status;
 		metadata.SN_Number = this.SN_number;
 		metadata.TS = this.TS;
+		metadata.NbActiveAlarms = this.NbActiveAlarms;
 		return metadata;
 	}
 
@@ -34,6 +35,7 @@ public partial class StationTest
 		shooting.Cam01Status = Cam1Status;
 		shooting.Cam02Status = Cam2Status;
 		shooting.TS = TS;
+		shooting.HasPlug = this.HasPlug;
 		return shooting;
 	}
 }

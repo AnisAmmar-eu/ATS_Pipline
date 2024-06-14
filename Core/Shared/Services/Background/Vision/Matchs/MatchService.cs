@@ -129,7 +129,7 @@ public class MatchService : BackgroundService
 									await toMatchService.UpdateAnode(cycle, cycleRID);
 									// Get S1S2Cycle and Add ToNotify row
 									string imagePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-									FileInfo file = Shooting.GetImagePathFromFilename(imagePath, anodeID!);
+									FileInfo file = Shooting.GetImagePathFromFilename(imagePath, $"{anodeID!}.{extension}");
 									StationCycle? cycleMatched = await anodeUOW.StationCycle.GetBy([cycle => cycle.RID == cycleRID]);
 
 									if (cycleMatched is not null)
@@ -143,6 +143,7 @@ public class MatchService : BackgroundService
 										};
 
 										anodeUOW.ToNotify.Add(toNotify);
+										anodeUOW.Commit();
 									}
 								}
 								else

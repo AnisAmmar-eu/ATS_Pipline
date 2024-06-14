@@ -25,10 +25,20 @@ public class ModeDebugService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
+		await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+		IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+
+		string debugPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DebugFolderPath);
+		string logPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.LogFilePath);
+		string csvPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.CsvExportFolderPath);
+
+		Directory.CreateDirectory(debugPath);
+		File.Create(logPath);
+		Directory.CreateDirectory(csvPath);
+
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-			IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+			await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
 
 			try
 			{
@@ -38,13 +48,11 @@ public class ModeDebugService : BackgroundService
 				{
 					foreach (DebugMode debugMode in settings)
 					{
-						await ApplyDebugModeAsync(debugMode);
-						await ApplyLogAsync(debugMode);
-						await ApplyCsvExportAsync(debugMode);
+						await ApplyDebugModeAsync(debugMode, debugPath);
+						await ApplyLogAsync(debugMode, logPath);
+						await ApplyCsvExportAsync(debugMode, csvPath);
 					}
 				}
-
-				await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
 			}
 			catch (Exception ex)
 			{
@@ -53,44 +61,35 @@ public class ModeDebugService : BackgroundService
 		}
 	}
 
-	private async Task ApplyDebugModeAsync(DebugMode debugMode)
+	private async Task ApplyDebugModeAsync(DebugMode debugMode, string debugPath)
 	{
 		int result;
 		if (debugMode.DebugModeEnabled)
 		{
-			string debugPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.DebugModePath);
-
 			result = DLLVisionImport.fcx_activate_pipeline_debug(debugPath);
 			if (result != 0)
-			{
 				_logger.LogError("Erreur lors de l'activation du mode de débogage : {ErrorCode}", result);
-				return;
-			}
-
-			_logger.LogInformation("Debug mode activé");
+			else
+				_logger.LogInformation("Debug mode activé");
 		}
 		else
 		{
-			result = DLLVisionImport.fcx_ats_deactivate_pipeline_debug();
+			result = DLLVisionImport.fcx_deactivate_pipeline_debug();
 			if (result != 0)
-			{
 				_logger.LogError("Erreur lors de la désactivation du mode de débogage : {ErrorCode}", result);
-				return;
-			}
-
-			_logger.LogInformation("Debug mode désactivé");
+			else
+				_logger.LogInformation("Debug mode désactivé");
 		}
 	}
 
-	private async Task ApplyLogAsync(DebugMode debugMode)
+	private async Task ApplyLogAsync(DebugMode debugMode, string logPath)
 	{
-		string logPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.LogPath);
 		int resultLevel;
 		int resultType;
 		if (debugMode.LogEnabled)
 		{
-			resultLevel = DLLVisionImport.fcx_ats_set_log_level(debugMode.LogSeverity);
-			resultType = DLLVisionImport.fcx_ats_set_log_type(logPath);
+			resultLevel = DLLVisionImport.fcx_set_log_level(debugMode.LogSeverity);
+			resultType = DLLVisionImport.fcx_set_log_type(logPath);
 
 			if (resultLevel != 0)
 			{
@@ -110,7 +109,7 @@ public class ModeDebugService : BackgroundService
 		}
 		else
 		{
-			resultLevel = DLLVisionImport.fcx_ats_set_log_level("off");
+			resultLevel = DLLVisionImport.fcx_set_log_level("off");
 			if (resultLevel != 0)
 			{
 				_logger.LogError("Erreur lors de la désactivation de la journalisation : {ErrorCode}", resultLevel);
@@ -121,13 +120,12 @@ public class ModeDebugService : BackgroundService
 		}
 	}
 
-	private async Task ApplyCsvExportAsync(DebugMode debugMode)
+	private async Task ApplyCsvExportAsync(DebugMode debugMode, string csvPath)
 	{
-		string csvPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.CsvExportPath);
 		int result;
 		if (debugMode.CsvExportEnabled)
 		{
-			result = DLLVisionImport.fcx_ats_activate_score_buffering(csvPath);
+			result = DLLVisionImport.fcx_activate_score_buffering(csvPath);
 			if (result != 0)
 			{
 				_logger.LogError("Erreur lors de l'activation de l'export CSV : {ErrorCode}", result);
@@ -138,7 +136,7 @@ public class ModeDebugService : BackgroundService
 		}
 		else
 		{
-			result = DLLVisionImport.fcx_ats_deactivate_score_buffering();
+			result = DLLVisionImport.fcx_deactivate_score_buffering();
 			if (result != 0)
 			{
 				_logger.LogError("Erreur lors de la désactivation de l'export CSV : {ErrorCode}", result);

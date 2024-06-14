@@ -1,3 +1,4 @@
+using Core.Entities.DebugsModes.Models.DB;
 using Core.Entities.IOT.Dictionaries;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Matchs;
 using Core.Entities.IOT.IOTDevices.Models.DB.BackgroundServices.Signs;
@@ -84,6 +85,8 @@ public static class IOTInitializer
 		InitializeServerRule(anodeCTX);
 		InitializeSignServices(anodeCTX);
 		InitializeMatchServices(anodeCTX);
+
+		InitializeDebugModes(anodeCTX);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
@@ -320,6 +323,18 @@ public static class IOTInitializer
 			match.Description = match.RID;
 			anodeCTX.Match.Add(match);
 		}
+
+		anodeCTX.SaveChanges();
+	}
+
+	private static void InitializeDebugModes(AnodeCTX anodeCTX)
+	{
+		anodeCTX.DebugModes.Add(new DebugMode {
+			DebugModeEnabled = false,
+			LogEnabled = false,
+			CsvExportEnabled = false,
+			LogSeverity = "Warning",
+		});
 
 		anodeCTX.SaveChanges();
 	}
