@@ -18,7 +18,6 @@ public partial class DTOLogEntry
 		Exception = log.Exception;
 		Properties = log.Properties;
 		Source = log.Source;
-		Type = log.Type;
 		HasBeenSent = log.HasBeenSent;
 	}
 

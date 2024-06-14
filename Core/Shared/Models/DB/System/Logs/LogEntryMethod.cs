@@ -18,7 +18,6 @@ public partial class LogEntry
 		Exception = dto.Exception;
 		Properties = dto.Properties;
 		Source = dto.Source;
-		Type = dto.Type;
 		HasBeenSent = dto.HasBeenSent;
 	}
 
