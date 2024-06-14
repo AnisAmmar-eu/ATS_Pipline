@@ -14,6 +14,7 @@ public partial class AnodeDX
 	{
 		this.S1S2SignStatus1 = cycle.SignStatus1;
 		this.S1S2SignStatus2 = cycle.SignStatus2;
+		this.S1S2TSFirstShooting = cycle.TSFirstShooting;
 	}
 
 	public override DTOAnodeDX ToDTO() => this.Adapt<DTOAnodeDX>();

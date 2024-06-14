@@ -211,6 +211,8 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				if (stationCycle.AnodeType is AnodeTypeDict.Undefined)
 					stationCycle.AnodeType = shooting.AnodeType;
 
+				stationCycle.HasPlug = shooting.HasPlug;
+
 				if (shooting.Cam01Status == 1)
 					stationCycle.Shooting1Packet = shooting;
 				else
@@ -229,6 +231,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
 				stationCycle.SerialNumber = metaData.GetSerialNumber();
+				stationCycle.NbActiveAlarms = metaData.NbActiveAlarms;
 
 				if (stationCycle.CanMatch())
 				{
@@ -265,6 +268,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 
 				stationCycle.AnodeType = shooting.AnodeType;
 				stationCycle.TSFirstShooting = shooting.ShootingTS;
+				stationCycle.HasPlug = shooting.HasPlug;
 				if (shooting.Cam01Status == 1)
 					stationCycle.Shooting1Packet = shooting;
 				else
@@ -278,6 +282,7 @@ public class PacketService : BaseEntityService<IPacketRepository, Packet, DTOPac
 				stationCycle.Picture1Status = metaData.Cam01Status;
 				stationCycle.Picture2Status = metaData.Cam02Status;
 				stationCycle.SerialNumber = metaData.GetSerialNumber();
+				stationCycle.NbActiveAlarms = metaData.NbActiveAlarms;
 			}
 			else
 			{

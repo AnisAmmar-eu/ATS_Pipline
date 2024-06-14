@@ -9,6 +9,7 @@ using Core.Shared.UnitOfWork;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.DLLVision;
 using Microsoft.EntityFrameworkCore;
+using Core.Shared.Services.Background;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Sign service");
@@ -28,6 +29,9 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<SignFi
 
 builder.Services.AddSingleton<WatchDogServiceSign>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<WatchDogServiceSign>());
+
+builder.Services.AddSingleton<ModeDebugService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<ModeDebugService>());
 
 IHost host = builder.Build();
 

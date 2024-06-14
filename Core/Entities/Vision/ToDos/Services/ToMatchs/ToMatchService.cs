@@ -20,6 +20,8 @@ using Core.Shared.Exceptions;
 using Core.Shared.Services.Kernel;
 using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.DLLVision;
+using Core.Entities.KPIData.WarningMsgs.Models.DB;
+using System.Runtime.InteropServices;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -86,7 +88,7 @@ public class ToMatchService :
 		}
 
 		if (cameraID == 2 || (cameraID == 1 && retMatchCode != -106))
-			cycle.KPI = CreateKPI(retMatch);
+			cycle.KPI = CreateKPI(retMatch, retMatchCode);
 
 		_anodeUOW.StationCycle.Update(cycle);
 		_anodeUOW.Commit();
@@ -158,28 +160,48 @@ public class ToMatchService :
 		await _anodeUOW.CommitTransaction();
 	}
 
-	private static KPI CreateKPI(IntPtr retMatch)
+	private static KPI CreateKPI(IntPtr retMatch, int retMatchCode)
 	{
 		KPI kPI = new() {
 			MScore = DLLVisionImport.fcx_matchRet_similarityScore(retMatch),
-			NbCandidats = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(retMatch), //TODO change when new DLL
+			NbCandidats = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(retMatch),
 			Threshold = DLLVisionImport.fcx_matchRet_threshold(retMatch),
 			NMminScore = DLLVisionImport.fcx_matchRet_worstScore(retMatch),
-			// kPI.NMmaxScore = DLLVisionImport.fcx_matchRet_bestScore(retMatch); TODO allow when DLL works
-			//kPI.NMAvg = DLLVisionImport.fcx_matchRet_mean(retMatch);
-			//kPI.NMStdev = Math.Sqrt(DLLVisionImport.fcx_matchRet_variance(retMatch));
+			NMmaxScore = DLLVisionImport.fcx_matchRet_bestScore(retMatch),
+			NMAvg = DLLVisionImport.fcx_matchRet_mean(retMatch),
+			NMStdev = Math.Sqrt(DLLVisionImport.fcx_matchRet_variance(retMatch)),
 			ComputeTime = DLLVisionImport.fcx_matchRet_elapsed(retMatch),
 		};
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < Math.Min(10, kPI.NbCandidats); i++)
 		{
 			kPI.TenBestMatches.Add(new TenBestMatch() {
 				Rank = i,
-				//AnodeID = DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i), TODO allow when DLL works
-				//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i), TODO allow when DLL works
+				AnodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i)) ?? string.Empty,
+				Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i),
 				KPI = kPI,
 			}
 		);
+		}
+
+		if (retMatchCode == -106)
+		{
+			for (int i = 0; i < DLLVisionImport.fcx_warnings_nb_messages(); i++)
+			{
+				nint warningMsgPtr = DLLVisionImport.fcx_warnings_get_message(i);
+				string? warningMsg = Marshal.PtrToStringAnsi(warningMsgPtr);
+				if (warningMsg is null)
+					continue;
+
+				string[] splitMsg = warningMsg.Split(";", 2);
+
+				kPI.WarningMsgs.Add(new WarningMsg() {
+					Code = int.Parse(splitMsg[0]),
+					Message = splitMsg[1],
+					KPI = kPI,
+				}
+			);
+			}
 		}
 
 		return kPI;

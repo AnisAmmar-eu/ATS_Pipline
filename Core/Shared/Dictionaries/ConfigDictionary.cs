@@ -94,9 +94,9 @@ public static class ConfigDictionary
 
 	#region DebugMode 
 
-	public const string DebugModePath = "DebugConfig:DebugModePath";
-	public const string LogPath = "DebugConfig:LogPath";
-	public const string CsvExportPath = "DebugConfig:CsvExportPath";
+	public const string DebugFolderPath = "DebugConfig:DebugFolderPath";
+	public const string LogFilePath = "DebugConfig:LogFilePath";
+	public const string CsvExportFolderPath = "DebugConfig:CsvExportFolderPath";
 
 	#endregion DebugMode 
 
