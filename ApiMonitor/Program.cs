@@ -1,5 +1,5 @@
-using ApiMonitor.Enrichers;
 using Carter;
+using Core.Configuration.Serilog;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.IOT.IOTDevices.Services;
@@ -26,7 +26,19 @@ using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+// Use Serilog as logger
 builder.Logging.ClearProviders();
+builder.Host.UseSerilog(
+	(ctx, serviceProvider, loggerConfig) => {
+		loggerConfig
+			.ReadFrom
+			.Configuration(ctx.Configuration)
+			.ReadFrom
+			.Services(serviceProvider)
+			.Enrich
+			.WithCustomEnrichers(ctx.Configuration);
+	});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -112,18 +124,6 @@ else
 	//builder.Services.AddSingleton<PurgeService>();
 	//builder.Services.AddHostedService(provider => provider.GetRequiredService<PurgeService>());
 }
-
-// Use Serilog as logger
-builder.Host.UseSerilog(
-	(ctx, serviceProvider, loggerConfig) => {
-		loggerConfig
-			.ReadFrom
-			.Configuration(ctx.Configuration)
-			.ReadFrom
-			.Services(serviceProvider)
-			.Enrich
-			.WithCustomEnrichers(ctx.Configuration);
-	});
 
 WebApplication app = builder.Build();
 

@@ -1,8 +1,9 @@
 ﻿using Core.Shared.Configuration;
+using Microsoft.Extensions.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace ApiMonitor.Enrichers;
+namespace Core.Configuration.Serilog;
 
 public class SourceEnricher : ILogEventEnricher
 {

@@ -1,5 +1,4 @@
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -13,7 +12,6 @@ public class BaseEndpoint
 {
 	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpoint<TReturn>(
 		Func<Task<TReturn>> func,
-		ILogService logService,
 		HttpContext httpContext,
 		bool isLogged = false)
 	{
@@ -24,17 +22,16 @@ public class BaseEndpoint
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext, e);
+			return new ApiResponse().ErrorResult(httpContext, e);
 		}
 
 		return isLogged
-			? await new ApiResponse(ans).SuccessResult(logService, httpContext)
+			? new ApiResponse(ans).SuccessResult(httpContext)
 			: new ApiResponse(ans).SuccessResult();
 	}
 
 	protected static async Task<JsonHttpResult<ApiResponse>> GenericEndpointEmptyResponse(
 		Func<Task> func,
-		ILogService logService,
 		HttpContext httpContext,
 		bool isLogged = false)
 	{
@@ -44,9 +41,9 @@ public class BaseEndpoint
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext, e);
+			return new ApiResponse().ErrorResult(httpContext, e);
 		}
 
-		return isLogged ? await new ApiResponse().SuccessResult(logService, httpContext) : new ApiResponse().SuccessResult();
+		return isLogged ? new ApiResponse().SuccessResult(httpContext) : new ApiResponse().SuccessResult();
 	}
 }

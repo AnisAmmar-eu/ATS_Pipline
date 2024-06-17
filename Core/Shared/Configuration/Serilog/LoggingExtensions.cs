@@ -1,7 +1,8 @@
 ﻿using Serilog.Configuration;
 using Serilog;
+using Microsoft.Extensions.Configuration;
 
-namespace ApiMonitor.Enrichers;
+namespace Core.Configuration.Serilog;
 
 public static class LoggingExtensions
 {

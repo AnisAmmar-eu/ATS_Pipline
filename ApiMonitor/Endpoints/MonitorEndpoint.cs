@@ -7,7 +7,6 @@ using Core.Entities.Vision.ToDos.Services.ToMatchs;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,27 +29,24 @@ public class MonitorEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIOTD
 	private static Task<JsonHttpResult<ApiResponse>> GetStatusByRID(
 		[Required][FromRoute] string rid,
 		IIOTDeviceService iotDeviceService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => iotDeviceService.GetStatusByRID(rid), logService, httpContext);
+		HttpContext httpContext)
+			=> GenericEndpoint(() => iotDeviceService.GetStatusByRID(rid), httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> GetDevicesByArrayRID(
 		[FromBody][Required] IEnumerable<string> rids,
 		IIOTDeviceService iotDeviceService,
-		ILogService logService,
 		HttpContext httpContext)
-			=> GenericEndpoint(() => iotDeviceService.GetStatusByArrayRID(rids), logService, httpContext);
+			=> GenericEndpoint(() => iotDeviceService.GetStatusByArrayRID(rids), httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> ActiveReinit(
 		IIOTDeviceService iotDeviceService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => iotDeviceService.ActiveReinit(), logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(() => iotDeviceService.ActiveReinit(), httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> TestGoMatch(
 		[FromBody][Required] IEnumerable<string> origins,
 		[Required][FromRoute] int instanceMatch,
 		[Required][FromRoute] int delay,
 		IToMatchService toMatchService,
-		ILogService logService,
 		HttpContext httpContext)
-			=> GenericEndpoint(() => toMatchService.GoMatch(origins.ToList(), instanceMatch, delay), logService, httpContext);
+			=> GenericEndpoint(() => toMatchService.GoMatch(origins.ToList(), instanceMatch, delay), httpContext);
 }

@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Shared.Repositories.System.Logs;
 
-public class LogRepository : BaseEntityRepository<AnodeCTX, Log, DTOLog>, ILogRepository
+public class LogRepository : BaseEntityRepository<AnodeCTX, LogEntry, DTOLogEntry>, ILogRepository
 {
 	public LogRepository(AnodeCTX context) : base(context, [], [])
 	{
 	}
 
-	public Task<List<Log>> GetRange(int start, int nbItems)
-		=> _context.Log.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
+	public Task<List<LogEntry>> GetRange(int start, int nbItems)
+		=> _context.Logs.OrderByDescending(log => log.TS).Skip(start).Take(nbItems).ToListAsync();
 
 	public async Task DeleteAll()
 	{

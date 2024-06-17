@@ -4,24 +4,12 @@ using Core.Shared.Services.Kernel.Interfaces;
 
 namespace Core.Shared.Services.SystemApp.Logs;
 
-public interface ILogService : IBaseEntityService<Log, DTOLog>
+public interface ILogService : IBaseEntityService<LogEntry, DTOLogEntry>
 {
-	public Task<List<DTOLog>> GetAll();
-	public Task<List<DTOLog>> GetRange(int start, int nbItems);
-	public Task<List<Log>> GetAllUnsent();
-	public Task SendLogs(List<Log> logs);
-	public Task ReceiveLogs(List<DTOLog> dtoLogs);
+	public Task<List<DTOLogEntry>> GetAll();
+	public Task<List<DTOLogEntry>> GetRange(int start, int nbItems);
+	public Task<List<LogEntry>> GetAllUnsent();
+	public Task SendLogs(List<LogEntry> logs);
+	public Task ReceiveLogs(List<DTOLogEntry> dtoLogs);
 	public Task DeleteAllLogs();
-
-	Task Create(
-		DateTimeOffset date,
-		string server,
-		string username,
-		string api,
-		string controller,
-		string function,
-		string endpoint,
-		int code,
-		string value
-		);
 }

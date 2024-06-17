@@ -2,7 +2,7 @@
 using Serilog.Core;
 using Serilog.Events;
 
-namespace ApiMonitor.Enrichers;
+namespace Core.Configuration.Serilog;
 
 public class HasBeenSentEnricher : ILogEventEnricher
 {

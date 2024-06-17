@@ -2,7 +2,6 @@ using Carter;
 using Core.Entities.Packets.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +21,6 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 
 	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetCameraTestImage(
 		[FromRoute] int cameraID,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		byte[] image;
@@ -36,7 +34,7 @@ public class CameraApiEndpoint : BaseEndpoint, ICarterModule
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext, e);
+			return new ApiResponse().ErrorResult(httpContext, e);
 		}
 
 		httpContext.Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");

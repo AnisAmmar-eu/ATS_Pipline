@@ -29,19 +29,16 @@ public class IOTTagEndpoint : BaseEntityEndpoint<IOTTag, DTOIOTTag, IIOTTagServi
 	private static Task<JsonHttpResult<ApiResponse>> GetTagValueByArrayRID(
 		[FromBody][Required] IEnumerable<string> rids,
 		IIOTTagService iotTagService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => iotTagService.GetByArrayRID(rids), logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(() => iotTagService.GetByArrayRID(rids), httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> SetTagValueByRID(
 		[FromRoute] string rid,
 		[FromRoute] string value,
 		IIOTTagService iotTagService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => iotTagService.UpdateTagByRID(rid, value), logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(() => iotTagService.UpdateTagByRID(rid, value), httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> SetTagsValues(
 		[FromBody][Required] List<PatchIOTTag> toUpdate,
 		IIOTTagService iotTagService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => iotTagService.UpdateTags(toUpdate), logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(() => iotTagService.UpdateTags(toUpdate), httpContext);
 }

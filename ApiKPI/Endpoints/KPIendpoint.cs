@@ -31,7 +31,6 @@ public class KPIEndpoint : BaseEntityEndpoint<KPI, DTOKPI, IKPIService>, ICarter
 	private static Task<JsonHttpResult<ApiResponse>> GetAllStationKPIs(
 		[FromBody] KPIrequest kpiRequest,
 		IKPIService kpiService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
@@ -40,7 +39,6 @@ public class KPIEndpoint : BaseEntityEndpoint<KPI, DTOKPI, IKPIService>, ICarter
 				kpiRequest.End,
 				kpiRequest.Anodes,
 				kpiRequest.OriginStations),
-			logService,
 			httpContext);
 	}
 }
