@@ -17,7 +17,7 @@ public class LogRepository : BaseEntityRepository<AnodeCTX, LogEntry, DTOLogEntr
 
 	public async Task DeleteAll()
 	{
-		_context.Log.RemoveRange(_context.Log);
+		_context.Logs.RemoveRange(_context.Logs);
 		await _context.SaveChangesAsync();
 	}
 }
