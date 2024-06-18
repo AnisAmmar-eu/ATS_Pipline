@@ -12,5 +12,6 @@ public partial class DTOLogEntry : DTOBaseEntity, IDTO<LogEntry, DTOLogEntry>
 	public string? Exception { get; set; }
 	public string? Properties { get; set; }
 	public string Source { get; set; } = string.Empty;
+	public string? Instance { get; set; }
 	public bool HasBeenSent { get; set; }
 }
