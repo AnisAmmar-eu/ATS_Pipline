@@ -222,5 +222,6 @@ public interface IBaseEntityRepository<T, TDTO>
 	/// <param name="predicate"></param>
 	/// <param name="withTracking"></param>
 	/// <param name="includes"></param>
-	Task<bool> Any(Expression<Func<T, bool>> predicate, bool withTracking = true, params string[] includes);
+	Task<bool> AnyPredicate(Expression<Func<T, bool>> predicate, bool withTracking = true, params string[] includes);
+	Task<bool> Any(bool withTracking = true, params string[] includes);
 }

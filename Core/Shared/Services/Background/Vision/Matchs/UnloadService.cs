@@ -51,41 +51,41 @@ public class UnloadService : BackgroundService
 
 			try
 			{
-				List<ToUnload> toUnloads = await anodeUOW.ToUnload.GetAll(
+				ToUnload? toUnload = await anodeUOW.ToUnload.GetBy(
 					[unload => unload.InstanceMatchID == instanceMatchID],
 					withTracking: false);
 
-				foreach (ToUnload toUnload in toUnloads)
+				if (toUnload is null)
+					continue;
+
+				foreach (int cameraID in new int[] { 1, 2 })
 				{
-					foreach (int cameraID in new int[] { 1, 2 })
+					string sANFile = Shooting.GetImagePathFromRoot(
+						toUnload.CycleRID,
+						toUnload.StationID,
+						imagesPath,
+						toUnload.AnodeType,
+						cameraID,
+						extension).FullName;
+
+					int dropResponse = DLLVisionImport.fcx_drop_anode(
+						cameraID,
+						sANFile);
+
+					if (dropResponse != 0)
 					{
-						string sANFile = Shooting.GetImagePathFromRoot(
-							toUnload.CycleRID,
-							toUnload.StationID,
-							imagesPath,
-							toUnload.AnodeType,
-							cameraID,
-							extension).FullName;
-
-						int dropResponse = DLLVisionImport.fcx_drop_anode(
-							cameraID,
-							sANFile);
-
-						if (dropResponse != 0)
-						{
-							_logger.LogError(
-								"Failed to unload anode with response code {responseCode}.",
-								dropResponse);
-						}
+						_logger.LogError(
+							"Failed to unload anode with response code {responseCode}.",
+							dropResponse);
 					}
-
-					await anodeUOW.Dataset.ExecuteDeleteAsync(
-						dataset => dataset.CycleRID == toUnload.CycleRID
-							&& toUnload.InstanceMatchID == dataset.InstanceMatchID);
-
-					await anodeUOW.ToUnload.ExecuteDeleteAsync(
-						unload => unload.ID == toUnload.ID);
 				}
+
+				await anodeUOW.Dataset.ExecuteDeleteAsync(
+					dataset => dataset.CycleRID == toUnload.CycleRID
+						&& toUnload.InstanceMatchID == dataset.InstanceMatchID);
+
+				await anodeUOW.ToUnload.ExecuteDeleteAsync(
+					unload => unload.ID == toUnload.ID);
 			}
 			catch (Exception ex)
 			{

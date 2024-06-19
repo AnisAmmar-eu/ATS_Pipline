@@ -349,7 +349,7 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 	/// <param name="predicate"></param>
 	/// <param name="withTracking"></param>
 	/// <param name="includes"></param>
-	public Task<bool> Any(Expression<Func<T, bool>> predicate, bool withTracking = true, params string[] includes)
+	public Task<bool> AnyPredicate(Expression<Func<T, bool>> predicate, bool withTracking = true, params string[] includes)
 	{
 		return Query(
 			[predicate],
@@ -359,6 +359,18 @@ public class BaseEntityRepository<TContext, T, TDTO> : IBaseEntityRepository<T, 
 			new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } }
 				)
 			.AnyAsync(predicate);
+	}
+
+	public Task<bool> Any(bool withTracking = true, params string[] includes)
+	{
+		return Query(
+			[],
+			null,
+			withTracking,
+			null,
+			new Dictionary<string, string[]> { { string.Empty, _baseIncludes.Concat(includes).ToArray() } }
+				)
+			.AnyAsync();
 	}
 
 	private IQueryable<T> Query(

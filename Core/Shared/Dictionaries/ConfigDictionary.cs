@@ -70,6 +70,9 @@ public static class ConfigDictionary
 	public const string GoMatchStations = "VisionSettings:GoMatchStations";
 	public const string IsChained = "VisionSettings:IsChained";
 
+	//Reinit
+	public const string ReinitChunk = "VisionSettings:ReinitChunk";
+
 	#endregion Vision settings
 
 	#region Vision File settings
