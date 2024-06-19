@@ -55,7 +55,7 @@ public class PurgeService : BackgroundService
 				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
 
 				// Delete Log
-				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
+				await anodeUOW.Logs.RemoveByLifeSpan(purgeThreshold);
 
 				// Delete Packet
 				List<Packet> packets = await anodeUOW.Packet.GetAll(

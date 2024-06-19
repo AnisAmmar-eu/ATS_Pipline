@@ -1,4 +1,5 @@
 using Carter;
+using Core.Configuration.Serilog;
 using Core.Entities.Anodes.Services;
 using Core.Entities.KPIData.KPIs.Services;
 using Core.Entities.Packets.Services;
@@ -15,8 +16,22 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Use Serilog as logger
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog(
+	(ctx, serviceProvider, loggerConfig) => {
+		loggerConfig
+			.ReadFrom
+			.Configuration(ctx.Configuration)
+			.ReadFrom
+			.Services(serviceProvider)
+			.Enrich
+			.WithCustomEnrichers(ctx.Configuration);
+	});
 
 // Add services to the container.
 

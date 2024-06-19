@@ -40,8 +40,7 @@ public class AnodeUOW : IAnodeUOW
 	public ICameraTestRepository CameraTest { get; }
 	public IBenchmarkTestRepository BenchmarkTest { get; }
 
-	public ILogRepository Log { get; }
-	public ILogEntryRepository Logs { get; }
+	public ILogRepository Logs { get; }
 
 	public IAlarmCRepository AlarmC { get; }
 	public IAlarmLogRepository AlarmLog { get; }
@@ -80,8 +79,7 @@ public class AnodeUOW : IAnodeUOW
 		BenchmarkTest = new BenchmarkTestRepository(_anodeCTX);
 		CameraTest = new CameraTestRepository(_anodeCTX);
 
-		Log = new LogRepository(_anodeCTX);
-		Logs = new LogEntryRepository(_anodeCTX);
+		Logs = new LogRepository(_anodeCTX);
 
 		AlarmC = new AlarmCRepository(_anodeCTX);
 		AlarmLog = new AlarmLogRepository(_anodeCTX);
@@ -156,8 +154,7 @@ public class AnodeUOW : IAnodeUOW
 
 			_ when repo == typeof(IStationTestRepository) => StationTest,
 
-			_ when repo == typeof(ILogRepository) => Log,
-			_ when repo == typeof(ILogEntryRepository) => Logs,
+			_ when repo == typeof(ILogRepository) => Logs,
 			_ => null,
 		};
 	}

@@ -57,7 +57,6 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 	{
 	}
 
-	public DbSet<Log> Log => Set<Log>();
 	public DbSet<LogEntry> Logs => Set<LogEntry>();
 
 	public DbSet<BenchmarkTest> BenchmarkTest => Set<BenchmarkTest>();

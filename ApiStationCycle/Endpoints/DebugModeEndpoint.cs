@@ -33,48 +33,40 @@ public class DebugModeEndpoint :
 	private static Task<JsonHttpResult<ApiResponse>> ToggleDebugMode(
 		bool enabled,
 		IDebugModeService debugModeService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => debugModeService.ApplyDebugMode(enabled),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ToggleLogs(
 		bool enabled,
 		IDebugModeService debugModeService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => debugModeService.ApplyLog(enabled),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> SetLogSeverity(
 		string severity,
 		IDebugModeService debugModeService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => debugModeService.SetSeverity(severity),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ToggleCsvExport(
 		bool enabled,
 		IDebugModeService debugModeService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => debugModeService.ApplyCsvExport(enabled),
-			logService,
 			httpContext);
 	}
 }

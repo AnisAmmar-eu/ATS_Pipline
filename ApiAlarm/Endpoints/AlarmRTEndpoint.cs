@@ -24,7 +24,6 @@ public class AlarmRTEndpoint : BaseEntityEndpoint<AlarmRT, DTOAlarmRT, IAlarmRTS
 	///     This function returns the statistics of AlarmRT. The result will always be an array of length 3.
 	/// </summary>
 	/// <param name="alarmRTService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>
 	///     res[0] => Nb No Alarms
@@ -33,6 +32,5 @@ public class AlarmRTEndpoint : BaseEntityEndpoint<AlarmRT, DTOAlarmRT, IAlarmRTS
 	/// </returns>
 	private static Task<JsonHttpResult<ApiResponse>> GetAlarmRTStats(
 		IAlarmRTService alarmRTService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(alarmRTService.GetAlarmRTStats, logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(alarmRTService.GetAlarmRTStats, httpContext);
 }

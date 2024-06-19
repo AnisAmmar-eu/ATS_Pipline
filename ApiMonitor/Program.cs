@@ -1,4 +1,5 @@
 using Carter;
+using Core.Configuration.Serilog;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.IOT.IOTDevices.Services;
@@ -20,13 +21,23 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using Serilog.Context;
 using System.Configuration;
 using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, _, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+// Use Serilog as logger
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog(
+	(ctx, serviceProvider, loggerConfig) => {
+		loggerConfig
+			.ReadFrom
+			.Configuration(ctx.Configuration)
+			.ReadFrom
+			.Services(serviceProvider)
+			.Enrich
+			.WithCustomEnrichers(ctx.Configuration);
+	});
 
 // Add services to the container.
 
@@ -116,9 +127,7 @@ else
 
 WebApplication app = builder.Build();
 
-LogContext.PushProperty("Source", app.Configuration.GetValueWithThrow<string>("StationConfig:StationName"));
-LogContext.PushProperty("Type", "Message");
-LogContext.PushProperty("HasBeenSent", Station.IsServer);
+// Serilog.Debugging.SelfLog.Enable(Console.WriteLine);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -89,7 +89,6 @@ public class PurgeServer : BackgroundService
 				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
 
 				// Delete Log
-				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
 				await anodeUOW.Logs.RemoveByLifeSpan(purgeThreshold);
 
 				// Delete Metadata (12 mois)

@@ -4,8 +4,8 @@ using Core.Shared.Repositories.Kernel.Interfaces;
 
 namespace Core.Shared.Repositories.System.Logs;
 
-public interface ILogRepository : IBaseEntityRepository<Log, DTOLog>
+public interface ILogRepository : IBaseEntityRepository<LogEntry, DTOLogEntry>
 {
-	public Task<List<Log>> GetRange(int start, int nbItems);
+	public Task<List<LogEntry>> GetRange(int start, int nbItems);
 	public Task DeleteAll();
 }

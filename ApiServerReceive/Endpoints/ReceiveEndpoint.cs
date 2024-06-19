@@ -40,7 +40,6 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmLog(
 		[FromBody][Required] List<DTOAlarmLog> dtoAlarmLogs,
 		IAlarmLogService alarmLogService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
@@ -48,14 +47,12 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 				foreach (DTOAlarmLog alarmLog in dtoAlarmLogs)
 					await alarmLogService.ReceiveAlarmLog(alarmLog);
 			},
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveAlarmRT(
 		[FromBody][Required] List<DTOAlarmRT> dtoAlarmRTs,
 		IAlarmRTService alarmRTService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
@@ -63,7 +60,6 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 				foreach (DTOAlarmRT alarmRT in dtoAlarmRTs)
 					await alarmRTService.ReceiveAlarmRT(alarmRT);
 			},
-			logService,
 			httpContext);
 	}
 
@@ -71,19 +67,16 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		[Required] DTOPacket packet,
 		[FromRoute] string stationName,
 		IPacketService packetService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
 			() => packetService.ReceivePacket(packet, stationName),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveImage(
 		[FromRoute] bool isImage,
 		IPacketService packetService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
@@ -93,7 +86,6 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 					httpContext.Request.Form.Files.Where(formFile => formFile.ContentType.Contains("image")));
 				return packetService.ReceiveStationImage(images, isImage);
 			},
-			logService,
 			httpContext);
 	}
 
@@ -102,23 +94,20 @@ public class ReceiveEndpoint : BaseEndpoint, ICarterModule
 		[FromRoute] string stationName,
 		[FromRoute] string cycleRID,
 		IPacketService packetService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
 			() => packetService.ReceivePacketAlarm(dtoAlarmsCycle, stationName, cycleRID),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> ReceiveLog(
-		[FromBody][Required] List<DTOLog> logs,
+		[FromBody][Required] List<DTOLogEntry> logs,
 		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
 			() => logService.ReceiveLogs(logs),
-			logService,
 			httpContext);
 	}
 }

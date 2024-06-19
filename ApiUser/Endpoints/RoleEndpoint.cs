@@ -36,13 +36,11 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	///     Get all roles
 	/// </summary>
 	/// <param name="roleService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="List{DTORole}" /></returns>
 	private static Task<JsonHttpResult<ApiResponse>> GetAll(
 		IRoleService roleService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(roleService.GetAll, logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(roleService.GetAll, httpContext);
 
 	// GET apiUser/roles/{rid}
 	/// <summary>
@@ -50,14 +48,12 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// </summary>
 	/// <param name="rid"></param>
 	/// <param name="roleService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The selected <see cref="DTORole" /></returns>
 	private static Task<JsonHttpResult<ApiResponse>> GetByRID(
 		[Required] string rid,
 		IRoleService roleService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => roleService.GetByRID(rid), logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(() => roleService.GetByRID(rid), httpContext);
 
 	// POST apiUser/roles
 	/// <summary>
@@ -65,14 +61,12 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// </summary>
 	/// <param name="dtoRole"></param>
 	/// <param name="roleService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The create <see cref="DTORole" /></returns>
 	private static Task<JsonHttpResult<ApiResponse>> Create(
 		[FromBody] DTORole dtoRole,
 		IRoleService roleService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => roleService.Create(dtoRole), logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(() => roleService.Create(dtoRole), httpContext);
 
 	// PUT apiUser/roles/{rid}
 	/// <summary>
@@ -81,15 +75,13 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// <param name="rid"></param>
 	/// <param name="dtoRole"></param>
 	/// <param name="roleService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The updated <see cref="DTORole" /></returns>
 	private static Task<JsonHttpResult<ApiResponse>> Update(
 		[Required] string rid,
 		[FromBody] DTORole dtoRole,
 		IRoleService roleService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(() => roleService.Update(rid, dtoRole), logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(() => roleService.Update(rid, dtoRole), httpContext);
 
 	// DELETE apiUser/roles/{rid}
 	/// <summary>
@@ -97,13 +89,11 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 	/// </summary>
 	/// <param name="rid"></param>
 	/// <param name="roleService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A string</returns>
 	private static Task<JsonHttpResult<ApiResponse>> Delete(
 		[Required] string rid,
 		IRoleService roleService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
@@ -111,7 +101,6 @@ public class RoleEndpoint : BaseEndpoint, ICarterModule
 				await roleService.Delete(rid);
 				return $"The role with RID {{{rid}}} has been successfully deleted.";
 			},
-			logService,
 			httpContext);
 	}
 }

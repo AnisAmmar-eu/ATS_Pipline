@@ -1,13 +1,10 @@
-﻿using System.Net;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Core.Shared.Exceptions;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Http.Metadata;
 
 namespace Core.Shared.Models.ApiResponses;
 
@@ -67,14 +64,13 @@ public partial class ApiResponse
 
 	public JsonHttpResult<ApiResponse> SuccessResult() => TypedResults.Json(this, JsonOptions);
 
-	public async Task<JsonHttpResult<ApiResponse>> SuccessResult(ILogService logService, HttpContext httpContext)
+	public JsonHttpResult<ApiResponse> SuccessResult(HttpContext httpContext)
 	{
-		await CreateLog(logService, httpContext);
+		CreateLog(httpContext);
 		return TypedResults.Json(this, JsonOptions);
 	}
 
-	public async Task<JsonHttpResult<ApiResponse>> ErrorResult(
-		ILogService logService,
+	public JsonHttpResult<ApiResponse> ErrorResult(
 		HttpContext httpContext,
 		Exception e)
 	{
@@ -110,32 +106,38 @@ public partial class ApiResponse
 				break;
 		}
 
-		await CreateLog(logService, httpContext);
+		CreateLog(httpContext);
 
 		return TypedResults.Json(this, JsonOptions, statusCode: Status.Code);
 	}
 
-	private async Task CreateLog(ILogService logService, HttpContext httpContext)
+	private void CreateLog(HttpContext httpContext)
 	{
-		Endpoint? endpoint = httpContext.GetEndpoint() ?? throw new ArgumentException("Logs creation, endpoint is null");
-		MethodInfo methodInfo = endpoint.Metadata.GetRequiredMetadata<MethodInfo>();
 		try
 		{
-			await logService.Create(
-				DateTimeOffset.Now,
-				Dns.GetHostName(),
-				httpContext.User.Identity?.Name ?? string.Empty,
-				methodInfo.Module.Name,
-				methodInfo.ReflectedType?.Name ?? string.Empty,
-				methodInfo.Name,
-				endpoint.Metadata.GetRequiredMetadata<IRouteDiagnosticsMetadata>().Route,
-				Status.Code,
-				JsonSerializer.Serialize(Result)[50..]
-				);
+			string result = JsonSerializer.Serialize(Result);
+			result = result[..((result.Length > 50) ? 50 : result.Length)];
+
+			if (Status.Code == 200)
+			{
+				Serilog.Log.ForContext("User", httpContext.User.Identity?.Name)
+					.Information("[{code}]: {response}", Status.Code, result);
+			}
+			else if (Status.Code == 404)
+			{
+				Serilog.Log.ForContext("User", httpContext.User.Identity?.Name)
+					.Warning("[{code}]: {response}", Status.Code, result);
+			}
+			else
+			{
+				Serilog.Log.ForContext("User", httpContext.User.Identity?.Name)
+					.Error("[{code}]: {response}", Status.Code, result);
+			}
 		}
 		catch
 		{
-			// ignored
+			Serilog.Log.ForContext("User", httpContext.User.Identity?.Name)
+				.Error("[{code}]: Error during response log.", Status.Code);
 		}
 	}
 

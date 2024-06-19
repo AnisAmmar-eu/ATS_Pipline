@@ -29,7 +29,6 @@ public class BenchmarkEndpoint :
 	private static Task<JsonHttpResult<ApiResponse>> GenerateRows(
 		[FromRoute] int nbItems,
 		IBenchmarkTestService benchmarkTestService,
-		ILogService logService,
 		HttpContext httpContext)
-			=> GenericEndpoint(() => benchmarkTestService.GenerateRows(nbItems), logService, httpContext);
+			=> GenericEndpoint(() => benchmarkTestService.GenerateRows(nbItems), httpContext);
 }
