@@ -111,6 +111,7 @@ public static class ConfigDictionary
 	public const string PurgeMetadata = "PurgeMetadata";
 	public const string PurgeAnodeEntry = "PurgeAnodeEntry";
 	public const string PurgeCycle = "PurgeCycle";
+	public const string PurgeDatasetInstances = "PurgeDatasetInstances";
 
 	#endregion Purge
 
