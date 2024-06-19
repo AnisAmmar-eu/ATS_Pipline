@@ -102,8 +102,6 @@ public class ToMatchService :
 		if (cycleRID is null)
 			return;
 
-		await _anodeUOW.StartTransaction();
-
 		try
 		{
 			Anode anode = await _anodeUOW.Anode.GetByWithThrow(
@@ -133,6 +131,7 @@ public class ToMatchService :
 				anode.IsComplete = cycle.AnodeType == AnodeTypeDict.DX;
 			}
 
+			_anodeUOW.Anode.Update(anode);
 			_anodeUOW.Commit();
 		}
 		catch (EntityNotFoundException)
@@ -142,8 +141,6 @@ public class ToMatchService :
 		{
 			throw;
 		}
-
-		await _anodeUOW.CommitTransaction();
 	}
 
 	public async Task UpdateChainedCycle(MatchableCycle cycle, string? cycleRID)
@@ -166,10 +163,10 @@ public class ToMatchService :
 			MScore = DLLVisionImport.fcx_matchRet_similarityScore(retMatch),
 			NbCandidats = DLLVisionImport.fcx_matchRet_cardinality_after_brut_force(retMatch),
 			Threshold = DLLVisionImport.fcx_matchRet_threshold(retMatch),
-			NMminScore = DLLVisionImport.fcx_matchRet_worstScore(retMatch),
-			NMmaxScore = DLLVisionImport.fcx_matchRet_bestScore(retMatch),
-			NMAvg = DLLVisionImport.fcx_matchRet_mean(retMatch),
-			NMStdev = Math.Sqrt(DLLVisionImport.fcx_matchRet_variance(retMatch)),
+			//NMminScore = DLLVisionImport.fcx_matchRet_worstScore(retMatch),
+			//NMmaxScore = DLLVisionImport.fcx_matchRet_bestScore(retMatch),
+			//NMAvg = DLLVisionImport.fcx_matchRet_mean(retMatch),
+			//NMStdev = Math.Sqrt(DLLVisionImport.fcx_matchRet_variance(retMatch)),
 			ComputeTime = DLLVisionImport.fcx_matchRet_elapsed(retMatch),
 		};
 
@@ -177,8 +174,8 @@ public class ToMatchService :
 		{
 			kPI.TenBestMatches.Add(new TenBestMatch() {
 				Rank = i,
-				AnodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i)) ?? string.Empty,
-				Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i),
+				//AnodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_bestsIdx_anodeId(retMatch, i)) ?? string.Empty,
+				//Score = DLLVisionImport.fcx_matchRet_bestsIdx_score(retMatch, i),
 				KPI = kPI,
 			}
 		);

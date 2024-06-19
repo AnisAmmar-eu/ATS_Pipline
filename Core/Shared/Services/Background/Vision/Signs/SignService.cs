@@ -54,7 +54,6 @@ public class SignService : BackgroundService
 			IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 			IToSignService toSignService
 				= asyncScope.ServiceProvider.GetRequiredService<IToSignService>();
-			await anodeUOW.StartTransaction();
 
 			try
 			{
@@ -69,79 +68,76 @@ public class SignService : BackgroundService
 						withTracking: false);
 
 				if (sign.Pause || rule.Reinit)
-				{
-					_logger.LogWarning("System on pause");
 					continue;
-				}
 
-				List<ToSign> toSigns = await anodeUOW.ToSign.GetAll(
+				ToSign? toSign = await anodeUOW.ToSign.GetBy(
 					[sign => sign.StationID == Station.ID && sign.AnodeType == anodeType],
+					query => query.OrderBy(sign => sign.ShootingTS),
 					withTracking: false);
 
-				foreach (ToSign toSign in toSigns)
+				if (toSign is null)
+					continue;
+
+				_logger.LogInformation("debut de signature {cycleRID}", toSign.CycleRID);
+
+				FileInfo image = Shooting.GetImagePathFromRoot(
+					toSign.CycleRID,
+					toSign.StationID,
+					imagesPath,
+					toSign.AnodeType,
+					toSign.CameraID,
+					extension);
+
+				string noExtension = Path.GetFileNameWithoutExtension(image.Name);
+				int retSign = DLLVisionImport.fcx_sign(
+					0,
+					toSign.CameraID,
+					image.DirectoryName ?? string.Empty,
+					noExtension,
+					image.DirectoryName ?? string.Empty);
+
+				StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
+
+				if (retSign == 0)
 				{
-					_logger.LogInformation("debut de signature {cycleRID}", toSign.CycleRID);
+					_logger.LogInformation("{nb} signé avec succès", image.Name);
 
-					FileInfo image = Shooting.GetImagePathFromRoot(
-						toSign.CycleRID,
-						toSign.StationID,
-						imagesPath,
-						toSign.AnodeType,
-						toSign.CameraID,
-						extension);
-
-					string noExtension = Path.GetFileNameWithoutExtension(image.Name);
-					int retSign = DLLVisionImport.fcx_sign(
-						0,
-						toSign.CameraID,
-						image.DirectoryName ?? string.Empty,
-						noExtension,
-						image.DirectoryName ?? string.Empty);
-
-					StationCycle cycle = await toSignService.UpdateCycle(toSign, retSign);
-
-					if (retSign == 0)
+					foreach (string family in loadDestinations)
 					{
-						_logger.LogInformation("{nb} signé avec succès", image.Name);
-
-						foreach (string family in loadDestinations)
+						foreach (int instanceMatchID in await ToLoadService.GetInstances(family, anodeUOW))
 						{
-							foreach (int instanceMatchID in await ToLoadService.GetInstances(family, anodeUOW))
-							{
-								ToLoad load = toSign.Adapt<ToLoad>();
-								load.InstanceMatchID = instanceMatchID;
-								await anodeUOW.ToLoad.Add(load);
-							}
-						}
-
-						// only one match has to be added
-						if (cycle.CanMatch())
-						{
-							foreach (int instanceMatchID in await ToMatchService.GetMatchInstance(
-								toSign.AnodeType,
-								toSign.StationID,
-								anodeUOW))
-							{
-								ToMatch toMatch = toSign.Adapt<ToMatch>();
-								toMatch.InstanceMatchID = instanceMatchID;
-								await anodeUOW.ToMatch.Add(toMatch);
-							}
+							ToLoad load = toSign.Adapt<ToLoad>();
+							load.InstanceMatchID = instanceMatchID;
+							await anodeUOW.ToLoad.Add(load);
 						}
 					}
-					else
+
+					// only one match has to be added
+					if (cycle.CanMatch())
 					{
-						_logger.LogWarning("Return code de la signature: {retSign} pour anode {imageName}", retSign, image.Name);
+						foreach (int instanceMatchID in await ToMatchService.GetMatchInstance(
+							toSign.AnodeType,
+							toSign.StationID,
+							anodeUOW))
+						{
+							ToMatch toMatch = toSign.Adapt<ToMatch>();
+							toMatch.InstanceMatchID = instanceMatchID;
+							await anodeUOW.ToMatch.Add(toMatch);
+						}
 					}
-
-					anodeUOW.ToSign.Remove(toSign);
-					anodeUOW.Commit();
-
-					// S1 and S2 (sign stations) are the only station to add an Anode
-					if (!Station.IsMatchStation(cycle.StationID))
-						await toSignService.AddAnode((S1S2Cycle)cycle);
-
-					anodeUOW.Commit();
 				}
+				else
+				{
+					_logger.LogWarning("Return code de la signature: {retSign} pour anode {imageName}", retSign, image.Name);
+				}
+
+				anodeUOW.ToSign.Remove(toSign);
+
+				// S1 and S2 (sign stations) are the only station to add an Anode
+				if (!Station.IsMatchStation(cycle.StationID))
+					await toSignService.AddAnode((S1S2Cycle)cycle);
+
+				anodeUOW.Commit();
 			}
 			catch (Exception ex)
 			{
@@ -149,8 +145,6 @@ public class SignService : BackgroundService
 					"Failed to execute SignService with exception message {message}.",
 					ex.Message);
 			}
-
-			await anodeUOW.CommitTransaction();
 		}
 	}
 }

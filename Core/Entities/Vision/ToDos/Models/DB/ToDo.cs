@@ -10,6 +10,8 @@ public partial class ToDo : BaseEntity, IBaseEntity<ToDo, DTOToDo>
 	public int StationID { get; set; }
 	public string AnodeType { get; set; }
 	public DateTimeOffset? ShootingTS { get; set; }
+	public bool HasPlug { get; set; }
+	public int NbActiveAlarms { get; set; }
 
 	public int StationCycleID { get; set; }
 }

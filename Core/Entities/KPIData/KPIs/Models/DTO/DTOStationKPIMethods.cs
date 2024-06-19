@@ -1,18 +1,18 @@
 using Core.Entities.KPIData.KPIs.Models.DB;
-using Core.Entities.StationCycles.Dictionaries;
 using Core.Entities.StationCycles.Models.DB.MatchableCycles;
+using Core.Entities.StationCycles.Models.DB.MatchableCycles.S5Cycles;
 using Core.Shared.Extensions;
 
 namespace Core.Entities.KPIData.KPIs.Models.DTO;
 
 public partial class DTOStationKPI
 {
-	public DTOStationKPI(List<MatchableCycle> cycles)
+	public DTOStationKPI(List<MatchableCycle> cycles, List<string> stationOrigin)
 	{
 		this.AnodeCount = cycles.Count;
-		this.AnodeRecognized = GetMatchedStationCycles(cycles).Count;
+		this.AnodeRecognized = GetMatchedStationCycles(cycles, stationOrigin);
 
-		List<KPI> kpis = cycles.ConvertAll(cycle => cycle.KPI!);
+		List<KPI> kpis = cycles.Where(cycle => cycle.KPI is not null).Select(cycle => cycle.KPI!).ToList();
 
 		this.RSizeAvg = AverageRSize(kpis);
 		this.RSizePeak = PeakRSize(kpis);
@@ -23,18 +23,26 @@ public partial class DTOStationKPI
 		this.MScoreStdev = CalculateMScoreStdev(kpis);
 		this.NMScoreStdev = CalculateNMScoreStdev(kpis);
 
-		this.IDRate = (AnodeRecognized == 0) ? 0 : AnodeCount / AnodeRecognized;
+		this.IDRate = (AnodeCount == 0) ? 0 : (double)AnodeRecognized / AnodeCount * 100;
 		this.IDMean = MScoreAvg - NMScoreAvg;
 		this.IDCluster = MScoreAvg - (3 * MScoreStdev) - (NMScoreAvg + (3 * NMScoreStdev));
 
 		this.ComputeTimeAvg = ElapsedTimeAvg(kpis);
 	}
 
-	public List<MatchableCycle> GetMatchedStationCycles(List<MatchableCycle> stationCycles)
+	public int GetMatchedStationCycles(List<MatchableCycle> stationCycles, List<string> stationOrigin)
 	{
-		return stationCycles
-			.Where(cycle => cycle.MatchingCamera1 == SignMatchStatus.Ok || cycle.MatchingCamera2 == SignMatchStatus.Ok)
-			.ToList();
+		if (stationCycles[0] is S5Cycle)
+		{
+			List<S5Cycle?> cycles = stationCycles.ConvertAll(stationCycles => stationCycles as S5Cycle);
+			return cycles.Count(cycle => cycle.Anode is not null
+				&& stationOrigin.Contains($"S{cycle.Anode.CycleRID[0].ToString()}"));
+		}
+		else
+		{
+			return stationCycles.Count(cycle => cycle.Anode is not null
+				&& stationOrigin.Contains($"S{cycle.Anode.CycleRID[0].ToString()}"));
+		}
 	}
 
 	public double AverageRSize(List<KPI> kpis) => kpis.Average(kpi => kpi.NbCandidats);
