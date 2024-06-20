@@ -87,7 +87,10 @@ public class StationCycleService :
 
 	public async Task<int[]> GetMainAndSecondHoleStatus(int? stationId)
 	{
-		List<StationCycle> stationCycles = await _anodeUOW.StationCycle.GetAll();
+		DateTimeOffset last24Hours = DateTimeOffset.UtcNow.AddHours(-24);
+
+		List<StationCycle> stationCycles = await _anodeUOW.StationCycle
+			.GetAll([sc => sc.TSFirstShooting >= last24Hours]);
 		if (stationId is not null)
 			stationCycles = stationCycles.Where(sc => sc.StationID == stationId).ToList();
 
@@ -104,7 +107,10 @@ public class StationCycleService :
 	{
 		int[] stationCounts = new int[5];
 
-		List<StationCycle> stationCycles = await _anodeUOW.StationCycle.GetAll();
+		DateTimeOffset last24Hours = DateTimeOffset.UtcNow.AddHours(-24);
+
+		List<StationCycle> stationCycles = await _anodeUOW.StationCycle
+			.GetAll([sc => sc.TSFirstShooting >= last24Hours]);
 
 		foreach (int stationId in Enumerable.Range(1, 5))
 			stationCounts[stationId - 1] = stationCycles.Count(sc => sc.StationID == stationId);
@@ -114,7 +120,10 @@ public class StationCycleService :
 
 	public async Task<int[]> GetAnodeCounterByAnodeType()
 	{
-		List<StationCycle> stationCycles = await _anodeUOW.StationCycle.GetAll();
+		DateTimeOffset last24Hours = DateTimeOffset.UtcNow.AddHours(-24);
+
+		List<StationCycle> stationCycles = await _anodeUOW.StationCycle
+			.GetAll([sc => sc.TSFirstShooting >= last24Hours]);
 
 		int dx = stationCycles.Count(sc => sc.AnodeType == "01");
 		int d20 = stationCycles.Count(sc => sc.AnodeType == "02");

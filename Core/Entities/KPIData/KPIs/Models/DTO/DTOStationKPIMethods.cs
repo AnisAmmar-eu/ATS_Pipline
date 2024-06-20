@@ -9,6 +9,7 @@ public partial class DTOStationKPI
 {
 	public DTOStationKPI(List<MatchableCycle> cycles, List<string> stationOrigin)
 	{
+		this.StationID = cycles[0].StationID;
 		this.AnodeCount = cycles.Count;
 		this.AnodeRecognized = GetMatchedStationCycles(cycles, stationOrigin);
 

@@ -4,6 +4,7 @@ namespace Core.Entities.KPIData.KPIs.Models.DTO;
 
 public partial class DTOStationKPI : DTOBaseEntity
 {
+	public int StationID { get; set; }
 	public int AnodeCount { get; set; }
 	public int AnodeRecognized { get; set; }
 	public double RSizeAvg { get; set; }
