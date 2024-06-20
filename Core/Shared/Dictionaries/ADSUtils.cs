@@ -17,6 +17,7 @@ public static class ADSUtils
 
 	public const string GlobalRID = "VA_STATION.CycleRID";
 	public const string GlobalAnodeType = "VA_STATION.Anode.AnodeType";
+	public const string HasPlug = "VA_STATION.Plug";
 	public const string PictureCountCam1 = "VA_STATION.PictureCounter_Cam01";
 	public const string PictureCountCam2 = "VA_STATION.PictureCounter_Cam02";
 

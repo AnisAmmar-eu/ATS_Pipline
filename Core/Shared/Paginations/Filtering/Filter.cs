@@ -126,12 +126,14 @@ public static class Filter
 
 		List<Expression> expressions = filterParam.FilterValue
 			.ConvertAll(value => {
-				IComparable refValue = ParseAsComparable(filterColumn.PropertyType, value)
+				// Get non nullable type if property is nullable
+				Type propertyType = Nullable.GetUnderlyingType(filterColumn.PropertyType) ?? filterColumn.PropertyType;
+				IComparable refValue = ParseAsComparable(propertyType, value)
 					?? throw new ArgumentException("Error happened during parsing of filterValue");
 				return (Expression)GetExpressionBody(
 					filterOption,
 					GetExpressionProperty(param, names),
-					Expression.Constant(refValue, refValue.GetType()));
+					Expression.Constant(refValue, propertyAccess.Type));
 			});
 
 		return (expressions.Count == 0) ? Expression.Constant(true) : expressions.Aggregate(Expression.OrElse);

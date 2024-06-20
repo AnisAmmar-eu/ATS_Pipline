@@ -36,6 +36,7 @@ public partial class MetaData
 		SN_Day = adsStruct.SN.Day;
 		SN_Vibro = adsStruct.SN.Vibro;
 		SN_Number = adsStruct.SN.Number;
+		NbActiveAlarms = adsStruct.ActiveAlmCount;
 	}
 
 	public override DTOMetaData ToDTO() => this.Adapt<DTOMetaData>();

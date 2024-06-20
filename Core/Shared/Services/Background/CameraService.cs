@@ -140,7 +140,9 @@ public class CameraService : BackgroundService
 							RIDStruct rid = tcClient.ReadAny<RIDStruct>(ridStructHandle);
 							uint anodeTypeHandle = tcClient.CreateVariableHandle(ADSUtils.GlobalAnodeType);
 							string anodeType = AnodeTypeDict.AnodeTypeIntToString(tcClient.ReadAny<int>(anodeTypeHandle));
-							_logger.LogInformation("AnodeType: {anodeType}", anodeType);
+							uint hasPlugHandle = tcClient.CreateVariableHandle(ADSUtils.HasPlug);
+							bool hasPlug = tcClient.ReadAny<bool>(hasPlugHandle);
+							_logger.LogError("HasPlug: {hasPlug}", hasPlug);
 							int cameraID = GetCameraID(cameraNb, tcClient);
 
 							FileInfo imagePath
@@ -167,6 +169,7 @@ public class CameraService : BackgroundService
 								Cam01Status = (cameraID == (int)CameraNb.Camera1) ? 1 : 0,
 								Cam02Status = (cameraID == (int)CameraNb.Camera2) ? 1 : 0,
 								HasError = false,
+								HasPlug = hasPlug,
 							};
 
 							await packetService.BuildPacket(shooting);
