@@ -22,6 +22,7 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.DLLVision;
 using Core.Entities.KPIData.WarningMsgs.Models.DB;
 using System.Runtime.InteropServices;
+using Serilog;
 
 namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
@@ -117,7 +118,8 @@ public class ToMatchService :
 				anode.SS3S4MatchingCamera1 = cycle.MatchingCamera1;
 				anode.S3S4MatchingCamera2 = cycle.MatchingCamera2;
 				anode.S3S4TSFirstShooting = cycle.TSFirstShooting;
-				anode.IsComplete = cycle.AnodeType == AnodeTypeDict.D20;
+				if (!anode.IsComplete)
+					anode.IsComplete = cycle.AnodeType == AnodeTypeDict.D20;
 			}
 			else
 			{
@@ -204,7 +206,7 @@ public class ToMatchService :
 		return kPI;
 	}
 
-	public async Task<bool> GoMatch(List<string> origins, int instanceMatchID, double delay)
+	public async Task<bool> GoMatch(List<string> origins, int instanceMatchID, double delay, ToMatch oldestToMatch)
 	{
 		try
 		{
@@ -239,19 +241,25 @@ public class ToMatchService :
 					oldestStation = newOldestStation;
 			}
 
-			Console.WriteLine(
-				"{0} {1} {2} {3} {4}",
+			Log.Information(
+				"{0} {1} {2} {3} {4} {5} {6} {7}",
 				rule?.Reinit == false,
 				!iotDevices.Select(device => device.IsConnected).Contains(false),
 				ValidDelay(oldestStation, delay),
 				ValidDelay(oldestToLoad, delay),
-				ValidDelay(oldestToSign, delay));
+				ValidDelay(oldestToSign, delay),
+				((DateTimeOffset)oldestToLoad).AddDays(delay) < oldestToMatch.ShootingTS,
+				((DateTimeOffset)oldestToSign).AddDays(delay) < oldestToMatch.ShootingTS,
+				!await _anodeUOW.ToUnload.AnyPredicate(toUnload => toUnload.InstanceMatchID == instanceMatchID));
 
 			return rule?.Reinit == false
 				&& !iotDevices.Select(device => device.IsConnected).Contains(false)
 				&& ValidDelay(oldestStation, delay)
 				&& ValidDelay(oldestToLoad, delay)
-				&& ValidDelay(oldestToSign, delay);
+				&& ValidDelay(oldestToSign, delay)
+				&& ((DateTimeOffset)oldestToLoad).AddDays(delay) < oldestToMatch.ShootingTS
+				&& ((DateTimeOffset)oldestToSign).AddDays(delay) < oldestToMatch.ShootingTS
+				&& !await _anodeUOW.ToUnload.AnyPredicate(toUnload => toUnload.InstanceMatchID == instanceMatchID);
 		}
 		catch (Exception)
 		{
