@@ -5,7 +5,6 @@ using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Paginations;
 using Core.Shared.Paginations.Filtering;
 using Core.Shared.Services.Kernel.Interfaces;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -98,9 +97,8 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 
 	private Task<JsonHttpResult<ApiResponse>> Add(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext,
-		TDTO dto) => GenericEndpoint(() => service.Add(dto.ToModel()), logService, httpContext, _isLogged);
+		TDTO dto) => GenericEndpoint(() => service.Add(dto.ToModel()), httpContext, _isLogged);
 
 	#endregion Create
 
@@ -108,32 +106,27 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 
 	private Task<JsonHttpResult<ApiResponse>> GetAll(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => service.GetAll(withTracking: false, includes: _includes),
-			logService,
 			httpContext,
 			_isLogged);
 	}
 
 	private Task<JsonHttpResult<ApiResponse>> GetAllWithIncludes(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext,
 		[FromBody] string[] includes)
 	{
 		return GenericEndpoint(
 			() => service.GetAll(withTracking: false, includes: includes),
-			logService,
 			httpContext,
 			_isLogged);
 	}
 
 	private Task<JsonHttpResult<ApiResponse>> GetByGeneric(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext,
 		[FromRoute] string columnName,
 		[FromRoute] string filterValue)
@@ -151,14 +144,12 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				};
 				return service.GetWithPagination(pagination, 0);
 			},
-			logService,
 			httpContext,
 			_isLogged);
 	}
 
 	private Task<JsonHttpResult<ApiResponse>> GetByGenericWithIncludes(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext,
 		[FromRoute] string columnName,
 		[FromRoute] string filterValue,
@@ -177,25 +168,22 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				};
 				return service.GetWithPagination(pagination, 0);
 			},
-			logService,
 			httpContext,
 			_isLogged);
 	}
 
 	private Task<JsonHttpResult<ApiResponse>> GetWithPagination(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext,
 		[FromRoute] int nbItems,
 		[FromBody] Pagination pagination)
-			=> GenericEndpoint(() => service.GetWithPagination(pagination, nbItems), logService, httpContext, _isLogged);
+			=> GenericEndpoint(() => service.GetWithPagination(pagination, nbItems), httpContext, _isLogged);
 
 	private Task<JsonHttpResult<ApiResponse>> CountWithPagination(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext,
 		[FromBody] Pagination pagination)
-			=> GenericEndpoint(() => service.CountWithPagination(pagination), logService, httpContext, _isLogged);
+			=> GenericEndpoint(() => service.CountWithPagination(pagination), httpContext, _isLogged);
 
 	#endregion Read
 
@@ -203,9 +191,8 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 
 	private Task<JsonHttpResult<ApiResponse>> Update(
 		TService service,
-		ILogService logService,
 		HttpContext httpContext,
-		TDTO dto) => GenericEndpoint(() => service.Update(dto.ToModel()), logService, httpContext, _isLogged);
+		TDTO dto) => GenericEndpoint(() => service.Update(dto.ToModel()), httpContext, _isLogged);
 
 	#endregion Update
 
@@ -213,13 +200,11 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 
 	private Task<JsonHttpResult<ApiResponse>> Remove(
 		[FromServices] TService service,
-		[FromServices] ILogService logService,
 		HttpContext httpContext,
 		[FromRoute] int id)
 	{
 		return GenericEndpointEmptyResponse(
 			() => service.Remove(id, _includes),
-			logService,
 			httpContext,
 			_isLogged);
 	}

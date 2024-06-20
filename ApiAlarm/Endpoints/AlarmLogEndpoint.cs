@@ -27,17 +27,14 @@ public class AlarmLogEndpoint : BaseEntityEndpoint<AlarmLog, DTOAlarmLog, IAlarm
 	/// </summary>
 	/// <param name="alarmLogIDs"></param>
 	/// <param name="alarmLogService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	private static Task<JsonHttpResult<ApiResponse>> AckAlarmLogs(
 		[FromBody][Required] int[] alarmLogIDs,
 		IAlarmLogService alarmLogService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => alarmLogService.AckAlarmLogs(alarmLogIDs),
-			logService,
 			httpContext);
 	}
 }

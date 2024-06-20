@@ -8,7 +8,6 @@ using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Exceptions;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,12 +38,10 @@ public class StationCycleEndpoint :
 
 	private static Task<JsonHttpResult<ApiResponse>> GetAllRIDs(
 		IStationCycleService stationCycleService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(stationCycleService.GetAllRIDs, logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(stationCycleService.GetAllRIDs, httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> GetMostRecent(
 		IStationCycleService stationCycleService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
@@ -52,7 +49,6 @@ public class StationCycleEndpoint :
 				return await stationCycleService.GetMostRecentWithIncludes() ??
 					throw new NoDataException("There is no station cycles yet.");
 			},
-			logService,
 			httpContext);
 	}
 
@@ -60,7 +56,6 @@ public class StationCycleEndpoint :
 		[Required][FromRoute] int id,
 		[Required][FromRoute] int cameraNb,
 		IStationCycleService stationCycleService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		byte[] image;
@@ -73,7 +68,7 @@ public class StationCycleEndpoint :
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext, e);
+			return new ApiResponse().ErrorResult(httpContext, e);
 		}
 
 		httpContext.Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
@@ -83,46 +78,38 @@ public class StationCycleEndpoint :
 	private static Task<JsonHttpResult<ApiResponse>> GetSignMatchResults(
 		int? stationId,
 		IStationCycleService stationCycleService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => stationCycleService.GetSignMatchResults(stationId),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetMainSecondHole(
 		int? stationId,
 		IStationCycleService stationCycleService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => stationCycleService.GetMainAndSecondHoleStatus(stationId),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetAnodeCounterByAnodeType(
 		IStationCycleService stationCycleService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => stationCycleService.GetAnodeCounterByAnodeType(),
-			logService,
 			httpContext);
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetAnodeCounterByStation(
 		IStationCycleService stationCycleService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => stationCycleService.GetAnodeCounterByStation(),
-			logService,
 			httpContext);
 	}
 }

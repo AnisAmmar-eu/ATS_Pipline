@@ -6,7 +6,6 @@ using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiStationCycle.Endpoints;
@@ -28,19 +27,16 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
 
 	private static Task<JsonHttpResult<ApiResponse>> GetMostRecent(
 		IPacketService packetService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(packetService.GetMostRecentShooting, logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(packetService.GetMostRecentShooting, httpContext);
 
 	private static Task<JsonHttpResult<ApiResponse>> GetOldest(
 		IPacketService packetService,
-		ILogService logService,
-		HttpContext httpContext) => GenericEndpoint(packetService.GetOldestNotSentTimestamp, logService, httpContext);
+		HttpContext httpContext) => GenericEndpoint(packetService.GetOldestNotSentTimestamp, httpContext);
 
 	private static async Task<Results<FileContentHttpResult, JsonHttpResult<ApiResponse>>> GetImageFromIDAndCamera(
 		int shootingID,
 		int cameraID,
 		IPacketService packetService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		byte[] image;
@@ -53,7 +49,7 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext, e);
+			return new ApiResponse().ErrorResult(httpContext, e);
 		}
 
 		httpContext.Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");

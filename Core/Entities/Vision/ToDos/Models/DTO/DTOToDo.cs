@@ -11,4 +11,6 @@ public partial class DTOToDo : DTOBaseEntity, IDTO<ToDo, DTOToDo>
 	public int StationID { get; set; }
 	public string AnodeType { get; set; }
 	public DateTimeOffset? ShootingTS { get; set; }
+	public bool HasPlug { get; set; }
+	public int NbActiveAlarms { get; set; }
 }

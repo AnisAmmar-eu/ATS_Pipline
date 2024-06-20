@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ApiStationCycle.Endpoints;
 
-public class LogEndpoint : BaseEntityEndpoint<Log, DTOLog, ILogService>, ICarterModule
+public class LogEndpoint : BaseEntityEndpoint<LogEntry, DTOLogEntry, ILogService>, ICarterModule
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
@@ -20,5 +20,5 @@ public class LogEndpoint : BaseEntityEndpoint<Log, DTOLog, ILogService>, ICarter
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> DeleteAll(ILogService logService, HttpContext httpContext)
-		=> GenericEndpointEmptyResponse(logService.DeleteAllLogs, logService, httpContext);
+		=> GenericEndpointEmptyResponse(logService.DeleteAllLogs, httpContext);
 }

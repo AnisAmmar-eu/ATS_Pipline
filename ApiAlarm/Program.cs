@@ -1,5 +1,6 @@
 using System.Text;
 using Carter;
+using Core.Configuration.Serilog;
 using Core.Entities.Alarms.AlarmsC.Services;
 using Core.Entities.Alarms.AlarmsLog.Services;
 using Core.Entities.Alarms.AlarmsRT.Services;
@@ -17,8 +18,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Use Serilog as logger
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog(
+	(ctx, serviceProvider, loggerConfig) => {
+		loggerConfig
+			.ReadFrom
+			.Configuration(ctx.Configuration)
+			.ReadFrom
+			.Services(serviceProvider)
+			.Enrich
+			.WithCustomEnrichers(ctx.Configuration);
+	});
 
 // Add services to the container.
 

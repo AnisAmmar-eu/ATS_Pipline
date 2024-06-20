@@ -1,4 +1,5 @@
 using System.Configuration;
+using Core.Configuration.Serilog;
 using Core.Entities.User.Models.DB.Roles;
 using Core.Entities.User.Models.DB.Users;
 using Core.Entities.Vision.ToDos.Services.ToMatchs;
@@ -15,9 +16,21 @@ using Microsoft.EntityFrameworkCore;
 using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Shared.Services.Background;
+using Serilog;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Match service");
+
+// Use Serilog as logger
+builder.Logging.ClearProviders();
+builder.Services.AddSerilog(
+	(logger) => {
+		logger
+			.ReadFrom
+			.Configuration(builder.Configuration)
+			.Enrich
+			.WithCustomEnrichers(builder.Configuration);
+	});
 
 builder.Services.AddDbContext<AnodeCTX>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
@@ -61,7 +74,7 @@ if (bool.Parse(dbInitialize))
 	UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 }
 
-ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
+Microsoft.Extensions.Logging.ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
 
 List<int> gpuID = builder.Configuration.GetSectionWithThrow<List<int>>(ConfigDictionary.GPUID);
 

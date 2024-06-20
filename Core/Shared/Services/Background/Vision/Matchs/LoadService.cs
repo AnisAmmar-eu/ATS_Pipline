@@ -68,52 +68,48 @@ public class LoadService : BackgroundService
 						withTracking: false);
 
 				if (match.Pause || rule.Reinit)
-				{
-					_logger.LogWarning("System on pause");
 					continue;
-				}
 
-				List<ToLoad> toLoads = await anodeUOW.ToLoad.GetAll(
+				ToLoad? toLoad = await anodeUOW.ToLoad.GetBy(
 					[load => load.InstanceMatchID == instanceMatchID],
 					orderBy: query => query.OrderByDescending(
 						toLoad => toLoad.ShootingTS),
-					withTracking: false,
-					maxCount: 20);
+					withTracking: false);
 
-				foreach (ToLoad toLoad in toLoads)
+				if (toLoad is null)
+					continue;
+
+				StationCycle cycle = await anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
+				if (cycle.TSFirstShooting?.AddDays(stationDelay) > DateTimeOffset.Now)
+					break;
+
+				FileInfo sanFile = Shooting.GetImagePathFromRoot(
+					toLoad.CycleRID,
+					toLoad.StationID,
+					imagesPath,
+					toLoad.AnodeType,
+					toLoad.CameraID,
+					extension);
+
+				int loadResponse = DLLVisionImport.fcx_load_anode(
+					toLoad.CameraID,
+					sanFile.DirectoryName ?? string.Empty,
+					Path.GetFileNameWithoutExtension(sanFile.Name));
+
+				if (loadResponse != 0)
 				{
-					StationCycle cycle = await anodeUOW.StationCycle.GetById(toLoad.StationCycleID);
-					if (cycle.TSFirstShooting?.AddDays(stationDelay) > DateTimeOffset.Now)
-						break;
-
-					FileInfo sanFile = Shooting.GetImagePathFromRoot(
-						toLoad.CycleRID,
-						toLoad.StationID,
-						imagesPath,
-						toLoad.AnodeType,
-						toLoad.CameraID,
-						extension);
-
-					int loadResponse = DLLVisionImport.fcx_load_anode(
-						toLoad.CameraID,
-						sanFile.DirectoryName ?? string.Empty,
-						Path.GetFileNameWithoutExtension(sanFile.Name));
-
-					if (loadResponse != 0)
-					{
-						_logger.LogError(
-							"Failed to unload anode with response code {responseCode}.",
-							loadResponse);
-						continue;
-					}
-
-					Dataset dataset = toLoad.Adapt<Dataset>();
-					await anodeUOW.Dataset.Add(dataset);
-					anodeUOW.Commit();
-
-					await anodeUOW.ToLoad.ExecuteDeleteAsync(
-						load => load.ID == toLoad.ID);
+					_logger.LogError(
+						"Failed to unload anode with response code {responseCode}.",
+						loadResponse);
+					continue;
 				}
+
+				Dataset dataset = toLoad.Adapt<Dataset>();
+				await anodeUOW.Dataset.Add(dataset);
+				anodeUOW.Commit();
+
+				await anodeUOW.ToLoad.ExecuteDeleteAsync(
+					load => load.ID == toLoad.ID);
 			}
 			catch (Exception ex)
 			{

@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Packets.Models.DB.Shootings;
 using Core.Entities.StationCycles.Models.DB;
+using Core.Entities.Vision.ToDos.Models.DB.Datasets;
 using Core.Entities.Vision.ToDos.Models.DB.ToUnloads;
 using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
@@ -36,6 +37,9 @@ public class PurgeServer : BackgroundService
 		int purgeMetadata = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeMetadata);
 		int purgeAnodeEntry = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeAnodeEntry);
 		int purgeCycle = _configuration.GetValueWithThrow<int>(ConfigDictionary.PurgeCycle);
+		IEnumerable<IConfigurationSection> purgeDatasetInstances = _configuration.GetSection(
+			ConfigDictionary.PurgeDatasetInstances)
+			.GetChildren();
 
 		string imagesPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
 		string thumbnailsPath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ThumbnailsPath);
@@ -74,22 +78,10 @@ public class PurgeServer : BackgroundService
 					DeleteFileIfExists(image2);
 				}
 
-				if (cycles.Count > 0)
-				{
-					List<ToUnload> toUnload = (List<ToUnload>)(await anodeUOW.Dataset.GetAll(
-						[data => cycles.ConvertAll(x => x.RID).Contains(data.CycleRID)]
-						))
-						.DistinctBy(x => x.CycleRID)
-						.Select(x => x.Adapt<ToUnload>());
-
-					anodeUOW.ToUnload.AddRange(toUnload);
-				}
-
 				// Delete AlarmLog
 				await anodeUOW.AlarmLog.ExecuteDeleteAsync(alarmLog => alarmLog.TS < threshold && alarmLog.HasBeenSent);
 
 				// Delete Log
-				await anodeUOW.Log.RemoveByLifeSpan(purgeThreshold);
 				await anodeUOW.Logs.RemoveByLifeSpan(purgeThreshold);
 
 				// Delete Metadata (12 mois)
@@ -97,15 +89,36 @@ public class PurgeServer : BackgroundService
 				await anodeUOW.StationCycle.RemoveByLifeSpan(span);
 				await anodeUOW.Packet.RemoveByLifeSpan(span);
 
-				//List<Packet> packets = await anodeUOW.Packet.GetAll([t => t.TS < metadataThreshold]);
-				//anodeUOW.Packet.RemoveRange(packets);
-
 				//Delete  Entry (5 years)
 				await anodeUOW.Anode.RemoveByLifeSpan(TimeSpan.FromDays(purgeAnodeEntry));
 
 				//Incomplete cycle ( 6 month )
 				DateTimeOffset incompleteAnodeThreshold = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(purgeCycle));
 				await anodeUOW.Anode.ExecuteDeleteAsync(anode => anode.TS < incompleteAnodeThreshold && !anode.IsComplete);
+
+				// Delete Datasets
+				foreach (IConfigurationSection purgeDatasetInstance in purgeDatasetInstances)
+				{
+					if (double.TryParse(purgeDatasetInstance.Value, out double value))
+					{
+						IEnumerable<int> instanceMatchIDs = (await anodeUOW.Match
+							.GetAll([match => match.Family == purgeDatasetInstance.Key]))
+							.ConvertAll(match => match.InstanceMatchID)
+							.Distinct();
+						DateTimeOffset purgeDatasetTS = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(value));
+
+						List<Dataset> datasets = (await anodeUOW.Dataset.GetAll(
+							[data => instanceMatchIDs.Contains(data.InstanceMatchID) && data.TS < purgeDatasetTS]
+							));
+						if (datasets.Count > 0)
+						{
+							anodeUOW.ToUnload.AddRange(datasets
+								.DistinctBy(x => x.CycleRID)
+								.Select(x => x.Adapt<ToUnload>()));
+							anodeUOW.Dataset.RemoveRange(datasets);
+						}
+					}
+				}
 
 				anodeUOW.Commit();
 				await anodeUOW.CommitTransaction();

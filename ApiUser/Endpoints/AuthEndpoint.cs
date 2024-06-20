@@ -5,7 +5,6 @@ using Core.Entities.User.Services.Auth;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Exceptions;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,13 +34,11 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 	/// </summary>
 	/// <param name="dtoRegister"></param>
 	/// <param name="authService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A string</returns>
 	private static Task<JsonHttpResult<ApiResponse>> Register(
 		[FromBody] DTORegister dtoRegister,
 		IAuthService authService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
@@ -49,7 +46,6 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 				await authService.Register(dtoRegister);
 				return $"User {{{dtoRegister.Username}}} has been successfully created.";
 			},
-			logService,
 			httpContext);
 	}
 
@@ -59,11 +55,10 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 	/// </summary>
 	/// <param name="dtoLogin"></param>
 	/// <param name="authService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The token</returns>
 	private static async Task<JsonHttpResult<ApiResponse>> Login(
-		[FromBody] DTOLogin dtoLogin, IAuthService authService, ILogService logService, HttpContext httpContext)
+		[FromBody] DTOLogin dtoLogin, IAuthService authService, HttpContext httpContext)
 	{
 		DTOLoginResponse result;
 		try
@@ -75,24 +70,24 @@ public class AuthEndpoint : BaseEndpoint, ICarterModule
 			try
 			{
 				result = await authService.RegisterSource(dtoLogin);
-				return await new ApiResponse(result).SuccessResult(logService, httpContext);
+				return new ApiResponse(result).SuccessResult(httpContext);
 			}
 			catch (EntityNotFoundException e2)
 			{
-				return await new ApiResponse(e2.Message).ErrorResult(logService, httpContext, e2);
+				return new ApiResponse(e2.Message).ErrorResult(httpContext, e2);
 			}
 			catch (Exception e2)
 			{
 				return (e2 is UnauthorizedAccessException)
-					? await new ApiResponse(e2.Message).ErrorResult(logService, httpContext, e2)
-					: await new ApiResponse("An undefined error happened.").ErrorResult(logService, httpContext, e2);
+					? new ApiResponse(e2.Message).ErrorResult(httpContext, e2)
+					: new ApiResponse("An undefined error happened.").ErrorResult(httpContext, e2);
 			}
 		}
 		catch (Exception e)
 		{
-			return await new ApiResponse().ErrorResult(logService, httpContext, e);
+			return new ApiResponse().ErrorResult(httpContext, e);
 		}
 
-		return await new ApiResponse(result).SuccessResult(logService, httpContext);
+		return new ApiResponse(result).SuccessResult(httpContext);
 	}
 }

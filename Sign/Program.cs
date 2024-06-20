@@ -1,4 +1,5 @@
 using System.Configuration;
+using Core.Configuration.Serilog;
 using Core.Entities.Vision.ToDos.Services.ToSigns;
 using Core.Shared.Configuration;
 using Core.Shared.Data;
@@ -10,9 +11,21 @@ using Core.Shared.UnitOfWork.Interfaces;
 using Core.Shared.DLLVision;
 using Microsoft.EntityFrameworkCore;
 using Core.Shared.Services.Background;
+using Serilog;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options => options.ServiceName = "Sign service");
+
+// Use Serilog as logger
+builder.Logging.ClearProviders();
+builder.Services.AddSerilog(
+	(logger) => {
+		logger
+			.ReadFrom
+			.Configuration(builder.Configuration)
+			.Enrich
+			.WithCustomEnrichers(builder.Configuration);
+	});
 
 builder.Services.AddDbContext<AnodeCTX>(
 	options => options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
@@ -46,7 +59,7 @@ if (bool.Parse(dbInitialize))
 	AnodeCTX context = services.GetRequiredService<AnodeCTX>();
 }
 
-ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
+Microsoft.Extensions.Logging.ILogger logger = host.Services.GetRequiredService<ILogger<Program>>();
 
 string dllPath = builder.Configuration.GetValueWithThrow<string>(ConfigDictionary.DLLPath);
 

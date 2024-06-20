@@ -1,7 +1,5 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Core.Shared.Exceptions;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core.Shared.Models.HttpResponse;
@@ -65,6 +63,7 @@ public class ControllerResponseObject
 	public ObjectResult SuccessResult()
 	{
 		Status.Code = 200;
+		CreateLog();
 		return new(this) { StatusCode = Status.Code };
 	}
 
@@ -74,19 +73,9 @@ public class ControllerResponseObject
 		return new(this);
 	}
 
-	public ObjectResult ErrorResult()
-	{
-		return new(this) { StatusCode = Status.Code };
-	}
+	public ObjectResult ErrorResult() => new(this) { StatusCode = Status.Code };
 
-	public async Task<JsonResult> SuccessResult(ILogService logService, ControllerContext context)
-	{
-		await CreateLog(logService, context);
-
-		return new JsonResult(this);
-	}
-
-	public async Task<ObjectResult> ErrorResult(ILogService logService, ControllerContext context, Exception e)
+	public ObjectResult ErrorResult(Exception e)
 	{
 		switch (e)
 		{
@@ -120,30 +109,28 @@ public class ControllerResponseObject
 				break;
 		}
 
-		await CreateLog(logService, context);
+		CreateLog();
 
-		return new ObjectResult(Result) { StatusCode = Status.Code };
+		return new(Result) { StatusCode = Status.Code };
 	}
 
-	private async Task CreateLog(ILogService logService, ControllerContext context)
+	private void CreateLog()
 	{
 		try
 		{
-			await logService.Create(
-				DateTimeOffset.Now,
-				Dns.GetHostName(),
-				string.Empty,
-				context.ActionDescriptor.ControllerTypeInfo.Assembly.ManifestModule.Name,
-				context.ActionDescriptor.ControllerTypeInfo.Name,
-				context.ActionDescriptor.ActionName,
-				context.ActionDescriptor.AttributeRouteInfo?.Template ?? string.Empty,
-				Status.Code,
-				JsonSerializer.Serialize(Result)
-				);
+			string result = JsonSerializer.Serialize(Result);
+			result = result[..((result.Length > 50) ? 50 : result.Length)];
+
+			if (Status.Code == 200)
+				Serilog.Log.Information("[{code}]: {response}", Status.Code, result);
+			else if (Status.Code == 404)
+				Serilog.Log.Warning("[{code}]: {response}", Status.Code, result);
+			else
+				Serilog.Log.Error("[{code}]: {response}", Status.Code, result);
 		}
 		catch
 		{
-			// ignored
+			Serilog.Log.Error("[{code}]: Error during response log.", Status.Code);
 		}
 	}
 }

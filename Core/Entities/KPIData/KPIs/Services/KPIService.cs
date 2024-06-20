@@ -28,7 +28,6 @@ public class KPIService :
 				[cycle => cycle is MatchableCycle && cycle.TS >= start && cycle.TS <= end && anodeTypes.Contains(cycle.AnodeType)],
 				includes: [nameof(MatchableCycle.KPI), nameof(MatchableCycle.Anode)]))
 			.Cast<MatchableCycle>()
-			.Where(cycle => cycle.Anode is not null && stationOrigin.Contains($"S{cycle.Anode.CycleRID[0].ToString()}"))
 			.ToList();
 
 		Console.WriteLine($"Cycles récupérés : {cycles.Count.ToString()}");
@@ -43,7 +42,7 @@ public class KPIService :
 			if (!Station.IsMatchStation(stationID) || cyclesToKPI.Count == 0)
 				continue;
 
-			dTOStationKPIs.Add(new DTOStationKPI(cyclesToKPI));
+			dTOStationKPIs.Add(new DTOStationKPI(cyclesToKPI, stationOrigin));
 		}
 
 		Console.WriteLine($"Nombre total de DTOStationKPIs  : {dTOStationKPIs.Count.ToString()}");

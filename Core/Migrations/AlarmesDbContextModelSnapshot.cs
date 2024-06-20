@@ -980,7 +980,13 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("HasPlug")
+                        .HasColumnType("bit");
+
                     b.Property<int>("InstanceMatchID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NbActiveAlarms")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ShootingTS")
@@ -1019,7 +1025,13 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("HasPlug")
+                        .HasColumnType("bit");
+
                     b.Property<int>("InstanceMatchID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NbActiveAlarms")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ShootingTS")
@@ -1171,7 +1183,13 @@ namespace Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("HasPlug")
+                        .HasColumnType("bit");
+
                     b.Property<int>("InstanceMatchID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NbActiveAlarms")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ShootingTS")
@@ -1191,52 +1209,6 @@ namespace Core.Migrations
                     b.ToTable("ToUnload");
                 });
 
-            modelBuilder.Entity("Core.Shared.Models.DB.System.Logs.Log", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Api")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Code")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Controller")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Endpoint")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Function")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("HasBeenSent")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Server")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StationID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("TS")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Log");
-                });
-
             modelBuilder.Entity("Core.Shared.Models.DB.System.Logs.LogEntry", b =>
                 {
                     b.Property<int>("ID")
@@ -1250,6 +1222,9 @@ namespace Core.Migrations
 
                     b.Property<bool>("HasBeenSent")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Instance")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Level")
                         .IsRequired()
@@ -1272,10 +1247,6 @@ namespace Core.Migrations
 
                     b.Property<DateTimeOffset>("TS")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 

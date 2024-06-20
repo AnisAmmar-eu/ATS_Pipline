@@ -56,8 +56,6 @@ public class MatchService : BackgroundService
 			IToMatchService toMatchService
 		   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
 
-			await anodeUOW.StartTransaction();
-
 			try
 			{
 				Match match = (Match)await anodeUOW.IOTDevice
@@ -71,104 +69,103 @@ public class MatchService : BackgroundService
 						withTracking: false);
 
 				if (match.Pause || rule.Reinit)
-				{
-					_logger.LogWarning("System on pause");
 					continue;
-				}
 
-				List<ToMatch> toMatchs = await anodeUOW.ToMatch.GetAll(
+				ToMatch? toMatch = await anodeUOW.ToMatch.GetBy(
 					[match => match.InstanceMatchID == instanceMatchID],
+					query => query.OrderByDescending(x => x.ShootingTS),
 					withTracking: false);
 
-				foreach (ToMatch toMatch in toMatchs)
+				if (toMatch is null || !await toMatchService.GoMatch(stationOrigins, instanceMatchID, stationDelay))
+					continue;
+
+				anodeUOW.StartTransaction();
+
+				_logger.LogInformation("debut de matching {cycleRID}", toMatch.CycleRID);
+
+				anodeUOW.ToMatch.Remove(toMatch);
+				anodeUOW.Commit();
+
+				foreach (int cameraID in new int[] { 1, 2 })
 				{
-					if (!await toMatchService.GoMatch(stationOrigins, instanceMatchID, stationDelay))
-						continue;
+					MatchableCycle cycle = (MatchableCycle)await anodeUOW.StationCycle.GetById(toMatch.StationCycleID);
 
-					_logger.LogInformation("debut de matching {cycleRID}", toMatch.CycleRID);
+					FileInfo image = Shooting.GetImagePathFromRoot(
+						toMatch.CycleRID,
+						toMatch.StationID,
+						imagesPath,
+						toMatch.AnodeType,
+						cameraID,
+						extension);
 
-					anodeUOW.ToMatch.Remove(toMatch);
-					anodeUOW.Commit();
+					nint retMatch = DLLVisionImport.fcx_match(
+						cameraID,
+						1,
+						image.DirectoryName ?? string.Empty,
+						Path.GetFileNameWithoutExtension(image.Name));
+					int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
+					_logger.LogInformation(
+						"{nb} matché avec code d'erreur {error}",
+						DLLVisionImport.fcx_matchRet_anodeId(retMatch),
+						matchErrorCode);
 
-					foreach (int cameraID in new int[] { 1, 2 })
+					if (matchErrorCode == 0 || matchErrorCode == -106)
 					{
-						MatchableCycle cycle = (MatchableCycle)await anodeUOW.StationCycle.GetById(toMatch.StationCycleID);
+						cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, isChained);
 
-						FileInfo image = Shooting.GetImagePathFromRoot(
-							toMatch.CycleRID,
-							toMatch.StationID,
-							imagesPath,
-							toMatch.AnodeType,
-							cameraID,
-							extension);
-
-						nint retMatch = DLLVisionImport.fcx_match(
-							cameraID,
-							1,
-							image.DirectoryName ?? string.Empty,
-							Path.GetFileNameWithoutExtension(image.Name));
-						int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
-						_logger.LogInformation(
-							"{nb} matché avec code d'erreur {error}",
-							DLLVisionImport.fcx_matchRet_anodeId(retMatch),
-							matchErrorCode);
-
-						if (matchErrorCode == 0 || matchErrorCode == -106)
+						if (matchErrorCode == 0)
 						{
-							cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, isChained);
+							string? anodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(retMatch));
+							string? cycleRID = Shooting.GetCycleRIDFromFilename(anodeID!);
 
-							if (matchErrorCode == 0)
+							int retFree = DLLVisionImport.fcx_matchRet_free(retMatch);
+
+							if (!isChained)
 							{
-								string? anodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(retMatch));
-								string? cycleRID = Shooting.GetCycleRIDFromFilename(anodeID!);
+								await toMatchService.UpdateAnode(cycle, cycleRID);
+								// Get S1S2Cycle and Add ToNotify row
+								string imagePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
+								FileInfo file = Shooting.GetImagePathFromFilename(imagePath, $"{anodeID!}.{extension}");
+								StationCycle? cycleMatched = await anodeUOW.StationCycle.GetBy([cycle => cycle.RID == cycleRID]);
 
-								int retFree = DLLVisionImport.fcx_matchRet_free(retMatch);
-
-								if (!isChained)
+								if (cycleMatched is not null)
 								{
-									await toMatchService.UpdateAnode(cycle, cycleRID);
-									// Get S1S2Cycle and Add ToNotify row
-									string imagePath = _configuration.GetValueWithThrow<string>(ConfigDictionary.ImagesPath);
-									FileInfo file = Shooting.GetImagePathFromFilename(imagePath, $"{anodeID!}.{extension}");
-									StationCycle? cycleMatched = await anodeUOW.StationCycle.GetBy([cycle => cycle.RID == cycleRID]);
+									ToNotify toNotify = new() {
+										StationID = cycleMatched.StationID,
+										SynchronisationKey = cycleMatched.RID,
+										ShootingTS = cycleMatched.TSFirstShooting ?? DateTimeOffset.Now,
+										SerialNumber = cycleMatched.SerialNumber,
+										Path = file.FullName,
+									};
 
-									if (cycleMatched is not null)
-									{
-										ToNotify toNotify = new() {
-											StationID = cycleMatched.StationID,
-											SynchronisationKey = cycleMatched.RID,
-											ShootingTS = cycleMatched.TSFirstShooting ?? DateTimeOffset.Now,
-											SerialNumber = cycleMatched.SerialNumber,
-											Path = file.FullName,
-										};
-
-										anodeUOW.ToNotify.Add(toNotify);
-										anodeUOW.Commit();
-									}
+									anodeUOW.ToNotify.Add(toNotify);
+									anodeUOW.Commit();
 								}
-								else
-								{
-									await toMatchService.UpdateChainedCycle(cycle, cycleRID);
-								}
-
-								foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, anodeUOW))
-								{
-									ToUnload toUnload = toMatch.Adapt<ToUnload>();
-									toUnload.InstanceMatchID = instance;
-									toUnload.CycleRID = cycleRID;
-									await anodeUOW.ToUnload.Add(toUnload);
-								}
-
-								anodeUOW.Commit();
-								break; //either camera has matched successfully, not need to go further
 							}
-						}
-						else
-						{
-							_logger.LogWarning("Return code de la signature: {retMatch} pour anode {image}", matchErrorCode, image.Name);
+							else
+							{
+								await toMatchService.UpdateChainedCycle(cycle, cycleRID);
+							}
+
+							foreach (int instance in await ToUnloadService.GetInstances(instanceMatchID, anodeUOW))
+							{
+								ToUnload toUnload = toMatch.Adapt<ToUnload>();
+								toUnload.InstanceMatchID = instance;
+								toUnload.CycleRID = cycleRID;
+								await anodeUOW.ToUnload.Add(toUnload);
+							}
+
+							anodeUOW.Commit();
+							break; //either camera has matched successfully, not need to go further
 						}
 					}
+					else
+					{
+						_logger.LogWarning("Return code de la signature: {retMatch} pour anode {image}", matchErrorCode, image.Name);
+					}
 				}
+
+				anodeUOW.CommitTransaction();
 			}
 			catch (Exception ex)
 			{
@@ -176,8 +173,6 @@ public class MatchService : BackgroundService
 					"Failed to execute MatchService with exception message {message}.",
 					ex.Message);
 			}
-
-			await anodeUOW.CommitTransaction();
 		}
 	}
 }

@@ -12,6 +12,6 @@ public partial class LogEntry : BaseEntity, IBaseEntity<LogEntry, DTOLogEntry>
 	public string? Exception { get; set; }
 	public string? Properties { get; set; }
 	public string Source { get; set; } = string.Empty;
-	public string Type { get; set; } = "Message";
+	public string? Instance { get; set; }
 	public bool HasBeenSent { get; set; }
 }

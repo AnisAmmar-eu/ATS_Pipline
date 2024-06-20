@@ -38,13 +38,11 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 	/// </summary>
 	/// <param name="dtoActEntityToValid"></param>
 	/// <param name="actService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>The action token as string</returns>
 	private static Task<JsonHttpResult<ApiResponse>> HasRights(
 		[FromBody] DTOActEntityToValid dtoActEntityToValid,
 		IActService actService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
@@ -52,7 +50,6 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 				string actionToken = await actService.HasRights(httpContext, dtoActEntityToValid);
 				return new { actionToken };
 			},
-			logService,
 			httpContext);
 	}
 
@@ -62,18 +59,15 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 	/// </summary>
 	/// <param name="dtoActEntity"></param>
 	/// <param name="actService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="DTOActEntity" /></returns>
 	private static Task<JsonHttpResult<ApiResponse>> GetActEntityWithRoles(
 		[FromBody] DTOActEntity dtoActEntity,
 		IActService actService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => actService.GetActionEntityRoles(dtoActEntity),
-			logService,
 			httpContext);
 	}
 
@@ -83,18 +77,15 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 	/// </summary>
 	/// <param name="dtoActEntitiesStatus"></param>
 	/// <param name="actService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <returns>A <see cref="List{DTOActEntityStatus}" /></returns>
 	private static Task<JsonHttpResult<ApiResponse>> GetActEntitiesStatusFromList(
 		[FromBody] List<DTOActEntityStatus> dtoActEntitiesStatus,
 		IActService actService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpoint(
 			() => actService.ActionsFromList(httpContext, dtoActEntitiesStatus),
-			logService,
 			httpContext);
 	}
 
@@ -104,13 +95,11 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 	/// </summary>
 	/// <param name="dtoActEntities"></param>
 	/// <param name="actService"></param>
-	/// <param name="logService"></param>
 	/// <param name="httpContext"></param>
 	/// <exception cref="UnauthorizedAccessException"></exception>
 	private static Task<JsonHttpResult<ApiResponse>> AssignActionsFromList(
 		[FromBody] List<DTOActEntity> dtoActEntities,
 		IActService actService,
-		ILogService logService,
 		HttpContext httpContext)
 	{
 		return GenericEndpointEmptyResponse(
@@ -118,7 +107,6 @@ public class ActEndpoint : BaseEntityEndpoint<Act, DTOAct, IActService>, ICarter
 				foreach (DTOActEntity dtoActEntity in dtoActEntities.Where(dto => dto.Act?.RID.StartsWith("MANAGE.") == true))
 					await actService.AssignAction(dtoActEntity);
 			},
-			logService,
 			httpContext);
 	}
 }
