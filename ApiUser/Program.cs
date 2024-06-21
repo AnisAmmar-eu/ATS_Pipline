@@ -1,101 +1,27 @@
 using System.Reflection;
-using System.Text;
 using ApiUser.SwaggerConfig;
-using Carter;
-using Core.Configuration.Serilog;
 using Core.Entities.User.Dictionaries;
-using Core.Entities.User.Models.DB.Roles;
-using Core.Entities.User.Models.DB.Users;
 using Core.Entities.User.Services.Acts;
 using Core.Entities.User.Services.Auth;
 using Core.Entities.User.Services.Roles;
 using Core.Entities.User.Services.Users;
 using Core.Shared.Authorize;
-using Core.Shared.Configuration;
 using Core.Shared.Data;
 using Core.Shared.Dictionaries;
 using Core.Shared.Services.Jwt;
 using Core.Shared.Services.SystemApp.Logs;
-using Core.Shared.UnitOfWork;
-using Core.Shared.UnitOfWork.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Use Serilog as logger
-builder.Logging.ClearProviders();
-builder.Host.UseSerilog(
-	(ctx, serviceProvider, loggerConfig) => {
-		loggerConfig
-			.ReadFrom
-			.Configuration(ctx.Configuration)
-			.ReadFrom
-			.Services(serviceProvider)
-			.Enrich
-			.WithCustomEnrichers(ctx.Configuration);
-	});
-
-builder.Services.AddControllers();
-
-builder.Configuration.LoadBaseConfiguration();
+builder.AddRequiredBuilders();
 
 if (!Station.IsServer)
 	throw new("¨This API can only run on the server. Please update appsettings.json");
 
-builder.Services.AddDbContext<AnodeCTX>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionStringWithThrow("DefaultConnection")));
-
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
-	options => {
-		options.Password.RequiredLength = 1;
-		options.Password.RequireLowercase = false;
-		options.Password.RequireUppercase = false;
-		options.Password.RequireNonAlphanumeric = false;
-		options.Password.RequireDigit = false;
-	})
-	.AddEntityFrameworkStores<AnodeCTX>()
-	.AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(
-	options => {
-		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-	})
-	// Adding Jwt Bearer
-	.AddJwtBearer(options => {
-		options.SaveToken = true;
-		options.RequireHttpsMetadata = false;
-		string jwtSecret = builder.Configuration.GetValueWithThrow<string>("JWT:Secret");
-		options.TokenValidationParameters = new() {
-			ValidateIssuer = true,
-			ValidateAudience = true,
-			ValidAudience = builder.Configuration.GetValueWithThrow<string>("JWT:ValidAudience"),
-			ValidIssuer = builder.Configuration.GetValueWithThrow<string>("JWT:ValidIssuer"),
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-		};
-		options.Events = new() {
-			OnMessageReceived = context => {
-				if (context.Request.Query.TryGetValue("access_token", out StringValues token)
-				   )
-					context.Token = token;
-
-				return Task.CompletedTask;
-			},
-			OnAuthenticationFailed = _ => Task.CompletedTask,
-		};
-	});
-
-// To fix: Unable to resolve service for type 'Microsoft.AspNetCore.Http.IHttpContextAccessor'
-builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+// System services
+builder.Services.AddScoped<ILogService, LogService>();
 
 // User Services
 builder.Services.AddScoped<IActService, ActService>();
@@ -103,14 +29,6 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
-// System services
-builder.Services.AddScoped<ILogService, LogService>();
-
-// UnitOfWork
-builder.Services.AddScoped<IAnodeUOW, AnodeUOW>();
-
-builder.Services.AddCarter();
 
 builder.Services.AddAuthorizationBuilder()
 	.AddPolicy(
@@ -161,26 +79,6 @@ builder.Services.AddSwaggerGen(
 
 WebApplication app = builder.Build();
 
-string[] clientHost = builder.Configuration.GetSectionWithThrow<string[]>(ConfigDictionary.ClientHost);
-app.UseCors(policyBuilder => policyBuilder.WithOrigins(clientHost)
-	.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
-	.AllowAnyHeader()
-	.AllowCredentials());
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapCarter();
+app.AddRequiredApps();
 
 app.Run();
