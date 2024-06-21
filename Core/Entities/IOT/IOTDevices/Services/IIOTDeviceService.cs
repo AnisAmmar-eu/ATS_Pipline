@@ -1,5 +1,6 @@
 using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
+using Core.Entities.IOT.IOTDevices.Models.DTO.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Shared.Services.Kernel.Interfaces;
 
@@ -24,4 +25,5 @@ public interface IIOTDeviceService : IBaseEntityService<IOTDevice, DTOIOTDevice>
 	/// </summary>
 	/// <returns></returns>
 	public Task<bool> ActiveReinit();
+	public Task<DTOServerRule?> GetReinit();
 }

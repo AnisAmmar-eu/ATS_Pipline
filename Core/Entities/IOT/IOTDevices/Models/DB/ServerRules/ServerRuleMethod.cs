@@ -1,4 +1,5 @@
 using Core.Entities.IOT.IOTDevices.Models.DTO.ServerRules;
+using Mapster;
 
 namespace Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 
@@ -12,5 +13,5 @@ public partial class ServerRule
 	{
 	}
 
-	public override DTOServerRule ToDTO() => new(this);
+	public override DTOServerRule ToDTO() => this.Adapt<DTOServerRule>();
 }

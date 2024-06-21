@@ -72,7 +72,7 @@ public class LoadService : BackgroundService
 
 				ToLoad? toLoad = await anodeUOW.ToLoad.GetBy(
 					[load => load.InstanceMatchID == instanceMatchID],
-					orderBy: query => query.OrderByDescending(
+					orderBy: query => query.OrderBy(
 						toLoad => toLoad.ShootingTS),
 					withTracking: false);
 

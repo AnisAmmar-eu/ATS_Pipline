@@ -75,8 +75,11 @@ public class MatchService : BackgroundService
 					[match => match.InstanceMatchID == instanceMatchID],
 					query => query.OrderBy(x => x.ShootingTS));
 
-				if (toMatch is null || !await toMatchService.GoMatch(stationOrigins, instanceMatchID, stationDelay, toMatch))
+				if (toMatch is null
+					|| !await toMatchService.GoMatch(stationOrigins, instanceMatchID, stationDelay, toMatch.ShootingTS))
+				{
 					continue;
+				}
 
 				anodeUOW.StartTransaction();
 

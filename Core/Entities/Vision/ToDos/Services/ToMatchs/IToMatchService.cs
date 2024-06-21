@@ -7,7 +7,7 @@ namespace Core.Entities.Vision.ToDos.Services.ToMatchs;
 
 public interface IToMatchService : IBaseEntityService<ToMatch, DTOToMatch>
 {
-	Task<bool> GoMatch(List<string> origins, int instanceMatchID, double delay, ToMatch oldestToMatch);
+	Task<bool> GoMatch(List<string> origins, int instanceMatchID, double delay, DateTimeOffset? oldestToMatch);
 	Task UpdateAnode(MatchableCycle cycle, string? cycleRID);
 	Task<MatchableCycle> UpdateCycle(MatchableCycle cycle, nint retMatch, int cameraID, bool isChained);
 	Task UpdateChainedCycle(MatchableCycle cycle, string? cycleRID);

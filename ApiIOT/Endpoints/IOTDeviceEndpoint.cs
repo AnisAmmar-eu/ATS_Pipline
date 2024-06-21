@@ -6,7 +6,6 @@ using Core.Entities.IOT.IOTDevices.Services;
 using Core.Shared.Endpoints.Kernel;
 using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Models.ApiResponses;
-using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +20,7 @@ public class IOTDeviceEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIO
 
 		group.MapGet("status/{rid}", GetStatusByRID).WithSummary("Get a device's STATUS by its RID").WithOpenApi();
 		group.MapPut("rids", GetDevicesByArrayRID).WithSummary("Get devices by their RIDs").WithOpenApi();
+		group.MapGet("serverRule", GetReinit).WithSummary("saucisse").WithOpenApi();
 	}
 
 	private static Task<JsonHttpResult<ApiResponse>> GetStatusByRID(
@@ -33,4 +33,9 @@ public class IOTDeviceEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIO
 		IIOTDeviceService iotDeviceService,
 		HttpContext httpContext)
 			=> GenericEndpoint(() => iotDeviceService.GetStatusByArrayRID(rids), httpContext);
+
+	private static Task<JsonHttpResult<ApiResponse>> GetReinit(
+		IIOTDeviceService iotDeviceService,
+		HttpContext httpContext)
+		=> GenericEndpoint(() => iotDeviceService.GetReinit(), httpContext);
 }
