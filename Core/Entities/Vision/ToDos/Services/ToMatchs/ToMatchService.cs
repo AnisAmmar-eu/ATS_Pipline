@@ -206,7 +206,7 @@ public class ToMatchService :
 		return kPI;
 	}
 
-	public async Task<bool> GoMatch(List<string> origins, int instanceMatchID, double delay, ToMatch oldestToMatch)
+	public async Task<bool> GoMatch(List<string> origins, int instanceMatchID, double delay, DateTimeOffset? oldestToMatch)
 	{
 		try
 		{
@@ -248,8 +248,8 @@ public class ToMatchService :
 				ValidDelay(oldestStation, delay),
 				ValidDelay(oldestToLoad, delay),
 				ValidDelay(oldestToSign, delay),
-				((DateTimeOffset)oldestToLoad).AddDays(delay) < oldestToMatch.ShootingTS,
-				((DateTimeOffset)oldestToSign).AddDays(delay) < oldestToMatch.ShootingTS,
+				((DateTimeOffset)oldestToLoad).AddDays(delay) < oldestToMatch,
+				((DateTimeOffset)oldestToSign).AddDays(delay) < oldestToMatch,
 				!await _anodeUOW.ToUnload.AnyPredicate(toUnload => toUnload.InstanceMatchID == instanceMatchID));
 
 			return rule?.Reinit == false
@@ -257,8 +257,8 @@ public class ToMatchService :
 				&& ValidDelay(oldestStation, delay)
 				&& ValidDelay(oldestToLoad, delay)
 				&& ValidDelay(oldestToSign, delay)
-				&& ((DateTimeOffset)oldestToLoad).AddDays(delay) < oldestToMatch.ShootingTS
-				&& ((DateTimeOffset)oldestToSign).AddDays(delay) < oldestToMatch.ShootingTS
+				&& ((DateTimeOffset)oldestToLoad).AddDays(delay) < oldestToMatch
+				&& ((DateTimeOffset)oldestToSign).AddDays(delay) < oldestToMatch
 				&& !await _anodeUOW.ToUnload.AnyPredicate(toUnload => toUnload.InstanceMatchID == instanceMatchID);
 		}
 		catch (Exception)

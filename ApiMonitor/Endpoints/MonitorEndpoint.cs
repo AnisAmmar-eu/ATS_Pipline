@@ -19,7 +19,9 @@ public class MonitorEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIOTD
 		RouteGroupBuilder group = app.MapGroup("apiMonitor").WithTags(nameof(MonitorEndpoint));
 		group.MapGet("status", () => new ApiResponse().SuccessResult());
 		group.MapPut("reinit", ActiveReinit).WithSummary("Active mode reinit").WithOpenApi();
-		group.MapPut("GoMatch/{instanceMatch}/{delay}", TestGoMatch).WithSummary("Test GoMatch").WithOpenApi();
+		group.MapPut("GoMatch/{instanceMatch}/{delay}/{oldestToMatch}", TestGoMatch)
+			.WithSummary("Test GoMatch")
+			.WithOpenApi();
 
 		RouteGroupBuilder groupIOTDevice = MapBaseEndpoints(group, BaseEndpointFlags.Read, nameof(IOTDevice.IOTTags));
 		groupIOTDevice.MapGet("status/{rid}", GetStatusByRID).WithSummary("Get a device's STATUS by its RID").WithOpenApi();
@@ -46,7 +48,8 @@ public class MonitorEndpoint : BaseEntityEndpoint<IOTDevice, DTOIOTDevice, IIOTD
 		[FromBody][Required] IEnumerable<string> origins,
 		[Required][FromRoute] int instanceMatch,
 		[Required][FromRoute] int delay,
+		[Required][FromRoute] DateTimeOffset? oldestToMatch,
 		IToMatchService toMatchService,
 		HttpContext httpContext)
-			=> GenericEndpoint(() => toMatchService.GoMatch(origins.ToList(), instanceMatch, delay), httpContext);
+			=> GenericEndpoint(() => toMatchService.GoMatch(origins.ToList(), instanceMatch, delay, oldestToMatch), httpContext);
 }

@@ -3,6 +3,7 @@ using Core.Entities.IOT.IOTDevices.Models.DB;
 using Core.Entities.IOT.IOTDevices.Models.DB.ITApis;
 using Core.Entities.IOT.IOTDevices.Models.DB.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.DTO;
+using Core.Entities.IOT.IOTDevices.Models.DTO.ServerRules;
 using Core.Entities.IOT.IOTDevices.Models.Structs;
 using Core.Entities.IOT.IOTDevices.Repositories;
 using Core.Entities.IOT.IOTTags.Models.DB;
@@ -48,6 +49,9 @@ public class IOTDeviceService : BaseEntityService<IIOTDeviceRepository, IOTDevic
 		return (await _anodeUOW.IOTDevice.GetAll([device => device is ITApi], withTracking: false))
 			.Select(device => device.RID);
 	}
+
+	public async Task<DTOServerRule?> GetReinit()
+		=> (DTOServerRule?)(await _anodeUOW.IOTDevice.GetBy([device => device is ServerRule]))?.ToDTO();
 
 	public async Task CheckAllConnectionsAndApplyTags(IEnumerable<string> rids)
 	{

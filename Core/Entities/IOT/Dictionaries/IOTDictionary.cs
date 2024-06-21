@@ -1,4 +1,3 @@
-using Core.Shared.Configuration;
 using Core.Shared.Dictionaries;
 
 namespace Core.Entities.IOT.Dictionaries;
@@ -140,16 +139,24 @@ public static class MatchService
 	public static MatchServiceData S4Gate1Gate0DX = new("Match2", 4, AnodeTypeDict.DX, "Gate1Gate0DX", 1);
 	public static MatchServiceData S3Gate1Gate0D20 = new("Match3", 3, AnodeTypeDict.D20, "Gate1Gate0D20", 2);
 	public static MatchServiceData S4Gate1Gate0D20 = new("Match4", 4, AnodeTypeDict.D20, "Gate1Gate0D20", 2);
+	public static MatchServiceData S3Gate1Gate0D20_sec = new("Match9", 3, AnodeTypeDict.D20, "Gate1Gate0D20", 6);
+	public static MatchServiceData S4Gate1Gate0D20_sec = new("Match10", 4, AnodeTypeDict.D20, "Gate1Gate0D20", 6);
 	public static MatchServiceData S5Gate2Gate0DX = new("Match5", 5, AnodeTypeDict.DX, "Gate2Gate0DX", 3);
 	public static MatchServiceData S5Gate2Gate1DX = new("Match6", 5, AnodeTypeDict.DX, "Gate2Gate1DX", 4);
+	public static MatchServiceData S3Gate1Gate0DX_sec = new("Match7", 3, AnodeTypeDict.DX, "Gate1Gate0DX", 5);
+	public static MatchServiceData S4Gate1Gate0DX_sec = new("Match8", 4, AnodeTypeDict.DX, "Gate1Gate0DX", 5);
 
 	public static List<MatchServiceData> list = [
 		S3Gate1Gate0DX,
 		S4Gate1Gate0DX,
 		S3Gate1Gate0D20,
 		S4Gate1Gate0D20,
+		S3Gate1Gate0D20_sec,
+		S4Gate1Gate0D20_sec,
 		S5Gate2Gate0DX,
-		S5Gate2Gate1DX
+		S5Gate2Gate1DX,
+		S3Gate1Gate0DX_sec,
+		S4Gate1Gate0DX_sec
 	];
 }
 
