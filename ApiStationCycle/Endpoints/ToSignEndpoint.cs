@@ -12,7 +12,7 @@ public class ToSignEndpoint : BaseEntityEndpoint<ToSign, DTOToSign, IToSignServi
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		if (Station.IsServer)
+		if (!Station.IsServer)
 			return;
 
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(ToSignEndpoint));

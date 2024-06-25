@@ -14,11 +14,11 @@ public class PacketEndpoint : BaseEntityEndpoint<Packet, DTOPacket, IPacketServi
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		if (Station.IsServer)
-			return;
-
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(PacketEndpoint));
 		group = MapBaseEndpoints(group, BaseEndpointFlags.Read);
+
+		if (Station.IsServer)
+			return;
 
 		group.MapGet("mostRecent", GetMostRecent);
 		group.MapGet("{shootingID}/{cameraID:int}/image", GetImageFromIDAndCamera);

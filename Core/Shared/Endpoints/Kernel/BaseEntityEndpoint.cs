@@ -5,6 +5,7 @@ using Core.Shared.Models.DTO.Kernel.Interfaces;
 using Core.Shared.Paginations;
 using Core.Shared.Paginations.Filtering;
 using Core.Shared.Services.Kernel.Interfaces;
+using Core.Shared.Services.SystemApp.Logs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -65,6 +66,13 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				.WithOpenApi();
 			group.MapPut("{columnName}/{filterValue}", GetByGenericWithIncludes)
 				.WithSummary($"Get a {tName} by a filterValue in columnName with includes")
+				.WithOpenApi();
+
+			group.MapGet("by", GetByQuery)
+				.WithSummary($"Get a {tName} by a values in query such as columnName=filterValue")
+				.WithOpenApi();
+			group.MapPut("by", GetByQueryWithIncludes)
+				.WithSummary($"Get a {tName} by a values in query such as columnName=filterValue")
 				.WithOpenApi();
 
 			group.MapPut("pagination", CountWithPagination)
@@ -165,6 +173,43 @@ public class BaseEntityEndpoint<T, TDTO, TService> : BaseEndpoint
 				Pagination pagination = new() {
 					Includes = [.. includes],
 					FilterParams = [param],
+				};
+				return service.GetWithPagination(pagination, 0);
+			},
+			httpContext,
+			_isLogged);
+	}
+
+	/// <summary>
+	/// This function allows for a generic GetBy by using a query. Values given in the query determines which filters to apply.
+	/// eg. the following query: ".../by?Name=LittleKingJohn&RID=LKJ" will return every entity with "LittleKingJohn" as a name
+	/// and "LKJ" as a RID. An error is throw if a column name given in the query does not correspond to any column in the table.
+	/// </summary>
+	/// <param name="service"></param>
+	/// <param name="httpContext"></param>
+	/// <returns></returns>
+	private Task<JsonHttpResult<ApiResponse>> GetByQuery(
+		TService service,
+		HttpContext httpContext)
+		=> GetByQueryWithIncludes(service, httpContext, []);
+
+	private Task<JsonHttpResult<ApiResponse>> GetByQueryWithIncludes(
+		TService service,
+		HttpContext httpContext,
+		[FromBody] string[] includes)
+	{
+		return GenericEndpoint(
+			() => {
+				List<FilterParam> filterParams = httpContext.Request.Query
+					.Select(kvp => new FilterParam {
+						ColumnName = kvp.Key,
+						FilterValue = [kvp.Value[0] ?? string.Empty],
+						FilterOptionName = "Equal",
+					})
+					.ToList();
+				Pagination pagination = new() {
+					Includes = [.. includes],
+					FilterParams = filterParams,
 				};
 				return service.GetWithPagination(pagination, 0);
 			},

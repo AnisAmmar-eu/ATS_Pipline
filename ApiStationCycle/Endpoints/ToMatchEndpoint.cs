@@ -12,7 +12,7 @@ public class ToMatchEndpoint : BaseEntityEndpoint<ToMatch, DTOToMatch, IToMatchS
 {
 	public void AddRoutes(IEndpointRouteBuilder app)
 	{
-		if (Station.IsServer)
+		if (!Station.IsServer)
 			return;
 
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(ToMatchEndpoint));
