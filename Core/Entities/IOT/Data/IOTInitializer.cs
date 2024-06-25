@@ -86,7 +86,8 @@ public static class IOTInitializer
 		InitializeSignServices(anodeCTX);
 		InitializeMatchServices(anodeCTX);
 
-		InitializeDebugModes(anodeCTX);
+		if (!anodeCTX.DebugModes.Any())
+			InitializeDebugModes(anodeCTX);
 	}
 
 	private static void InitializeCamera(AnodeCTX anodeCTX, string rid, string prefix, int port)
@@ -277,7 +278,7 @@ public static class IOTInitializer
 			Description = rid,
 			Address = address,
 			ConnectionPath = path,
-			IsConnected = false,
+			IsConnected = true,
 			OldestTSShooting = DateTimeOffset.MinValue,
 			IsOptional = true,
 		};

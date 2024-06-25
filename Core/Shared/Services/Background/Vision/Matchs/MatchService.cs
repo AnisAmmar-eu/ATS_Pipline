@@ -50,14 +50,14 @@ public class MatchService : BackgroundService
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
-			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
-			IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
-			IToMatchService toMatchService
-		   = asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
-
 			try
 			{
+				await Task.Delay(TimeSpan.FromSeconds(signMatchTimer), stoppingToken);
+				await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
+				IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
+				IToMatchService toMatchService
+					= asyncScope.ServiceProvider.GetRequiredService<IToMatchService>();
+
 				Match match = (Match)await anodeUOW.IOTDevice
 					.GetByWithThrow(
 						[device => device is Match && ((Match)device).InstanceMatchID == instanceMatchID],
@@ -106,21 +106,20 @@ public class MatchService : BackgroundService
 						image.DirectoryName ?? string.Empty,
 						Path.GetFileNameWithoutExtension(image.Name));
 					int matchErrorCode = DLLVisionImport.fcx_matchRet_errorCode(retMatch);
+					string? anodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(retMatch));
 					_logger.LogInformation(
 						"{nb} matché avec code d'erreur {error}",
-						DLLVisionImport.fcx_matchRet_anodeId(retMatch),
+						anodeID,
 						matchErrorCode);
 
 					if (matchErrorCode == 0 || matchErrorCode == -106)
 					{
 						cycle = await toMatchService.UpdateCycle(cycle, retMatch, cameraID, isChained);
+						int retfree = DLLVisionImport.fcx_matchRet_free(retMatch);
 
 						if (matchErrorCode == 0)
 						{
-							string? anodeID = Marshal.PtrToStringAnsi(DLLVisionImport.fcx_matchRet_anodeId(retMatch));
 							string? cycleRID = Shooting.GetCycleRIDFromFilename(anodeID!);
-
-							int retFree = DLLVisionImport.fcx_matchRet_free(retMatch);
 
 							if (!isChained)
 							{
@@ -176,5 +175,7 @@ public class MatchService : BackgroundService
 					ex.Message);
 			}
 		}
+
+		_logger.LogError("End of match service");
 	}
 }

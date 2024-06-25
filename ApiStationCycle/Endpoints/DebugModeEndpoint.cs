@@ -1,12 +1,12 @@
 using Carter;
-using Core.Entities.DebugsModes.Services;
 using Core.Entities.DebugsModes.Models.DB;
 using Core.Entities.DebugsModes.Models.DTO;
+using Core.Entities.DebugsModes.Services;
 using Core.Shared.Dictionaries;
 using Core.Shared.Endpoints.Kernel;
+using Core.Shared.Endpoints.Kernel.Dictionaries;
 using Core.Shared.Models.ApiResponses;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Core.Shared.Endpoints.Kernel.Dictionaries;
 
 namespace ApiStationCycle.Endpoints;
 
@@ -20,7 +20,6 @@ public class DebugModeEndpoint :
 			return;
 
 		RouteGroupBuilder group = app.MapGroup("apiStationCycle").WithTags(nameof(DebugModeEndpoint));
-		group.MapGet("status", () => new ApiResponse().SuccessResult());
 
 		// Debug Mode , Logs , Csv 
 		group.MapPut("debugMode/{enabled}", ToggleDebugMode);
