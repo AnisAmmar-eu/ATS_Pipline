@@ -231,6 +231,9 @@ public static class Filter
 		if (type == typeof(string))
 			return value;
 
+		if (type.IsEnum)
+			return Enum.Parse(type, value) as IComparable;
+
 		if (type.GetInterfaces().All(c => c != typeof(IComparable)))
 			throw new ArgumentException($"Filter: {type} is not parsable as IComparable.");
 
