@@ -1,5 +1,6 @@
 ﻿using Core.Shared.Dictionaries;
 using Core.Shared.Models.DB.System.Logs;
+using Mapster;
 
 namespace Core.Shared.Models.DTO.System.Logs;
 
@@ -10,17 +11,5 @@ public partial class DTOLogEntry
 		HasBeenSent = Station.IsServer;
 	}
 
-	public DTOLogEntry(LogEntry log)
-	{
-		Message = log.Message;
-		MessageTemplate = log.MessageTemplate;
-		Level = log.Level;
-		Exception = log.Exception;
-		Properties = log.Properties;
-		Source = log.Source;
-		Instance = log.Instance;
-		HasBeenSent = log.HasBeenSent;
-	}
-
-	public override LogEntry ToModel() => new(this);
+	public override LogEntry ToModel() => this.Adapt<LogEntry>();
 }
