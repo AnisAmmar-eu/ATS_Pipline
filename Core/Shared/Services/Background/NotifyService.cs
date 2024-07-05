@@ -45,12 +45,11 @@ public class NotifyService : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		GetLastMessageFromMsgNewTopic(3);
-		GetLastMessageFromMsgNewTopic(4);
-		GetLastMessageFromMsgNewTopic(5);
-
 		while (!stoppingToken.IsCancellationRequested)
 		{
+			GetLastMessageFromMsgNewTopic(3);
+			GetLastMessageFromMsgNewTopic(4);
+			GetLastMessageFromMsgNewTopic(5);
 			await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
 			IAnodeUOW anodeUOW = asyncScope.ServiceProvider.GetRequiredService<IAnodeUOW>();
 
@@ -92,7 +91,7 @@ public class NotifyService : BackgroundService
 
 		MqttClientOptions options = new MqttClientOptionsBuilder()
 			.WithClientId(Guid.NewGuid().ToString())
-			.WithTcpServer("localhost", 1883)
+			.WithTcpServer("172.26.8.159", 1883)
 			.WithCleanSession()
 			.Build();
 
@@ -113,6 +112,7 @@ public class NotifyService : BackgroundService
 		{
 			_logger.LogError("Failed to wait for response from MQTT topic with exception message {message}.", ex.Message);
 		}
+
 	}
 
 	private async Task SendNotificationInfo(ToNotify notification)
@@ -132,7 +132,7 @@ public class NotifyService : BackgroundService
 
 		MqttClientOptions options = new MqttClientOptionsBuilder()
 			.WithClientId(Guid.NewGuid().ToString())
-			.WithTcpServer("localhost", 1883)
+			.WithTcpServer("172.26.8.159", 1883)
 			.WithCleanSession()
 			.Build();
 

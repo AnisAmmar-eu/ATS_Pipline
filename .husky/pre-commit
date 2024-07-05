@@ -18,6 +18,7 @@
 
 ## or put your custom commands -------------------
 #echo 'Husky.Net is awesome!'
+exit 0
 
 STAGED_FILES=($(git diff --cached --name-only --diff-filter=ACM | grep ".cs$" || true))
 
