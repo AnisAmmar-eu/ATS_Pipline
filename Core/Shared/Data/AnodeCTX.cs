@@ -159,7 +159,9 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 		base.OnModelCreating(builder);
 
 		// It is not needed to give the triggers' names. EFC just need to know if there is one since .NET 7
-		builder.Entity<AlarmLog>().ToTable(tb => tb.HasTrigger("trigger"));
+		builder.Entity<AlarmLog>().ToTable(tb => tb.HasTrigger("AlarmLogTrigger"));
+		builder.Entity<AlarmRT>().ToTable(tb => tb.HasTrigger("AlarmRTTrigger"));
+		builder.Entity<IOTDevice>().ToTable(tb => tb.HasTrigger("IOTDeviceTrigger"));
 
 		builder.Entity<AlarmLog>()
 			.HasOne(j => j.Alarm)
@@ -169,7 +171,7 @@ public class AnodeCTX : IdentityDbContext<ApplicationUser, ApplicationRole, stri
 
 		builder.Entity<AlarmRT>()
 			.HasOne(at => at.Alarm)
-			.WithOne(ac => ac.AlarmRT)
+			.WithMany(ac => ac.AlarmRTs)
 			.HasForeignKey<AlarmRT>(at => at.AlarmID);
 
 		builder.Entity<AlarmList>()
