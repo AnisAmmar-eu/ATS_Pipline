@@ -60,3 +60,14 @@ jobs:
 
         docker build -t anisammar11/dockerimage:ApiUserimage -f ./ApiUser/Dockerfile .
         docker push anisammar11/dockerimage:ApiUserimage
+
+    - name: Test and generate code coverage
+      run: |
+        dotnet test --collect:"XPlat Code Coverage"
+        reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./coverage -reporttypes:Html
+
+    - name: Scan for vulnerabilities
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: anisammar11/dockerimage:ApiMonitorimage
+
