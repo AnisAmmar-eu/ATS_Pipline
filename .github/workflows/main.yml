@@ -26,10 +26,12 @@ jobs:
     - name: Clean Install
       run: dotnet restore
 
-    - name: Build & Test
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
       run: dotnet test --no-build --verbosity normal
 
-     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
