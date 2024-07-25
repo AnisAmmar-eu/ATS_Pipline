@@ -58,41 +58,6 @@
         <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
         <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
     </ItemGroup>
-    <ItemGroup>
-        <Reference Include="Stemmer.Cvb">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Aux">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Aux.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Extensions">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Extensions.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Forms">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Forms.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Foundation">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Foundation.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Minos">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Minos.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Movie2">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Movie2.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Polimago">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Polimago.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.SampleDatabase">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.SampleDatabase.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.ShapeFinder">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.ShapeFinder.dll</HintPath>
-        </Reference>
-        <Reference Include="Stemmer.Cvb.Wpf">
-            <HintPath>..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Wpf.dll</HintPath>
-        </Reference>
-    </ItemGroup>
     <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
         <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
     </Target>
