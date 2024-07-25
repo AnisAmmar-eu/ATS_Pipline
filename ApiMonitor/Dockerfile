@@ -13,7 +13,7 @@ COPY . .
 WORKDIR "/src/ApiMonitor"
 RUN dotnet build "./ApiMonitor.csproj" -c $BUILD_CNFIGURATION -o /app/build
 
-FOMR build AS publish
+FROM build AS publish
 ARG BUILD_CNFIGURATION=RELEASE
 RUN dotnet publish "./ApiMonitor.csproj" -c $BUILD_CNFIGURATION -o /app/publish /p:UseAppHost=false
 
