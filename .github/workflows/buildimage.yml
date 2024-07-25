@@ -5,9 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "dotnet8" ]
+    branches: [ "ATS_AnisDevOps" ]
   pull_request:
-    branches: [ "dotnet8" ]
+    branches: [ "ATS_AnisDevOps" ]
 
 jobs:
   build:
@@ -26,6 +26,6 @@ jobs:
 
     - name: Build
       run: dotnet build --no-restore
-      
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
