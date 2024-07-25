@@ -38,52 +38,25 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Build & push
-      uses: docker/build-push-action@v6
-      with:
-        context : .
-        file : ./ApiMonitor/Dockerfile
-        push: true
-        tags: anisammar11/dockerimage:ApiMonitorimage
-      
-    - uses: docker/build-push-action@v6
-      with:
-        context : .
-        file : ./ApiStationCycle/Dockerfile
-        push: true
-        tags: anisammar11/dockerimage:ApiStationCycleimage
+    - name: Build & push all images
+      run: |
+        docker build -t anisammar11/dockerimage:ApiMonitorimage -f ./ApiMonitor/Dockerfile .
+        docker push anisammar11/dockerimage:ApiMonitorimage
 
-    - uses: docker/build-push-action@v6
-      with:
-        context : .
-        file : ./ApiKPI/Dockerfile
-        push: true
-        tags: anisammar11/dockerimage:ApiKPIimage
+        docker build -t anisammar11/dockerimage:ApiStationCycleimage -f ./ApiStationCycle/Dockerfile .
+        docker push anisammar11/dockerimage:ApiStationCycleimage
 
-    - uses: docker/build-push-action@v6
-      with:
-        context : .
-        file : ./ApiADS/Dockerfile
-        push: true
-        tags: anisammar11/dockerimage:ApiADSimage
+        docker build -t anisammar11/dockerimage:ApiKPIimage -f ./ApiKPI/Dockerfile .
+        docker push anisammar11/dockerimage:ApiKPIimage
 
-    - uses: docker/build-push-action@v6
-      with:
-        context : .
-        file : ./ApiAlarm/Dockerfile
-        push: true
-        tags: anisammar11/dockerimage:ApiAlarmimage
+        docker build -t anisammar11/dockerimage:ApiADSimage -f ./ApiADS/Dockerfile .
+        docker push anisammar11/dockerimage:ApiADSimage
 
-    - uses: docker/build-push-action@v6
-      with:
-        context : .
-        file : ./ApiIOT/Dockerfile
-        push: true
-        tags: anisammar11/dockerimage:ApiIOTimage
+        docker build -t anisammar11/dockerimage:ApiAlarmimage -f ./ApiAlarm/Dockerfile .
+        docker push anisammar11/dockerimage:ApiAlarmimage
 
-    - uses: docker/build-push-action@v6
-      with:
-        context : .
-        file : ./ApiUser/Dockerfile
-        push: true
-        tags: anisammar11/dockerimage:ApiUserimage
+        docker build -t anisammar11/dockerimage:ApiIOTimage -f ./ApiIOT/Dockerfile .
+        docker push anisammar11/dockerimage:ApiIOTimage
+
+        docker build -t anisammar11/dockerimage:ApiUserimage -f ./ApiUser/Dockerfile .
+        docker push anisammar11/dockerimage:ApiUserimage
