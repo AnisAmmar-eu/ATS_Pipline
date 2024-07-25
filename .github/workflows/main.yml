@@ -44,4 +44,46 @@ jobs:
         context : .
         file : ./ApiMonitor/Dockerfile
         push: true
-        tags: anisammar11/dockerimage:latest
+        tags: anisammar11/dockerimage:ApiMonitorimage
+      
+    - uses: docker/build-push-action@v6
+      with:
+        context : .
+        file : ./ApiStationCycle/Dockerfile
+        push: true
+        tags: anisammar11/dockerimage:ApiStationCycleimage
+
+    - uses: docker/build-push-action@v6
+      with:
+        context : .
+        file : ./ApiKPI/Dockerfile
+        push: true
+        tags: anisammar11/dockerimage:ApiKPIimage
+
+    - uses: docker/build-push-action@v6
+      with:
+        context : .
+        file : ./ApiADS/Dockerfile
+        push: true
+        tags: anisammar11/dockerimage:ApiADSimage
+
+    - uses: docker/build-push-action@v6
+      with:
+        context : .
+        file : ./ApiAlarm/Dockerfile
+        push: true
+        tags: anisammar11/dockerimage:ApiAlarmimage
+
+    - uses: docker/build-push-action@v6
+      with:
+        context : .
+        file : ./ApiIOT/Dockerfile
+        push: true
+        tags: anisammar11/dockerimage:ApiIOTimage
+
+    - uses: docker/build-push-action@v6
+      with:
+        context : .
+        file : ./ApiUser/Dockerfile
+        push: true
+        tags: anisammar11/dockerimage:ApiUserimage
