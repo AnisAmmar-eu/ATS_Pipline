@@ -66,3 +66,6 @@ jobs:
       with:
         image-ref: anisammar11/dockerimage:ApiMonitorimage
 
+    - name: Lint code
+      run: dotnet format --check
+
