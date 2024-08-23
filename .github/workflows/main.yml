@@ -23,7 +23,7 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Clean Install
+    - name: Clean & Install
       run: dotnet restore
 
     - name: Build & Test
